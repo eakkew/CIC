@@ -105,7 +105,8 @@ namespace CIC
 
         private void conference_button_Click(object sender, EventArgs e)
         {
-
+            frmConference conference = new frmConference();
+            conference.Show();
         }
 
         private void manual_call_button_Click(object sender, EventArgs e)
