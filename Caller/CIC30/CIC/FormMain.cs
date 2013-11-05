@@ -112,14 +112,9 @@ namespace CIC
         private void manual_call_button_Click(object sender, EventArgs e)
         {
             frmManualCall manualCall = new frmManualCall();
-            manualCall.FormClosed += manual_call_closed;
             manualCall.Show();
             
             state_change(FormMainState.ManualCall);
-        }
-
-        private void manual_call_closed(object sender, EventArgs e)
-        {
         }
 
         private void break_button_Click(object sender, EventArgs e)
