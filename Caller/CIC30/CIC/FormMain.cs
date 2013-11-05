@@ -19,6 +19,7 @@ namespace CIC
         Mute,
         Break,
         ManualCall,
+        Loggedout,
         None,
 
     };
@@ -26,8 +27,12 @@ namespace CIC
 
     public partial class FormMain : Form
     {
-        private bool break_requested;
-        
+        private bool break_requested { get; set; }
+        private bool IsLoggedIntoDialer { get; set; }
+
+        private ININ.IceLib.Connection.Session IC_Session = null;
+        private ININ.IceLib.Dialer.DialerCallInteraction ActiveDialerInteration = null;
+        private ININ.IceLib.Interactions.InteractionsManager NormalInterationManager = null;
         private FormMainState prev_state = FormMainState.Preview;
         private static Interaction ActiveNormalInteration { get; set; }
 
@@ -111,7 +116,7 @@ namespace CIC
 
         private void manual_call_button_Click(object sender, EventArgs e)
         {
-            frmManualCall manualCall = new frmManualCall();
+            frmManualCall manualCall = new frmManualCall(IC_Session, NormalInterationManager);
             manualCall.Show();
             
             state_change(FormMainState.ManualCall);
@@ -130,7 +135,55 @@ namespace CIC
 
         private void logout_workflow_button_Click(object sender, EventArgs e)
         {
-
+            string scope = "CIC::MainForm::LogoutToolStripMenuItem_Click(): ";
+            //Tracing.TraceStatus(scope + "Starting.");
+            try
+            {
+                switch (this.IsLoggedIntoDialer)
+                {
+                    case true:
+                        if (/*this.CallStateToolStripStatusLabel.Text.ToLower().Trim() == "n/a"*/ true)
+                        {
+                            this.LogoutGranted(sender, e);      //No call object from this campaign;permit to logging out.
+                        }
+                        else
+                        {
+                            if (this.ActiveDialerInteration != null)
+                            {
+                                // check if the user is working
+                                if (/*this.RequestBreakToolStripButton.Text.Trim() != "End Break"*/ false)
+                                {
+                                    //this.WorkLogoutFlag = true;
+                                    //this.RequestBreakToolStripButton_Click(sender, e);               //wait for breakgrant
+                                    this.ActiveDialerInteration.DialerSession.RequestLogout();
+                                }
+                                else
+                                {
+                                    this.LogoutGranted(sender, e);     //already breakp;ermit to logging out.
+                                }
+                            }
+                        }
+                        break;
+                    default:
+                        if (ActiveNormalInteration != null)
+                        {
+                            ActiveNormalInteration.Disconnect();
+                            ActiveNormalInteration = null;
+                        }
+                        if (this.IC_Session != null)
+                        {
+                            this.IC_Session.Disconnect();
+                            this.IC_Session = null;
+                        }
+                        break;
+                }
+                //Tracing.TraceStatus(scope + "Completed.");
+            }
+            catch (System.Exception ex)
+            {
+                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+            }
         }
 
         private void exit_button_Click(object sender, EventArgs e)
@@ -168,6 +221,9 @@ namespace CIC
                     break;
                 case FormMainState.Break:
                     break_state();
+                    break;
+                case FormMainState.Loggedout:
+                    logged_out_state();
                     break;
             }
             prev_state = state;
@@ -264,6 +320,12 @@ namespace CIC
             exit_button.Enabled = true;
         }
 
+        private void logged_out_state()
+        {
+            reset_state();
+            workflow_button.Enabled = true;
+        }
+
         private void timer1_Tick(object sender, EventArgs e)
         {
             timer -= (float)timer1.Interval / 1000;
@@ -298,5 +360,60 @@ namespace CIC
         //    }
         //    //Tracing.TraceStatus(scope + "Completed.");
         //}
+
+        private void LogoutGranted(object sender, EventArgs e)
+        {
+            string scope = "CIC::MainForm::LogoutGranted(): ";
+            //Tracing.TraceStatus(scope + "Starting.");
+            if (this.InvokeRequired == true)
+            {
+                this.BeginInvoke(new EventHandler<EventArgs>(LogoutGranted), new object[] { sender, e });
+            }
+            else
+            {
+                try
+                {
+                    switch (this.IsLoggedIntoDialer)
+                    {
+                        case true:
+                            if (this.ActiveDialerInteration != null)
+                            {
+                                this.ActiveDialerInteration = null;
+                            }
+                            // TODO: need to clean up
+                            //this.IcWorkFlow = null;
+                            //this.DialerSession = null;
+                            
+                            //this.InitializeStatusMessageDetails();
+                            //this.SetToDoNotDisturb_UserStatusMsg();
+                            //this.CallActivityCodeToolStripComboBox.Items.Clear();
+                            //this.ShowActiveCallInfo();
+                            //this.CrmScreenPop();
+                            state_change(FormMainState.Loggedout);
+                            System.Windows.Forms.MessageBox.Show(global::CIC.Properties.Settings.Default.CompletedWorkflowMsg, "System Info.", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            break;
+                        default:
+                            if (ActiveNormalInteration != null)
+                            {
+                                ActiveNormalInteration.Disconnect();
+                                ActiveNormalInteration = null;
+                            }
+                            if (this.IC_Session != null)
+                            {
+                                this.IC_Session.Disconnect();
+                                this.IC_Session = null;
+                            }
+                            state_change(FormMainState.Loggedout);
+                            break;
+                    }
+                    //Tracing.TraceStatus(scope + "Completed.");
+                }
+                catch (System.Exception ex)
+                {
+                    //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                    System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                }
+            }
+        }
     }
 }
