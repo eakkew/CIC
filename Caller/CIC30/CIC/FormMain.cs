@@ -34,6 +34,7 @@ namespace CIC
         private ININ.IceLib.Dialer.DialerCallInteraction ActiveDialerInteration = null;
         private ININ.IceLib.Interactions.InteractionsManager NormalInterationManager = null;
         private FormMainState prev_state = FormMainState.Preview;
+        private FormMainState current_state = FormMainState.Preview;
         private static Interaction ActiveNormalInteration { get; set; }
 
         private float timer;
@@ -142,7 +143,9 @@ namespace CIC
                 switch (this.IsLoggedIntoDialer)
                 {
                     case true:
-                        if (/*this.CallStateToolStripStatusLabel.Text.ToLower().Trim() == "n/a"*/ true)
+                        // FIX ME: check the state of calling
+                        //if (/*this.CallStateToolStripStatusLabel.Text.ToLower().Trim() == "n/a"*/ true)
+                        if (this.current_state == FormMainState.Disconnect)
                         {
                             this.LogoutGranted(sender, e);      //No call object from this campaign;permit to logging out.
                         }
@@ -150,16 +153,17 @@ namespace CIC
                         {
                             if (this.ActiveDialerInteration != null)
                             {
-                                // check if the user is working
-                                if (/*this.RequestBreakToolStripButton.Text.Trim() != "End Break"*/ false)
+                                // TODO: validate the condition of log out request while not on break
+                                //if (/*this.RequestBreakToolStripButton.Text.Trim() != "End Break"*/ false)
+                                if (!this.break_requested)
                                 {
-                                    //this.WorkLogoutFlag = true;
-                                    //this.RequestBreakToolStripButton_Click(sender, e);               //wait for breakgrant
+                                    this.break_requested = true;
+                                    this.break_button_Click(sender, e);               //wait for breakgrant
                                     this.ActiveDialerInteration.DialerSession.RequestLogout();
                                 }
                                 else
                                 {
-                                    this.LogoutGranted(sender, e);     //already breakp;ermit to logging out.
+                                    this.LogoutGranted(sender, e);     //already breakpermit to logging out.
                                 }
                             }
                         }
@@ -226,7 +230,8 @@ namespace CIC
                     logged_out_state();
                     break;
             }
-            prev_state = state;
+            prev_state = current_state;
+            current_state = state;
             req_state_change = FormMainState.None;
         }
 
