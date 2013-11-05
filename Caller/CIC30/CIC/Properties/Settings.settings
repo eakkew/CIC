@@ -1,0 +1,276 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="CIC.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="UserId" Type="System.String" Scope="User">
+      <Value Profile="(Default)">suthee</Value>
+    </Setting>
+    <Setting Name="StationId" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1001</Value>
+    </Setting>
+    <Setting Name="Phone" Type="System.String" Scope="User">
+      <Value Profile="(Default)">0122917823</Value>
+    </Setting>
+    <Setting Name="StationTypeId" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="UseWindowsAuthentication" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="UsePersistentConnection" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ScreenPopRecordId" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">is_attr_i3_rowid</Value>
+    </Setting>
+    <Setting Name="AlternatePreviewNumbers" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">is_attr_phone_mobile;is_attr_phone_office;is_attr_phone_home</Value>
+    </Setting>
+    <Setting Name="TransferPanelVisible" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Preview_Direction_ATTR" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Preview_CallType_ATTR" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Preview_QueueName_ATTR" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Preview_Number_ATTR" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">is_attr_numbertodial</Value>
+    </Setting>
+    <Setting Name="Preview_CallState_ATTR" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Preview_Campaign_ATTR" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">is_attr_campaignid</Value>
+    </Setting>
+    <Setting Name="ScreenPop_PostQueryString" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ScreenPop_PreQueryString" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ReasonCode_Busy" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Busy</Value>
+    </Setting>
+    <Setting Name="ReasonCode_Deleted" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Remove from list</Value>
+    </Setting>
+    <Setting Name="ReasonCode_Failure" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Failure</Value>
+    </Setting>
+    <Setting Name="ReasonCode_Fax" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Fax</Value>
+    </Setting>
+    <Setting Name="ReasonCode_Machine" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Answering machine</Value>
+    </Setting>
+    <Setting Name="ReasonCode_NoAnswer" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">No answer</Value>
+    </Setting>
+    <Setting Name="ReasonCode_RemoteHangup" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Hang up</Value>
+    </Setting>
+    <Setting Name="ReasonCode_Scheduled" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Call back later</Value>
+    </Setting>
+    <Setting Name="ReasonCode_SIT" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Sit</Value>
+    </Setting>
+    <Setting Name="ReasonCode_Success" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Success</Value>
+    </Setting>
+    <Setting Name="ReasonCode_WrongParty" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Wrong number</Value>
+    </Setting>
+    <Setting Name="CamEnable" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ApplicationTitle" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Customer Interaction Center 3.0</Value>
+    </Setting>
+    <Setting Name="AutoResetUserStatus" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ScreenPop_KeyList_ATTR" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">key2</Value>
+    </Setting>
+    <Setting Name="ScreenPop_FieldList_ATTR" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">is_attr_custid</Value>
+    </Setting>
+    <Setting Name="StartupUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://cicocs/crm_cic30/login.aspx?usr={0}&amp;psw={1}</Value>
+    </Setting>
+    <Setting Name="PrePopUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://cicocs/crm_cic30/mainscnapp.aspx?callid={0}key={1}</Value>
+    </Setting>
+    <Setting Name="PopUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://cicocs/crm_cic30/mainscnapp.aspx?callid={0}&amp;key={1}</Value>
+    </Setting>
+    <Setting Name="startSearchKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">?SID=</Value>
+    </Setting>
+    <Setting Name="endSearchKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">&amp;</Value>
+    </Setting>
+    <Setting Name="InbdScreenPop_FieldList_ATTR" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">acd_popup_id</Value>
+    </Setting>
+    <Setting Name="ReasonCode_Transfereded" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Transferred to another agent</Value>
+    </Setting>
+    <Setting Name="DisplayIVR_Screen" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Display_WebMenu" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="CIC_Agent_Hlp" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">CICAgentHlp.chm</Value>
+    </Setting>
+    <Setting Name="Server" Type="System.String" Scope="User">
+      <Value Profile="(Default)">192.168.100.21</Value>
+    </Setting>
+    <Setting Name="FailOverServer" Type="System.String" Scope="User">
+      <Value Profile="(Default)">192.168.100.22</Value>
+    </Setting>
+    <Setting Name="NormalBar_Normal" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">bluebgBar.jpg</Value>
+    </Setting>
+    <Setting Name="NormalBar_Info" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">yellowbgBar.jpg</Value>
+    </Setting>
+    <Setting Name="NormalBar_Active" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">redbgBar.jpg</Value>
+    </Setting>
+    <Setting Name="WorkFlowBar_Normal" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">bluebgBar.jpg</Value>
+    </Setting>
+    <Setting Name="WorkFlowBar_Info" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">yellowbgBar.jpg</Value>
+    </Setting>
+    <Setting Name="WorkFlowBar_Active" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">redbgBar.jpg</Value>
+    </Setting>
+    <Setting Name="WorkFlowBar_Initial" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">pinkbgBar.jpg</Value>
+    </Setting>
+    <Setting Name="TransferBar" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">redbgBar.jpg</Value>
+    </Setting>
+    <Setting Name="MainBackground" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">whitebgTopPannel.jpg</Value>
+    </Setting>
+    <Setting Name="SwitchOverSupport" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="IncompletedWorkflowMsg" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Please logout workflow.</Value>
+    </Setting>
+    <Setting Name="CompletedWorkflowMsg" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Workflow logout complete.</Value>
+    </Setting>
+    <Setting Name="CompletedBreak" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Completed break.</Value>
+    </Setting>
+    <Setting Name="SingleSignOn" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="IncompletedCall" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Please finish the Current Call.</Value>
+    </Setting>
+    <Setting Name="AutoAnswer" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="NormalAlertSound" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">seankingston-beautifulgirl.mp3</Value>
+    </Setting>
+    <Setting Name="DialerAlertSound" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">ClientAlert4.wav</Value>
+    </Setting>
+    <Setting Name="NormalAlertting" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="DialerAlerting" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="NormalLooping" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="DialerLooping" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="DialerRingCount" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="NormalRingCount" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">-1</Value>
+    </Setting>
+    <Setting Name="StationType1Name" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Workstation</Value>
+    </Setting>
+    <Setting Name="StationType1Value" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Workstation</Value>
+    </Setting>
+    <Setting Name="StationType1Enabled" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="StationType2Name" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">This Computer</Value>
+    </Setting>
+    <Setting Name="StationType2Value" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">This Computer</Value>
+    </Setting>
+    <Setting Name="StationType2Enabled" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="StationType3Name" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Remote Workstation</Value>
+    </Setting>
+    <Setting Name="StationType3Value" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Remote Workstation</Value>
+    </Setting>
+    <Setting Name="StationType3Enabled" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="StationType4Name" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Remote Number</Value>
+    </Setting>
+    <Setting Name="StationType4Value" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Remote Number</Value>
+    </Setting>
+    <Setting Name="StationType4Enabled" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="StationType5Name" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Sip Soft Phone</Value>
+    </Setting>
+    <Setting Name="StationType5Value" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Sip Soft Phone</Value>
+    </Setting>
+    <Setting Name="StationType5Enabled" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="savePassword" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Animate" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="CallerSupports" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="AutoCRMSignOn" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ACDAvailableTalkMsg" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">available, talk</Value>
+    </Setting>
+    <Setting Name="ACDAgenNotAnsweringMsg" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">acd - agent not answering</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

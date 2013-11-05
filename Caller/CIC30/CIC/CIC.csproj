@@ -1,0 +1,451 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2F6A469D-0CBD-4BE7-BEBC-9739CA9D9AD0}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CIC</RootNamespace>
+    <AssemblyName>CIC</AssemblyName>
+    <ApplicationIcon>app.ico</ApplicationIcon>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <StartupObject>CIC.Program</StartupObject>
+    <PublishUrl>http://localhost/CIC/</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Web</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ININ.Client.Common.UI, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86" />
+    <Reference Include="ININ.IceLib, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Interactive Intelligence\IceLib SDK\bin\ININ.IceLib.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ININ.IceLib.Dialer, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Interactive Intelligence\Dialer Developer\bin\ININ.IceLib.Dialer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ININ.IceLib.Directories, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Interactive Intelligence\IceLib SDK\bin\ININ.IceLib.Directories.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ININ.IceLib.Interactions, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Interactive Intelligence\IceLib SDK\bin\ININ.IceLib.Interactions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ININ.IceLib.People, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Interactive Intelligence\IceLib SDK\bin\ININ.IceLib.People.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ININ.IceLib.Tracker, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Interactive Intelligence\IceLib SDK\bin\ININ.IceLib.Tracker.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ININ.IceLib.UnifiedMessaging, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Interactive Intelligence\IceLib SDK\bin\ININ.IceLib.UnifiedMessaging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Interop.ARP, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="Locus.Control, Version=1.0.3219.28214, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\LocusLib\LocusLib\bin\Debug\Locus.Control.dll</HintPath>
+    </Reference>
+    <Reference Include="locuslibk, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Messaging" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Services, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\WINDOWS\assembly\GAC_MSIL\System.Web.Services\2.0.0.0__b03f5f7f11d50a3a\System.Web.Services.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CallbackSummaryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CallbackSummaryForm.Designer.cs">
+      <DependentUpon>CallbackSummaryForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormMain.Designer.cs">
+      <DependentUpon>FormMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmAboutBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmAboutBox.Designer.cs">
+      <DependentUpon>frmAboutBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmCamera.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmCamera.Designer.cs">
+      <DependentUpon>frmCamera.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmChangePassword.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmChangePassword.Designer.cs">
+      <DependentUpon>frmChangePassword.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmConference.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmConference.Designer.cs">
+      <DependentUpon>frmConference.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmDisposition.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmDisposition.Designer.cs">
+      <DependentUpon>frmDisposition.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmIVRList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmIVRList.Designer.cs">
+      <DependentUpon>frmIVRList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmMailDocView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmMailDocView.Designer.cs">
+      <DependentUpon>frmMailDocView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmMain.Designer.cs">
+      <DependentUpon>frmMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmManualCall.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmManualCall.Designer.cs">
+      <DependentUpon>frmManualCall.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmTransfer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmTransfer.Designer.cs">
+      <DependentUpon>frmTransfer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmWorkflow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmWorkflow.Designer.cs">
+      <DependentUpon>frmWorkflow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ICStation.cs" />
+    <Compile Include="ICWorkFlow.cs" />
+    <Compile Include="LoginParams.cs" />
+    <Compile Include="LoginForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LoginForm.designer.cs">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LVITEM.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Native.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="CallbackSummaryForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>CallbackSummaryForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormMain.resx">
+      <DependentUpon>FormMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmAboutBox.resx">
+      <DependentUpon>frmAboutBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmCamera.resx">
+      <DependentUpon>frmCamera.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmChangePassword.resx">
+      <DependentUpon>frmChangePassword.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmConference.resx">
+      <DependentUpon>frmConference.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmDisposition.resx">
+      <DependentUpon>frmDisposition.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmIVRList.resx">
+      <DependentUpon>frmIVRList.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmMailDocView.resx">
+      <DependentUpon>frmMailDocView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmMain.resx">
+      <DependentUpon>frmMain.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmManualCall.resx">
+      <DependentUpon>frmManualCall.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmTransfer.resx">
+      <DependentUpon>frmTransfer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmWorkflow.resx">
+      <DependentUpon>frmWorkflow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LoginForm.resx">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ScheduleCallbackForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ScheduleCallbackForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserStatusGridView.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>UserStatusGridView.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="ScheduleCallbackForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ScheduleCallbackForm.Designer.cs">
+      <DependentUpon>ScheduleCallbackForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserData.cs" />
+    <Compile Include="UserDataEventArgs.cs" />
+    <Compile Include="UserStatusGridView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserStatusGridView.Designer.cs">
+      <DependentUpon>UserStatusGridView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Utils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="app.ico" />
+    <None Include="app.config" />
+    <None Include="Resources\bluebgBar.jpg" />
+    <None Include="Resources\pinkbgBar.jpg" />
+    <None Include="Resources\greenbgBar.jpg" />
+    <None Include="Resources\redbgBar.jpg" />
+    <None Include="Resources\greenbgTopPannel.jpg" />
+    <None Include="bin\Debug\Resources\VT_connect.jpg" />
+    <None Include="bin\Debug\Resources\VT_disconnect.jpg" />
+    <None Include="bin\Debug\Resources\trans_Connected.gif" />
+    <None Include="bin\Debug\Resources\trans_DisConnected.gif" />
+    <None Include="bin\Debug\Resources\cConnected.gif" />
+    <None Include="bin\Debug\Resources\cDisConnected.gif" />
+    <None Include="bin\Debug\Resources\Inet_Con.ico" />
+    <None Include="bin\Debug\Resources\Inet_DisCon.ico" />
+    <None Include="bin\Debug\Resources\AboutBoxLogo.bmp" />
+    <None Include="bin\Debug\Resources\mod_icon.jpg" />
+    <None Include="bin\Debug\Resources\mod_icon2.jpg" />
+    <None Include="bin\Debug\Resources\mod_icon3.jpg" />
+    <None Include="bin\Debug\Resources\swapline_icon_mod.png" />
+    <None Include="bin\Debug\Resources\Cancel_mod_icon.png" />
+    <None Include="bin\Debug\Resources\swap_icon.png" />
+    <None Include="bin\Debug\Resources\fffffff.ico" />
+    <None Include="bin\Debug\Resources\cancle_mod.png" />
+    <None Include="bin\Debug\Resources\swapcall_mod.png" />
+    <None Include="bin\Debug\Resources\1234567.ico" />
+    <None Include="bin\Debug\Resources\123.ico" />
+    <None Include="bin\Debug\Resources\Cancle2.ico" />
+    <None Include="bin\Debug\Resources\DialPad.png" />
+    <None Include="bin\Debug\Resources\transPanel.png" />
+    <Content Include="Resources\4RingBack.wav" />
+    <Content Include="Resources\Act.ico" />
+    <Content Include="Resources\alarmclock.ico" />
+    <Content Include="Resources\app.ico" />
+    <Content Include="Resources\App36.ico" />
+    <Content Include="Resources\AsstPhone.ico" />
+    <Content Include="Resources\AtLunch.ico" />
+    <Content Include="Resources\AtPlay.ico" />
+    <Content Include="Resources\Available.ico" />
+    <Content Include="Resources\AvailForward.ico" />
+    <Content Include="Resources\AvailNoACD.ico" />
+    <Content Include="Resources\AvailRemote.ico" />
+    <Content Include="Resources\AwayFromDesk.ico" />
+    <Content Include="Resources\bell.ico" />
+    <Content Include="Resources\bleep.wav" />
+    <Content Include="Resources\BusPhone.ico" />
+    <Content Include="Resources\BusPhone2.ico" />
+    <None Include="Resources\cam_icon.jpg" />
+    <Content Include="Resources\ClientAlert1.wav" />
+    <Content Include="Resources\ClientAlert2.wav" />
+    <Content Include="Resources\ClientAlert3.wav" />
+    <Content Include="Resources\ClientAlert4.wav" />
+    <Content Include="Resources\ClientRinging1.wav" />
+    <Content Include="Resources\ClientRinging10.wav" />
+    <Content Include="Resources\ClientRinging2.wav" />
+    <Content Include="Resources\ClientRinging3.wav" />
+    <Content Include="Resources\ClientRinging4.wav" />
+    <Content Include="Resources\ClientRinging5.wav" />
+    <Content Include="Resources\ClientRinging6.wav" />
+    <Content Include="Resources\ClientRinging7.wav" />
+    <Content Include="Resources\ClientRinging8.wav" />
+    <Content Include="Resources\ClientRinging9.wav" />
+    <Content Include="Resources\DoNotDis.ico" />
+    <Content Include="Resources\EIC.ico" />
+    <Content Include="Resources\error.ico" />
+    <Content Include="Resources\Error.wav" />
+    <Content Include="Resources\Exchange.ico" />
+    <Content Include="Resources\FaxPhone.ico" />
+    <Content Include="Resources\first_aid.ico" />
+    <Content Include="Resources\flag_blue.ico" />
+    <Content Include="Resources\flag_green.ico" />
+    <Content Include="Resources\flag_red.ico" />
+    <Content Include="Resources\flag_yellow.ico" />
+    <Content Include="Resources\FollowUp.ico" />
+    <Content Include="Resources\GoneHome.ico" />
+    <Content Include="Resources\hammer.ico" />
+    <Content Include="Resources\HmPhone1.ico" />
+    <Content Include="Resources\HmPhone2.ico" />
+    <Content Include="Resources\hourglass.ico" />
+    <Content Include="Resources\information.ico" />
+    <Content Include="Resources\Information.wav" />
+    <Content Include="Resources\InMeeting.ico" />
+    <Content Include="Resources\Lock.ico" />
+    <None Include="Resources\loginBG.jpg" />
+    <None Include="Resources\locus-web_01.gif" />
+    <Content Include="Resources\mailbox_empty.ico" />
+    <Content Include="Resources\mailbox_full.ico" />
+    <Content Include="Resources\MobPhone.ico" />
+    <Content Include="Resources\ODBC.ico" />
+    <Content Include="Resources\OnVacation.ico" />
+    <Content Include="Resources\Outlook.ico" />
+    <Content Include="Resources\OutOfOffice.ICO" />
+    <Content Include="Resources\OutOfTown.ico" />
+    <Content Include="Resources\Pager1.ico" />
+    <Content Include="Resources\pencil.ico" />
+    <Content Include="Resources\pin_blue.ico" />
+    <Content Include="Resources\pin_green.ico" />
+    <Content Include="Resources\pin_grey.ico" />
+    <Content Include="Resources\pin_red.ico" />
+    <Content Include="Resources\pin_yellow.ico" />
+    <Content Include="Resources\RingBack.wav" />
+    <Content Include="Resources\RingIn.wav" />
+    <Content Include="Resources\telephone.ico" />
+    <Content Include="Resources\Training.ico" />
+    <Content Include="Resources\unknown.ico" />
+    <Content Include="Resources\Unlock.ico" />
+    <Content Include="Resources\warning.ico" />
+    <Content Include="Resources\Warning.wav" />
+    <Content Include="Resources\WHome.ico" />
+    <None Include="Resources\yellowbgBar.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
