@@ -1,0 +1,965 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ININ.IceLib.Data.TransactionBuilder</name>
+    </assembly>
+    <members>
+        <member name="T:ININ.IceLib.Data.TransactionBuilder.TransactionBuffer">
+            <summary>
+            String buffer used for sending transaction requests to and receiving responses from TransactionServer.
+            </summary>
+        </member>
+        <member name="T:ININ.IceLib.Data.TransactionBuilder.ExecuteCompletedEventArgs">
+            <summary>
+            Provides data for the ExecuteCompleted event of a <see cref="T:ININ.IceLib.Data.TransactionBuilder.TransactionClient"/>.
+            </summary>
+            <doccompleted/>
+        </member>
+        <member name="M:ININ.IceLib.Data.TransactionBuilder.ExecuteCompletedEventArgs.#ctor(System.Boolean,ININ.IceLib.Data.TransactionBuilder.TransactionData,System.Exception,System.Boolean,System.Object)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ININ.IceLib.Data.TransactionBuilder.ExecuteCompletedEventArgs"/> class with the specified values.
+            </summary>
+            <param name="success">If set to <c>true</c> the transaction success.</param>
+            <param name="transactionData">The transaction data.</param>
+            <param name="error">The error, if one occurred.</param>
+            <param name="cancelled">If set to <c>true</c> the operation was cancelled.</param>
+            <param name="userState">An object that contains state information for this request.</param>
+            <exception cref="T:System.ArgumentNullException">A parameter is a null reference (Nothing in Visual Basic).</exception>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.ExecuteCompletedEventArgs.Success">
+            <summary>
+            Gets the success result associated with the event.
+            </summary>
+            <value><c>true</c> if the transaction completed successfully; <c>false</c> otherwise.</value>
+            <exception cref="T:System.Reflection.TargetInvocationException">The <see cref="P:System.ComponentModel.AsyncCompletedEventArgs.Error">Error</see> 
+            property has been set by the asynchronous operation. The <see cref="P:System.Exception.InnerException">InnerException</see> 
+            property holds a reference to Error.</exception>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.ExecuteCompletedEventArgs.TransactionData">
+            <summary>
+            Gets the transaction data associated with the event.
+            </summary>
+            <value>The transaction data includes parameters, the name of the procedure, query results, return code, transaction name, and other details.</value>
+            <exception cref="T:System.Reflection.TargetInvocationException">The <see cref="P:System.ComponentModel.AsyncCompletedEventArgs.Error">Error</see> 
+            property has been set by the asynchronous operation. The <see cref="P:System.Exception.InnerException">InnerException</see> 
+            property holds a reference to Error.</exception>
+        </member>
+        <member name="T:ININ.IceLib.Data.TransactionBuilder.TransactionClient">
+            <summary>
+            Provides the communication layer between .NET Client applications and Transaction Server.
+            </summary>
+            <remarks>TransactionClient uses IceLib's <see cref="T:ININ.IceLib.Connection.Session"/> to pass data back and forth to Session Manager, which in turn
+            uses Notifer to pass data back and forth to Transaction Server.
+            <bold>TransactionClient</bold> supports both synchronous and asynchronous operations.
+            To execute a transaction synchronously, use <see cref="M:ININ.IceLib.Data.TransactionBuilder.TransactionClient.Execute(ININ.IceLib.Data.TransactionBuilder.TransactionData@)"/>.
+            To execute a transaction asynchronously, use <see cref="M:ININ.IceLib.Data.TransactionBuilder.TransactionClient.ExecuteAsync(ININ.IceLib.Data.TransactionBuilder.TransactionData,System.EventHandler{ININ.IceLib.Data.TransactionBuilder.ExecuteCompletedEventArgs},System.Object)"/>.
+            </remarks>
+            <doccompleted/>
+        </member>
+        <member name="M:ININ.IceLib.Data.TransactionBuilder.TransactionClient.#ctor(ININ.IceLib.Connection.Session)">
+            <summary>
+            Creates a new instance of the TransactionClient class.
+            </summary>
+            <param name="session">IceLib <see cref="T:ININ.IceLib.Connection.Session"/> used for communication with Session Manager.</param>
+            <exception cref="T:System.ArgumentNullException">A parameter is a null reference (Nothing in Visual Basic).</exception>
+        </member>
+        <member name="M:ININ.IceLib.Data.TransactionBuilder.TransactionClient.Execute(ININ.IceLib.Data.TransactionBuilder.TransactionData@)">
+            <summary>
+            Executes a transaction synchronously.  Caller is blocked until results are returned from tran execution.
+            </summary>
+            <param name="transactionData"><see cref="T:ININ.IceLib.Data.TransactionBuilder.TransactionData"/> object that holds information about the transaction being executed.</param>
+            <returns><c>true</c> if the transaction completed successfully; <c>false</c> otherwise.</returns>
+            <exception cref="T:System.ArgumentNullException">A parameter is a null reference (Nothing in Visual Basic).</exception>
+            <exception cref="T:System.ObjectDisposedException">The Session has been disposed.</exception>
+            <exception cref="T:ININ.IceLib.IceLibLicenseException">The client does not have the license required to perform this operation</exception>
+        </member>
+        <member name="M:ININ.IceLib.Data.TransactionBuilder.TransactionClient.ExecuteAsync(ININ.IceLib.Data.TransactionBuilder.TransactionData,System.EventHandler{ININ.IceLib.Data.TransactionBuilder.ExecuteCompletedEventArgs},System.Object)">
+            <summary>
+            Asynchronously executes a transaction.
+            </summary>
+            <param name="transactionData"><see cref="T:ININ.IceLib.Data.TransactionBuilder.TransactionData"/> object that holds information about the transaction being executed.</param>
+            <param name="completedCallback">The callback to invoke when the asynchronous operation completes.</param>
+            <param name="userState">An object that contains state information for this request.</param>
+            <exception cref="T:System.ArgumentNullException">A parameter is a null reference (Nothing in Visual Basic).</exception>
+            <remarks>When completed, the <paramref name="completedCallback"/> delegate is invoked on a thread appropriate to the application-model, such as the GUI thread in a UI application.  The <c>Error</c> property of the <see cref="T:System.ComponentModel.AsyncCompletedEventArgs">AsyncCompletedEventArgs-derived object</see> passed to the delegate will contain any exceptions thrown while executing the asynchronous task.  See the synchronous version of this method for more detailed error information.</remarks>
+        </member>
+        <member name="M:ININ.IceLib.Data.TransactionBuilder.TransactionClient.GetDefaultConnectionInformation">
+            <summary>
+            Retrieves the default Tracker <see cref="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettings.ConnectionInformation"/> for the Session.
+            </summary>
+            <returns>The default connection information.</returns>
+            <remarks>
+            <para><c>GetDefaultConnectionInformation()</c> retrieves the value from the IC server based on the Session that the TransactionClient was instatiated against, or uses the cached value if it has already been retrieved.</para>
+            <para>This method will be invoked automatically for any transaction that has only a <see cref="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettings.ConnectionInformation"/> value of <see cref="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettingDefaults.ConnectionInformation">TransactionSettingDefaults.ConnectionInformation</see>
+            for both the transaction and global settings of the TransactionClient.</para>
+            </remarks>
+            <exception cref="T:ININ.IceLib.IceLibException">The Session does not have a valid connection.</exception>
+            <exception cref="T:System.ObjectDisposedException">The Session has been disposed.</exception>
+        </member>
+        <member name="M:ININ.IceLib.Data.TransactionBuilder.TransactionClient.BeginExecute(ININ.IceLib.Data.TransactionBuilder.TransactionData,System.AsyncCallback,System.Object)">
+            <summary>
+            Begins an asynchronous request to execute a transaction.
+            </summary>
+            <param name="data"><see cref="T:ININ.IceLib.Data.TransactionBuilder.TransactionData"/> object that holds information about the transaction being executed.</param>
+            <param name="callback">The AsyncCallback delegate.</param>
+            <param name="state">An object that contains state information for this request.</param>
+            <returns>An <see cref="T:System.IAsyncResult"/> that references the asynchronous operation.</returns>
+            <exception cref="T:System.ArgumentNullException">A parameter is a null reference (Nothing in Visual Basic).</exception>
+            <remarks>Public method to initiate the execution of a transaction in a non-blocking fashion.</remarks>
+            <exception cref="T:ININ.IceLib.IceLibException">The Session does not have a valid connection.</exception>
+            <exception cref="T:System.ObjectDisposedException">The Session has been disposed.</exception>
+        </member>
+        <member name="M:ININ.IceLib.Data.TransactionBuilder.TransactionClient.EndExecute(System.IAsyncResult,ININ.IceLib.Data.TransactionBuilder.TransactionData@)">
+            <summary>
+             Ends a pending asynchronous request to execution a transaction.
+            </summary>
+             <param name="result">An IAsyncResult that stores state information and any user defined data for this asynchronous operation.</param>
+             <param name="data"><see cref="T:ININ.IceLib.Data.TransactionBuilder.TransactionData"/> object that holds information about the transaction being executed.</param>
+            <remarks>Call this to end an asynchronous operation.</remarks>
+            <returns><c>true</c> if the transaction was executed successfully; <c>false</c> otherwise.</returns>
+            <exception cref="T:System.ArgumentNullException">A parameter is a null reference (Nothing in Visual Basic).</exception>
+            <remarks>Public method to initiate the execution of a transaction in a non-blocking fashion.</remarks>
+            <exception cref="T:System.ArgumentException">The actual type of the <c>result</c> parameter is not the apropriate type for this operation.</exception>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionClient.TransactionSettingsTransactionScope">
+            <summary>
+            Accessor-only property that will return the transaction scope <see cref="T:ININ.IceLib.Data.TransactionBuilder.TransactionSettings"/> object.
+            </summary>
+            <value>The transaction settings transaction scope.</value>
+            <remarks>This is where any temporary transaction settings are stored.  These settings will
+            be included in the request string that is sent to the Transaction Server only if they have
+            overridden the settings in the <see cref="P:ININ.IceLib.Data.TransactionBuilder.TransactionClient.TransactionSettingsGlobalScope"/> property.
+            The transaction settings contained in the
+            <see cref="P:ININ.IceLib.Data.TransactionBuilder.TransactionClient.TransactionSettingsTransactionScope"/>
+            property are cleared by the coded gen'd code after each transaction execution.  If you want to set
+            transaction settings that will persist for all transactions being executed by a
+            particular <see cref="T:ININ.IceLib.Data.TransactionBuilder.TransactionClient"/> object, use the
+            <see cref="P:ININ.IceLib.Data.TransactionBuilder.TransactionClient.TransactionSettingsGlobalScope"/> property
+            </remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionClient.TransactionSettingsGlobalScope">
+            <summary>
+            Accessor-only property that will return the global scope <see cref="T:ININ.IceLib.Data.TransactionBuilder.TransactionSettings"/> object.
+            </summary>
+            <value>The transaction settings global scope.</value>
+            <remarks>This is where the global transaction settings are stored.  These settings will
+            be included in the request string that is sent to the Transaction Server only if they have
+            not be overridden by settings in the <see cref="P:ININ.IceLib.Data.TransactionBuilder.TransactionClient.TransactionSettingsTransactionScope"/> property.
+            They will persist for all transactions being executed by a particular
+            <see cref="T:ININ.IceLib.Data.TransactionBuilder.TransactionClient"/> object.  If you want
+            to change transaction settings for a particular transaction, use the
+            <see cref="P:ININ.IceLib.Data.TransactionBuilder.TransactionClient.TransactionSettingsTransactionScope"/> property
+            </remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionClient.DataFormatErrorString">
+            <summary>
+            Accessor-only property that will return the localized data format error string.
+            </summary>
+            <value>The data format error string.</value>
+            <remarks>This string is used by code gen'd code to display an error string
+            indicating that the result string from the Transacion Server contained
+            a format error.
+            </remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionClient.TransactionExecutionErrorString">
+            <summary>
+            Accessor-only property that will return the localized transaction execution error string.
+            </summary>
+            <value>The transaction execution error string.</value>
+            <remarks>This string is used by code gen'd code to display an error string
+            indicating that an error occured during transaction execution.
+            </remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionClient.LastError">
+            <summary>
+            Property for accessing or modifying the last error that occured while executing a
+            transaction or processing the results.
+            </summary>
+            <value>The last error.</value>
+            <remarks>This string is used by code gen'd code to display an error string
+            indicating the last error that occured.  This is a non-localized string that
+            comes directly from the TransactionServer.
+            </remarks>
+        </member>
+        <member name="T:ININ.IceLib.Data.TransactionBuilder.TransactionClient.IntermediateWaitState">
+            <summary>
+            Derived from <see cref="T:System.IAsyncResult"/>
+            </summary>
+            <remarks>Provides base class support for implementing asynchronous methods for TransactionClient.</remarks>
+        </member>
+        <member name="M:ININ.IceLib.Data.TransactionBuilder.TransactionClient.IntermediateWaitState.#ctor(System.AsyncCallback,System.Object)">
+            <summary>
+            Constructs an IntermediateWaitState object.
+            </summary>
+            <param name="p_Callback">An asynchronous callback, to be called when the operation is complete.</param>
+            <param name="p_State">A user-provided object that distinguishes this particular asynchronous request from other requests.</param>
+            <remarks>Only constructor.</remarks>
+        </member>
+        <member name="M:ININ.IceLib.Data.TransactionBuilder.TransactionClient.IntermediateWaitState.SetCompletedSynchronously">
+            <summary>
+            The request was satisfied without the need for an Asynchronous action.
+            </summary>
+            <remarks>Call this method to set IntermediateResult to true.</remarks>
+        </member>
+        <member name="M:ININ.IceLib.Data.TransactionBuilder.TransactionClient.IntermediateWaitState.WaitComplete(System.IAsyncResult)">
+            <summary>
+            Helper method to signal completion of an Asynchronous action.
+            about this asynchronous operation.
+            </summary>
+            <remarks>Signals completion of an Asynchronous action.</remarks>
+            <param name="p_Result"><see cref="T:System.IAsyncResult"/> object that holds state information.</param>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionClient.IntermediateWaitState.AsyncState">
+            <summary>
+            Gets or sets the AsyncState object
+            </summary>
+            <remarks>Access the state object.</remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionClient.IntermediateWaitState.AsyncWaitHandle">
+            <summary>
+            Gets the AsyncWaitHandle object
+            </summary>
+            <remarks>Access the AsyncWaitHandle object (Event).</remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionClient.IntermediateWaitState.CompletedSynchronously">
+            <summary>
+            Gets or sets the completed synchronously flag object
+            </summary>
+            <remarks>Access the state object.</remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionClient.IntermediateWaitState.IsCompleted">
+            <summary>
+            Gets or sets the is completed flag object
+            </summary>
+            <remarks>Check to see if the asynchronous has completed.</remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionClient.IntermediateWaitState.State">
+            <summary>
+            Gets or sets State.
+            </summary>
+            <remarks>A user-defined object that qualifies or contains information about an asynchronous operation.</remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionClient.IntermediateWaitState.Callback">
+            <summary>
+            Gets or sets the callback.
+            </summary>
+            <remarks>Method to be called when the asynchronous operation is completed.</remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionClient.IntermediateWaitState.Event">
+            <summary>
+            Gets or sets the Event.
+            </summary>
+            <remarks>Event associated with this asynchronous call.</remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionClient.IntermediateWaitState.Success">
+            <summary>
+            Gets or sets Success.
+            </summary>
+            <remarks>Indicates whether or not the asynchronous operation complete successfully.</remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionClient.IntermediateWaitState.IntermediateResult">
+            <summary>
+            Gets or sets IntermediateResult.
+            </summary>
+            <remarks>Object that holds state information for this asynchronous operation.</remarks>
+        </member>
+        <member name="M:ININ.IceLib.Data.TransactionBuilder.TransactionClient.ExecTranWaitState.#ctor(System.AsyncCallback,ININ.IceLib.Data.TransactionBuilder.TransactionData,System.Object)">
+            <summary>
+            Constructs an ExecTranWaitState object.
+            </summary>
+            <param name="callback">An asynchronous callback, to be called when the operation is complete.</param>
+            <param name="data"><see cref="T:ININ.IceLib.Data.TransactionBuilder.TransactionData"/> object that holds information about the transaction being executed.</param>
+            <param name="state">A user-provided object that distinguishes this particular asynchronous request from other requests.</param>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionClient.ExecTranWaitState.TransactionData">
+            <summary>
+            Gets or sets the <see cref="T:ININ.IceLib.Data.TransactionBuilder.TransactionData"/> for this ExecTranWaitState.
+            </summary>
+            <remarks>Contains parameter information that will be used during the transaction execution.</remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionClient.ExecTranWaitState.ResultString">
+            <summary>
+            Gets or sets the result string for this ExecTranWaitState.
+            </summary>
+            <remarks>The string that holds the response from Transaction Server.</remarks>
+        </member>
+        <member name="T:ININ.IceLib.Data.TransactionBuilder.ParameterDataType">
+            <summary>
+            Specifies constants indicating the data type of a transaction parameter.
+            </summary>
+            <remarks>
+            This enumeration is used by TransactionClient  during transaction execution to specify the data type of its transaction parameters.
+            </remarks>
+        </member>
+        <member name="F:ININ.IceLib.Data.TransactionBuilder.ParameterDataType.Integer">
+            <summary>An integer.</summary>
+        </member>
+        <member name="F:ININ.IceLib.Data.TransactionBuilder.ParameterDataType.IntegerNull">
+            <summary>A null integer.</summary>
+        </member>
+        <member name="F:ININ.IceLib.Data.TransactionBuilder.ParameterDataType.RowCountInteger">
+            <summary>A row count integer.</summary>
+        </member>
+        <member name="F:ININ.IceLib.Data.TransactionBuilder.ParameterDataType.RowCountIntegerNull">
+            <summary>A null row count integer.</summary>
+        </member>
+        <member name="F:ININ.IceLib.Data.TransactionBuilder.ParameterDataType.Boolean">
+            <summary>A bool.</summary>
+        </member>
+        <member name="F:ININ.IceLib.Data.TransactionBuilder.ParameterDataType.BooleanNull">
+            <summary>A null bool.</summary>
+        </member>
+        <member name="F:ININ.IceLib.Data.TransactionBuilder.ParameterDataType.String">
+            <summary>A string.</summary>
+        </member>
+        <member name="F:ININ.IceLib.Data.TransactionBuilder.ParameterDataType.StringNull">
+            <summary>A null string.</summary>
+        </member>
+        <member name="F:ININ.IceLib.Data.TransactionBuilder.ParameterDataType.Real">
+            <summary>A double.</summary>
+        </member>
+        <member name="F:ININ.IceLib.Data.TransactionBuilder.ParameterDataType.RealNull">
+            <summary>A null double.</summary>
+        </member>
+        <member name="F:ININ.IceLib.Data.TransactionBuilder.ParameterDataType.DateTime">
+            <summary>A datetime.</summary>
+        </member>
+        <member name="F:ININ.IceLib.Data.TransactionBuilder.ParameterDataType.DateTimeNull">
+            <summary>A null datetime.</summary>
+        </member>
+        <member name="T:ININ.IceLib.Data.TransactionBuilder.ParameterType">
+            <summary>
+            Specifies constants indicating the type of a transaction parameter.
+            </summary>
+            <remarks>
+            This enumeration is used by TransactionClient during transaction execution to specify the type of its transaction parameters.
+            </remarks>
+        </member>
+        <member name="F:ININ.IceLib.Data.TransactionBuilder.ParameterType.In">
+            <summary>An input.</summary>
+        </member>
+        <member name="F:ININ.IceLib.Data.TransactionBuilder.ParameterType.Out">
+            <summary>An output.</summary>
+        </member>
+        <member name="F:ININ.IceLib.Data.TransactionBuilder.ParameterType.InOut">
+            <summary>An input/output.</summary>
+        </member>
+        <member name="F:ININ.IceLib.Data.TransactionBuilder.ParameterType.Return">
+            <summary>A return code.</summary>
+        </member>
+        <member name="T:ININ.IceLib.Data.TransactionBuilder.TransactionRequestType">
+            <summary>
+            Specifies constants indicating the request type of a transaction.
+            </summary>
+            <remarks>
+            This enumeration is used by TransactionClient during transaction execution to specify the transaction request type.
+            </remarks>
+        </member>
+        <member name="F:ININ.IceLib.Data.TransactionBuilder.TransactionRequestType.None">
+            <summary>Transaction request type <i>none</i>.</summary>
+        </member>
+        <member name="F:ININ.IceLib.Data.TransactionBuilder.TransactionRequestType.Supported">
+            <summary>Transaction request type <i>supported</i>.</summary>
+        </member>
+        <member name="F:ININ.IceLib.Data.TransactionBuilder.TransactionRequestType.Requires">
+            <summary>Transaction request type <i>requires</i>.</summary>
+        </member>
+        <member name="F:ININ.IceLib.Data.TransactionBuilder.TransactionRequestType.Distributed">
+            <summary>Transaction request type <i>distributed</i>.</summary>
+        </member>
+        <member name="F:ININ.IceLib.Data.TransactionBuilder.TransactionRequestType.RequiresNewDistributed">
+            <summary>Transaction request type <i>requires new distributed</i>.</summary>
+        </member>
+        <member name="T:ININ.IceLib.Data.TransactionBuilder.TransactionIsolationType">
+            <summary>
+            Specifies constants indicating the isolation type of a transaction.
+            </summary>
+            <remarks>
+            This enumeration is used by TransactionClient during transaction execution to specify the transaction isolation type.
+            </remarks>
+        </member>
+        <member name="F:ININ.IceLib.Data.TransactionBuilder.TransactionIsolationType.Default">
+            <summary>Default.</summary>
+        </member>
+        <member name="F:ININ.IceLib.Data.TransactionBuilder.TransactionIsolationType.ReadUncommitted">
+            <summary>Read uncommitted.</summary>
+        </member>
+        <member name="F:ININ.IceLib.Data.TransactionBuilder.TransactionIsolationType.ReadCommitted">
+            <summary>Read committed.</summary>
+        </member>
+        <member name="F:ININ.IceLib.Data.TransactionBuilder.TransactionIsolationType.RepeatableRead">
+            <summary>Repeatable read.</summary>
+        </member>
+        <member name="F:ININ.IceLib.Data.TransactionBuilder.TransactionIsolationType.Serializable">
+            <summary>Serializable.</summary>
+        </member>
+        <member name="T:ININ.IceLib.Data.TransactionBuilder.ExtendedErrorCode">
+            <summary>
+            Specifies constants indicating the extented error codes for transaction execution failures.
+            </summary>
+            <remarks>
+            This enumeration is used by TransactionClient during transaction execution to specify the extented error codes for transaction execution failures.
+            </remarks>
+        </member>
+        <member name="F:ININ.IceLib.Data.TransactionBuilder.ExtendedErrorCode.Other">
+            <summary>Other.</summary>
+        </member>
+        <member name="F:ININ.IceLib.Data.TransactionBuilder.ExtendedErrorCode.Success">
+            <summary>Success.</summary>
+        </member>
+        <member name="F:ININ.IceLib.Data.TransactionBuilder.ExtendedErrorCode.RecordNotFound">
+            <summary>Record not found.</summary>
+        </member>
+        <member name="F:ININ.IceLib.Data.TransactionBuilder.ExtendedErrorCode.RecordChanged">
+            <summary>Record changed.</summary>
+        </member>
+        <member name="F:ININ.IceLib.Data.TransactionBuilder.ExtendedErrorCode.RecordDeactivated">
+            <summary>Record deactivated.</summary>
+        </member>
+        <member name="T:ININ.IceLib.Data.TransactionBuilder.TransactionData">
+            <summary>
+            Contains the configurable settings that a TransactionClient
+            uses when communicating with Transaction Server.
+            </summary>
+            <remarks>This class is used during the construction of the request string that
+            is sent to the Transaction Server.  It contains information that is necessary
+            for the execution of transactions.  The defaults are recommended in most cases.
+            </remarks>
+            <doccompleted/>
+        </member>
+        <member name="M:ININ.IceLib.Data.TransactionBuilder.TransactionData.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:ININ.IceLib.Data.TransactionBuilder.TransactionData"/> class.
+            </summary>
+            <remarks>Constructs a TransactionData object.</remarks>
+        </member>
+        <member name="M:ININ.IceLib.Data.TransactionBuilder.TransactionData.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:ININ.IceLib.Data.TransactionBuilder.TransactionData.Dispose(System.Boolean)">
+            <summary>
+            Releases the resources used by the Session.
+            </summary>
+            <param name="disposing">Indicates whether the object is in the process of being disposed of.</param>
+        </member>
+        <member name="M:ININ.IceLib.Data.TransactionBuilder.TransactionData.ToString">
+            <inheritdoc/>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionData.TransactionName">
+            <summary>
+            Gets or sets TransactionName.
+            </summary>
+            <value>The name of the transaction.</value>
+            <remarks>The TransactionName can be any string.</remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionData.ProcedureName">
+            <summary>
+            Gets or sets ProcedureName.
+            </summary>
+            <value>The name of the procedure.</value>
+            <remarks>The ProcedureName is the name of the stored procedure that will be
+            executed by Transaction Server.</remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionData.WarningMessage">
+            <summary>
+            Gets or sets WarningMessage.
+            </summary>
+            <value>The warning message.</value>
+            <remarks>The WarningMessage is a string containing the warning message
+            returned from Transaction Server in the event of a transaction execution failure.
+            It will give details (in a non-localized string) as to why the transaction
+            execution failed.
+            </remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionData.ReturnCode">
+            <summary>
+            Gets or sets ReturnCode.
+            </summary>
+            <value>The return code.</value>
+            <remarks>This is the return code of the transaction upon being executed.</remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionData.Parameters">
+            <summary>
+            Gets or sets Parameters.
+            </summary>
+            <value>The parameters.</value>
+            <remarks>The Parameters property allows access to the list of parameters that
+            are used for a transaction.  Before a transaction is executed, a list of
+            Parameters is constructed according to the requirements of that particular
+            transaction.  The list is contained in the <see cref="T:ININ.IceLib.Data.TransactionBuilder.TransactionData"/> object that is
+            passed to either the <see cref="M:ININ.IceLib.Data.TransactionBuilder.TransactionClient.Execute(ININ.IceLib.Data.TransactionBuilder.TransactionData@)"/>
+            method or the <see cref="M:ININ.IceLib.Data.TransactionBuilder.TransactionClient.ExecuteAsync(ININ.IceLib.Data.TransactionBuilder.TransactionData,System.EventHandler{ININ.IceLib.Data.TransactionBuilder.ExecuteCompletedEventArgs},System.Object)"/> method.
+            This list of parameters is also included in the request string that is sent to Transaction Server.
+            </remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionData.ResultSet">
+            <summary>
+            Gets or sets ResultSet.
+            </summary>
+            <value>The result set.</value>
+            <remarks>ResultSet contains the data that is returned after the execution of
+            a transaction.
+            </remarks>
+        </member>
+        <member name="T:ININ.IceLib.Internal.TransactionReturnCode">
+            <summary>
+            Specifies the possible return codes from a Session Manager request to execute a transaction.
+            </summary>
+            <remarks> This internal-only enum is used to check the return code during a Session.SendMessage.</remarks>
+        </member>
+        <member name="F:ININ.IceLib.Internal.TransactionReturnCode.Success">
+            <summary> Represents a successful transaction operation </summary>
+        </member>
+        <member name="F:ININ.IceLib.Internal.TransactionReturnCode.FailTrackerLicenseCheck">
+            <summary> Represents a transaction failure due to a missing Tracker license. </summary>
+        </member>
+        <member name="T:ININ.IceLib.Data.TransactionBuilder.TransactionParameter">
+            <summary>
+            Represents a paramter that is used for executing transactions.  Each transaction can have
+            multiple transaction parameters.
+            </summary>
+            <remarks>
+            Contains a <see cref="T:ININ.IceLib.Data.TransactionBuilder.ParameterType"/> (input, 
+            output, result set, etc.), a <see cref="T:ININ.IceLib.Data.TransactionBuilder.ParameterDataType"/> (integer, string, etc.)
+            and a (string) <b>Value</b>.
+            </remarks>
+            <doccompleted/>
+        </member>
+        <member name="M:ININ.IceLib.Data.TransactionBuilder.TransactionParameter.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:ININ.IceLib.Data.TransactionBuilder.TransactionParameter"/> class.
+            </summary>
+            <remarks>Only constructor provided.</remarks>
+        </member>
+        <member name="M:ININ.IceLib.Data.TransactionBuilder.TransactionParameter.ToString">
+            <inheritdoc/>
+        </member>
+        <member name="M:ININ.IceLib.Data.TransactionBuilder.TransactionParameter.SetNull">
+            <summary>
+            Sets <b>DataType</b> to the nulll type that corresponds to the current <b>DataType</b>
+            </summary>
+            <remarks>Call this method to change the <b>DataType</b> from Integer to IntegerNull or from 
+            String to StringNull, etc.
+            </remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionParameter.Type">
+            <summary>
+            Gets or sets the <see cref="T:ININ.IceLib.Data.TransactionBuilder.ParameterType"/>.
+            </summary>
+            <value>The type.</value>
+            <remarks>Can be any <see cref="T:ININ.IceLib.Data.TransactionBuilder.ParameterType"/>.</remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionParameter.DataType">
+            <summary>
+            Gets or sets the <see cref="T:ININ.IceLib.Data.TransactionBuilder.ParameterDataType"/>.
+            </summary>
+            <value>The data type.</value>
+            <remarks>Can be any <see cref="T:ININ.IceLib.Data.TransactionBuilder.ParameterDataType"/>.</remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionParameter.Value">
+            <summary>
+            Gets or sets the value.
+            </summary>
+            <value>The value.</value>
+            <remarks>Can be any string value.</remarks>
+        </member>
+        <member name="T:ININ.IceLib.Data.TransactionBuilder.TransactionSettingDefaults">
+            <summary>
+            Struct containing defaults used by <see cref="T:ININ.IceLib.Data.TransactionBuilder.TransactionSettings"/>.
+            </summary>
+            <remarks>When a <see cref="T:ININ.IceLib.Data.TransactionBuilder.TransactionSettings"/> object is
+            constructed, its members will be initialized using values from this struct.
+            </remarks>
+            <doccompleted/>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettingDefaults.UserId">
+            <summary>
+            Gets the default value for user ID.
+            </summary>
+            <value>The user ID.</value>
+            <remarks>Use this property when you want to reset the value of user ID
+            back to its default of <see cref="F:System.String.Empty"/>.</remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettingDefaults.FormatVersion">
+            <summary>
+            Gets the default value for format version.
+            </summary>
+            <value>The format version.</value>
+            <remarks>Use this property when you want to reset the value of FormatVersion
+            back to its default of <c>1</c>.</remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettingDefaults.TransactionServer">
+            <summary>
+            Gets the default value for Transaction Server.
+            </summary>
+            <value>The transaction server.</value>
+            <remarks>Use this property when you want to reset the value of Transaction
+            Server back to its default of <c>"TransactionServer"</c>.</remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettingDefaults.ClientNet">
+            <summary>
+            Gets the default value for client net.
+            </summary>
+            <value>The client net.</value>
+            <remarks>Use this property when you want to reset the value of
+            client net back to its default of <c>"{6EC724FF-B9B5-445e-8927-EB329EE35F8E}"</c>.</remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettingDefaults.Provider">
+            <summary>
+            Gets the default value for provider.
+            </summary>
+            <value>The provider.</value>
+            <remarks>Use this property when you want to reset the value of provider
+            back to its default of <c>"ININ.I3DBTranSPProvider.1"</c>.</remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettingDefaults.ConnectionInformation">
+            <summary>
+            Gets the default value for connection information.
+            </summary>
+            <value>The connection information.</value>
+            <remarks>Use this property when you want to reset the value of connection
+            information back to its default of <see cref="F:System.String.Empty"/>.</remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettingDefaults.Catalog">
+            <summary>
+            Gets the default value for catalog.
+            </summary>
+            <value>The catalog.</value>
+            <remarks>Use this property when you want to reset the value of catalog
+            back to its default of <see cref="F:System.String.Empty"/>.</remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettingDefaults.Schema">
+            <summary>
+            Gets the default value for schema.
+            </summary>
+            <value>The schema.</value>
+            <remarks>Use this property when you want to reset the value of schema
+            back to its default of <see cref="F:System.String.Empty"/>.</remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettingDefaults.ServerInfo">
+            <summary>
+            Gets the default value for server info.
+            </summary>
+            <value>The server info.</value>
+            <remarks>Use this property when you want to reset the value of server info
+            back to its default of <see cref="F:System.String.Empty"/>.</remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettingDefaults.AdditionalInformation">
+            <summary>
+            Gets the default value for additional info.
+            </summary>
+            <value>The additional information.</value>
+            <remarks>Use this property when you want to reset the value of additional
+            info back to its default of <see cref="F:System.String.Empty"/>.</remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettingDefaults.TransactionId">
+            <summary>
+            Gets the default value for transaction ID.
+            </summary>
+            <value>The transaction ID.</value>
+            <remarks>Use this property when you want to reset the value of Transaction
+            ID back to its default of <see cref="F:System.String.Empty"/>.</remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettingDefaults.ReadOnly">
+            <summary>
+            Gets the default value for read only.
+            </summary>
+            <value><c>true</c> if read only; otherwise, <c>false</c>.</value>
+            <remarks>Use this property when you want to reset the value of read only
+            back to its default of <c>true</c>.</remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettingDefaults.Asynchronous">
+            <summary>
+            Gets the default value for asynchronous.
+            </summary>
+            <value><c>true</c> if asynchronous; otherwise, <c>false</c>.</value>
+            <remarks>Use this property when you want to reset the value of asynchronous
+            back to its default.
+            <note>The asynchronous property of the
+            <see cref="T:ININ.IceLib.Data.TransactionBuilder.TransactionSettings"/>
+            class can only be set to the default of <c>false</c>.</note>
+            </remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettingDefaults.IncludeParameterMetadata">
+            <summary>
+            Gets the default value for include parameter metadata.
+            </summary>
+            <value>
+            	<c>true</c> if should include parameter metadata; otherwise, <c>false</c>.
+            </value>
+            <remarks>Use this property when you want to reset the value of
+            include parameter metadata back to its default of <c>false</c>.</remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettingDefaults.IncludeRowSetMetadata">
+            <summary>
+            Gets the default value for include row set metadata.
+            </summary>
+            <value>
+            	<c>true</c> if should include row set metadata; otherwise, <c>false</c>.
+            </value>
+            <remarks>Use this property when you want to reset the value of
+            include row set metadata back to its default of <c>false</c>.</remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettingDefaults.Timeout">
+            <summary>
+            Gets the default value for timeout.
+            </summary>
+            <value>The timeout.</value>
+            <remarks>Use this property when you want to reset the value of timeout
+            back to its default of <c>60</c>.</remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettingDefaults.RowLimit">
+            <summary>
+            Gets the default value for row limit.
+            </summary>
+            <value>The row limit.</value>
+            <remarks>Use this property when you want to reset the value of row limit
+            back to its default of <c>1000</c>.</remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettingDefaults.RequestType">
+            <summary>
+            Gets the default value for request type.
+            </summary>
+            <value>The type of the request.</value>
+            <remarks>Use this property when you want to reset the value of
+            request type back to its default of <see cref="F:ININ.IceLib.Data.TransactionBuilder.TransactionRequestType.Supported"/>.</remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettingDefaults.IsolationType">
+            <summary>
+            Gets the default value for isolation type.
+            </summary>
+            <value>The isolation type.</value>
+            <remarks>Use this property when you want to reset the value of
+            isolation type back to its default of <see cref="F:ININ.IceLib.Data.TransactionBuilder.TransactionIsolationType.ReadCommitted"/>.</remarks>
+        </member>
+        <member name="T:ININ.IceLib.Data.TransactionBuilder.TransactionSettings">
+            <summary>
+            Contains the settings used for communcation with the Transaction Server.
+            </summary>
+            <remarks>A <see cref="T:ININ.IceLib.Data.TransactionBuilder.TransactionClient"/> contains a
+            <c>TransactionSettings</c> data member.  The values contained within this
+            <c>TransactionSettings</c> are included in the request string that is sent to
+            Transaction Server.
+            </remarks>
+            <doccompleted/>
+        </member>
+        <member name="M:ININ.IceLib.Data.TransactionBuilder.TransactionSettings.#ctor">
+            <summary>
+            Constructs a TransactionSettings object.
+            </summary>
+            <remarks>The only constructor.  The TransactionSettings object will be initialized
+            with the values stored in the <see cref="T:ININ.IceLib.Data.TransactionBuilder.TransactionSettingDefaults"/>
+            struct.
+            </remarks>
+        </member>
+        <member name="M:ININ.IceLib.Data.TransactionBuilder.TransactionSettings.ToString">
+            <summary>
+            Returns a string representation of TransactionSettings
+            </summary>
+            <returns>The transaction settings</returns>
+        </member>
+        <member name="M:ININ.IceLib.Data.TransactionBuilder.TransactionSettings.Reset">
+            <summary>
+            This method sets all transaction settings back to the default settings.
+            </summary>
+            <remarks>Call this method to restore the transaction settings to the default settings.
+            The default settings are contained in the 
+            <see cref="T:ININ.IceLib.Data.TransactionBuilder.TransactionSettingDefaults"/> struct.
+            </remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettings.UserId">
+            <summary>
+            Gets or sets the user ID.
+            </summary>
+            <value>The user ID.</value>
+            <remarks>Specifies user ID to associate with the transaction.</remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettings.FormatVersion">
+            <summary>
+            Gets or sets the format version.
+            </summary>
+            <value>The format version.</value>
+            <remarks>Specifies version number of the request/response strings.  Unlikely to change very often.</remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettings.ClientNet">
+            <summary>
+            Gets or sets ClientNet.
+            </summary>
+            <value>The client net.</value>
+            <remarks>GUID representing the client net to use.  The default should be used in most cases.</remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettings.Provider">
+            <summary>
+            Gets or sets the provider.
+            </summary>
+            <value>The provider.</value>
+            <remarks>Specifies which provider should be used by the Transaction Server to
+            process the request contained in the transaction.  Example:  ININ.I3DBTranSPProvider.1
+            </remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettings.ConnectionInformation">
+            <summary>
+            Gets or sets the connection information.
+            </summary>
+            <value>The connection information.</value>
+            <remarks>
+            <para>Contains the data source string used for executing transactions that
+            contain data base operations.  Example:  <c>ICDS:IC Tracker</c></para>
+            <para>If the value is <see cref="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettingDefaults.ConnectionInformation">TransactionSettingDefaults.ConnectionInformation</see>,
+            for both the Transaction and Global settings of the TransactionClient, then <see cref="M:ININ.IceLib.Data.TransactionBuilder.TransactionClient.GetDefaultConnectionInformation"/>
+            will be called at Transaction exceution time to determine the connection information.</para>
+            </remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettings.Catalog">
+            <summary>
+            Gets or sets the catalog.
+            </summary>
+            <value>The catalog.</value>
+            <remarks>Contains the catelog to be used for executing transactions that
+            contain data base operations.  The default is the empty string.
+            It's ok to leave it empty.
+            </remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettings.Schema">
+            <summary>
+            Gets or sets the schema.
+            </summary>
+            <value>The schema.</value>
+            <remarks>Contains the schema to be used for executing transactions that
+            contain data base operations.
+            The default is the empty string.  It's ok to leave it empty.
+            </remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettings.Timeout">
+            <summary>
+            Gets or sets the timeout (in seconds).
+            </summary>
+            <value>The timeout.</value>
+            <remarks>Specifies how long (in seconds)the Transaction Server should wait for a transaction to
+            complete before considering it hung and returning to the caller.  The default is 60.
+            </remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettings.ReadOnly">
+            <summary>
+            Gets or sets the read-only flag.
+            </summary>
+            <value><c>true</c> if read only; otherwise, <c>false</c>.</value>
+            <remarks>Is this transaction a read-only operation?
+            </remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettings.TransactionId">
+            <summary>
+            Gets or sets the transaction ID.
+            </summary>
+            <value>The transaction ID.</value>
+            <remarks>The transaction ID of this transaction.
+            The default is the empty string.  It's ok to leave it empty.
+            </remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettings.IncludeParameterMetadata">
+            <summary>
+            Gets or sets the include parameter metadata flag.
+            </summary>
+            <value>
+            	<c>true</c> if should include parameter metadata; otherwise, <c>false</c>.
+            </value>
+            <remarks>Should parameter metadata be included in this transaction?
+            Leave this at the default (<c>false</c>) for all transactions.
+            </remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettings.RequestType">
+            <summary>
+            Gets or sets the request type of this transaction.
+            </summary>
+            <value>The type of the request.</value>
+            <remarks>Contains a <see cref="T:ININ.IceLib.Data.TransactionBuilder.TransactionRequestType"/> object.
+            </remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettings.IsolationType">
+            <summary>
+            Gets or sets the isolation type of this transaction.
+            </summary>
+            <value>The isolation type.</value>
+            <remarks>Contains a <see cref="T:ININ.IceLib.Data.TransactionBuilder.TransactionIsolationType"/> object.
+            </remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettings.IncludeRowSetMetadata">
+            <summary>
+            Gets or sets the row set metadata flag.
+            </summary>
+            <value>
+            	<c>true</c> if should include row set metadata; otherwise, <c>false</c>.
+            </value>
+            <remarks>Should row set metadata be included in this transaction?
+            Leave this at the default (<c>false</c>) for all transactions.
+            </remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettings.ServerInfo">
+            <summary>
+            Gets or sets the server info for this transaction.
+            </summary>
+            <value>The server info.</value>
+            <remarks>The default is the empty string.  It's ok to leave it empty.</remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettings.AdditionalInformation">
+            <summary>
+            Gets or sets the additional info for this transaction.
+            </summary>
+            <value>The additional information.</value>
+            <remarks>The default is the empty string.  It's ok to leave it empty.</remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettings.Asynchronous">
+            <summary>
+            Gets asynchronous flag.
+            </summary>
+            <value><c>true</c> if asynchronous; otherwise, <c>false</c>.</value>
+            <remarks>This flag is there for legacy reasons.  It will always be <c>false</c>.
+            However, that does not mean that asynchronous operations are not supported.
+            They are.  For details, please see the documentation on <see cref="T:ININ.IceLib.Data.TransactionBuilder.TransactionClient"/>.
+            </remarks>
+        </member>
+        <member name="P:ININ.IceLib.Data.TransactionBuilder.TransactionSettings.RowLimit">
+            <summary>
+            Gets or sets the row limit for this transaction.
+            </summary>
+            <value>The row limit.</value>
+            <remarks>The default is 1000.</remarks>
+        </member>
+        <member name="T:ININ.IceLib.Data.TransactionBuilder.RecordNotFoundException">
+            <summary>
+            Represents a RecordNotFound error.
+            </summary>
+            <remarks>Throw this exception when a requested data record cannot be found.</remarks>
+            <doccompleted/>
+        </member>
+        <member name="M:ININ.IceLib.Data.TransactionBuilder.RecordNotFoundException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:ININ.IceLib.Data.TransactionBuilder.RecordNotFoundException"/> class.
+            </summary>
+            <remarks>Loads the localized error string and passes it to the base constructor.</remarks>
+        </member>
+        <member name="T:ININ.IceLib.Data.NamespaceDoc">
+            <summary>
+            <para>The <b>ININ.IceLib.Data</b> namespace contains classes for manipulating Interaction Center data.</para>
+            </summary>
+            <remarks>At this time the <see cref="N:ININ.IceLib.Data"/> namespace only contains the 
+            <see cref="N:ININ.IceLib.Data.TransactionBuilder"/> namespace.
+            </remarks>
+        </member>
+        <member name="T:ININ.IceLib.Data.TransactionBuilder.NamespaceDoc">
+            <summary>
+            <para>The <b>ININ.IceLib.Data.TransactionBuilder</b> namespace contains classes necessary for client 
+            applications to execute transactions remotely through Transaction Server.</para>
+            <para>The primary class used in the <b>ININ.IceLib.Data.TransactionBuilder</b> namespace is 
+            the <see cref="T:ININ.IceLib.Data.TransactionBuilder.TransactionClient"/> class.
+            </para>
+            <para>The classes in the TransactionBuilder can be used in a .Net application to execute
+            custom transactions.  The <b>ININ.IceLib.Tracker</b> namespace contains an API for accessing
+            and manipulating Interaction Tracker data.  The classes and methods in the <b>ININ.IceLib.Tracker.</b>
+            namespace use the classes in the <see cref="N:ININ.IceLib.Data.TransactionBuilder"/> namespace as a middle tier.  It provides the
+            communication later that is used to execute the remote stored procedures via TransactionServer.
+            </para>
+            </summary>
+        </member>
+    </members>
+</doc>
