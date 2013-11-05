@@ -1,6 +1,5 @@
 ﻿using ININ.IceLib.Connection;
 using ININ.IceLib.Interactions;
-using ININ.IceLib.Interactions.InteractionsManager;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
