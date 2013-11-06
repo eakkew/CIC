@@ -92,7 +92,9 @@
             this.Controls.Add(this.transfer_button);
             this.Controls.Add(this.call_button);
             this.Name = "frmTransfer";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "frmTransfer";
+            this.TopMost = true;
             this.ResumeLayout(false);
             this.PerformLayout();
 

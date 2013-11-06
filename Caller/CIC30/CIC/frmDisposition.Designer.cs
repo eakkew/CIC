@@ -71,7 +71,9 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "frmDisposition";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Disposition";
+            this.TopMost = true;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmDisposition_FormClosed);
             this.ResumeLayout(false);
             this.PerformLayout();

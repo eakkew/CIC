@@ -49,32 +49,32 @@
             this.viewRemoteVideoToolStripMenuItem,
             this.portSettingToolStripMenuItem});
             this.popMnuVideo.Name = "popMnuVideo";
-            this.popMnuVideo.Size = new System.Drawing.Size(172, 92);
+            this.popMnuVideo.Size = new System.Drawing.Size(185, 92);
             // 
             // cameraSettingToolStripMenuItem
             // 
             this.cameraSettingToolStripMenuItem.Name = "cameraSettingToolStripMenuItem";
-            this.cameraSettingToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.cameraSettingToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.cameraSettingToolStripMenuItem.Text = "Camera Setting";
             // 
             // viewLocalVideoToolStripMenuItem
             // 
             this.viewLocalVideoToolStripMenuItem.Name = "viewLocalVideoToolStripMenuItem";
-            this.viewLocalVideoToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.viewLocalVideoToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.viewLocalVideoToolStripMenuItem.Text = "Remote/ Local Video";
             this.viewLocalVideoToolStripMenuItem.Click += new System.EventHandler(this.viewLocalVideoToolStripMenuItem_Click);
             // 
             // viewRemoteVideoToolStripMenuItem
             // 
             this.viewRemoteVideoToolStripMenuItem.Name = "viewRemoteVideoToolStripMenuItem";
-            this.viewRemoteVideoToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.viewRemoteVideoToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.viewRemoteVideoToolStripMenuItem.Text = "Start/Stop Camera";
             this.viewRemoteVideoToolStripMenuItem.Click += new System.EventHandler(this.viewRemoteVideoToolStripMenuItem_Click);
             // 
             // portSettingToolStripMenuItem
             // 
             this.portSettingToolStripMenuItem.Name = "portSettingToolStripMenuItem";
-            this.portSettingToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.portSettingToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.portSettingToolStripMenuItem.Text = "Port Setting";
             // 
             // MyipcamVideo
@@ -126,7 +126,9 @@
             this.Controls.Add(this.MyipcamVideo);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmCamera";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Camera";
+            this.TopMost = true;
             this.Load += new System.EventHandler(this.frmCamera_Load);
             this.popMnuVideo.ResumeLayout(false);
             this.ResumeLayout(false);

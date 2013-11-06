@@ -62,7 +62,9 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmIVRList";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Customer History";
+            this.TopMost = true;
             this.Load += new System.EventHandler(this.frmIVRList_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

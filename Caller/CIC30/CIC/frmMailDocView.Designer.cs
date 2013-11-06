@@ -103,7 +103,7 @@
             this.toolStripLabel3});
             this.StatusToolStrip.Location = new System.Drawing.Point(3, 0);
             this.StatusToolStrip.Name = "StatusToolStrip";
-            this.StatusToolStrip.Size = new System.Drawing.Size(116, 25);
+            this.StatusToolStrip.Size = new System.Drawing.Size(114, 25);
             this.StatusToolStrip.TabIndex = 0;
             this.StatusToolStrip.Text = "toolStrip6";
             // 
@@ -111,7 +111,7 @@
             // 
             this.toolStripLabel3.Image = global::CIC.Properties.Resources.information;
             this.toolStripLabel3.Name = "toolStripLabel3";
-            this.toolStripLabel3.Size = new System.Drawing.Size(104, 22);
+            this.toolStripLabel3.Size = new System.Drawing.Size(102, 22);
             this.toolStripLabel3.Text = "toolStripLabel3";
             // 
             // MailsplitContainer
@@ -166,7 +166,7 @@
             this.btnClose});
             this.BtnToolStrip.Location = new System.Drawing.Point(3, 0);
             this.BtnToolStrip.Name = "BtnToolStrip";
-            this.BtnToolStrip.Size = new System.Drawing.Size(301, 25);
+            this.BtnToolStrip.Size = new System.Drawing.Size(298, 25);
             this.BtnToolStrip.TabIndex = 4;
             // 
             // btnSend
@@ -174,7 +174,7 @@
             this.btnSend.Image = global::CIC.Properties.Resources.Pager1;
             this.btnSend.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnSend.Name = "btnSend";
-            this.btnSend.Size = new System.Drawing.Size(55, 22);
+            this.btnSend.Size = new System.Drawing.Size(53, 22);
             this.btnSend.Text = "Send";
             // 
             // btnNew
@@ -182,7 +182,7 @@
             this.btnNew.Image = global::CIC.Properties.Resources.pencil;
             this.btnNew.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnNew.Name = "btnNew";
-            this.btnNew.Size = new System.Drawing.Size(52, 22);
+            this.btnNew.Size = new System.Drawing.Size(51, 22);
             this.btnNew.Text = "New";
             // 
             // btnForward
@@ -190,7 +190,7 @@
             this.btnForward.Image = global::CIC.Properties.Resources.OutOfOffice;
             this.btnForward.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnForward.Name = "btnForward";
-            this.btnForward.Size = new System.Drawing.Size(71, 22);
+            this.btnForward.Size = new System.Drawing.Size(70, 22);
             this.btnForward.Text = "Forward";
             // 
             // btnReply
@@ -206,7 +206,7 @@
             this.btnClose.Image = global::CIC.Properties.Resources.Unlock;
             this.btnClose.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(55, 22);
+            this.btnClose.Size = new System.Drawing.Size(56, 22);
             this.btnClose.Text = "Close";
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
@@ -301,13 +301,13 @@
             this.txtSubject});
             this.SubjectToolStrip.Location = new System.Drawing.Point(3, 100);
             this.SubjectToolStrip.Name = "SubjectToolStrip";
-            this.SubjectToolStrip.Size = new System.Drawing.Size(563, 25);
+            this.SubjectToolStrip.Size = new System.Drawing.Size(560, 25);
             this.SubjectToolStrip.TabIndex = 5;
             // 
             // toolStripLabel2
             // 
             this.toolStripLabel2.Name = "toolStripLabel2";
-            this.toolStripLabel2.Size = new System.Drawing.Size(49, 22);
+            this.toolStripLabel2.Size = new System.Drawing.Size(46, 22);
             this.toolStripLabel2.Text = "Subject";
             // 
             // txtSubject
@@ -325,7 +325,9 @@
             this.Controls.Add(this.toolStripContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmMailDocView";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Email Viewer";
+            this.TopMost = true;
             this.toolStripContainer1.BottomToolStripPanel.ResumeLayout(false);
             this.toolStripContainer1.BottomToolStripPanel.PerformLayout();
             this.toolStripContainer1.ContentPanel.ResumeLayout(false);

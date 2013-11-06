@@ -83,7 +83,9 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "frmManualCall";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Manual Call";
+            this.TopMost = true;
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -92,7 +92,9 @@
             this.Controls.Add(this.conference_button);
             this.Controls.Add(this.call_button);
             this.Name = "frmConference";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "frmConference";
+            this.TopMost = true;
             this.ResumeLayout(false);
             this.PerformLayout();
 
