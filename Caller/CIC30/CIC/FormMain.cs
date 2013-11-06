@@ -117,9 +117,15 @@ namespace CIC
 
         private void manual_call_button_Click(object sender, EventArgs e)
         {
-            frmManualCall manualCall = new frmManualCall(IC_Session, NormalInterationManager);
-            manualCall.Show();
-            
+            if (this.IsLoggedIntoDialer)
+            {
+                frmManualCall manualCall = new frmManualCall(IC_Session, NormalInterationManager);
+                manualCall.Show();
+            }
+            else
+            {
+
+            }
             state_change(FormMainState.ManualCall);
         }
 
