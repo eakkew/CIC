@@ -32,8 +32,8 @@ namespace CIC
       public static CIC.ICStation IcStation = null;
       public static CIC.frmICStation mICStation = null;
       public static ININ.IceLib.Dialer.DialingManager mDialingManager = null;
-      public static CIC.frmMain MainApp = null;
-      //public static CIC.FormMain MainApp = null;
+      //public static CIC.frmMain MainApp = null;
+      public static CIC.FormMain MainDashboard = null;
       public static CIC.frmWorkflow Workflow = null;
       public static ININ.IceLib.Dialer.DialingManager DialingManager
       {
@@ -126,20 +126,11 @@ namespace CIC
                   }
                   if (global::CIC.Program.SessionLogInResult == CIC.Utils.LoginResult.Success)
                   {
-                      Workflow = new CIC.frmWorkflow();
-                      WorkflowFormClosed = false;
-                      Workflow.Show();
-
-                      while (!global::CIC.Program.WorkflowFormClosed)
-                      {
-                          Application.DoEvents();
-                      }
-
                       m_Session.Disconnect();
                       m_Session = null;
-                      MainApp = new CIC.frmMain();
-                      //MainApp = new CIC.FormMain();
-                      Application.Run(MainApp);
+                      //MainApp = new CIC.frmMain();
+                      MainDashboard = new CIC.FormMain();
+                      Application.Run(MainDashboard);
                   }
                   m_Session.Disconnect();
                   Tracing.TraceNote("CIC::Program::Main()::Disconnecting from Session Manager.");
