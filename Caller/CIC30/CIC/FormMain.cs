@@ -105,7 +105,7 @@ namespace CIC
         {
             state_info_label.Text = "Disconnected from: " + calling_phone;
             frmDisposition disposition = new frmDisposition();
-            disposition.Show();
+            disposition.ShowDialog();
             state_change(FormMainState.Disconnect);
         }
 
@@ -123,7 +123,7 @@ namespace CIC
         {
             transfer_complete = false;
             frmTransfer transfer = new frmTransfer();
-            transfer.Show();
+            transfer.ShowDialog();
             // check if there is still a connection or if transfer complete.
             if (transfer_complete)
             {
@@ -134,7 +134,7 @@ namespace CIC
         private void conference_button_Click(object sender, EventArgs e)
         {
             frmConference conference = new frmConference();
-            conference.Show();
+            conference.ShowDialog();
         }
 
         private void manual_call_button_Click(object sender, EventArgs e)
@@ -143,7 +143,7 @@ namespace CIC
             {
                 //MessageBox.Show("Please logged into dialer first");
                 frmManualCall manualCall = new frmManualCall(IC_Session, NormalInterationManager);
-                manualCall.Show();
+                manualCall.ShowDialog();
                 state_change(FormMainState.ManualCall);
             }
             else
