@@ -50,6 +50,7 @@ namespace CIC
         public FormMain()
         {
             InitializeComponent();
+            this.IsActiveConnection = true; // FIXME: remove the placeholder
             this.workflow_button_Click(null, EventArgs.Empty);
         }
 
@@ -70,7 +71,7 @@ namespace CIC
         {
             if (this.IsActiveConnection)
             {
-                frmWorkflow workflow = new CIC.frmWorkflow();
+                frmWorkflow workflow = new CIC.frmWorkflow(this.IC_Session);
                 workflow.Show();
             }
             else
@@ -249,8 +250,8 @@ namespace CIC
             {
                 // TODO: goto logout state
                 //Tracing.TraceStatus(scope + "Error info.Logon to Workflow[" + ((ToolStripMenuItem)sender).Text + "] : " + ex.Message);
-                System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info.Logon to Workflow[" + ((ToolStripMenuItem)sender).Text + "] : " + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
-            }   
+                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info.Logon to Workflow[" + ((ToolStripMenuItem)sender).Text + "] : " + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+            }  
         }
 
         private void ShowActiveCallInfo()

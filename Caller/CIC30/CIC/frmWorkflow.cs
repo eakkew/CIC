@@ -15,7 +15,7 @@ namespace CIC
     {
         private string[] Workflows;
 
-        public frmWorkflow()
+        private frmWorkflow()
         {
 
         }
@@ -24,6 +24,7 @@ namespace CIC
         {
             string scope = "CIC::MainForm::LoginToolStripMenuItem_DropDownOpening()::";
             Tracing.TraceStatus(scope + "Starting.");
+            InitializeComponent();
             try
             {
                 Program.Initialize(IC_Session);
@@ -53,11 +54,17 @@ namespace CIC
                 System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
                 MessageBox.Show(output, "CIC Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+            catch (Exception e)
+            {
+                string output = String.Format("Something really bad happened: {0}", e.Message);
+                MessageBox.Show(output, "CIC Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
         private void login_button_Click(object sender, EventArgs e)
         {
             //do stuff to select workflow
+            Program.MainDashboard.workflow_invoke(sender, e);
             this.Close();
         }
 
@@ -69,7 +76,6 @@ namespace CIC
 
         private void frmWorkflow_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Program.MainDashboard.workflow_invoke(sender, e);
         }
     }
 }
