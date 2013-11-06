@@ -29,9 +29,12 @@ namespace CIC
     {
         private bool break_requested { get; set; }
         private bool IsLoggedIntoDialer { get; set; }
+        private bool IsActiveConnection { get; set; }
 
+        private ICWorkFlow IcWorkFlow = null;
         private ININ.IceLib.Connection.Session IC_Session = null;
         private ININ.IceLib.Dialer.DialerCallInteraction ActiveDialerInteration = null;
+        private ININ.IceLib.Dialer.DialerSession DialerSession = null;
         private ININ.IceLib.Interactions.InteractionsManager NormalInterationManager = null;
         private FormMainState prev_state = FormMainState.Preview;
         private FormMainState current_state = FormMainState.Preview;
@@ -65,8 +68,15 @@ namespace CIC
 
         private void workflow_button_Click(object sender, EventArgs e)
         {
-            frmWorkflow workflow = new CIC.frmWorkflow();
-            workflow.Show();
+            if (this.IsActiveConnection)
+            {
+                frmWorkflow workflow = new CIC.frmWorkflow();
+                workflow.Show();
+            }
+            else
+            {
+
+            }
         }
 
         private void call_button_Click(object sender, EventArgs e)
@@ -201,6 +211,60 @@ namespace CIC
                 //Tracing.TraceStatus(scope + "Error info." + ex.Message);
                 System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
             }
+        }
+        
+        public void workflow_invoke(object sender, EventArgs e)
+        {
+            string scope = "CIC::MainForm::WorkflowToolStripMenuItem_Click()::";
+            //Tracing.TraceStatus(scope + "Starting.");
+            try
+            {
+                //Tracing.TraceStatus(scope + "Logging into workflow. UserId=" + this.IC_Session.UserId + ", StationId=" + this.IC_Session.GetStationInfo().Id);
+                this.IcWorkFlow = new CIC.ICWorkFlow(CIC.Program.DialingManager);
+                this.DialerSession = IcWorkFlow.LogIn(((ToolStripMenuItem)sender).Text);
+                this.IsLoggedIntoDialer = this.IcWorkFlow.LoginResult;
+                if (this.IsLoggedIntoDialer == true)
+                {
+                    this.RegisterHandlers();
+                    this.Initial_ActityCodes();
+
+                    this.InitializeStatusMessageDetails();
+                    //Tracing.TraceStatus(scope + "Completed.");
+                    // TODO: change state to something
+                }
+                else
+                {
+                    // TODO: goto logout state
+                    //Tracing.TraceStatus(scope + "WorkFlow [" + ((ToolStripMenuItem)sender).Text + "] logon Fail.Please try again.");
+                }
+                this.ShowActiveCallInfo();
+            }
+            catch (System.Exception ex)
+            {
+                // TODO: goto logout state
+                //Tracing.TraceStatus(scope + "Error info.Logon to Workflow[" + ((ToolStripMenuItem)sender).Text + "] : " + ex.Message);
+                System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info.Logon to Workflow[" + ((ToolStripMenuItem)sender).Text + "] : " + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+            }   
+        }
+
+        private void ShowActiveCallInfo()
+        {
+            // TODO: copy function from frmMain to here
+        }
+
+        private void InitializeStatusMessageDetails()
+        {
+            // TODO: copy function from frmMain to here
+        }
+
+        private void Initial_ActityCodes()
+        {
+            // TODO: copy function from frmMain to here
+        }
+
+        private void RegisterHandlers()
+        {
+            // TODO: copy function from frmMain to here
         }
 
         private void exit_button_Click(object sender, EventArgs e)
@@ -433,5 +497,6 @@ namespace CIC
                 }
             }
         }
+
     }
 }

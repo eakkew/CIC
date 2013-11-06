@@ -1,4 +1,5 @@
 ﻿using ININ.IceLib;
+using ININ.IceLib.Connection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,39 +17,42 @@ namespace CIC
 
         public frmWorkflow()
         {
-            InitializeComponent();
-            // load up workflows into combobox
+
+        }
+
+        public frmWorkflow(Session IC_Session)
+        {
+            string scope = "CIC::MainForm::LoginToolStripMenuItem_DropDownOpening()::";
+            Tracing.TraceStatus(scope + "Starting.");
             try
             {
-                this.Workflows = Program.DialingManager.GetAvailableWorkflows();
+                Program.Initialize(IC_Session);
+                string[] workflows = Program.DialingManager.GetAvailableWorkflows();
+                workflow_combobox.Items.Clear();
+                if (workflows.Length > 0)
+                {
+                    foreach (string workflow in workflows)
+                    {
+                        //ToolStripMenuItem menu = new ToolStripMenuItem((string)workflow, null, WorkflowToolStripMenuItem_Click);
+                        //menu.Image = global::CIC.Properties.Resources.pin_green;
+                        this.workflow_combobox.Items.Add(workflow);
+                    }
+                }
+                else
+                {
+                    ToolStripMenuItem menu = new ToolStripMenuItem("No Workflows Available");
+                    menu.Enabled = false;
+                    this.workflow_combobox.Items.Add(menu);
+                }
+                Tracing.TraceStatus(scope + "Completed.");
             }
-            catch (System.Exception ex)
+            catch (ININ.IceLib.IceLibException ex)
             {
                 string output = String.Format("Cannot retrieving available workflows: {0}", ex.Message);
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
-                //MessageBox.Show(output, "CIC Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                MessageBox.Show(output, "CIC Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            workflow_combobox.Items.Clear();
-
-
-            if (workflow_combobox.Items.Count > 0)
-            {
-                workflow_combobox.Enabled = true;
-                foreach (string workflow in this.Workflows)
-                {
-                    workflow_combobox.Items.Add(workflow);
-                }
-
-            }
-            else
-            {
-                workflow_combobox.Items.Add("No workflows available");
-                workflow_combobox.SelectedIndex = 0;
-                workflow_combobox.Enabled = false;
-            }
-            
-
         }
 
         private void login_button_Click(object sender, EventArgs e)
@@ -65,7 +69,7 @@ namespace CIC
 
         private void frmWorkflow_FormClosed(object sender, FormClosedEventArgs e)
         {
-            global::CIC.Program.WorkflowFormClosed = true;
+            Program.MainDashboard.workflow_invoke(sender, e);
         }
     }
 }
