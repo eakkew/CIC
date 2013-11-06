@@ -47,6 +47,7 @@ namespace CIC
         public FormMain()
         {
             InitializeComponent();
+            this.workflow_button_Click(null, EventArgs.Empty);
         }
 
         private void reset_timer()
@@ -69,14 +70,20 @@ namespace CIC
         }
 
         private void call_button_Click(object sender, EventArgs e)
-        {
-            //change state
-            name1_panel.BackColor = Color.Yellow;
-            
-            reset_timer();
-            state_info_label.Text = "Calling: " + calling_phone;
+        {   
+            if (this.IsLoggedIntoDialer)
+            {
+                //change state from workflow.
+                name1_panel.BackColor = Color.Yellow;
+                reset_timer();
+                state_info_label.Text = "Calling: " + calling_phone;
 
-            state_change(FormMainState.Calling);
+                state_change(FormMainState.Calling);
+            }
+            else
+            {
+
+            }
         }
 
         private void disconnect_button_Click(object sender, EventArgs e)

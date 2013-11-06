@@ -95,7 +95,9 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "frmWorkflow";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Select Workflow";
+            this.TopMost = true;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmWorkflow_FormClosed);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
