@@ -27,7 +27,6 @@ namespace CIC
       private static string SoftPhoneStationNameKey = "Station";
       public static ININ.IceLib.Connection.Session m_Session = null;
       public static bool LogInFormClosed = true;
-      public static bool WorkflowFormClosed = true;
       public static global::CIC.LoginParams mLoginParam = null;
       public static CIC.ICStation IcStation = null;
       public static CIC.frmICStation mICStation = null;
