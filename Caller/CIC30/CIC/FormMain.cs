@@ -119,14 +119,20 @@ namespace CIC
         {
             if (this.IsLoggedIntoDialer)
             {
+                //MessageBox.Show("Please logged into dialer first");
                 frmManualCall manualCall = new frmManualCall(IC_Session, NormalInterationManager);
                 manualCall.Show();
+                state_change(FormMainState.ManualCall);
             }
             else
             {
-
-            }
-            state_change(FormMainState.ManualCall);
+                MessageBox.Show("Please logged into Dialer first");  
+                /*
+                 * TODO : Change state to match manual call condition
+                 * 
+                 */
+            } 
+            
         }
 
         private void break_button_Click(object sender, EventArgs e)
