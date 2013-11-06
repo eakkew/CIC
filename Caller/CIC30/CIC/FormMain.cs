@@ -51,13 +51,17 @@ namespace CIC
         {
             InitializeComponent();
             this.IsActiveConnection = true; // FIXME: remove the placeholder
-            this.workflow_button_Click(null, EventArgs.Empty);
         }
 
         private void reset_timer()
         {
             timer1.Stop();
             timer = 10.0f;
+        }
+
+        public void login_workflow()
+        {
+            this.workflow_button_Click(null, EventArgs.Empty);
         }
 
         private void FormMain_Load(object sender, EventArgs e)
