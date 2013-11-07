@@ -1,4 +1,4 @@
-using ININ.IceLib.Interactions;
+﻿using ININ.IceLib.Interactions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,6 +10,12 @@ using System.Windows.Forms;
 
 namespace CIC
 {
+    private enum CallerType
+    {
+        TimerCalled,
+        ButtonClicked
+    }
+
     public enum FormMainState
     {
         Preview,
@@ -33,7 +39,8 @@ namespace CIC
 
         private ICWorkFlow IcWorkFlow = null;
         private ININ.IceLib.Connection.Session IC_Session = null;
-        private ININ.IceLib.Dialer.DialerCallInteraction ActiveDialerInteration = null;
+        private ININ.IceLib.Dialer.DialerCallInteraction ActiveDialerInteraction = null;
+        private ININ.IceLib.Interactions.Interaction ActiveNormalInteraction = null;
         private ININ.IceLib.Dialer.DialerSession DialerSession = null;
         private ININ.IceLib.Interactions.InteractionsManager NormalInterationManager = null;
         private FormMainState prev_state = FormMainState.Preview;
@@ -87,22 +94,15 @@ namespace CIC
 
         private void call_button_Click(object sender, EventArgs e)
         {   
-            if (this.IsLoggedIntoDialer)
-            {
-                //change state from workflow.
-                name1_panel.BackColor = Color.Yellow;
-                reset_timer();
-                state_info_label.Text = "Calling: " + calling_phone;
+            //change state from workflow.
+            name1_panel.BackColor = Color.Yellow;
+            reset_timer();
+            state_info_label.Text = "Calling: " + calling_phone;
 
-                // make a call or pickup
-                placecall_or_pickup();
+            // make a call or pickup
+            placecall_or_pickup();
                 
-                state_change(FormMainState.Calling);
-            }
-            else
-            {
-                // TODO: change the state back to no connected.
-            }
+            state_change(FormMainState.Calling);
         }
 
         private void disconnect_button_Click(object sender, EventArgs e)
@@ -110,7 +110,7 @@ namespace CIC
             state_info_label.Text = "Disconnected from: " + calling_phone;
             try
             {
-                if (this.ActiveDialerInteration.IsConnected)
+                if (this.ActiveDialerInteraction.IsConnected)
                 {
                     frmDisposition disposition = new frmDisposition();
                     disposition.ShowDialog();
@@ -234,7 +234,7 @@ namespace CIC
                     }
                     else
                     {
-                        if (this.ActiveDialerInteration != null)
+                        if (this.ActiveDialerInteraction != null)
                         {
                             // TODO: validate the condition of log out request while not on break
                             //if (/*this.RequestBreakToolStripButton.Text.Trim() != "End Break"*/ false)
@@ -242,7 +242,7 @@ namespace CIC
                             {
                                 this.break_requested = true;
                                 this.break_button_Click(sender, e);               //wait for breakgrant
-                                this.ActiveDialerInteration.DialerSession.RequestLogout();
+                                this.ActiveDialerInteraction.DialerSession.RequestLogout();
                             }
                             else
                             {
@@ -501,7 +501,7 @@ namespace CIC
                 reset_timer();
                 
                 // make a call or pickup
-                placecall_or_pickup();
+                placecall();
                 
                 state_change(FormMainState.Calling);
                 state_info_label.Text = "Calling: " + calling_phone;
@@ -518,24 +518,57 @@ namespace CIC
         
         private void placecall_or_pickup()
         {
-            bool mySwitch;
-            switch (mySwitch)
+            bool mySwitch = true;
+            if (!IsLoggedIntoDialer)
             {
-                case true:
-                // TODO calling logic for calling
-                // PlaceCallToolStripButton will enable when 
-                // 1. WorkflowToolStripMenuItem_Click() and IsLoggedIntoDialer == true 
-                // 2. EnabledDialerCallTools() and CallStateToolStripStatusLabel.Text == initializing
-                placecall();
-                break;
-                case false:
-                // TODO calling logic for pickup
-                // PickupToolStripButton will enable when 
-                // 1. EnabledNormalCallTools() and CallStateToolStripStatusLabel.Text == initializing | alerting | messaging | offering | held
-                // 2. EnabledDialerCallTools() and CallStateToolStripStatusLabel.Text ==                alerting | messaging | offering | held | mute
-                pickup();
-                break;
+                if (IsNormalInteractionAvailableForPickup())
+                {
+                    pickup();
+                    return;
+                }
             }
+            
+            if (IsDialerInteractionAvailableForPickup())
+            {
+                pickup();
+                return;
+            }
+            else placecall();
+            //// default function
+            //switch (mySwitch)
+            //{
+            //    case true:
+            //    // TODO calling logic for calling
+            //    // PlaceCallToolStripButton will enable when 
+            //    // 1. WorkflowToolStripMenuItem_Click()
+            //    // 2. EnabledDialerCallTools() and CallStateToolStripStatusLabel.Text == initializing
+            //    placecall();
+            //    break;
+            //    case false:
+            //    // TODO calling logic for pickup
+            //    // PickupToolStripButton will enable when 
+            //    // 1. EnabledNormalCallTools() and CallStateToolStripStatusLabel.Text == initializing | alerting | messaging | offering | held
+            //    // 2. EnabledDialerCallTools() and CallStateToolStripStatusLabel.Text ==                alerting | messaging | offering | held | mute
+            //    pickup();
+            //    break;
+            //}
+        }
+
+        private bool IsDialerInteractionAvailableForPickup()
+        {
+            return ActiveDialerInteraction.State == InteractionState.Alerting
+                || ActiveDialerInteraction.State == InteractionState.Held
+                || ActiveDialerInteraction.State == InteractionState.Messaging
+                || ActiveDialerInteraction.State == InteractionState.Offering;
+        }
+
+
+        private bool IsNormalInteractionAvailableForPickup()
+        {
+            return ActiveNormalInteraction.State == InteractionState.Alerting
+                || ActiveNormalInteraction.State == InteractionState.Held
+                || ActiveNormalInteraction.State == InteractionState.Messaging
+                || ActiveNormalInteraction.State == InteractionState.Offering;
         }
 
         //private void SetCallHistory(string phone)
@@ -564,9 +597,9 @@ namespace CIC
                     switch (this.IsLoggedIntoDialer)
                     {
                         case true:
-                            if (this.ActiveDialerInteration != null)
+                            if (this.ActiveDialerInteraction != null)
                             {
-                                this.ActiveDialerInteration = null;
+                                this.ActiveDialerInteraction = null;
                             }
                             // TODO: need to clean up
                             //this.IcWorkFlow = null;
