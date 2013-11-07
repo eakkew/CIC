@@ -123,7 +123,22 @@ namespace CIC
 
         private void hold_button_Click(object sender, EventArgs e)
         {
-            state_change(FormMainState.Hold);
+            switch (current_state)
+            {
+                case FormMainState.Calling:
+                    state_info_label.Text = "Hold call from: " + calling_phone;
+                    state_change(FormMainState.Hold);
+                    break;
+                case FormMainState.Mute:
+                    state_info_label.Text = "Hold call from: " + calling_phone;
+                    state_change(FormMainState.Hold);
+                    break;
+                case FormMainState.Hold:
+                    state_info_label.Text = "Continue call from: " + calling_phone;
+                    state_change(FormMainState.Calling);
+                    break;
+            }
+                
         }
 
         private void mute_button_Click(object sender, EventArgs e)
