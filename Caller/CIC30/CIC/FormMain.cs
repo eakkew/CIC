@@ -95,6 +95,7 @@ namespace CIC
 
                 // make a call or pickup
                 placecall_or_pickup();
+                
                 state_change(FormMainState.Calling);
             }
             else
@@ -430,6 +431,10 @@ namespace CIC
             if (timer <= 0)
             {
                 reset_timer();
+                
+                // make a call or pickup
+                placecall_or_pickup();
+                
                 state_change(FormMainState.Calling);
                 state_info_label.Text = "Calling: " + calling_phone;
             }
