@@ -51,6 +51,7 @@ namespace CIC
         {
             InitializeComponent();
             this.IsActiveConnection = true; // FIXME: remove the placeholder
+            this.IsLoggedIntoDialer = true; // FIXME: remove the placeholder
         }
 
         private void reset_timer()
@@ -80,7 +81,7 @@ namespace CIC
             }
             else
             {
-
+                // TODO: change the state back to no connected.
             }
         }
 
@@ -97,15 +98,26 @@ namespace CIC
             }
             else
             {
-
+                // TODO: change the state back to no connected.
             }
         }
 
         private void disconnect_button_Click(object sender, EventArgs e)
         {
             state_info_label.Text = "Disconnected from: " + calling_phone;
-            frmDisposition disposition = new frmDisposition();
-            disposition.ShowDialog();
+            try
+            {
+                if (this.ActiveDialerInteration.IsConnected)
+                {
+                    frmDisposition disposition = new frmDisposition();
+                    disposition.ShowDialog();
+                }
+            }
+            catch (Exception ex)
+            {
+                string output = String.Format("Something really bad happened: {0}", ex.Message);
+                MessageBox.Show(output, "CIC Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
             state_change(FormMainState.Disconnect);
         }
 
@@ -248,7 +260,7 @@ namespace CIC
                     // TODO: goto logout state
                     //Tracing.TraceStatus(scope + "WorkFlow [" + ((ToolStripMenuItem)sender).Text + "] logon Fail.Please try again.");
                 }
-                this.ShowActiveCallInfo();
+                this.ShowActiveCallInfo(); // TODO: change to state change
             }
             catch (System.Exception ex)
             {
@@ -329,6 +341,7 @@ namespace CIC
             call_button.Enabled = false;
             disconnect_button.Enabled = false;
             hold_button.Enabled = false;
+            mute_button.Enabled = false;
             transfer_button.Enabled = false;
             conference_button.Enabled = false;
             manual_call_button.Enabled = false;
@@ -344,6 +357,7 @@ namespace CIC
             call_button.Enabled = true;
             disconnect_button.Enabled = true;
             hold_button.Enabled = true;
+            mute_button.Enabled = true;
             transfer_button.Enabled = true;
             conference_button.Enabled = true;
             manual_call_button.Enabled = true;
@@ -386,8 +400,14 @@ namespace CIC
 
         private void  disconnect_state()
         {
+            // TODO: rename typo enable_all_button()
             enable_all_button();
             disconnect_button.Enabled = false;
+            hold_button.Enabled = false;
+            mute_button.Enabled = false;
+            transfer_button.Enabled = false;
+            conference_button.Enabled = false;
+
 
             // calling a new number
             reset_timer();
