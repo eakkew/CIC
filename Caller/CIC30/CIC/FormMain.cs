@@ -644,12 +644,35 @@ namespace CIC
         ****************************************************/
         private void placecall()
         {
-            //TODO to be implemented.
+            // Src: PlaceCallToolStripButton_Click()
+            // string scope = "CIC::MainForm::PlaceCallToolStripButton_Click(): ";
+            if (this.InvokeRequired == true)
+            {
+                this.BeginInvoke(new EventHandler<EventArgs>(PlaceCallToolStripButton_Click), new object[] { sender, e });
+            }
+            else
+            {
+                try
+                {
+                    // Tracing.TraceStatus(scope + "Starting.[Place Call]");
+                    if (this.ActiveDialerInteration != null)
+                    {
+                        this.ActiveDialerInteration.PlacePreviewCall();
+                    }                    
+                    // Tracing.TraceStatus(scope + "Completed.[Place Call]");
+                }
+                catch (System.Exception ex)
+                {
+                    // Tracing.TraceStatus(scope + "Error info : " + ex.Message);
+                    // System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                }
+            }
         }
         
         private void pickup()
         {
             //TODO to be implemented.
+            // PickupToolStripButton_Click()
         }
     }
 }
