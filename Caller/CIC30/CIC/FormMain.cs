@@ -528,7 +528,7 @@ namespace CIC
                 }
             }
             
-            if (IsDialerInteractionAvailableForPickup())
+            if (IsDialerInteractionAvailableForPickup() || ActiveDialerInteraction.IsMuted)
             {
                 pickup();
                 return;
@@ -650,6 +650,7 @@ namespace CIC
         private void pickup()
         {
             //TODO to be implemented.
+            //TODO: verify if when mute, you can pickup the muted connection
         }
     }
 }
