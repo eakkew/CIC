@@ -658,7 +658,7 @@ namespace CIC
                     if (this.ActiveDialerInteration != null)
                     {
                         this.ActiveDialerInteration.PlacePreviewCall();
-                    }                    
+                    }
                     // Tracing.TraceStatus(scope + "Completed.[Place Call]");
                 }
                 catch (System.Exception ex)
@@ -671,8 +671,65 @@ namespace CIC
         
         private void pickup()
         {
-            //TODO to be implemented.
-            // PickupToolStripButton_Click()
+            // Src: PickupToolStripButton_Click()
+            // string scope = "CIC::frmMain::PickupToolStripButton_Click()::";
+            // Tracing.TraceStatus(scope + "Starting.");
+            try
+            {
+                switch (this.IsLoggedIntoDialer)
+                {
+                    case true:   //Log On to Dialer Server.
+                        Tracing.TraceStatus(scope + "Pickup button clicked.Log on to Dialer Server.");
+                        if (this.ActiveDialerInteration != null)
+                        {
+                            this.ActiveDialerInteration.Pickup();
+                        }
+                        if (this.ActiveNormalInteration != null)
+                        {
+                            switch (this.ActiveNormalInteration.InteractionType)
+                            {
+                                case InteractionType.Email:
+                                    //Show Mail form
+                                    this.ActiveNormalInteration.Pickup();
+                                    break;
+                                case InteractionType.Chat:
+                                    break;
+                                case InteractionType.Call:
+                                    this.ActiveNormalInteration.Pickup();
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        break;
+                    default:     // Not Log On to Dialer Server.
+                        Tracing.TraceStatus(scope + "Pickup button clicked[Basic station].");
+                        if (this.ActiveNormalInteration != null)
+                        {
+                            switch (this.ActiveNormalInteration.InteractionType)
+                            {
+                                case InteractionType.Email:
+                                    this.ViewEmailDetail(this.ActiveNormalInteration);
+                                    this.ActiveNormalInteration.Pickup();
+                                    break;
+                                case InteractionType.Chat:
+                                    break;
+                                case InteractionType.Call:
+                                    this.ActiveNormalInteration.Pickup();
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        break;
+                }
+                // Tracing.TraceStatus(scope + "Completed.");
+            }
+            catch (System.Exception ex)
+            {
+                // Tracing.TraceStatus("Error info." + ex.Message);
+                // System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+            }
         }
     }
 }
