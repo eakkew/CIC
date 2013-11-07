@@ -132,7 +132,10 @@ namespace CIC
                       MainDashboard.login_workflow();
                       Application.Run(MainDashboard);
                   }
-                  m_Session.Disconnect();
+                  if (m_Session != null)
+                  {
+                      m_Session.Disconnect();
+                  }
                   Tracing.TraceNote("CIC::Program::Main()::Disconnecting from Session Manager.");
               }
               catch (System.Exception e)

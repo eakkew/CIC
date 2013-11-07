@@ -1,4 +1,4 @@
-﻿using ININ.IceLib.Interactions;
+using ININ.IceLib.Interactions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -51,6 +51,7 @@ namespace CIC
         {
             InitializeComponent();
             this.IsActiveConnection = true; // FIXME: remove the placeholder
+            this.IsLoggedIntoDialer = true; // FIXME: remove the placeholder
         }
 
         private void reset_timer()
@@ -80,7 +81,7 @@ namespace CIC
             }
             else
             {
-
+                // TODO: change the state back to no connected.
             }
         }
 
@@ -100,26 +101,72 @@ namespace CIC
             }
             else
             {
-
+                // TODO: change the state back to no connected.
             }
         }
 
         private void disconnect_button_Click(object sender, EventArgs e)
         {
             state_info_label.Text = "Disconnected from: " + calling_phone;
-            frmDisposition disposition = new frmDisposition();
-            disposition.ShowDialog();
+            try
+            {
+                if (this.ActiveDialerInteration.IsConnected)
+                {
+                    frmDisposition disposition = new frmDisposition();
+                    disposition.ShowDialog();
+                }
+            }
+            catch (Exception ex)
+            {
+                string output = String.Format("Something really bad happened: {0}", ex.Message);
+                MessageBox.Show(output, "CIC Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
             state_change(FormMainState.Disconnect);
         }
 
         private void hold_button_Click(object sender, EventArgs e)
         {
-            state_change(FormMainState.Hold);
+            switch (current_state)
+            {   
+                // case calling state -> change to hold state
+                case FormMainState.Calling:
+                    state_info_label.Text = "Hold call from: " + calling_phone;
+                    state_change(FormMainState.Hold);
+                    break;
+                // case Mute state -> change to hold state.
+                case FormMainState.Mute:
+                    state_info_label.Text = "Hold call from: " + calling_phone;
+                    state_change(FormMainState.Hold);
+                    break;
+                // case Hold state -> change to calling state
+                case FormMainState.Hold:
+                    state_info_label.Text = "Continue call from: " + calling_phone;
+                    state_change(FormMainState.Calling);
+                    break;
+            }
+                
         }
 
         private void mute_button_Click(object sender, EventArgs e)
         {
-            state_change(FormMainState.Mute);
+            switch (current_state)
+            {
+                // case calling state -> change to mute state
+                case FormMainState.Calling:
+                    state_info_label.Text = "Mute call from: " + calling_phone;
+                    state_change(FormMainState.Mute);
+                    break;
+                // case Mute state -> change to mute state.
+                case FormMainState.Hold:
+                    state_info_label.Text = "Mute call from: " + calling_phone;
+                    state_change(FormMainState.Mute);
+                    break;
+                // case Hold state -> change back to calling state
+                case FormMainState.Mute:
+                    state_info_label.Text = "Continue call from: " + calling_phone;
+                    state_change(FormMainState.Calling);
+                    break;
+            }
         }
 
         private void transfer_button_Click(object sender, EventArgs e)
@@ -177,53 +224,64 @@ namespace CIC
             //Tracing.TraceStatus(scope + "Starting.");
             try
             {
-                switch (this.IsLoggedIntoDialer)
+                if (this.IsLoggedIntoDialer)
                 {
-                    case true:
-                        // FIX ME: check the state of calling
-                        //if (/*this.CallStateToolStripStatusLabel.Text.ToLower().Trim() == "n/a"*/ true)
-                        if (this.current_state == FormMainState.Disconnect)
+                    // FIX ME: check the state of calling
+                    //if (/*this.CallStateToolStripStatusLabel.Text.ToLower().Trim() == "n/a"*/ true)
+                    if (this.current_state == FormMainState.Disconnect)
+                    {
+                        this.LogoutGranted(sender, e);      //No call object from this campaign;permit to logging out.
+                    }
+                    else
+                    {
+                        if (this.ActiveDialerInteration != null)
                         {
-                            this.LogoutGranted(sender, e);      //No call object from this campaign;permit to logging out.
-                        }
-                        else
-                        {
-                            if (this.ActiveDialerInteration != null)
+                            // TODO: validate the condition of log out request while not on break
+                            //if (/*this.RequestBreakToolStripButton.Text.Trim() != "End Break"*/ false)
+                            if (!this.break_requested)
                             {
-                                // TODO: validate the condition of log out request while not on break
-                                //if (/*this.RequestBreakToolStripButton.Text.Trim() != "End Break"*/ false)
-                                if (!this.break_requested)
-                                {
-                                    this.break_requested = true;
-                                    this.break_button_Click(sender, e);               //wait for breakgrant
-                                    this.ActiveDialerInteration.DialerSession.RequestLogout();
-                                }
-                                else
-                                {
-                                    this.LogoutGranted(sender, e);     //already breakpermit to logging out.
-                                }
+                                this.break_requested = true;
+                                this.break_button_Click(sender, e);               //wait for breakgrant
+                                this.ActiveDialerInteration.DialerSession.RequestLogout();
+                            }
+                            else
+                            {
+                                this.LogoutGranted(sender, e);     //already breakpermit to logging out.
                             }
                         }
-                        break;
-                    default:
-                        if (ActiveNormalInteration != null)
-                        {
-                            ActiveNormalInteration.Disconnect();
-                            ActiveNormalInteration = null;
-                        }
-                        if (this.IC_Session != null)
-                        {
-                            this.IC_Session.Disconnect();
-                            this.IC_Session = null;
-                        }
-                        break;
+                    }
                 }
+                else
+                {
+                    disconnect_normal_interaction();
+                    disconnect_IC_session();
+                    // TODO: disable functions as dialer is not connect
+                }
+                
                 //Tracing.TraceStatus(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
                 //Tracing.TraceStatus(scope + "Error info." + ex.Message);
                 System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+            }
+        }
+
+        private void disconnect_IC_session()
+        {
+            if (this.IC_Session != null)
+            {
+                this.IC_Session.Disconnect();
+                this.IC_Session = null;
+            }
+        }
+
+        private static void disconnect_normal_interaction()
+        {
+            if (ActiveNormalInteration != null)
+            {
+                ActiveNormalInteration.Disconnect();
+                ActiveNormalInteration = null;
             }
         }
         
@@ -251,7 +309,7 @@ namespace CIC
                     // TODO: goto logout state
                     //Tracing.TraceStatus(scope + "WorkFlow [" + ((ToolStripMenuItem)sender).Text + "] logon Fail.Please try again.");
                 }
-                this.ShowActiveCallInfo();
+                this.ShowActiveCallInfo(); // TODO: change to state change
             }
             catch (System.Exception ex)
             {
@@ -332,6 +390,7 @@ namespace CIC
             call_button.Enabled = false;
             disconnect_button.Enabled = false;
             hold_button.Enabled = false;
+            mute_button.Enabled = false;
             transfer_button.Enabled = false;
             conference_button.Enabled = false;
             manual_call_button.Enabled = false;
@@ -347,6 +406,7 @@ namespace CIC
             call_button.Enabled = true;
             disconnect_button.Enabled = true;
             hold_button.Enabled = true;
+            mute_button.Enabled = true;
             transfer_button.Enabled = true;
             conference_button.Enabled = true;
             manual_call_button.Enabled = true;
@@ -355,7 +415,9 @@ namespace CIC
             logout_workflow_button.Enabled = true;
             exit_button.Enabled = true;
         }
-
+        /*
+         * //TODO : seperate break case to break_request
+         */
         private void preview_state()
         {
             // starts the next number in line
@@ -391,8 +453,14 @@ namespace CIC
 
         private void  disconnect_state()
         {
+            // TODO: rename typo enable_all_button()
             enable_all_button();
             disconnect_button.Enabled = false;
+            hold_button.Enabled = false;
+            mute_button.Enabled = false;
+            transfer_button.Enabled = false;
+            conference_button.Enabled = false;
+
 
             // calling a new number
             reset_timer();
@@ -442,11 +510,7 @@ namespace CIC
 
         public static void MakeCallCompleted(object sender,InteractionCompletedEventArgs e)
         {
-            if (e.Cancelled == true)
-            {
-                //
-            }
-            else
+            if (!e.Cancelled)
             {
                 ActiveNormalInteration = e.Interaction;
             }
