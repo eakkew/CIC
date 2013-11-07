@@ -124,15 +124,18 @@ namespace CIC
         private void hold_button_Click(object sender, EventArgs e)
         {
             switch (current_state)
-            {
+            {   
+                // case calling state -> change to hold state
                 case FormMainState.Calling:
                     state_info_label.Text = "Hold call from: " + calling_phone;
                     state_change(FormMainState.Hold);
                     break;
+                // case Mute state -> change to hold state.
                 case FormMainState.Mute:
                     state_info_label.Text = "Hold call from: " + calling_phone;
                     state_change(FormMainState.Hold);
                     break;
+                // case Hold state -> change to calling state
                 case FormMainState.Hold:
                     state_info_label.Text = "Continue call from: " + calling_phone;
                     state_change(FormMainState.Calling);
@@ -143,7 +146,24 @@ namespace CIC
 
         private void mute_button_Click(object sender, EventArgs e)
         {
-            state_change(FormMainState.Mute);
+            switch (current_state)
+            {
+                // case calling state -> change to mute state
+                case FormMainState.Calling:
+                    state_info_label.Text = "Mute call from: " + calling_phone;
+                    state_change(FormMainState.Mute);
+                    break;
+                // case Mute state -> change to mute state.
+                case FormMainState.Hold:
+                    state_info_label.Text = "Mute call from: " + calling_phone;
+                    state_change(FormMainState.Mute);
+                    break;
+                // case Hold state -> change back to calling state
+                case FormMainState.Mute:
+                    state_info_label.Text = "Continue call from: " + calling_phone;
+                    state_change(FormMainState.Calling);
+                    break;
+            }
         }
 
         private void transfer_button_Click(object sender, EventArgs e)
@@ -392,7 +412,9 @@ namespace CIC
             logout_workflow_button.Enabled = true;
             exit_button.Enabled = true;
         }
-
+        /*
+         * //TODO : seperate break case to break_request
+         */
         private void preview_state()
         {
             // starts the next number in line
@@ -411,7 +433,7 @@ namespace CIC
             mute_button.Enabled = true;
             transfer_button.Enabled = true;
             conference_button.Enabled = true;
-            break_button.Enabled = true; 
+            break_button.Enabled = true;
         }
 
         private void hold_state()
