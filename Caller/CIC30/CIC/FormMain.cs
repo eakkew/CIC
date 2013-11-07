@@ -93,6 +93,8 @@ namespace CIC
                 reset_timer();
                 state_info_label.Text = "Calling: " + calling_phone;
 
+                // make a call or pickup
+                placecall_or_pickup();
                 state_change(FormMainState.Calling);
             }
             else
@@ -372,6 +374,8 @@ namespace CIC
             transfer_button.Enabled = true;
             conference_button.Enabled = true;
             break_button.Enabled = true; 
+            
+            // TODO hilight the calling name and number in the GUI
         }
 
         private void hold_state()
@@ -442,6 +446,26 @@ namespace CIC
                 ActiveNormalInteration = e.Interaction;
             }
         }
+        
+        private void placecall_or_pickup()
+        {
+            bool mySwitch
+            switch mySwitch
+                case: true
+                    // TODO calling logic for calling
+                    // PlaceCallToolStripButton will enable when 
+                    // 1. WorkflowToolStripMenuItem_Click() and IsLoggedIntoDialer == true 
+                    // 2. EnabledDialerCallTools() and CallStateToolStripStatusLabel.Text == initializing
+                    placecall();
+                    break;
+                case: false
+                    // TODO calling logic for pickup
+                    // PickupToolStripButton will enable when 
+                    // 1. EnabledNormalCallTools() and CallStateToolStripStatusLabel.Text == initializing | alerting | messaging | offering | held
+                    // 2. EnabledDialerCallTools() and CallStateToolStripStatusLabel.Text ==                alerting | messaging | offering | held | mute
+                    pickup();
+                    break
+        }
 
         //private void SetCallHistory(string phone)
         //{
@@ -508,6 +532,20 @@ namespace CIC
                 }
             }
         }
-
+        
+        /****************************************************
+        *****************************************************
+        ******************* The Logic Part ******************
+        *****************************************************
+        ****************************************************/
+        private void placecall()
+        {
+            //TODO to be implemented.
+        }
+        
+        private void pickup()
+        {
+            //TODO to be implemented.
+        }
     }
 }
