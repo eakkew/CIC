@@ -449,22 +449,24 @@ namespace CIC
         
         private void placecall_or_pickup()
         {
-            bool mySwitch
-            switch mySwitch
-                case: true
-                    // TODO calling logic for calling
-                    // PlaceCallToolStripButton will enable when 
-                    // 1. WorkflowToolStripMenuItem_Click() and IsLoggedIntoDialer == true 
-                    // 2. EnabledDialerCallTools() and CallStateToolStripStatusLabel.Text == initializing
-                    placecall();
-                    break;
-                case: false
-                    // TODO calling logic for pickup
-                    // PickupToolStripButton will enable when 
-                    // 1. EnabledNormalCallTools() and CallStateToolStripStatusLabel.Text == initializing | alerting | messaging | offering | held
-                    // 2. EnabledDialerCallTools() and CallStateToolStripStatusLabel.Text ==                alerting | messaging | offering | held | mute
-                    pickup();
-                    break
+            bool mySwitch;
+            switch (mySwitch)
+            {
+                case true:
+                // TODO calling logic for calling
+                // PlaceCallToolStripButton will enable when 
+                // 1. WorkflowToolStripMenuItem_Click() and IsLoggedIntoDialer == true 
+                // 2. EnabledDialerCallTools() and CallStateToolStripStatusLabel.Text == initializing
+                placecall();
+                break;
+                case false:
+                // TODO calling logic for pickup
+                // PickupToolStripButton will enable when 
+                // 1. EnabledNormalCallTools() and CallStateToolStripStatusLabel.Text == initializing | alerting | messaging | offering | held
+                // 2. EnabledDialerCallTools() and CallStateToolStripStatusLabel.Text ==                alerting | messaging | offering | held | mute
+                pickup();
+                break;
+            }
         }
 
         //private void SetCallHistory(string phone)
