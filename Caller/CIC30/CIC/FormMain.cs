@@ -1,4 +1,4 @@
-﻿using ININ.IceLib.Interactions;
+using ININ.IceLib.Interactions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace CIC
 {
-    private enum CallerType
+    public enum CallerType
     {
         TimerCalled,
         ButtonClicked
@@ -126,46 +126,49 @@ namespace CIC
 
         private void hold_button_Click(object sender, EventArgs e)
         {
-            switch (current_state)
-            {   
-                // case calling state -> change to hold state
-                case FormMainState.Calling:
-                    state_info_label.Text = "Hold call from: " + calling_phone;
-                    state_change(FormMainState.Hold);
-                    break;
-                // case Mute state -> change to hold state.
-                case FormMainState.Mute:
-                    state_info_label.Text = "Hold call from: " + calling_phone;
-                    state_change(FormMainState.Hold);
-                    break;
-                // case Hold state -> change to calling state
-                case FormMainState.Hold:
-                    state_info_label.Text = "Continue call from: " + calling_phone;
-                    state_change(FormMainState.Calling);
-                    break;
+            if (this.IsLoggedIntoDialer)
+            {
+                if (this.ActiveDialerInteraction != null)
+                {
+                    if (this.ActiveDialerInteraction.IsMuted)
+                    {
+                        this.ActiveDialerInteraction.Mute(false);
+                    }
+                    this.ActiveDialerInteraction.Hold(!this.ActiveDialerInteraction.IsHeld);
+                }
+                else if (this.ActiveNormalInteraction != null)
+                {
+                    if (this.ActiveNormalInteraction.IsMuted)
+                    {
+                        this.ActiveNormalInteraction.Mute(false);
+                    }
+                    this.ActiveNormalInteraction.Hold(!this.ActiveNormalInteraction.IsHeld);
+                }
+                state_change(FormMainState.Hold);
             }
-                
         }
 
         private void mute_button_Click(object sender, EventArgs e)
         {
-            switch (current_state)
+            if (this.IsLoggedIntoDialer)
             {
-                // case calling state -> change to mute state
-                case FormMainState.Calling:
-                    state_info_label.Text = "Mute call from: " + calling_phone;
-                    state_change(FormMainState.Mute);
-                    break;
-                // case Mute state -> change to mute state.
-                case FormMainState.Hold:
-                    state_info_label.Text = "Mute call from: " + calling_phone;
-                    state_change(FormMainState.Mute);
-                    break;
-                // case Hold state -> change back to calling state
-                case FormMainState.Mute:
-                    state_info_label.Text = "Continue call from: " + calling_phone;
-                    state_change(FormMainState.Calling);
-                    break;
+                if (this.ActiveDialerInteraction != null)
+                {
+                    if (this.ActiveDialerInteraction.IsHeld)
+                    {
+                        this.ActiveDialerInteraction.Hold(false);
+                    }
+                    this.ActiveDialerInteraction.MuteAsync(!this.ActiveDialerInteraction.IsMuted, MuteCompleted, null);
+                }
+                else if (this.ActiveNormalInteraction != null)
+                {
+                    if (this.ActiveNormalInteraction.IsHeld)
+                    {
+                        this.ActiveNormalInteraction.Hold(false);
+                    }
+                    this.ActiveNormalInteraction.MuteAsync(!this.ActiveNormalInteraction.IsMuted, MuteCompleted, null);
+                }
+                state_change(FormMainState.Mute);
             }
         }
 
@@ -367,9 +370,49 @@ namespace CIC
                         disconnect_state();
                     break;
                 case FormMainState.Hold:
+                    switch (current_state)
+                    {
+                        // case calling state -> change to hold state
+                        case FormMainState.Calling:
+                            hold_button.Text = "Unhold";
+                            state_info_label.Text = "Hold call from: " + calling_phone;
+                            break;
+                        // case Mute state -> change to hold state.
+                        case FormMainState.Mute:
+                            hold_button.Text = "Unhold";
+                            mute_button.Text = "Mute";
+                            state_info_label.Text = "Hold call from: " + calling_phone;
+                            break;
+                        // case Hold state -> change to calling state
+                        case FormMainState.Hold:
+                            hold_button.Text = "Hold";
+                            state_info_label.Text = "Continue call from: " + calling_phone;
+                            state = FormMainState.Calling;
+                            break;
+                    }
                     hold_state();
                     break;
                 case FormMainState.Mute:
+                    switch (current_state)
+                    {
+                        // case calling state -> change to hold state
+                        case FormMainState.Calling:
+                            mute_button.Text = "Unmute";
+                            state_info_label.Text = "Mute call from: " + calling_phone;
+                            break;
+                        // case Mute state -> change to hold state.
+                        case FormMainState.Hold:
+                            mute_button.Text = "Unmute";
+                            hold_button.Text = "Hold";
+                            state_info_label.Text = "Mute call from: " + calling_phone;
+                            break;
+                        // case Hold state -> change to calling state
+                        case FormMainState.Mute:
+                            mute_button.Text = "Mute";
+                            state_info_label.Text = "Continue call from: " + calling_phone;
+                            state = FormMainState.Calling;
+                            break;
+                    }
                     mute_state();
                     break;
                 case FormMainState.Break:
@@ -528,7 +571,7 @@ namespace CIC
                 }
             }
             
-            if (IsDialerInteractionAvailableForPickup())
+            if (IsDialerInteractionAvailableForPickup() || ActiveDialerInteraction.IsMuted)
             {
                 pickup();
                 return;
@@ -730,6 +773,11 @@ namespace CIC
                 // Tracing.TraceStatus("Error info." + ex.Message);
                 // System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
             }
+        }
+
+        private void MuteCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            //Reserve
         }
     }
 }
