@@ -186,53 +186,64 @@ namespace CIC
             //Tracing.TraceStatus(scope + "Starting.");
             try
             {
-                switch (this.IsLoggedIntoDialer)
+                if (this.IsLoggedIntoDialer)
                 {
-                    case true:
-                        // FIX ME: check the state of calling
-                        //if (/*this.CallStateToolStripStatusLabel.Text.ToLower().Trim() == "n/a"*/ true)
-                        if (this.current_state == FormMainState.Disconnect)
+                    // FIX ME: check the state of calling
+                    //if (/*this.CallStateToolStripStatusLabel.Text.ToLower().Trim() == "n/a"*/ true)
+                    if (this.current_state == FormMainState.Disconnect)
+                    {
+                        this.LogoutGranted(sender, e);      //No call object from this campaign;permit to logging out.
+                    }
+                    else
+                    {
+                        if (this.ActiveDialerInteration != null)
                         {
-                            this.LogoutGranted(sender, e);      //No call object from this campaign;permit to logging out.
-                        }
-                        else
-                        {
-                            if (this.ActiveDialerInteration != null)
+                            // TODO: validate the condition of log out request while not on break
+                            //if (/*this.RequestBreakToolStripButton.Text.Trim() != "End Break"*/ false)
+                            if (!this.break_requested)
                             {
-                                // TODO: validate the condition of log out request while not on break
-                                //if (/*this.RequestBreakToolStripButton.Text.Trim() != "End Break"*/ false)
-                                if (!this.break_requested)
-                                {
-                                    this.break_requested = true;
-                                    this.break_button_Click(sender, e);               //wait for breakgrant
-                                    this.ActiveDialerInteration.DialerSession.RequestLogout();
-                                }
-                                else
-                                {
-                                    this.LogoutGranted(sender, e);     //already breakpermit to logging out.
-                                }
+                                this.break_requested = true;
+                                this.break_button_Click(sender, e);               //wait for breakgrant
+                                this.ActiveDialerInteration.DialerSession.RequestLogout();
+                            }
+                            else
+                            {
+                                this.LogoutGranted(sender, e);     //already breakpermit to logging out.
                             }
                         }
-                        break;
-                    default:
-                        if (ActiveNormalInteration != null)
-                        {
-                            ActiveNormalInteration.Disconnect();
-                            ActiveNormalInteration = null;
-                        }
-                        if (this.IC_Session != null)
-                        {
-                            this.IC_Session.Disconnect();
-                            this.IC_Session = null;
-                        }
-                        break;
+                    }
                 }
+                else
+                {
+                    disconnect_normal_interaction();
+                    disconnect_IC_session();
+                    // TODO: disable functions as dialer is not connect
+                }
+                
                 //Tracing.TraceStatus(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
                 //Tracing.TraceStatus(scope + "Error info." + ex.Message);
                 System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+            }
+        }
+
+        private void disconnect_IC_session()
+        {
+            if (this.IC_Session != null)
+            {
+                this.IC_Session.Disconnect();
+                this.IC_Session = null;
+            }
+        }
+
+        private static void disconnect_normal_interaction()
+        {
+            if (ActiveNormalInteration != null)
+            {
+                ActiveNormalInteration.Disconnect();
+                ActiveNormalInteration = null;
             }
         }
         
@@ -453,11 +464,7 @@ namespace CIC
 
         public static void MakeCallCompleted(object sender,InteractionCompletedEventArgs e)
         {
-            if (e.Cancelled == true)
-            {
-                //
-            }
-            else
+            if (!e.Cancelled)
             {
                 ActiveNormalInteration = e.Interaction;
             }
