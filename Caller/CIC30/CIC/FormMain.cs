@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace CIC
 {
-    private enum CallerType
+    public enum CallerType
     {
         TimerCalled,
         ButtonClicked
@@ -367,9 +367,49 @@ namespace CIC
                         disconnect_state();
                     break;
                 case FormMainState.Hold:
+                    switch (current_state)
+                    {
+                        // case calling state -> change to hold state
+                        case FormMainState.Calling:
+                            hold_button.Text = "Unhold";
+                            state_info_label.Text = "Hold call from: " + calling_phone;
+                            break;
+                        // case Mute state -> change to hold state.
+                        case FormMainState.Mute:
+                            hold_button.Text = "Hold";
+                            mute_button.Text = "Mute";
+                            state_info_label.Text = "Hold call from: " + calling_phone;
+                            break;
+                        // case Hold state -> change to calling state
+                        case FormMainState.Hold:
+                            hold_button.Text = "Hold";
+                            state_info_label.Text = "Continue call from: " + calling_phone;
+                            state = FormMainState.Calling;
+                            break;
+                    }
                     hold_state();
                     break;
                 case FormMainState.Mute:
+                    switch (current_state)
+                    {
+                        // case calling state -> change to hold state
+                        case FormMainState.Calling:
+                            mute_button.Text = "Unmute";
+                            state_info_label.Text = "Mute call from: " + calling_phone;
+                            break;
+                        // case Mute state -> change to hold state.
+                        case FormMainState.Mute:
+                            mute_button.Text = "Unmute";
+                            hold_button.Text = "Hold";
+                            state_info_label.Text = "Mute call from: " + calling_phone;
+                            break;
+                        // case Hold state -> change to calling state
+                        case FormMainState.Hold:
+                            hold_button.Text = "Mute";
+                            state_info_label.Text = "Continue call from: " + calling_phone;
+                            state = FormMainState.Calling;
+                            break;
+                    }
                     mute_state();
                     break;
                 case FormMainState.Break:
