@@ -931,7 +931,7 @@
             // state_info_label
             // 
             this.state_info_label.AutoSize = true;
-            this.state_info_label.Location = new System.Drawing.Point(3, 38);
+            this.state_info_label.Location = new System.Drawing.Point(18, 38);
             this.state_info_label.Name = "state_info_label";
             this.state_info_label.Size = new System.Drawing.Size(0, 13);
             this.state_info_label.TabIndex = 1;
@@ -939,7 +939,7 @@
             // timer_info
             // 
             this.timer_info.AutoSize = true;
-            this.timer_info.Location = new System.Drawing.Point(3, 9);
+            this.timer_info.Location = new System.Drawing.Point(18, 9);
             this.timer_info.Name = "timer_info";
             this.timer_info.Size = new System.Drawing.Size(52, 13);
             this.timer_info.TabIndex = 0;

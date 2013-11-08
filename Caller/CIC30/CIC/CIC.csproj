@@ -299,6 +299,7 @@
     <Compile Include="UserStatusGridView.Designer.cs">
       <DependentUpon>UserStatusGridView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Util.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
