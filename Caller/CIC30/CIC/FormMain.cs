@@ -52,7 +52,6 @@ namespace CIC
         private UserStatus CurrentUserStatus { get; set; }
         private StatusMessageDetails AvailableStatusMessageDetails { get; set; }
         
-        private NameValueCollection mDialerData { get; set; }
         private ICWorkFlow IcWorkFlow = null;
         private WorkgroupDetails ActiveWorkgroupDetails { get; set; }
         private PeopleManager mPeopleManager { get; set; }
@@ -65,6 +64,7 @@ namespace CIC
         private InteractionState StrConnectionState = InteractionState.None;
 
         private static Interaction ActiveNormalInteraction { get; set; }
+        private static NameValueCollection mDialerData { get; set; }
 
         private float timer;
         private string calling_phone = "0881149998";
@@ -932,10 +932,26 @@ namespace CIC
             exit_button.Enabled = true;
         }
 
+
         private void logged_out_state()
         {
             reset_state();
             workflow_button.Enabled = true;
+        }
+
+        private void disable_break_request()
+        {
+            break_button.Enabled = false;
+        }
+            
+        private void disable_logout()
+        {
+            logout_workflow_button.Enabled = false;
+        }
+
+        private void enable_transfer()
+        {
+            transfer_button.Enabled = true;
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -1040,22 +1056,66 @@ namespace CIC
 
         private void WorkflowStarted(object sender, WorkflowStartedEventArgs e)
         {
-            throw new NotImplementedException();
+            string scope = "CIC::MainForm::WorkflowStarted()::";
+            //Tracing.TraceStatus(scope + "Starting.");
+
+            disable_logout();
+            //Tracing.TraceStatus(scope + "Completed.");
         }
 
         private void WorkflowStopped(object sender, WorkflowStoppedEventArgs e)
         {
-            throw new NotImplementedException();
+            string scope = "CIC::MainForm::WorkflowStopped()::";
+            //Tracing.TraceStatus(scope + "Starting.");
+            //this.TransferPanelToolStripButton.Enabled = true;
+            //this.RequestBreakToolStripButton.Visible = false;
+            enable_transfer();
+            disable_break_request();
+            //Tracing.TraceStatus(scope + "Completed.");
         }
 
         private void CampaignTransition(object sender, CampaignTransistionEventArgs e)
         {
-            throw new NotImplementedException();
+            // NYI
         }
 
         private void DataPop(object sender, DataPopEventArgs e)
         {
-            throw new NotImplementedException();
+            string scope = "CIC::MainForm::DataPop()::";
+            //Tracing.TraceStatus(scope + "Starting.");
+            try
+            {
+                if (e.Interaction.IsWatching() != true)
+                {
+                    e.Interaction.AttributesChanged += new EventHandler<AttributesEventArgs>(DialerInteraction_AttributesChanged);
+                    e.Interaction.StartWatching(this.InteractionAttributes);
+                }
+                this.ActiveDialerInteraction = e.Interaction;
+                switch (e.Interaction.InteractionType)
+                {
+                    case InteractionType.Email:
+                        break;
+                    case InteractionType.Chat:
+                        break;
+                    case InteractionType.Callback:
+                        this.Initialize_CallBack();
+                        this.Initialize_ContactData();
+                        this.ShowActiveCallInfo();
+                        this.CrmScreenPop();
+                        break;
+                    case InteractionType.Call:
+                        this.Initialize_ContactData();
+                        this.ShowActiveCallInfo();
+                        this.CrmScreenPop();
+                        break;
+                }
+                //Tracing.TraceStatus(scope + "Completed.");
+            }
+            catch (System.Exception ex)
+            {
+                //Tracing.TraceStatus(scope + "Error info : " + ex.Message);
+                System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+            }
         }
 
         private void PreviewCallAdded(object sender, PreviewCallAddedEventArgs e)
@@ -1099,7 +1159,43 @@ namespace CIC
 
         private void CrmScreenPop()
         {
-            throw new NotImplementedException();
+            string scope = "CIC::MainForm::CrmScreenPop()::";
+            //Tracing.TraceStatus(scope + "Starting.");
+            string FullyUrl = "";
+            if (this.InvokeRequired == true)
+            {
+                this.BeginInvoke(new MethodInvoker(CrmScreenPop));
+            }
+            else
+            {
+                try
+                {
+                    // TODO: figure out what to do with url page
+                    //switch (this.IsLoggedIntoDialer)
+                    //{
+                    //    case true:
+                    //        FullyUrl = this.GetFullyScreenUrl(mDialerData);
+                    //        this.CrmScreenPop_RefreshSession();
+                    //        this.CrmScreenPop_SetMainEntry(FullyUrl);
+                    //        this.CrmScreenPop_RetriveLastSessionID();
+                    //        break;
+                    //    default:
+                    //        if (Properties.Settings.Default.StartupUrl != null)
+                    //        {
+                    //            this.CrmScreenPop_RetriveIVRValue();
+                    //            this.CrmScreenPop_SetACDEntry();
+                    //        }
+                    //        break;
+                    //}
+                    //Tracing.TraceStatus(scope + "Completed.");
+                }
+                catch (System.Exception ex)
+                {
+                    //Tracing.TraceStatus(scope + "Error info : " + ex.Message);
+                    System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                    //this.MainWebBrowser.Url = new System.Uri(global::CIC.Properties.Settings.Default.StartupUrl, System.UriKind.Absolute);
+                }
+            }
         }
 
         private void Initialize_ContactData()
@@ -1113,11 +1209,11 @@ namespace CIC
             dt.Columns.Add("attr_value");
             if (this.ActiveDialerInteraction != null)
             {
-                this.mDialerData = new NameValueCollection();
-                this.mDialerData.Clear();
+                mDialerData = new NameValueCollection();
+                mDialerData.Clear();
                 foreach (KeyValuePair<string, string> pair in this.ActiveDialerInteraction.ContactData)
                 {
-                    this.mDialerData.Add(pair.Key.ToString().Trim(), pair.Value);
+                    mDialerData.Add(pair.Key.ToString().Trim(), pair.Value);
                     System.Data.DataRow dr = dt.NewRow();
                     dr["id"] = i++.ToString();
                     dr["attr_key"] = pair.Key.ToString();

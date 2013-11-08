@@ -6267,7 +6267,7 @@ namespace CIC
                 {
                     //System.Uri Url = new System.Uri(global::CIC.Properties.Settings.Default.StartupUrl, System.UriKind.Absolute);
                     string sUsrSelect = this.ActiveNormalInteraction.GetStringAttribute("sUsrSelect");
-                    string Eic_RemoteTnRaw = this.ActiveNormalInteraction.GetStringAttribute("Eic_RemoteTnRaw");
+                    //string Eic_RemoteTnRaw = this.ActiveNormalInteraction.GetStringAttribute("Eic_RemoteTnRaw");
                     //string sCustID = this.ActiveNormalInteraction.GetStringAttribute("sCustID");
                     //MessageBox.Show("Cus ID : "+sCustID);
                     this.sCollectUserSelect = this.ActiveNormalInteraction.GetStringAttribute("sCollectUserSelect");
