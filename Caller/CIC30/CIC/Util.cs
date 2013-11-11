@@ -84,8 +84,7 @@ namespace CIC
         public static bool form_validation_telephone_number(string number)
         {
             // 1 plus + 3 maximum hyphen or space
-            Regex r = new Regex(@"^\+?(\d[\d-. ]+)?(\([\d-. ]+\))?[\d-. ]+\d$");
-            
+            Regex r = new Regex(@"^[\d]+\d$"); // extension      -
             Match m = r.Match(number);
             return m.Success;
         }
