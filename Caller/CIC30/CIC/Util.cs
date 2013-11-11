@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace CIC
 {
@@ -78,6 +79,15 @@ namespace CIC
                 //Tracing.TraceStatus(scope + "Error info." + ex.Message);
             }
             return sRet;
+        }
+
+        public static bool form_validation_telephone_number(string number)
+        {
+            // 1 plus + 3 maximum hyphen or space
+            Regex r = new Regex(@"^\+?(\d[\d-. ]+)?(\([\d-. ]+\))?[\d-. ]+\d$");
+            
+            Match m = r.Match(number);
+            return m.Success;
         }
     }
 }

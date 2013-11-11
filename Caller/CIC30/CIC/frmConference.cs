@@ -19,9 +19,13 @@ namespace CIC
 
         private void call_button_Click(object sender, EventArgs e)
         {
-            // call the number
-            ext_number_box.Enabled = false;
-            call_button.Enabled = false;
+            if (Util.form_validation_telephone_number(ext_number_box.Text))
+            {
+                // call the number
+                ext_number_box.Enabled = false;
+                conference_button.Enabled = true;
+                call_button.Enabled = false;
+            }
         }
 
         private void conference_button_Click(object sender, EventArgs e)
@@ -35,5 +39,6 @@ namespace CIC
             // do not merge the line and close the form
             this.Close();
         }
+
     }
 }
