@@ -19,11 +19,14 @@ namespace CIC
 
         private void call_button_Click(object sender, EventArgs e)
         {
-            // call the number
-            call_button.Enabled = false;
-            transfer_button.Enabled = true;
-            ext_number_box.Enabled = false;
-            cancel_button.Enabled = false;
+            if (Util.form_validation_telephone_number(ext_number_box.Text))
+            {
+                // call the number
+                call_button.Enabled = false;
+                transfer_button.Enabled = true;
+                ext_number_box.Enabled = false;
+                cancel_button.Enabled = false;
+            }
         }
 
         private void cancel_button_Click(object sender, EventArgs e)
@@ -36,5 +39,7 @@ namespace CIC
             // transfer the current connection to another
             this.Close();
         }
+        
+
     }
 }

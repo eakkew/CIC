@@ -146,6 +146,7 @@ namespace CIC
         {
             if (IcWorkFlow.LoginResult)
             {
+                
                 if (this.ActiveDialerInteraction != null)
                 {
                     if (this.ActiveDialerInteraction.IsMuted)
@@ -779,6 +780,7 @@ namespace CIC
             mute_button.Enabled = true;
             transfer_button.Enabled = true;
             conference_button.Enabled = true;
+            break_button.Enabled = !break_requested;
         }
 
         private void  disconnect_state()
@@ -804,6 +806,7 @@ namespace CIC
             mute_button.Enabled = true;
             transfer_button.Enabled = true;
             conference_button.Enabled = true;
+            break_button.Enabled = !break_requested;
         }
 
         private void break_state()

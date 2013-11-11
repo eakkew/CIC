@@ -61,11 +61,13 @@ namespace CIC
 
             this.Close();
         }
-
+        /*
+         * TODO : Change function name to validate textbox
+         */
         private bool CheckEmptyPhoneNumber()
         {
             //check the phone
-            return false;
+            return !Util.form_validation_telephone_number(phone_box.Text);
         }
     }
 }
