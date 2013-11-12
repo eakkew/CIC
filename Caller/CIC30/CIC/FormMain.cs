@@ -139,7 +139,14 @@ namespace CIC
                 string output = String.Format("Something really bad happened: {0}", ex.Message);
                 MessageBox.Show(output, "CIC Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            state_change(FormMainState.Disconnect);
+
+            if (break_requested || prev_state == FormMainState.ManualCall)
+            {
+                break_requested = false;
+                state_change(FormMainState.Break);
+            }
+            else
+                state_change(FormMainState.Disconnect);
         }
 
         private void hold_button_Click(object sender, EventArgs e)
@@ -649,13 +656,7 @@ namespace CIC
                     calling_state();
                     break;
                 case FormMainState.Disconnect:
-                    if (break_requested || prev_state == FormMainState.ManualCall)
-                    {
-                        break_requested = false;
-                        break_state();
-                    }
-                    else
-                        disconnect_state();
+                    disconnect_state();
                     break;
                 case FormMainState.Hold:
                     switch (current_state)
