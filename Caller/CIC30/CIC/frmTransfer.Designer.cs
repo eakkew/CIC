@@ -80,6 +80,7 @@
             this.ext_number_box.Name = "ext_number_box";
             this.ext_number_box.Size = new System.Drawing.Size(100, 20);
             this.ext_number_box.TabIndex = 4;
+            this.ext_number_box.TextChanged += new System.EventHandler(this.ext_number_box_TextChanged);
             // 
             // frmTransfer
             // 
