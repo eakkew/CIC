@@ -1354,7 +1354,7 @@ namespace CIC
             {
                 if (this.IsActiveConnection == true)
                 {
-                    Program.Initialize(this.IC_Session);
+                    Program.Initialize_dialingManager(this.IC_Session);
                     this.workflows = Program.DialingManager.GetAvailableWorkflows();
                     this.LoginToolStripMenuItem.DropDownItems.Clear();
                     if (workflows.Length > 0)

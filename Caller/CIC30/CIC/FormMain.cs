@@ -1,4 +1,5 @@
-﻿using ININ.IceLib.Dialer;
+﻿using ININ.IceLib.Connection;
+using ININ.IceLib.Dialer;
 using ININ.IceLib.Interactions;
 using ININ.IceLib.People;
 using System;
@@ -40,7 +41,7 @@ namespace CIC
     {
         private bool break_requested { get; set; }
         private bool BlindTransferFlag { get; set; }
-        //private bool IsLoggedIntoDialer { get; set; }
+        private int AutoReconnect = 2;
         private bool IsActiveConnection { get; set; }
         private bool SwapPartyFlag { get; set; }
         private string[] InteractionAttributes { get; set; }
@@ -76,7 +77,192 @@ namespace CIC
         public FormMain()
         {
             InitializeComponent();
+            InitializeSession();
             this.IsActiveConnection = true; // FIXME: remove the placeholder
+        }
+
+        private void InitializeSession()
+        {
+            string scope = "CIC::frmMain::InitialAllComponents()::";
+            //Tracing.TraceStatus(scope + "Starting");
+            bool bResult = false;
+            if (this.InvokeRequired == true)
+            {
+                this.BeginInvoke(new MethodInvoker(InitializeSession));
+            }
+            else
+            {
+                try
+                {
+                    global::CIC.Program.m_Session = new Session();
+                    global::CIC.Program.IcStation = new ICStation(global::CIC.Program.m_Session);
+                    global::CIC.Program.m_Session.SetAutoReconnectInterval(this.AutoReconnect);   //Time in seccond to Reconnected.
+                    global::CIC.Program.m_Session.ConnectionStateChanged += new EventHandler<ConnectionStateChangedEventArgs>(mSession_Changed);
+                    global::CIC.Program.IcStation.LogIn(global::CIC.Program.mLoginParam.WindowsAuthentication, global::CIC.Program.mLoginParam.UserId, global::CIC.Program.mLoginParam.Password, global::CIC.Program.mLoginParam.Server, global::CIC.Program.mLoginParam.StationType, global::CIC.Program.mLoginParam.StationId, global::CIC.Program.mLoginParam.PhoneNumber, global::CIC.Program.mLoginParam.Persistent, this.SessionConnectCompleted, null);
+
+                    ININ.IceLib.Connection.Session session = global::CIC.Program.m_Session;
+                    Program.Initialize_dialingManager(session);
+                
+                    if (session != null)
+                    {
+                        bResult = this.SetActiveSession(session);
+                        if (this.IC_Session != null)
+                        {
+                            // TODO: Revise these chunk
+                            //this.Load_ApplicationSkin();
+                            //this.Additional_InitializeComponent();
+                            ININ.IceLib.Connection.ConnectionState mConnectionState;
+                            try
+                            {
+                                mConnectionState = this.IC_Session.ConnectionState;
+                            }
+                            catch
+                            {
+                                mConnectionState = ININ.IceLib.Connection.ConnectionState.None;
+
+                            }
+                            ///this.SetStatusBarStripMsg();
+                            if (mConnectionState == ININ.IceLib.Connection.ConnectionState.Up)
+                            {
+                                this.Initial_NormalInteraction();
+                                //this.InitializeQueueWatcher();
+                                //this.UnifiedMessaging_StartWatching();
+                               
+                                //Tracing.TraceStatus(scope + "Completed.");
+                            }
+                            else
+                            {
+                                //No active connection. 
+                                // TODO: set state to no active connection
+
+                                //Tracing.TraceStatus(scope + "Cannot log on to station.please try again.");
+                            }
+                        }
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    // TODO: set state to no active connection
+                    //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                    System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                }
+            }
+        }
+
+        private void Initial_NormalInteraction()
+        {
+            string scope = "CIC::MainForm::Initial_NormalInteraction()::";
+            //Tracing.TraceStatus(scope + "Starting.");
+            try
+            {
+                //Tracing.TraceStatus(scope + "Getting an instance of Normal InteractionsManager.");
+                this.NormalInterationManager = InteractionsManager.GetInstance(this.IC_Session);
+                if (this.InteractionList == null)
+                {
+                    this.InteractionList = new System.Collections.ArrayList();
+                }
+                else
+                {
+                    this.InteractionList.Clear();
+                }
+                //Tracing.TraceStatus(scope + "Getting an instance of PeopleManager[Normal Interactions].");
+                this.mPeopleManager = PeopleManager.GetInstance(this.IC_Session);
+                //this.WebBrowserStatusToolStripStatusLabel.Text = "";
+                //if (this.sCollectUserSelect != null)
+                //{
+                //    if (this.sCollectUserSelect.Trim() != "")
+                //    {
+                //        this.IVRMenu.Enabled = true;
+                //    }
+                //    else
+                //    {
+                //        this.IVRMenu.Enabled = false;
+                //    }
+                //}
+                //Tracing.TraceStatus(scope + "Completed.");
+            }
+            catch (System.Exception ex)
+            {
+                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+            }
+        }
+
+        private void SessionConnectCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            // TODO: implement ln 477
+        }
+
+        private void mSession_Changed(object sender, ConnectionStateChangedEventArgs e)
+        {
+            // TODO: 
+            Application.DoEvents();
+            switch (e.State)
+            {
+                case ININ.IceLib.Connection.ConnectionState.Attempting:
+                    break;
+                case ININ.IceLib.Connection.ConnectionState.Up:
+                    if (this.IsActiveConnection == false)
+                    {
+                        global::CIC.Program.IcStation.ConnectionTimes = 0;
+                        this.IsActiveConnection = true;       //Set to ActiveConnection.
+                        //this.SetStatusBarStripMsg();
+                        //this.InitialAllComponents();
+                    }
+                    break;
+                case ININ.IceLib.Connection.ConnectionState.Down:
+                    if (this.IsActiveConnection == true)
+                    {
+                        this.IsActiveConnection = false;       //Set to InActiveConnection.
+                        //this.Dispose_QueueWatcher();
+                        //this.DisabledAll();
+                        //this.SetStatusBarStripMsg();
+                    }
+
+                    if (global::CIC.Program.m_Session != null)
+                    {
+                        global::CIC.Program.m_Session.Disconnect();
+                        global::CIC.Program.m_Session = null;
+                    }
+                    global::CIC.Program.m_Session = new Session();
+                    global::CIC.Program.m_Session.ConnectionStateChanged += new EventHandler<ConnectionStateChangedEventArgs>(mSession_Changed);
+                    global::CIC.Program.IcStation.CurrentSession = global::CIC.Program.m_Session;
+                    try
+                    {
+                        global::CIC.Program.IcStation.ICConnect();
+                    }
+                    catch
+                    {
+
+                    }
+                    //this.SetStatusBarStripMsg();
+                    break;
+                case ININ.IceLib.Connection.ConnectionState.None:
+                    global::CIC.Program.IcStation.ICConnect();
+                    //this.SetStatusBarStripMsg();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private bool SetActiveSession(ININ.IceLib.Connection.Session session)
+        {
+            bool bResult = false;
+            string scope = "CIC::frmMain::SetActiveSession()::";
+            //Tracing.TraceStatus(scope + "Starting.");
+            if (session == null)
+            {
+                //Tracing.TraceStatus(scope + "Null reference session.");
+                throw new ArgumentNullException("Null reference session.");
+            }
+            else
+            {
+                //Tracing.TraceStatus(scope + "Completed.");
+                bResult = true;
+                this.IC_Session = session;
+            }
+            return bResult;
         }
 
         private void reset_timer()
@@ -101,7 +287,7 @@ namespace CIC
         {
             if (this.IsActiveConnection)
             {
-                frmWorkflow workflow = new CIC.frmWorkflow(this.IC_Session);
+                frmWorkflow workflow = new CIC.frmWorkflow(global::CIC.Program.m_Session);
                 workflow.Show();
             }
             else
@@ -431,13 +617,15 @@ namespace CIC
 
                     //Tracing.TraceStatus(scope + "Completed.");
                     // TODO: change state to something
+                    this.Initial_NormalInteraction();
+                    this.UpdateUserStatus();
                 }
                 else
                 {
                     // TODO: goto logout state
                     //Tracing.TraceStatus(scope + "WorkFlow [" + ((ToolStripMenuItem)sender).Text + "] logon Fail.Please try again.");
                 }
-                this.ShowActiveCallInfo(); // TODO: change to state change
+                //this.ShowActiveCallInfo(); // TODO: change to state change
             }
             catch (System.Exception ex)
             {
@@ -445,6 +633,164 @@ namespace CIC
                 //Tracing.TraceStatus(scope + "Error info.Logon to Workflow[" + ((ToolStripMenuItem)sender).Text + "] : " + ex.Message);
                 //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info.Logon to Workflow[" + ((ToolStripMenuItem)sender).Text + "] : " + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
             }  
+        }
+
+        private void UpdateUserStatus()
+        {
+            int iIndex = 0;
+            int AvailableIndex = 0;
+            string sIconName;
+            string sIconPath = "";
+            System.Drawing.Icon Status_icon = null;
+            this.AllStatusMessageList = null;
+            this.AllStatusMessageListOfUser = null;
+            UserStatusUpdate statusUpdate = null;
+            string scope = "CIC::frmMain::InitializeStatusMessageDetails()::";
+            //Tracing.TraceStatus(scope + "Starting.");
+            //this.imgcmbAgentStatus.ImageList.Images.Clear();
+            //this.imgcmbAgentStatus.Items.Clear();
+            try
+            {
+                switch (IcWorkFlow.LoginResult)
+                {
+                    case true: //Log On to Workflow
+                        if (this.mPeopleManager != null)
+                        {
+                            this.AllStatusMessageList = new StatusMessageList(this.mPeopleManager);
+                            this.AllStatusMessageListOfUser = new UserStatusList(this.mPeopleManager);
+                            this.AllStatusMessageListOfUser.WatchedObjectsChanged += new EventHandler<WatchedObjectsEventArgs<UserStatusProperty>>(AllStatusMessageListOfUser_WatchedObjectsChanged);
+                            string[] dusers = { Program.DialingManager.Session.UserId };   //Make value to array 
+                            this.AllStatusMessageListOfUser.StartWatching(dusers);
+                            this.CurrentUserStatus = this.AllStatusMessageListOfUser.GetUserStatus(Program.DialingManager.Session.UserId);
+                            //this.imgcmbAgentStatus.ImageList = this.imsLstServerStatus;
+                            //this.CmbImgAgentStatus.ImageList = this.imsLstServerStatus;
+                            //this.imsLstServerStatus.Images.Clear();
+                            sIconPath = CIC.Program.ResourcePath;
+                            this.AllStatusMessageList.StartWatching();
+                            foreach (StatusMessageDetails status in this.AllStatusMessageList.GetList())
+                            {
+                                sIconName = Util.GetFilenameFromFilePath(status.IconFileName.ToString());
+                                sIconPath += sIconName;
+                                if (System.IO.File.Exists(sIconPath) == true)
+                                {
+                                    Status_icon = new System.Drawing.Icon(sIconPath);
+                                    //this.imsLstServerStatus.Images.Add(status.MessageText, Status_icon);
+                                }
+                                else
+                                {
+                                    //this.imsLstServerStatus.Images.Add(status.MessageText, status.Icon);
+                                }
+                                if (status.MessageText.ToLower().Trim() == "available")
+                                {
+                                    AvailableStatusMessageDetails = status;
+                                    AvailableIndex = iIndex;
+                                }
+                                if (status.MessageText.ToLower().Trim() == "do not disturb")
+                                {
+                                    //DoNotDisturbStatusMessageDetails = status;
+                                }
+                               // this.imgcmbAgentStatus.Items.Add(new ImageComboBoxItem(status.MessageText, iIndex));
+                                iIndex++;
+                                //Tracing.TraceNote(scope + "Id=" + status.Id + ", MessageText=" + status.MessageText);
+                            }
+                        }
+                        break;
+                    default:    //Not Log On to Workflow
+                        //Tracing.TraceNote(scope + "Creating instance of StatusMessageList");
+                        if (this.mPeopleManager != null)
+                        {
+                            string[] nusers = { this.IC_Session.UserId };   //Make value to array 
+                            this.AllStatusMessageList = new StatusMessageList(this.mPeopleManager);
+                            this.AllStatusMessageListOfUser = new UserStatusList(this.mPeopleManager);
+                            this.AllStatusMessageListOfUser.WatchedObjectsChanged += new EventHandler<WatchedObjectsEventArgs<UserStatusProperty>>(AllStatusMessageListOfUser_WatchedObjectsChanged);
+                            this.AllStatusMessageListOfUser.StartWatching(nusers);
+                            this.CurrentUserStatus = this.AllStatusMessageListOfUser.GetUserStatus(this.IC_Session.UserId);
+                            //this.imgcmbAgentStatus.ImageList = this.imsLstServerStatus;
+                            //this.CmbImgAgentStatus.ImageList = this.imsLstServerStatus;
+                            //this.imsLstServerStatus.Images.Clear();
+                            sIconPath = CIC.Program.ResourcePath;
+                            this.AllStatusMessageList.StartWatching();
+                            foreach (StatusMessageDetails status in this.AllStatusMessageList.GetList())
+                            {
+                                if (status.IsSelectableStatus == true)
+                                {
+                                    sIconName = Util.GetFilenameFromFilePath(status.IconFileName.ToString());
+                                    sIconPath += sIconName;
+                                    if (System.IO.File.Exists(sIconPath) == true)
+                                    {
+                                        Status_icon = new System.Drawing.Icon(sIconPath);
+                                        //this.imsLstServerStatus.Images.Add(status.MessageText, Status_icon);
+                                    }
+                                    else
+                                    {
+                                        //this.imsLstServerStatus.Images.Add(status.MessageText, status.Icon);
+                                    }
+                                    if (status.MessageText.ToLower().Trim() == "available")
+                                    {
+                                        AvailableStatusMessageDetails = status;
+                                        AvailableIndex = iIndex;
+                                    }
+                                    if (status.MessageText.ToLower().Trim() == "do not disturb")
+                                    {
+                                        //DoNotDisturbStatusMessageDetails = status;
+                                    }
+                                    //imgcmbAgentStatus.Items.Add(new ImageComboBoxItem(status.MessageText, iIndex));
+                                    iIndex++;
+                                }
+                               // Tracing.TraceNote(scope + "Id=" + status.Id + ", MessageText=" + status.MessageText);
+                            }
+                        }
+                        break;
+                }
+                //Set Current User Status Display 
+                if (this.mPeopleManager != null)
+                {
+                    statusUpdate = new UserStatusUpdate(this.mPeopleManager);
+                    if (this.CurrentUserStatus != null)
+                    {
+                        if (global::CIC.Properties.Settings.Default.AutoResetUserStatus == true)
+                        {
+                            statusUpdate.StatusMessageDetails = this.AvailableStatusMessageDetails;
+                            statusUpdate.UpdateRequest();
+                            //this.imgcmbAgentStatus.SetMessage(this.CurrentUserStatus.StatusMessageDetails.MessageText);
+                        }
+                        else
+                        {
+                            if (this.CurrentUserStatus.StatusMessageDetails.IsSelectableStatus == true)
+                            {
+                                statusUpdate.StatusMessageDetails = this.CurrentUserStatus.StatusMessageDetails;
+                                statusUpdate.UpdateRequest();
+                            }
+                            else
+                            {
+                                if (IcWorkFlow.LoginResult)
+                                {
+                                    statusUpdate.StatusMessageDetails = this.AvailableStatusMessageDetails;
+                                    statusUpdate.UpdateRequest();
+                                }
+                                else
+                                {
+                                    //Display last user status.
+                                }
+                            }
+                            //if (this.imgcmbAgentStatus.Items.Count > 0)
+                            //{
+                            //    this.imgcmbAgentStatus.SetMessage(this.CurrentUserStatus.StatusMessageDetails.MessageText);
+                            //}
+                        }
+                    }
+                }
+            }
+            catch (System.Exception ex)
+            {
+                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+            }
+        }
+
+        private void AllStatusMessageListOfUser_WatchedObjectsChanged(object sender, WatchedObjectsEventArgs<UserStatusProperty> e)
+        {
+            throw new NotImplementedException();
         }
 
         private void ShowActiveCallInfo()
@@ -479,6 +825,7 @@ namespace CIC
                          *       set call state
                          *       set dialer number
                          */
+                        this.name1_box1.Text = this.ActiveDialerInteraction.ContactData["is_attr_FName"];
                         //this.CallIdToolStripStatusLabel.Text = this.ActiveDialerInteraction.CallIdKey.ToString().Trim();
                         //this.DirectiontoolStripStatus.Text = this.ActiveDialerInteraction.Direction.ToString();
                         //this.CallTypeToolStripStatusLabel.Text = "Campaign Call";
@@ -974,6 +1321,7 @@ namespace CIC
         private void CampaignTransition(object sender, CampaignTransistionEventArgs e)
         {
             // NYI
+            int i = 0;
         }
 
         private ReasonCode GetReasonCode(string sFinishcode)
@@ -1067,11 +1415,11 @@ namespace CIC
             //Tracing.TraceStatus(scope + "Starting.");
             try
             {
-                if (e.Interaction.IsWatching() != true)
-                {
-                    e.Interaction.AttributesChanged += new EventHandler<AttributesEventArgs>(DialerInteraction_AttributesChanged);
-                    e.Interaction.StartWatching(this.InteractionAttributes);
-                }
+                //if (e.Interaction.IsWatching() != true)
+                //{
+                //    e.Interaction.AttributesChanged += new EventHandler<AttributesEventArgs>(DialerInteraction_AttributesChanged);
+                //    e.Interaction.StartWatching(this.InteractionAttributes);
+                //}
                 this.ActiveDialerInteraction = e.Interaction;
                 switch (e.Interaction.InteractionType)
                 {
@@ -1441,6 +1789,7 @@ namespace CIC
                     // Tracing.TraceStatus(scope + "Starting.[Place Call]");
                     if (this.ActiveDialerInteraction != null)
                     {
+                        state_info_label.Text = "Calling: " + this.ActiveDialerInteraction.ContactData["is_attr_numbertodial"];
                         this.ActiveDialerInteraction.PlacePreviewCall();
                     }
                     // Tracing.TraceStatus(scope + "Completed.[Place Call]");

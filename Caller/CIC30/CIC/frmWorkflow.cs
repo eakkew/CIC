@@ -27,8 +27,8 @@ namespace CIC
             InitializeComponent();
             try
             {
-                Program.Initialize(IC_Session);
-                string[] workflows = Program.DialingManager.GetAvailableWorkflows();
+                Program.Initialize_dialingManager(IC_Session);
+                string[] workflows = Program.mDialingManager.GetAvailableWorkflows();
                 workflow_combobox.Items.Clear();
                 if (workflows.Length > 0)
                 {
@@ -64,7 +64,7 @@ namespace CIC
         private void login_button_Click(object sender, EventArgs e)
         {
             //do stuff to select workflow
-            Program.MainDashboard.workflow_invoke(this.workflow_combobox.SelectedText, e);
+            Program.MainDashboard.workflow_invoke(this.workflow_combobox.SelectedItem, e);
             this.Close();
         }
 

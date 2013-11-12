@@ -49,7 +49,7 @@ namespace CIC
               mDialingManager = value;
           }
       }
-      public static void Initialize(Session session)
+      public static void Initialize_dialingManager(Session session)
       {
           mDialingManager = null;
           mDialingManager = new ININ.IceLib.Dialer.DialingManager(session);
