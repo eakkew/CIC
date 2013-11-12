@@ -42,6 +42,7 @@ namespace CIC
         private void save_button_Click(object sender, EventArgs e)
         {
             // save data and callback to main form to save stuff
+            Program.MainDashboard.disposition_invoke(this.finishcode_combobox.SelectedText, e);
             this.Close();
         }
 

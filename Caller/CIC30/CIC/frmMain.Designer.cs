@@ -71,6 +71,38 @@
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.CreateConferenceToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.LeaveConferenceToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.AgentStatusToolStrip = new System.Windows.Forms.ToolStrip();
+            this.toolStripAgntStLbl = new System.Windows.Forms.ToolStripLabel();
+            this.CmbImgAgentStatus = new Locus.Control.ToolStripImageComboBox();
+            this.toolStripSeparatorAgntSt = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStriplblAdditionalStatus = new System.Windows.Forms.ToolStripLabel();
+            this.RequestBreakToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.WorkflowCallToolStrip = new System.Windows.Forms.ToolStrip();
+            this.PlaceCallToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.SkipCallToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStriplblReasonCode = new System.Windows.Forms.ToolStripLabel();
+            this.CallActivityCodeToolStripComboBox = new System.Windows.Forms.ToolStripComboBox();
+            this.DispositionToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.WebBrowserCtrlToolStrip = new System.Windows.Forms.ToolStrip();
+            this.GoBackToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.GoForwardToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.UrlToolStripTextBox = new System.Windows.Forms.ToolStripTextBox();
+            this.GoToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.RefreshToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.StopToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.TelephonyToolStrip = new System.Windows.Forms.ToolStrip();
+            this.PickupToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.HoldToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.MuteToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.TransferPanelToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.DisconnectToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
+            this.PhoneNumberToolStripTextBox = new System.Windows.Forms.ToolStripComboBox();
+            this.CallToolStripSplitButton = new System.Windows.Forms.ToolStripButton();
+            this.DialpadToolStripDropDownButton = new System.Windows.Forms.ToolStripDropDownButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.IVRMenu = new System.Windows.Forms.ToolStripButton();
             this.MainMnuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SaveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -96,38 +128,6 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.WebbrowserToolStrip = new System.Windows.Forms.ToolStrip();
             this.WebBrowserToolStripDropDownButton = new System.Windows.Forms.ToolStripDropDownButton();
-            this.AgentStatusToolStrip = new System.Windows.Forms.ToolStrip();
-            this.toolStripAgntStLbl = new System.Windows.Forms.ToolStripLabel();
-            this.CmbImgAgentStatus = new Locus.Control.ToolStripImageComboBox();
-            this.toolStripSeparatorAgntSt = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStriplblAdditionalStatus = new System.Windows.Forms.ToolStripLabel();
-            this.RequestBreakToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.TelephonyToolStrip = new System.Windows.Forms.ToolStrip();
-            this.PickupToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.HoldToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.MuteToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.TransferPanelToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.DisconnectToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
-            this.PhoneNumberToolStripTextBox = new System.Windows.Forms.ToolStripComboBox();
-            this.CallToolStripSplitButton = new System.Windows.Forms.ToolStripButton();
-            this.DialpadToolStripDropDownButton = new System.Windows.Forms.ToolStripDropDownButton();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.IVRMenu = new System.Windows.Forms.ToolStripButton();
-            this.WorkflowCallToolStrip = new System.Windows.Forms.ToolStrip();
-            this.PlaceCallToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.SkipCallToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStriplblReasonCode = new System.Windows.Forms.ToolStripLabel();
-            this.CallActivityCodeToolStripComboBox = new System.Windows.Forms.ToolStripComboBox();
-            this.DispositionToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.WebBrowserCtrlToolStrip = new System.Windows.Forms.ToolStrip();
-            this.GoBackToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.GoForwardToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.UrlToolStripTextBox = new System.Windows.Forms.ToolStripTextBox();
-            this.GoToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.RefreshToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.StopToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.imsLstServerStatus = new System.Windows.Forms.ImageList(this.components);
             this.imageCmbItem = new Locus.Control.ImageComboBoxItem(this.components);
             this.printDialogObj = new System.Windows.Forms.PrintDialog();
@@ -143,12 +143,12 @@
             this.InfoTransferToolStrip.SuspendLayout();
             this.TransferStatusToolStrip.SuspendLayout();
             this.TransferToolStrip.SuspendLayout();
-            this.MainMnuStrip.SuspendLayout();
-            this.WebbrowserToolStrip.SuspendLayout();
             this.AgentStatusToolStrip.SuspendLayout();
-            this.TelephonyToolStrip.SuspendLayout();
             this.WorkflowCallToolStrip.SuspendLayout();
             this.WebBrowserCtrlToolStrip.SuspendLayout();
+            this.TelephonyToolStrip.SuspendLayout();
+            this.MainMnuStrip.SuspendLayout();
+            this.WebbrowserToolStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStripContainer1
@@ -161,7 +161,7 @@
             // toolStripContainer1.ContentPanel
             // 
             this.toolStripContainer1.ContentPanel.Controls.Add(this.MainSplitContainer);
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(1020, 383);
+            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(1020, 359);
             this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolStripContainer1.Location = new System.Drawing.Point(0, 0);
             this.toolStripContainer1.Name = "toolStripContainer1";
@@ -177,8 +177,8 @@
             this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.WorkflowCallToolStrip);
             this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.WebBrowserCtrlToolStrip);
             this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.TelephonyToolStrip);
-            this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.WebbrowserToolStrip);
             this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.MainMnuStrip);
+            this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.WebbrowserToolStrip);
             // 
             // StatusBarStrip
             // 
@@ -207,7 +207,7 @@
             this.WebBrowserStatusToolStripStatusLabel.Image = global::CIC.Properties.Resources.information;
             this.WebBrowserStatusToolStripStatusLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.WebBrowserStatusToolStripStatusLabel.Name = "WebBrowserStatusToolStripStatusLabel";
-            this.WebBrowserStatusToolStripStatusLabel.Size = new System.Drawing.Size(670, 20);
+            this.WebBrowserStatusToolStripStatusLabel.Size = new System.Drawing.Size(639, 20);
             this.WebBrowserStatusToolStripStatusLabel.Spring = true;
             this.WebBrowserStatusToolStripStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -280,7 +280,7 @@
             this.MainSplitContainer.Panel2.Controls.Add(this.InfoTransferToolStrip);
             this.MainSplitContainer.Panel2.Controls.Add(this.TransferStatusToolStrip);
             this.MainSplitContainer.Panel2.Controls.Add(this.TransferToolStrip);
-            this.MainSplitContainer.Size = new System.Drawing.Size(1020, 383);
+            this.MainSplitContainer.Size = new System.Drawing.Size(1020, 359);
             this.MainSplitContainer.SplitterDistance = 762;
             this.MainSplitContainer.TabIndex = 0;
             // 
@@ -579,6 +579,311 @@
             this.LeaveConferenceToolStripButton.Visible = false;
             this.LeaveConferenceToolStripButton.Click += new System.EventHandler(this.LeaveConferenceToolStripButton_Click);
             // 
+            // AgentStatusToolStrip
+            // 
+            this.AgentStatusToolStrip.BackColor = System.Drawing.Color.Transparent;
+            this.AgentStatusToolStrip.CanOverflow = false;
+            this.AgentStatusToolStrip.Dock = System.Windows.Forms.DockStyle.None;
+            this.AgentStatusToolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.AgentStatusToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripAgntStLbl,
+            this.CmbImgAgentStatus,
+            this.toolStripSeparatorAgntSt,
+            this.toolStriplblAdditionalStatus,
+            this.RequestBreakToolStripButton});
+            this.AgentStatusToolStrip.Location = new System.Drawing.Point(3, 0);
+            this.AgentStatusToolStrip.Name = "AgentStatusToolStrip";
+            this.AgentStatusToolStrip.Size = new System.Drawing.Size(281, 25);
+            this.AgentStatusToolStrip.TabIndex = 0;
+            // 
+            // toolStripAgntStLbl
+            // 
+            this.toolStripAgntStLbl.Image = global::CIC.Properties.Resources.AvailNoACD;
+            this.toolStripAgntStLbl.Name = "toolStripAgntStLbl";
+            this.toolStripAgntStLbl.Size = new System.Drawing.Size(90, 22);
+            this.toolStripAgntStLbl.Text = "Agent Status";
+            // 
+            // CmbImgAgentStatus
+            // 
+            this.CmbImgAgentStatus.BackColor = System.Drawing.Color.NavajoWhite;
+            this.CmbImgAgentStatus.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CmbImgAgentStatus.Name = "CmbImgAgentStatus";
+            this.CmbImgAgentStatus.Size = new System.Drawing.Size(180, 25);
+            // 
+            // toolStripSeparatorAgntSt
+            // 
+            this.toolStripSeparatorAgntSt.Name = "toolStripSeparatorAgntSt";
+            this.toolStripSeparatorAgntSt.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStriplblAdditionalStatus
+            // 
+            this.toolStriplblAdditionalStatus.Name = "toolStriplblAdditionalStatus";
+            this.toolStriplblAdditionalStatus.Size = new System.Drawing.Size(80, 22);
+            this.toolStriplblAdditionalStatus.Text = "Available Talk";
+            this.toolStriplblAdditionalStatus.Visible = false;
+            // 
+            // RequestBreakToolStripButton
+            // 
+            this.RequestBreakToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("RequestBreakToolStripButton.Image")));
+            this.RequestBreakToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.RequestBreakToolStripButton.Name = "RequestBreakToolStripButton";
+            this.RequestBreakToolStripButton.Size = new System.Drawing.Size(101, 22);
+            this.RequestBreakToolStripButton.Text = "Request Break";
+            this.RequestBreakToolStripButton.Visible = false;
+            this.RequestBreakToolStripButton.Click += new System.EventHandler(this.RequestBreakToolStripButton_Click);
+            // 
+            // WorkflowCallToolStrip
+            // 
+            this.WorkflowCallToolStrip.BackColor = System.Drawing.Color.Transparent;
+            this.WorkflowCallToolStrip.CanOverflow = false;
+            this.WorkflowCallToolStrip.Dock = System.Windows.Forms.DockStyle.None;
+            this.WorkflowCallToolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.WorkflowCallToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.PlaceCallToolStripButton,
+            this.SkipCallToolStripButton,
+            this.toolStripSeparator1,
+            this.toolStriplblReasonCode,
+            this.CallActivityCodeToolStripComboBox,
+            this.DispositionToolStripButton});
+            this.WorkflowCallToolStrip.Location = new System.Drawing.Point(3, 25);
+            this.WorkflowCallToolStrip.Name = "WorkflowCallToolStrip";
+            this.WorkflowCallToolStrip.Size = new System.Drawing.Size(538, 25);
+            this.WorkflowCallToolStrip.TabIndex = 5;
+            // 
+            // PlaceCallToolStripButton
+            // 
+            this.PlaceCallToolStripButton.Image = global::CIC.Properties.Resources.BusPhone;
+            this.PlaceCallToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.PlaceCallToolStripButton.Name = "PlaceCallToolStripButton";
+            this.PlaceCallToolStripButton.Size = new System.Drawing.Size(78, 22);
+            this.PlaceCallToolStripButton.Text = "Place Call";
+            this.PlaceCallToolStripButton.Click += new System.EventHandler(this.PlaceCallToolStripButton_Click);
+            // 
+            // SkipCallToolStripButton
+            // 
+            this.SkipCallToolStripButton.Image = global::CIC.Properties.Resources.error;
+            this.SkipCallToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.SkipCallToolStripButton.Name = "SkipCallToolStripButton";
+            this.SkipCallToolStripButton.Size = new System.Drawing.Size(72, 22);
+            this.SkipCallToolStripButton.Text = "Skip Call";
+            this.SkipCallToolStripButton.Click += new System.EventHandler(this.SkipCallToolStripButton_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStriplblReasonCode
+            // 
+            this.toolStriplblReasonCode.Image = global::CIC.Properties.Resources.hammer;
+            this.toolStriplblReasonCode.Name = "toolStriplblReasonCode";
+            this.toolStriplblReasonCode.Size = new System.Drawing.Size(61, 22);
+            this.toolStriplblReasonCode.Text = "Reason";
+            // 
+            // CallActivityCodeToolStripComboBox
+            // 
+            this.CallActivityCodeToolStripComboBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
+            this.CallActivityCodeToolStripComboBox.DropDownHeight = 218;
+            this.CallActivityCodeToolStripComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CallActivityCodeToolStripComboBox.DropDownWidth = 200;
+            this.CallActivityCodeToolStripComboBox.IntegralHeight = false;
+            this.CallActivityCodeToolStripComboBox.Name = "CallActivityCodeToolStripComboBox";
+            this.CallActivityCodeToolStripComboBox.Size = new System.Drawing.Size(230, 25);
+            // 
+            // DispositionToolStripButton
+            // 
+            this.DispositionToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("DispositionToolStripButton.Image")));
+            this.DispositionToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.DispositionToolStripButton.Name = "DispositionToolStripButton";
+            this.DispositionToolStripButton.Size = new System.Drawing.Size(86, 22);
+            this.DispositionToolStripButton.Text = "Disposition";
+            this.DispositionToolStripButton.Click += new System.EventHandler(this.DispositionToolStripButton_Click);
+            // 
+            // WebBrowserCtrlToolStrip
+            // 
+            this.WebBrowserCtrlToolStrip.BackColor = System.Drawing.Color.Transparent;
+            this.WebBrowserCtrlToolStrip.Dock = System.Windows.Forms.DockStyle.None;
+            this.WebBrowserCtrlToolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.WebBrowserCtrlToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.GoBackToolStripButton,
+            this.GoForwardToolStripButton,
+            this.UrlToolStripTextBox,
+            this.GoToolStripButton,
+            this.RefreshToolStripButton,
+            this.StopToolStripButton});
+            this.WebBrowserCtrlToolStrip.Location = new System.Drawing.Point(3, 50);
+            this.WebBrowserCtrlToolStrip.Name = "WebBrowserCtrlToolStrip";
+            this.WebBrowserCtrlToolStrip.Size = new System.Drawing.Size(686, 25);
+            this.WebBrowserCtrlToolStrip.TabIndex = 3;
+            // 
+            // GoBackToolStripButton
+            // 
+            this.GoBackToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("GoBackToolStripButton.Image")));
+            this.GoBackToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.GoBackToolStripButton.Name = "GoBackToolStripButton";
+            this.GoBackToolStripButton.Size = new System.Drawing.Size(52, 22);
+            this.GoBackToolStripButton.Text = "Back";
+            this.GoBackToolStripButton.Click += new System.EventHandler(this.GoBackToolStripButton_Click);
+            // 
+            // GoForwardToolStripButton
+            // 
+            this.GoForwardToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("GoForwardToolStripButton.Image")));
+            this.GoForwardToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.GoForwardToolStripButton.Name = "GoForwardToolStripButton";
+            this.GoForwardToolStripButton.Size = new System.Drawing.Size(70, 22);
+            this.GoForwardToolStripButton.Text = "Forward";
+            this.GoForwardToolStripButton.Click += new System.EventHandler(this.GoForwardToolStripButton_Click);
+            // 
+            // UrlToolStripTextBox
+            // 
+            this.UrlToolStripTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.UrlToolStripTextBox.Name = "UrlToolStripTextBox";
+            this.UrlToolStripTextBox.Size = new System.Drawing.Size(400, 25);
+            this.UrlToolStripTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.UrlToolStripTextBox_KeyDown);
+            // 
+            // GoToolStripButton
+            // 
+            this.GoToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("GoToolStripButton.Image")));
+            this.GoToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.GoToolStripButton.Name = "GoToolStripButton";
+            this.GoToolStripButton.Size = new System.Drawing.Size(42, 22);
+            this.GoToolStripButton.Text = "Go";
+            this.GoToolStripButton.Click += new System.EventHandler(this.GoToolStripButton_Click);
+            // 
+            // RefreshToolStripButton
+            // 
+            this.RefreshToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("RefreshToolStripButton.Image")));
+            this.RefreshToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.RefreshToolStripButton.Name = "RefreshToolStripButton";
+            this.RefreshToolStripButton.Size = new System.Drawing.Size(66, 22);
+            this.RefreshToolStripButton.Text = "Refresh";
+            this.RefreshToolStripButton.Click += new System.EventHandler(this.RefreshToolStripButton_Click);
+            // 
+            // StopToolStripButton
+            // 
+            this.StopToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("StopToolStripButton.Image")));
+            this.StopToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.StopToolStripButton.Name = "StopToolStripButton";
+            this.StopToolStripButton.Size = new System.Drawing.Size(51, 22);
+            this.StopToolStripButton.Text = "Stop";
+            this.StopToolStripButton.Click += new System.EventHandler(this.StopToolStripButton_Click);
+            // 
+            // TelephonyToolStrip
+            // 
+            this.TelephonyToolStrip.BackColor = System.Drawing.Color.Transparent;
+            this.TelephonyToolStrip.CanOverflow = false;
+            this.TelephonyToolStrip.Dock = System.Windows.Forms.DockStyle.None;
+            this.TelephonyToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.PickupToolStripButton,
+            this.HoldToolStripButton,
+            this.MuteToolStripButton,
+            this.TransferPanelToolStripButton,
+            this.DisconnectToolStripButton,
+            this.toolStripSeparator11,
+            this.PhoneNumberToolStripTextBox,
+            this.CallToolStripSplitButton,
+            this.DialpadToolStripDropDownButton,
+            this.toolStripSeparator2,
+            this.IVRMenu});
+            this.TelephonyToolStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
+            this.TelephonyToolStrip.Location = new System.Drawing.Point(3, 75);
+            this.TelephonyToolStrip.Name = "TelephonyToolStrip";
+            this.TelephonyToolStrip.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
+            this.TelephonyToolStrip.Size = new System.Drawing.Size(705, 23);
+            this.TelephonyToolStrip.TabIndex = 4;
+            // 
+            // PickupToolStripButton
+            // 
+            this.PickupToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("PickupToolStripButton.Image")));
+            this.PickupToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.PickupToolStripButton.Name = "PickupToolStripButton";
+            this.PickupToolStripButton.Size = new System.Drawing.Size(63, 20);
+            this.PickupToolStripButton.Text = "Pickup";
+            this.PickupToolStripButton.Click += new System.EventHandler(this.PickupToolStripButton_Click);
+            // 
+            // HoldToolStripButton
+            // 
+            this.HoldToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("HoldToolStripButton.Image")));
+            this.HoldToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.HoldToolStripButton.Name = "HoldToolStripButton";
+            this.HoldToolStripButton.Size = new System.Drawing.Size(53, 20);
+            this.HoldToolStripButton.Text = "Hold";
+            this.HoldToolStripButton.Click += new System.EventHandler(this.HoldToolStripButton_Click);
+            // 
+            // MuteToolStripButton
+            // 
+            this.MuteToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("MuteToolStripButton.Image")));
+            this.MuteToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.MuteToolStripButton.Name = "MuteToolStripButton";
+            this.MuteToolStripButton.Size = new System.Drawing.Size(55, 20);
+            this.MuteToolStripButton.Text = "Mute";
+            this.MuteToolStripButton.Click += new System.EventHandler(this.MuteToolStripButton_Click);
+            // 
+            // TransferPanelToolStripButton
+            // 
+            this.TransferPanelToolStripButton.Image = global::CIC.Properties.Resources.transPanel;
+            this.TransferPanelToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.TransferPanelToolStripButton.Name = "TransferPanelToolStripButton";
+            this.TransferPanelToolStripButton.Size = new System.Drawing.Size(102, 20);
+            this.TransferPanelToolStripButton.Text = "Transfer Panel";
+            this.TransferPanelToolStripButton.Click += new System.EventHandler(this.TransferPanelToolStripButton_Click);
+            // 
+            // DisconnectToolStripButton
+            // 
+            this.DisconnectToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("DisconnectToolStripButton.Image")));
+            this.DisconnectToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.DisconnectToolStripButton.Name = "DisconnectToolStripButton";
+            this.DisconnectToolStripButton.Size = new System.Drawing.Size(86, 20);
+            this.DisconnectToolStripButton.Text = "Disconnect";
+            this.DisconnectToolStripButton.Click += new System.EventHandler(this.DisconnectToolStripButton_Click);
+            // 
+            // toolStripSeparator11
+            // 
+            this.toolStripSeparator11.Name = "toolStripSeparator11";
+            this.toolStripSeparator11.Size = new System.Drawing.Size(6, 23);
+            // 
+            // PhoneNumberToolStripTextBox
+            // 
+            this.PhoneNumberToolStripTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.PhoneNumberToolStripTextBox.DropDownWidth = 110;
+            this.PhoneNumberToolStripTextBox.Name = "PhoneNumberToolStripTextBox";
+            this.PhoneNumberToolStripTextBox.Size = new System.Drawing.Size(130, 23);
+            this.PhoneNumberToolStripTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.PhoneNumberToolStripTextBox_KeyDown);
+            this.PhoneNumberToolStripTextBox.TextChanged += new System.EventHandler(this.PhoneNumberToolStripTextBox_TextChanged);
+            // 
+            // CallToolStripSplitButton
+            // 
+            this.CallToolStripSplitButton.Image = ((System.Drawing.Image)(resources.GetObject("CallToolStripSplitButton.Image")));
+            this.CallToolStripSplitButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.CallToolStripSplitButton.Name = "CallToolStripSplitButton";
+            this.CallToolStripSplitButton.Size = new System.Drawing.Size(47, 20);
+            this.CallToolStripSplitButton.Text = "Call";
+            this.CallToolStripSplitButton.Click += new System.EventHandler(this.CallToolStripSplitButton_Click);
+            // 
+            // DialpadToolStripDropDownButton
+            // 
+            this.DialpadToolStripDropDownButton.Image = ((System.Drawing.Image)(resources.GetObject("DialpadToolStripDropDownButton.Image")));
+            this.DialpadToolStripDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.DialpadToolStripDropDownButton.Name = "DialpadToolStripDropDownButton";
+            this.DialpadToolStripDropDownButton.Size = new System.Drawing.Size(76, 20);
+            this.DialpadToolStripDropDownButton.Text = "Dialpad";
+            this.DialpadToolStripDropDownButton.ToolTipText = "Dialpad";
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.BackColor = System.Drawing.Color.DimGray;
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 23);
+            // 
+            // IVRMenu
+            // 
+            this.IVRMenu.Image = global::CIC.Properties.Resources.HmPhone2;
+            this.IVRMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.IVRMenu.Name = "IVRMenu";
+            this.IVRMenu.Size = new System.Drawing.Size(78, 20);
+            this.IVRMenu.Text = "IVR Menu";
+            this.IVRMenu.Click += new System.EventHandler(this.IVRMenu_Click);
+            // 
             // MainMnuStrip
             // 
             this.MainMnuStrip.BackColor = System.Drawing.Color.Transparent;
@@ -802,7 +1107,7 @@
             this.WebbrowserToolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.WebbrowserToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.WebBrowserToolStripDropDownButton});
-            this.WebbrowserToolStrip.Location = new System.Drawing.Point(270, 98);
+            this.WebbrowserToolStrip.Location = new System.Drawing.Point(42, 122);
             this.WebbrowserToolStrip.Name = "WebbrowserToolStrip";
             this.WebbrowserToolStrip.Size = new System.Drawing.Size(108, 25);
             this.WebbrowserToolStrip.TabIndex = 1;
@@ -814,311 +1119,6 @@
             this.WebBrowserToolStripDropDownButton.Name = "WebBrowserToolStripDropDownButton";
             this.WebBrowserToolStripDropDownButton.Size = new System.Drawing.Size(105, 22);
             this.WebBrowserToolStripDropDownButton.Text = "Web Browser";
-            // 
-            // AgentStatusToolStrip
-            // 
-            this.AgentStatusToolStrip.BackColor = System.Drawing.Color.Transparent;
-            this.AgentStatusToolStrip.CanOverflow = false;
-            this.AgentStatusToolStrip.Dock = System.Windows.Forms.DockStyle.None;
-            this.AgentStatusToolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.AgentStatusToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripAgntStLbl,
-            this.CmbImgAgentStatus,
-            this.toolStripSeparatorAgntSt,
-            this.toolStriplblAdditionalStatus,
-            this.RequestBreakToolStripButton});
-            this.AgentStatusToolStrip.Location = new System.Drawing.Point(3, 0);
-            this.AgentStatusToolStrip.Name = "AgentStatusToolStrip";
-            this.AgentStatusToolStrip.Size = new System.Drawing.Size(281, 25);
-            this.AgentStatusToolStrip.TabIndex = 0;
-            // 
-            // toolStripAgntStLbl
-            // 
-            this.toolStripAgntStLbl.Image = global::CIC.Properties.Resources.AvailNoACD;
-            this.toolStripAgntStLbl.Name = "toolStripAgntStLbl";
-            this.toolStripAgntStLbl.Size = new System.Drawing.Size(90, 22);
-            this.toolStripAgntStLbl.Text = "Agent Status";
-            // 
-            // CmbImgAgentStatus
-            // 
-            this.CmbImgAgentStatus.BackColor = System.Drawing.Color.NavajoWhite;
-            this.CmbImgAgentStatus.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CmbImgAgentStatus.Name = "CmbImgAgentStatus";
-            this.CmbImgAgentStatus.Size = new System.Drawing.Size(180, 25);
-            // 
-            // toolStripSeparatorAgntSt
-            // 
-            this.toolStripSeparatorAgntSt.Name = "toolStripSeparatorAgntSt";
-            this.toolStripSeparatorAgntSt.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStriplblAdditionalStatus
-            // 
-            this.toolStriplblAdditionalStatus.Name = "toolStriplblAdditionalStatus";
-            this.toolStriplblAdditionalStatus.Size = new System.Drawing.Size(80, 22);
-            this.toolStriplblAdditionalStatus.Text = "Available Talk";
-            this.toolStriplblAdditionalStatus.Visible = false;
-            // 
-            // RequestBreakToolStripButton
-            // 
-            this.RequestBreakToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("RequestBreakToolStripButton.Image")));
-            this.RequestBreakToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.RequestBreakToolStripButton.Name = "RequestBreakToolStripButton";
-            this.RequestBreakToolStripButton.Size = new System.Drawing.Size(101, 22);
-            this.RequestBreakToolStripButton.Text = "Request Break";
-            this.RequestBreakToolStripButton.Visible = false;
-            this.RequestBreakToolStripButton.Click += new System.EventHandler(this.RequestBreakToolStripButton_Click);
-            // 
-            // TelephonyToolStrip
-            // 
-            this.TelephonyToolStrip.BackColor = System.Drawing.Color.Transparent;
-            this.TelephonyToolStrip.CanOverflow = false;
-            this.TelephonyToolStrip.Dock = System.Windows.Forms.DockStyle.None;
-            this.TelephonyToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.PickupToolStripButton,
-            this.HoldToolStripButton,
-            this.MuteToolStripButton,
-            this.TransferPanelToolStripButton,
-            this.DisconnectToolStripButton,
-            this.toolStripSeparator11,
-            this.PhoneNumberToolStripTextBox,
-            this.CallToolStripSplitButton,
-            this.DialpadToolStripDropDownButton,
-            this.toolStripSeparator2,
-            this.IVRMenu});
-            this.TelephonyToolStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
-            this.TelephonyToolStrip.Location = new System.Drawing.Point(3, 75);
-            this.TelephonyToolStrip.Name = "TelephonyToolStrip";
-            this.TelephonyToolStrip.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.TelephonyToolStrip.Size = new System.Drawing.Size(705, 23);
-            this.TelephonyToolStrip.TabIndex = 4;
-            // 
-            // PickupToolStripButton
-            // 
-            this.PickupToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("PickupToolStripButton.Image")));
-            this.PickupToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.PickupToolStripButton.Name = "PickupToolStripButton";
-            this.PickupToolStripButton.Size = new System.Drawing.Size(63, 20);
-            this.PickupToolStripButton.Text = "Pickup";
-            this.PickupToolStripButton.Click += new System.EventHandler(this.PickupToolStripButton_Click);
-            // 
-            // HoldToolStripButton
-            // 
-            this.HoldToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("HoldToolStripButton.Image")));
-            this.HoldToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.HoldToolStripButton.Name = "HoldToolStripButton";
-            this.HoldToolStripButton.Size = new System.Drawing.Size(53, 20);
-            this.HoldToolStripButton.Text = "Hold";
-            this.HoldToolStripButton.Click += new System.EventHandler(this.HoldToolStripButton_Click);
-            // 
-            // MuteToolStripButton
-            // 
-            this.MuteToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("MuteToolStripButton.Image")));
-            this.MuteToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.MuteToolStripButton.Name = "MuteToolStripButton";
-            this.MuteToolStripButton.Size = new System.Drawing.Size(55, 20);
-            this.MuteToolStripButton.Text = "Mute";
-            this.MuteToolStripButton.Click += new System.EventHandler(this.MuteToolStripButton_Click);
-            // 
-            // TransferPanelToolStripButton
-            // 
-            this.TransferPanelToolStripButton.Image = global::CIC.Properties.Resources.transPanel;
-            this.TransferPanelToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.TransferPanelToolStripButton.Name = "TransferPanelToolStripButton";
-            this.TransferPanelToolStripButton.Size = new System.Drawing.Size(102, 20);
-            this.TransferPanelToolStripButton.Text = "Transfer Panel";
-            this.TransferPanelToolStripButton.Click += new System.EventHandler(this.TransferPanelToolStripButton_Click);
-            // 
-            // DisconnectToolStripButton
-            // 
-            this.DisconnectToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("DisconnectToolStripButton.Image")));
-            this.DisconnectToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.DisconnectToolStripButton.Name = "DisconnectToolStripButton";
-            this.DisconnectToolStripButton.Size = new System.Drawing.Size(86, 20);
-            this.DisconnectToolStripButton.Text = "Disconnect";
-            this.DisconnectToolStripButton.Click += new System.EventHandler(this.DisconnectToolStripButton_Click);
-            // 
-            // toolStripSeparator11
-            // 
-            this.toolStripSeparator11.Name = "toolStripSeparator11";
-            this.toolStripSeparator11.Size = new System.Drawing.Size(6, 23);
-            // 
-            // PhoneNumberToolStripTextBox
-            // 
-            this.PhoneNumberToolStripTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.PhoneNumberToolStripTextBox.DropDownWidth = 110;
-            this.PhoneNumberToolStripTextBox.Name = "PhoneNumberToolStripTextBox";
-            this.PhoneNumberToolStripTextBox.Size = new System.Drawing.Size(130, 23);
-            this.PhoneNumberToolStripTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.PhoneNumberToolStripTextBox_KeyDown);
-            this.PhoneNumberToolStripTextBox.TextChanged += new System.EventHandler(this.PhoneNumberToolStripTextBox_TextChanged);
-            // 
-            // CallToolStripSplitButton
-            // 
-            this.CallToolStripSplitButton.Image = ((System.Drawing.Image)(resources.GetObject("CallToolStripSplitButton.Image")));
-            this.CallToolStripSplitButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.CallToolStripSplitButton.Name = "CallToolStripSplitButton";
-            this.CallToolStripSplitButton.Size = new System.Drawing.Size(47, 20);
-            this.CallToolStripSplitButton.Text = "Call";
-            this.CallToolStripSplitButton.Click += new System.EventHandler(this.CallToolStripSplitButton_Click);
-            // 
-            // DialpadToolStripDropDownButton
-            // 
-            this.DialpadToolStripDropDownButton.Image = ((System.Drawing.Image)(resources.GetObject("DialpadToolStripDropDownButton.Image")));
-            this.DialpadToolStripDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.DialpadToolStripDropDownButton.Name = "DialpadToolStripDropDownButton";
-            this.DialpadToolStripDropDownButton.Size = new System.Drawing.Size(76, 20);
-            this.DialpadToolStripDropDownButton.Text = "Dialpad";
-            this.DialpadToolStripDropDownButton.ToolTipText = "Dialpad";
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.BackColor = System.Drawing.Color.DimGray;
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 23);
-            // 
-            // IVRMenu
-            // 
-            this.IVRMenu.Image = global::CIC.Properties.Resources.HmPhone2;
-            this.IVRMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.IVRMenu.Name = "IVRMenu";
-            this.IVRMenu.Size = new System.Drawing.Size(78, 20);
-            this.IVRMenu.Text = "IVR Menu";
-            this.IVRMenu.Click += new System.EventHandler(this.IVRMenu_Click);
-            // 
-            // WorkflowCallToolStrip
-            // 
-            this.WorkflowCallToolStrip.BackColor = System.Drawing.Color.Transparent;
-            this.WorkflowCallToolStrip.CanOverflow = false;
-            this.WorkflowCallToolStrip.Dock = System.Windows.Forms.DockStyle.None;
-            this.WorkflowCallToolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.WorkflowCallToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.PlaceCallToolStripButton,
-            this.SkipCallToolStripButton,
-            this.toolStripSeparator1,
-            this.toolStriplblReasonCode,
-            this.CallActivityCodeToolStripComboBox,
-            this.DispositionToolStripButton});
-            this.WorkflowCallToolStrip.Location = new System.Drawing.Point(3, 25);
-            this.WorkflowCallToolStrip.Name = "WorkflowCallToolStrip";
-            this.WorkflowCallToolStrip.Size = new System.Drawing.Size(538, 25);
-            this.WorkflowCallToolStrip.TabIndex = 5;
-            // 
-            // PlaceCallToolStripButton
-            // 
-            this.PlaceCallToolStripButton.Image = global::CIC.Properties.Resources.BusPhone;
-            this.PlaceCallToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.PlaceCallToolStripButton.Name = "PlaceCallToolStripButton";
-            this.PlaceCallToolStripButton.Size = new System.Drawing.Size(78, 22);
-            this.PlaceCallToolStripButton.Text = "Place Call";
-            this.PlaceCallToolStripButton.Click += new System.EventHandler(this.PlaceCallToolStripButton_Click);
-            // 
-            // SkipCallToolStripButton
-            // 
-            this.SkipCallToolStripButton.Image = global::CIC.Properties.Resources.error;
-            this.SkipCallToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.SkipCallToolStripButton.Name = "SkipCallToolStripButton";
-            this.SkipCallToolStripButton.Size = new System.Drawing.Size(72, 22);
-            this.SkipCallToolStripButton.Text = "Skip Call";
-            this.SkipCallToolStripButton.Click += new System.EventHandler(this.SkipCallToolStripButton_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStriplblReasonCode
-            // 
-            this.toolStriplblReasonCode.Image = global::CIC.Properties.Resources.hammer;
-            this.toolStriplblReasonCode.Name = "toolStriplblReasonCode";
-            this.toolStriplblReasonCode.Size = new System.Drawing.Size(61, 22);
-            this.toolStriplblReasonCode.Text = "Reason";
-            // 
-            // CallActivityCodeToolStripComboBox
-            // 
-            this.CallActivityCodeToolStripComboBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
-            this.CallActivityCodeToolStripComboBox.DropDownHeight = 218;
-            this.CallActivityCodeToolStripComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CallActivityCodeToolStripComboBox.DropDownWidth = 200;
-            this.CallActivityCodeToolStripComboBox.IntegralHeight = false;
-            this.CallActivityCodeToolStripComboBox.Name = "CallActivityCodeToolStripComboBox";
-            this.CallActivityCodeToolStripComboBox.Size = new System.Drawing.Size(230, 25);
-            // 
-            // DispositionToolStripButton
-            // 
-            this.DispositionToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("DispositionToolStripButton.Image")));
-            this.DispositionToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.DispositionToolStripButton.Name = "DispositionToolStripButton";
-            this.DispositionToolStripButton.Size = new System.Drawing.Size(86, 22);
-            this.DispositionToolStripButton.Text = "Disposition";
-            this.DispositionToolStripButton.Click += new System.EventHandler(this.DispositionToolStripButton_Click);
-            // 
-            // WebBrowserCtrlToolStrip
-            // 
-            this.WebBrowserCtrlToolStrip.BackColor = System.Drawing.Color.Transparent;
-            this.WebBrowserCtrlToolStrip.Dock = System.Windows.Forms.DockStyle.None;
-            this.WebBrowserCtrlToolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.WebBrowserCtrlToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.GoBackToolStripButton,
-            this.GoForwardToolStripButton,
-            this.UrlToolStripTextBox,
-            this.GoToolStripButton,
-            this.RefreshToolStripButton,
-            this.StopToolStripButton});
-            this.WebBrowserCtrlToolStrip.Location = new System.Drawing.Point(3, 50);
-            this.WebBrowserCtrlToolStrip.Name = "WebBrowserCtrlToolStrip";
-            this.WebBrowserCtrlToolStrip.Size = new System.Drawing.Size(686, 25);
-            this.WebBrowserCtrlToolStrip.TabIndex = 3;
-            // 
-            // GoBackToolStripButton
-            // 
-            this.GoBackToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("GoBackToolStripButton.Image")));
-            this.GoBackToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.GoBackToolStripButton.Name = "GoBackToolStripButton";
-            this.GoBackToolStripButton.Size = new System.Drawing.Size(52, 22);
-            this.GoBackToolStripButton.Text = "Back";
-            this.GoBackToolStripButton.Click += new System.EventHandler(this.GoBackToolStripButton_Click);
-            // 
-            // GoForwardToolStripButton
-            // 
-            this.GoForwardToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("GoForwardToolStripButton.Image")));
-            this.GoForwardToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.GoForwardToolStripButton.Name = "GoForwardToolStripButton";
-            this.GoForwardToolStripButton.Size = new System.Drawing.Size(70, 22);
-            this.GoForwardToolStripButton.Text = "Forward";
-            this.GoForwardToolStripButton.Click += new System.EventHandler(this.GoForwardToolStripButton_Click);
-            // 
-            // UrlToolStripTextBox
-            // 
-            this.UrlToolStripTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.UrlToolStripTextBox.Name = "UrlToolStripTextBox";
-            this.UrlToolStripTextBox.Size = new System.Drawing.Size(400, 25);
-            this.UrlToolStripTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.UrlToolStripTextBox_KeyDown);
-            // 
-            // GoToolStripButton
-            // 
-            this.GoToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("GoToolStripButton.Image")));
-            this.GoToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.GoToolStripButton.Name = "GoToolStripButton";
-            this.GoToolStripButton.Size = new System.Drawing.Size(42, 22);
-            this.GoToolStripButton.Text = "Go";
-            this.GoToolStripButton.Click += new System.EventHandler(this.GoToolStripButton_Click);
-            // 
-            // RefreshToolStripButton
-            // 
-            this.RefreshToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("RefreshToolStripButton.Image")));
-            this.RefreshToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.RefreshToolStripButton.Name = "RefreshToolStripButton";
-            this.RefreshToolStripButton.Size = new System.Drawing.Size(66, 22);
-            this.RefreshToolStripButton.Text = "Refresh";
-            this.RefreshToolStripButton.Click += new System.EventHandler(this.RefreshToolStripButton_Click);
-            // 
-            // StopToolStripButton
-            // 
-            this.StopToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("StopToolStripButton.Image")));
-            this.StopToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.StopToolStripButton.Name = "StopToolStripButton";
-            this.StopToolStripButton.Size = new System.Drawing.Size(51, 22);
-            this.StopToolStripButton.Text = "Stop";
-            this.StopToolStripButton.Click += new System.EventHandler(this.StopToolStripButton_Click);
             // 
             // imsLstServerStatus
             // 
@@ -1172,18 +1172,18 @@
             this.TransferStatusToolStrip.PerformLayout();
             this.TransferToolStrip.ResumeLayout(false);
             this.TransferToolStrip.PerformLayout();
-            this.MainMnuStrip.ResumeLayout(false);
-            this.MainMnuStrip.PerformLayout();
-            this.WebbrowserToolStrip.ResumeLayout(false);
-            this.WebbrowserToolStrip.PerformLayout();
             this.AgentStatusToolStrip.ResumeLayout(false);
             this.AgentStatusToolStrip.PerformLayout();
-            this.TelephonyToolStrip.ResumeLayout(false);
-            this.TelephonyToolStrip.PerformLayout();
             this.WorkflowCallToolStrip.ResumeLayout(false);
             this.WorkflowCallToolStrip.PerformLayout();
             this.WebBrowserCtrlToolStrip.ResumeLayout(false);
             this.WebBrowserCtrlToolStrip.PerformLayout();
+            this.TelephonyToolStrip.ResumeLayout(false);
+            this.TelephonyToolStrip.PerformLayout();
+            this.MainMnuStrip.ResumeLayout(false);
+            this.MainMnuStrip.PerformLayout();
+            this.WebbrowserToolStrip.ResumeLayout(false);
+            this.WebbrowserToolStrip.PerformLayout();
             this.ResumeLayout(false);
 
         }

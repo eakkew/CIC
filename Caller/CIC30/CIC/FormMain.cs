@@ -40,7 +40,7 @@ namespace CIC
     {
         private bool break_requested { get; set; }
         private bool BlindTransferFlag { get; set; }
-        private bool IsLoggedIntoDialer { get; set; }
+        //private bool IsLoggedIntoDialer { get; set; }
         private bool IsActiveConnection { get; set; }
         private bool SwapPartyFlag { get; set; }
         private string[] InteractionAttributes { get; set; }
@@ -51,8 +51,7 @@ namespace CIC
         private UserStatusList AllStatusMessageListOfUser { get; set; }
         private UserStatus CurrentUserStatus { get; set; }
         private StatusMessageDetails AvailableStatusMessageDetails { get; set; }
-        
-        private ICWorkFlow IcWorkFlow = null;
+
         private WorkgroupDetails ActiveWorkgroupDetails { get; set; }
         private PeopleManager mPeopleManager { get; set; }
         private ININ.IceLib.Connection.Session IC_Session = null;
@@ -63,6 +62,7 @@ namespace CIC
         private FormMainState current_state = FormMainState.Preview;
         private InteractionState StrConnectionState = InteractionState.None;
 
+        private static ICWorkFlow IcWorkFlow = null;
         private static Interaction ActiveNormalInteraction { get; set; }
         private static NameValueCollection mDialerData { get; set; }
 
@@ -77,7 +77,6 @@ namespace CIC
         {
             InitializeComponent();
             this.IsActiveConnection = true; // FIXME: remove the placeholder
-            this.IsLoggedIntoDialer = true; // FIXME: remove the placeholder
         }
 
         private void reset_timer()
@@ -140,12 +139,19 @@ namespace CIC
                 string output = String.Format("Something really bad happened: {0}", ex.Message);
                 MessageBox.Show(output, "CIC Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            state_change(FormMainState.Disconnect);
+
+            if (break_requested || prev_state == FormMainState.ManualCall)
+            {
+                break_requested = false;
+                state_change(FormMainState.Break);
+            }
+            else
+                state_change(FormMainState.Disconnect);
         }
 
         private void hold_button_Click(object sender, EventArgs e)
         {
-            if (this.IsLoggedIntoDialer)
+            if (IcWorkFlow.LoginResult)
             {
                 
                 if (this.ActiveDialerInteraction != null)
@@ -170,7 +176,7 @@ namespace CIC
 
         private void mute_button_Click(object sender, EventArgs e)
         {
-            if (this.IsLoggedIntoDialer)
+            if (IcWorkFlow.LoginResult)
             {
                 if (this.ActiveDialerInteraction != null)
                 {
@@ -212,7 +218,7 @@ namespace CIC
 
         private void manual_call_button_Click(object sender, EventArgs e)
         {
-            if (this.IsLoggedIntoDialer)
+            if (IcWorkFlow.LoginResult)
             {
                 //MessageBox.Show("Please logged into dialer first");
                 frmManualCall manualCall = new frmManualCall(IC_Session, NormalInterationManager);
@@ -247,7 +253,7 @@ namespace CIC
             //Tracing.TraceStatus(scope + "Starting.");
             try
             {
-                if (this.IsLoggedIntoDialer)
+                if (IcWorkFlow.LoginResult)
                 {
                     // FIX ME: check the state of calling
                     //if (/*this.CallStateToolStripStatusLabel.Text.ToLower().Trim() == "n/a"*/ true)
@@ -308,6 +314,107 @@ namespace CIC
             }
         }
         
+        public void disposition_invoke(object sender, EventArgs e)
+        {
+            string scope = "CIC::MainForm::DispositionToolStripButton_Click(): ";
+            string sFinishcode = (String)sender;
+            if (this.InvokeRequired == true)
+            {
+                this.BeginInvoke(new EventHandler<EventArgs>(disposition_invoke), new object[] { sender, e });
+            }
+            else
+            {
+                //Tracing.TraceStatus(scope + "Starting.[Disposition]");
+                try
+                {
+                    if (IcWorkFlow.LoginResult)
+                    {
+                        if (this.ActiveDialerInteraction != null)
+                        {
+                            ININ.IceLib.People.UserStatusUpdate statusUpdate = new UserStatusUpdate(this.mPeopleManager);
+                            if (this.ActiveDialerInteraction.DialingMode == DialingMode.Preview ||
+                                this.ActiveDialerInteraction.DialingMode == DialingMode.Regular)
+                            {
+                                ININ.IceLib.Dialer.ReasonCode sReasoncode = this.GetReasonCode(sFinishcode);
+                                ININ.IceLib.Dialer.CallCompletionParameters callCompletionParameters = new ININ.IceLib.Dialer.CallCompletionParameters(sReasoncode, sFinishcode);
+                                if (this.ActiveDialerInteraction.IsDisconnected == false)
+                                {
+                                    this.ActiveDialerInteraction.Disconnect();
+                                }
+
+                                if (sReasoncode == ReasonCode.Scheduled)
+                                {
+                                    List<string> attributeNamesToWatch = this.SetAttributeList();
+                                    if (this.ActiveDialerInteraction.IsWatching() != true)
+                                    {
+                                        this.ActiveDialerInteraction.StartWatching(attributeNamesToWatch.ToArray());
+                                    }
+                                    if (this.frmScheduleCallbackForm.ScheduleCallbackResult == false)
+                                    {
+                                        return;
+                                    }
+                                    this.ActiveDialerInteraction.ChangeWatchedAttributesAsync(attributeNamesToWatch.ToArray(), null, true, ChangeWatchedAttributesCompleted, null);
+                                    this.ActiveDialerInteraction.CallComplete(new CallCompletionParameters(sReasoncode, sFinishcode, this.CallBackDateTime, this.ScheduleAgent, false));
+                                }
+                                else
+                                {
+                                    this.ActiveDialerInteraction.CallComplete(callCompletionParameters);
+                                }
+
+                                // TODO: check what this chuck does. wtf?
+                                //if (this.BreakStatus.Trim() != "End Break")
+                                //{
+                                //    if (this.AvailableStatusMessageDetails != null)
+                                //    {
+                                //        this.userManualStatusChangeFlag = true;
+                                //        statusUpdate.StatusMessageDetails = this.AvailableStatusMessageDetails;
+                                //        statusUpdate.UpdateRequest();
+                                //        this.imgcmbAgentStatus.SetMessage(this.AvailableStatusMessageDetails.MessageText);  //Set Available status for a new call.
+                                //    }
+                                //}
+                            }
+                            else if (this.ActiveDialerInteraction.DialingMode == DialingMode.Precise)
+                            {
+                                //
+                            }
+                            else if (this.ActiveDialerInteraction.DialingMode == DialingMode.Agentless)
+                            {
+                                //
+                            }
+                            else if (this.ActiveDialerInteraction.DialingMode == DialingMode.OwnAgentCallback)
+                            {
+                                //
+                            }
+                            else if (this.ActiveDialerInteraction.DialingMode == DialingMode.OwnAgentCallback_Preview)
+                            {
+                                //
+                            }
+                            else
+                            {
+                                //Other Mode!
+                            }
+                        }
+                    }
+                    //this.DispositionToolStripButton.Enabled = false;
+                    //this.CallActivityCodeToolStripComboBox.Enabled = false;
+                    //this.PlaceCallToolStripButton.Enabled = false;
+                    //this.SkipCallToolStripButton.Enabled = false;
+                    //this.CallToolStripSplitButton.Enabled = false;
+                    //this.PickupToolStripButton.Enabled = false;
+                    //this.MuteToolStripButton.Enabled = false;
+                    //this.HoldToolStripButton.Enabled = false;
+                    //this.DisconnectToolStripButton.Enabled = false;
+                    //this.DialpadToolStripDropDownButton.Enabled = false;
+                    //Tracing.TraceStatus(scope + "Completed.[Disposition]");
+                }
+                catch (ININ.IceLib.IceLibException ex)
+                {
+                    //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                    System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                }
+            }
+        }
+
         public void workflow_invoke(object sender, EventArgs e)
         {
             string scope = "CIC::MainForm::WorkflowToolStripMenuItem_Click()::";
@@ -315,10 +422,10 @@ namespace CIC
             try
             {
                 //Tracing.TraceStatus(scope + "Logging into workflow. UserId=" + this.IC_Session.UserId + ", StationId=" + this.IC_Session.GetStationInfo().Id);
-                this.IcWorkFlow = new CIC.ICWorkFlow(CIC.Program.DialingManager);
+                IcWorkFlow = new CIC.ICWorkFlow(CIC.Program.DialingManager);
                 this.DialerSession = IcWorkFlow.LogIn(((String)sender));
-                this.IsLoggedIntoDialer = this.IcWorkFlow.LoginResult;
-                if (this.IsLoggedIntoDialer == true)
+                //IcWorkFlow.LoginResult = IcWorkFlow.LoginResult;
+                if (IcWorkFlow.LoginResult)
                 {
                     this.RegisterHandlers();
 
@@ -350,13 +457,12 @@ namespace CIC
             }
             else
             {
-                if (this.IsLoggedIntoDialer)
+                if (IcWorkFlow.LoginResult)
                 {
                     if (this.ActiveDialerInteraction == null)
                     {
                         // TODO: disable direction|calltype|campaignID|queuename|number|callstate|callID
                         //this.ActiveConferenceInteraction = null;
-                        //this.Reset_ActiveCallSelPopMenu();
                     }
                     else
                     {
@@ -388,7 +494,6 @@ namespace CIC
                     {
                         // TODO: disable direction|calltype|campaignID|queuename|number|callstate|callID
                         //this.ActiveConferenceInteraction = null;
-                        //this.Reset_ActiveCallSelPopMenu();
                     }
                     else
                     {
@@ -396,7 +501,6 @@ namespace CIC
                         {
                             // TODO: disable direction|calltype|campaignID|queuename|number|callstate|callID
                             //this.ActiveConferenceInteraction = null;
-                            //this.Reset_ActiveCallSelPopMenu();
                         }
                         else
                         {
@@ -474,7 +578,7 @@ namespace CIC
             //            ActiveNormalInteraction.Disconnect();
             //            ActiveNormalInteraction = null;
             //        }
-            //        if (this.IsLoggedIntoDialer != true)
+            //        if (IcWorkFlow.LoginResult != true)
             //        {
             //            this.ActiveDialerInteraction = null;
             //        }
@@ -552,13 +656,7 @@ namespace CIC
                     calling_state();
                     break;
                 case FormMainState.Disconnect:
-                    if (break_requested || prev_state == FormMainState.ManualCall)
-                    {
-                        break_requested = false;
-                        break_state();
-                    }
-                    else
-                        disconnect_state();
+                    disconnect_state();
                     break;
                 case FormMainState.Hold:
                     switch (current_state)
@@ -767,11 +865,20 @@ namespace CIC
                 ActiveNormalInteraction = e.Interaction;
             }
         }
-        
+
+        private void ChangeWatchedAttributesCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            if (e.Error != null)
+            {
+                MessageBox.Show(e.Error.StackTrace, e.Error.Message);
+                return;
+            }
+        }
+
         private void placecall_or_pickup()
         {
             bool mySwitch = true;
-            if (!IsLoggedIntoDialer)
+            if (!IcWorkFlow.LoginResult)
             {
                 if (IsNormalInteractionAvailableForPickup())
                 {
@@ -869,6 +976,52 @@ namespace CIC
             // NYI
         }
 
+        private ReasonCode GetReasonCode(string sFinishcode)
+        {
+            ININ.IceLib.Dialer.ReasonCode sRet = 0;
+            switch (sFinishcode.ToLower().Trim())
+            {
+                case "busy":
+                    sRet = ReasonCode.Busy;
+                    break;
+                case "deleted":
+                    sRet = ReasonCode.Deleted;
+                    break;
+                case "failure":
+                    sRet = ReasonCode.Failure;
+                    break;
+                case "fax":
+                    sRet = ReasonCode.Fax;
+                    break;
+                case "machine":
+                    sRet = ReasonCode.Machine;
+                    break;
+                case "noanswer":
+                    sRet = ReasonCode.NoAnswer;
+                    break;
+                case "remotehangup":
+                    sRet = ReasonCode.RemoteHangup;
+                    break;
+                case "scheduled":
+                    sRet = ReasonCode.Scheduled;
+                    break;
+                case "sit":
+                    sRet = ReasonCode.SIT;
+                    break;
+                case "wrongparty":
+                    sRet = ReasonCode.WrongParty;
+                    break;
+                case "success":
+                    sRet = ReasonCode.Success;
+                    break;
+                default:
+                    sRet = ReasonCode.Success;
+                    break;
+            }
+            
+            return sRet;
+        }
+
         private void DataPop(object sender, DataPopEventArgs e)
         {
             string scope = "CIC::MainForm::DataPop()::";
@@ -961,7 +1114,7 @@ namespace CIC
                 try
                 {
                     // TODO: figure out what to do with url page
-                    //switch (this.IsLoggedIntoDialer)
+                    //switch (IcWorkFlow.LoginResult)
                     //{
                     //    case true:
                     //        FullyUrl = this.GetFullyScreenUrl(mDialerData);
@@ -1025,7 +1178,7 @@ namespace CIC
             //Tracing.TraceStatus(scope + "Starting.");
             try
             {
-                    if (this.IsLoggedIntoDialer && this.ActiveDialerInteraction != null)
+                    if (IcWorkFlow.LoginResult && this.ActiveDialerInteraction != null)
                     {
                         this.ActiveDialerInteraction.AttributesChanged += new EventHandler<AttributesEventArgs>(CallBackInteraction_AttributesChanged);
                         List<string> callbackAttributeNames = new List<string>();
@@ -1122,6 +1275,75 @@ namespace CIC
             }
         }
 
+        private List<string> SetAttributeList()
+        {
+            string DialerNumber = this.GetDialerNumber();
+            if (DialerNumber.Trim() != "")
+            {
+                this.frmScheduleCallbackForm = new CIC.ScheduleCallbackForm(DialerNumber);
+            }
+            else
+            {
+                this.frmScheduleCallbackForm = new CIC.ScheduleCallbackForm(this.ActiveDialerInteraction.RemoteId);
+            }
+            this.frmScheduleCallbackForm.ShowDialog();
+            this.CallBackDateTime = this.frmScheduleCallbackForm.CallbackDateTime;
+            this.CallBackPhone = this.frmScheduleCallbackForm.ScheduledNumber;
+            switch (this.frmScheduleCallbackForm.CallbackType)
+            {
+                case CIC.Utils.CallbackType.CampaignWide:
+                    this.ScheduleAgent = "";
+                    break;
+                case CIC.Utils.CallbackType.OwnAgent:
+                    this.ScheduleAgent = this.IC_Session.UserId;
+                    break;
+                default:
+                    this.ScheduleAgent = "";
+                    break;
+            }
+            List<string> callbackAttributeNames = new List<string>();
+            callbackAttributeNames.Add(CallbackInteractionAttributeName.RemoteName);
+            callbackAttributeNames.Add(CallbackInteractionAttributeName.RemoteId);
+            callbackAttributeNames.Add(this.CallBackPhone);
+            callbackAttributeNames.Add(CallbackInteractionAttributeName.CallbackMessage);
+            callbackAttributeNames.Add(CallbackInteractionAttributeName.CallbackCompletion);
+            return callbackAttributeNames;
+        }
+
+        private string GetDialerNumber()
+        {
+            string DialerNumber = "";
+            string AlternatePreview_ATTR = Properties.Settings.Default.AlternatePreviewNumbers;
+            string[] AlternatePreviewNoATTRCollection;
+            string scope = "CIC::frmMain::GetDialerNumber()::";
+            //Tracing.TraceStatus(scope + "Starting.");
+
+            if (mDialerData[Properties.Settings.Default.Preview_Number_ATTR].ToString().Trim() == String.Empty)
+            {
+                if (AlternatePreview_ATTR != String.Empty)
+                {
+                    AlternatePreviewNoATTRCollection = AlternatePreview_ATTR.Split(';');
+                    foreach (string PreviewNoATTR in AlternatePreviewNoATTRCollection)
+                    {
+                        if (PreviewNoATTR.Trim() != String.Empty)
+                        {
+                            if (mDialerData[PreviewNoATTR.Trim()].Trim() != String.Empty)
+                            {
+                                DialerNumber = mDialerData[PreviewNoATTR.Trim()];
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                DialerNumber = mDialerData[Properties.Settings.Default.Preview_Number_ATTR].ToString().Trim();
+            }
+            //Tracing.TraceStatus(scope + "Completed.");
+            return DialerNumber;
+        }
+
         private void DialerInteraction_AttributesChanged(object sender, AttributesEventArgs e)
         {
             string scope = "CIC::MainForm::DialerInteraction_AttributesChanged():: ";
@@ -1161,7 +1383,7 @@ namespace CIC
             {
                 try
                 {
-                    switch (this.IsLoggedIntoDialer)
+                    switch (IcWorkFlow.LoginResult)
                     {
                         case true:
                             if (this.ActiveDialerInteraction != null)
@@ -1238,7 +1460,7 @@ namespace CIC
             // Tracing.TraceStatus(scope + "Starting.");
             try
             {
-                switch (this.IsLoggedIntoDialer)
+                switch (IcWorkFlow.LoginResult)
                 {
                     case true:   //Log On to Dialer Server.
                         //Tracing.TraceStatus(scope + "Pickup button clicked.Log on to Dialer Server.");
@@ -1303,5 +1525,13 @@ namespace CIC
         {
             // TODO: check UAT for detail if we need this.
         }
+
+        public ScheduleCallbackForm frmScheduleCallbackForm { get; set; }
+
+        public DateTime CallBackDateTime { get; set; }
+
+        public string CallBackPhone { get; set; }
+
+        public string ScheduleAgent { get; set; }
     }
 }
