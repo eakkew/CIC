@@ -99,7 +99,13 @@ namespace CIC
                     global::CIC.Program.IcStation = new ICStation(global::CIC.Program.m_Session);
                     global::CIC.Program.m_Session.SetAutoReconnectInterval(this.AutoReconnect);   //Time in seccond to Reconnected.
                     global::CIC.Program.m_Session.ConnectionStateChanged += new EventHandler<ConnectionStateChangedEventArgs>(mSession_Changed);
-                    global::CIC.Program.IcStation.LogIn(global::CIC.Program.mLoginParam.WindowsAuthentication, global::CIC.Program.mLoginParam.UserId, global::CIC.Program.mLoginParam.Password, global::CIC.Program.mLoginParam.Server, global::CIC.Program.mLoginParam.StationType, global::CIC.Program.mLoginParam.StationId, global::CIC.Program.mLoginParam.PhoneNumber, global::CIC.Program.mLoginParam.Persistent, this.SessionConnectCompleted, null);
+                    global::CIC.Program.IcStation.LogIn(
+                        global::CIC.Program.mLoginParam.WindowsAuthentication, global::CIC.Program.mLoginParam.UserId,
+                        global::CIC.Program.mLoginParam.Password, global::CIC.Program.mLoginParam.Server,
+                        global::CIC.Program.mLoginParam.StationType, global::CIC.Program.mLoginParam.StationId,
+                        global::CIC.Program.mLoginParam.PhoneNumber, global::CIC.Program.mLoginParam.Persistent,
+                        this.SessionConnectCompleted, null
+                    );
 
                     ININ.IceLib.Connection.Session session = global::CIC.Program.m_Session;
                     Program.Initialize_dialingManager(session);
