@@ -20,9 +20,9 @@ namespace CIC
             InitializeComponent();
         }
 
-        public frmManualCall(Session session, InteractionsManager manager)
+        public frmManualCall(InteractionsManager manager)
         {
-            this.IC_Session = session;
+            this.IC_Session = Program.m_Session;
             this.NormalInterationManager = manager;
             InitializeComponent();
         }
@@ -42,13 +42,7 @@ namespace CIC
                 //this.CallToolStripSplitButton.Enabled = false;
                 if (this.CheckEmptyPhoneNumber() != true)
                 {
-                    //Tracing.TraceStatus(scope + "Call button clicked.Log On to Basic station.");
-                    ININ.IceLib.Interactions.CallInteractionParameters callParams = new ININ.IceLib.Interactions.CallInteractionParameters(phone_box.Text, CallMadeStage.Allocated);
-                    ININ.IceLib.Connection.SessionSettings sessionSetting = this.IC_Session.GetSessionSettings();
-                    callParams.AdditionalAttributes.Add("CallerHost", sessionSetting.MachineName.ToString());
-                    //this.IsManualDialing = true;
-                    this.NormalInterationManager.MakeCallAsync(callParams, FormMain.MakeCallCompleted, null);
-                    //this.SetCallHistory();
+                    FormMain.MakeManualCall(phone_box.Text);
                 }
                 
                 //Tracing.TraceStatus(scope + "Completed.");

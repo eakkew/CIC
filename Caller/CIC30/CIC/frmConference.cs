@@ -21,6 +21,7 @@ namespace CIC
         {
             if (Util.form_validation_telephone_number(ext_number_box.Text))
             {
+                // TODO: hold current call
                 // call the number
                 ext_number_box.Enabled = false;
                 conference_button.Enabled = true;
@@ -30,13 +31,17 @@ namespace CIC
 
         private void conference_button_Click(object sender, EventArgs e)
         {
+            // TODO: 
             // complete the merge line and close the form
+            //if (this.TransferTxtDestination.Text.Trim() != "")
+
             this.Close();
         }
 
         private void cancel_button_Click(object sender, EventArgs e)
         {
-            // do not merge the line and close the form
+            // TODO: do not merge the line and close the form
+            // TODO: unhold line
             this.Close();
         }
 

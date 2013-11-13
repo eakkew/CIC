@@ -407,7 +407,7 @@ namespace CIC
             if (IcWorkFlow.LoginResult)
             {
                 //MessageBox.Show("Please logged into dialer first");
-                frmManualCall manualCall = new frmManualCall(IC_Session, NormalInterationManager);
+                frmManualCall manualCall = new frmManualCall(NormalInterationManager);
                 manualCall.ShowDialog();
                 state_change(FormMainState.ManualCall);
             }
@@ -1682,6 +1682,18 @@ namespace CIC
             callbackAttributeNames.Add(CallbackInteractionAttributeName.CallbackMessage);
             callbackAttributeNames.Add(CallbackInteractionAttributeName.CallbackCompletion);
             return callbackAttributeNames;
+        }
+
+        public static void MakeManualCall(string number)
+        {
+            //Tracing.TraceStatus(scope + "Call button clicked.Log On to Basic station.");
+            ININ.IceLib.Interactions.CallInteractionParameters callParams =
+                new ININ.IceLib.Interactions.CallInteractionParameters(number, CallMadeStage.Allocated);
+            ININ.IceLib.Connection.SessionSettings sessionSetting = Program.m_Session.GetSessionSettings();
+            callParams.AdditionalAttributes.Add("CallerHost", sessionSetting.MachineName.ToString());
+            //this.IsManualDialing = true;
+            InteractionsManager.GetInstance(Program.m_Session).MakeCallAsync(callParams, FormMain.MakeCallCompleted, null);
+            //this.SetCallHistory();
         }
 
         private string GetDialerNumber()

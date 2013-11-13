@@ -21,6 +21,7 @@ namespace CIC
         {
             if (Util.form_validation_telephone_number(ext_number_box.Text))
             {
+                // TODO: hold current line
                 // call the number
                 call_button.Enabled = false;
                 transfer_button.Enabled = true;
@@ -31,12 +32,31 @@ namespace CIC
 
         private void cancel_button_Click(object sender, EventArgs e)
         {
+            // TODO: unhold current line
+            // TODO: make sure the calling was disconnected
             this.Close();
         }
 
         private void transfer_button_Click(object sender, EventArgs e)
         {
             // transfer the current connection to another
+            
+            //if (this.ActiveNormalInteraction != null)
+            //{
+            //    this.ActiveNormalInteraction.BlindTransfer(this.TransferTxtDestination.Text);
+            //}
+            //Tracing.TraceNote(scope + "Performing blind transfer");
+
+
+            //ININ.IceLib.People.UserStatusUpdate statusUpdate = new UserStatusUpdate(this.mPeopleManager);
+            //string sFinishcode = global::CIC.Properties.Settings.Default.ReasonCode_Transfereded;
+            //ININ.IceLib.Dialer.ReasonCode sReasoncode = ININ.IceLib.Dialer.ReasonCode.Transferred;
+            //CallCompletionParameters callCompletionParameters = new CallCompletionParameters(sReasoncode, sFinishcode);
+            //this.ActiveDialerInteraction.CallComplete(callCompletionParameters);
+            //statusUpdate.StatusMessageDetails = this.AvailableStatusMessageDetails;
+            //statusUpdate.UpdateRequest();
+            //this.imgcmbAgentStatus.SetMessage(this.AvailableStatusMessageDetails.MessageText);  //Set Available status for a new call.
+                            
             this.Close();
         }
 
