@@ -72,6 +72,9 @@ namespace CIC
         public bool transfer_complete = false;
  
         public FormMainState req_state_change = FormMainState.None;
+        
+        // index for running place call number
+        private int call_idx = 0;
        
         public FormMain()
         {
@@ -865,7 +868,10 @@ namespace CIC
                                     {
                                         this.SetActiveCallInfo();
                                         this.ShowActiveCallInfo();
+                        
+                                        // restart timer and reset call index
                                         restart_timer();
+                                        call_idx = 0;
                                     }
                                     else
                                     {
@@ -1393,13 +1399,21 @@ namespace CIC
                         this.Initialize_CallBack();
                         this.Initialize_ContactData();
                         this.ShowActiveCallInfo();
+                        
+                        // restart timer and reset call index
                         restart_timer();
+                        call_idx = 0;
+                        
                         this.CrmScreenPop();
                         break;
                     case InteractionType.Call:
                         this.Initialize_ContactData();
                         this.ShowActiveCallInfo();
+                        
+                        // restart timer and reset call index
                         restart_timer();
+                        call_idx = 0;
+                        
                         this.CrmScreenPop();
                         break;
                 }
@@ -1435,13 +1449,21 @@ namespace CIC
                         this.Initialize_CallBack();
                         this.Initialize_ContactData();
                         this.ShowActiveCallInfo();
+                        
+                        // restart timer and reset call index
                         restart_timer();
+                        call_idx = 0;
+                        
                         this.CrmScreenPop();
                         break;
                     case InteractionType.Call:
                         this.Initialize_ContactData();
                         this.ShowActiveCallInfo();
+                        
+                        // restart timer and reset call index
                         restart_timer();
+                        call_idx = 0;
+                        
                         this.CrmScreenPop();
                         break;
                 }
