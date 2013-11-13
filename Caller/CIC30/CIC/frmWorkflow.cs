@@ -51,7 +51,7 @@ namespace CIC
             {
                 string output = String.Format("Cannot retrieving available workflows: {0}", ex.Message);
                 Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
                 MessageBox.Show(output, "CIC Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception e)
