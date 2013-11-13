@@ -33,7 +33,6 @@ namespace CIC
         ManualCall,
         Loggedout,
         None,
-
     };
     //private bool IsLoggedIntoDialer = false;
 
@@ -73,6 +72,9 @@ namespace CIC
         public bool transfer_complete = false;
  
         public FormMainState req_state_change = FormMainState.None;
+        
+        // index for running place call number
+        private int call_idx = 0;
        
         public FormMain()
         {
@@ -99,7 +101,13 @@ namespace CIC
                     global::CIC.Program.IcStation = new ICStation(global::CIC.Program.m_Session);
                     global::CIC.Program.m_Session.SetAutoReconnectInterval(this.AutoReconnect);   //Time in seccond to Reconnected.
                     global::CIC.Program.m_Session.ConnectionStateChanged += new EventHandler<ConnectionStateChangedEventArgs>(mSession_Changed);
-                    global::CIC.Program.IcStation.LogIn(global::CIC.Program.mLoginParam.WindowsAuthentication, global::CIC.Program.mLoginParam.UserId, global::CIC.Program.mLoginParam.Password, global::CIC.Program.mLoginParam.Server, global::CIC.Program.mLoginParam.StationType, global::CIC.Program.mLoginParam.StationId, global::CIC.Program.mLoginParam.PhoneNumber, global::CIC.Program.mLoginParam.Persistent, this.SessionConnectCompleted, null);
+                    global::CIC.Program.IcStation.LogIn(
+                        global::CIC.Program.mLoginParam.WindowsAuthentication, global::CIC.Program.mLoginParam.UserId,
+                        global::CIC.Program.mLoginParam.Password, global::CIC.Program.mLoginParam.Server,
+                        global::CIC.Program.mLoginParam.StationType, global::CIC.Program.mLoginParam.StationId,
+                        global::CIC.Program.mLoginParam.PhoneNumber, global::CIC.Program.mLoginParam.Persistent,
+                        this.SessionConnectCompleted, null
+                    );
 
                     ININ.IceLib.Connection.Session session = global::CIC.Program.m_Session;
                     Program.Initialize_dialingManager(session);
@@ -145,7 +153,7 @@ namespace CIC
                 {
                     // TODO: set state to no active connection
                     //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                    System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                    //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
                 }
             }
         }
@@ -185,7 +193,7 @@ namespace CIC
             catch (System.Exception ex)
             {
                 //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
             }
         }
 
@@ -269,6 +277,12 @@ namespace CIC
         {
             timer1.Stop();
             timer = 10.0f;
+        }
+        
+        private void restart_timer()
+        {
+            restart_timer();
+            timer1.Start();
         }
 
         public void login_workflow()
@@ -425,12 +439,85 @@ namespace CIC
         private void break_button_Click(object sender, EventArgs e)
         {
             //state_change(FormMainState.Break);
-            break_requested = true;
+
+            try
+            {
+                if (this.ActiveDialerInteraction == null)
+                {
+                    break_requested = false;
+                }
+                else
+                {
+                    switch (!break_requested)
+                    {
+                        case true:
+                            this.ActiveDialerInteraction.DialerSession.RequestBreak();
+                            break_requested = true;
+                            break_requested_state();
+                            //this.RequestBreakToolStripButton.Text = "Break Pending";
+                            /*if (this.WorkLogoutFlag == true)
+                            {
+                                System.Windows.Forms.MessageBox.Show(global::CIC.Properties.Settings.Default.IncompletedCall, "Error Info.", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            }*/
+                            break;
+                        default:
+                            break_requested = false;
+                            break_requested_state();
+                            //this.RequestBreakToolStripButton.Text = "Break Pending";
+                            /*if (this.WorkLogoutFlag == true)
+                            {
+                                System.Windows.Forms.MessageBox.Show(global::CIC.Properties.Settings.Default.IncompletedCall, "Error Info.", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            }*/
+                            break;
+                    }
+                }
+                //Tracing.TraceStatus(scope + "Completed.");
+            }
+            catch (System.Exception ex)
+            {
+                //this.RequestBreakToolStripButton.Enabled = false;
+                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+            }
         }
 
         private void endbreak_button_Click(object sender, EventArgs e)
         {
-            state_change(FormMainState.Preview);
+            try
+            {
+                if (this.ActiveDialerInteraction == null)
+                {
+                    break_requested = false;
+                }
+                else
+                {
+                    switch (break_requested)
+                    {
+                        case true:
+                            //this.SetToAvailable_UserStatusMsg();
+                            this.ActiveDialerInteraction.DialerSession.EndBreak();
+                            break_requested = false;
+                            break_requested_state();
+                            //this.RequestBreakToolStripButton.Text = "Request Break";
+                            break;
+                        default :
+                            break_requested = true;
+                            break_requested_state();
+                            //this.RequestBreakToolStripButton.Text = "Break Pending";
+                            /*if (this.WorkLogoutFlag == true)
+                            {
+                                System.Windows.Forms.MessageBox.Show(global::CIC.Properties.Settings.Default.IncompletedCall, "Error Info.", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            }*/
+                            break;
+                    }
+                }
+            }
+            catch (System.Exception ex)
+            {
+                //this.RequestBreakToolStripButton.Enabled = false;
+                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+            }
         }
 
         private void logout_workflow_button_Click(object sender, EventArgs e)
@@ -478,7 +565,7 @@ namespace CIC
             catch (System.Exception ex)
             {
                 //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
             }
         }
 
@@ -596,7 +683,7 @@ namespace CIC
                 catch (ININ.IceLib.IceLibException ex)
                 {
                     //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                    System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                    //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
                 }
             }
         }
@@ -784,7 +871,7 @@ namespace CIC
             catch (System.Exception ex)
             {
                 //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
             }
         }
 
@@ -860,6 +947,10 @@ namespace CIC
                                     {
                                         this.SetActiveCallInfo();
                                         this.ShowActiveCallInfo();
+                        
+                                        // restart timer and reset call index
+                                        restart_timer();
+                                        call_idx = 0;
                                     }
                                     else
                                     {
@@ -989,7 +1080,7 @@ namespace CIC
             catch (System.Exception ex)
             {
                 //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
             }
         }
 
@@ -1011,7 +1102,7 @@ namespace CIC
             catch (System.Exception ex)
             {
                 //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
             }
         }
 
@@ -1083,7 +1174,10 @@ namespace CIC
                     mute_state();
                     break;
                 case FormMainState.Break:
-                    break_state();
+                    if (break_requested)
+                        break_state();
+                    else
+                        preview_state();
                     break;
                 case FormMainState.Loggedout:
                     logged_out_state();
@@ -1131,7 +1225,7 @@ namespace CIC
         private void preview_state()
         {
             // starts the next number in line
-            timer1.Start();
+            // timer1.Start();
             state_info_label.Text = "Next Calling Number: " + calling_phone;
 
             reset_state();
@@ -1191,6 +1285,11 @@ namespace CIC
             endbreak_button.Enabled = true;
             logout_workflow_button.Enabled = true;
             exit_button.Enabled = true;
+        }
+        
+        private void break_requested_state()
+        {
+            break_button.Enabled = break_requested;
         }
 
 
@@ -1418,11 +1517,21 @@ namespace CIC
                         this.Initialize_CallBack();
                         this.Initialize_ContactData();
                         this.ShowActiveCallInfo();
+                        
+                        // restart timer and reset call index
+                        restart_timer();
+                        call_idx = 0;
+                        
                         this.CrmScreenPop();
                         break;
                     case InteractionType.Call:
                         this.Initialize_ContactData();
                         this.ShowActiveCallInfo();
+                        
+                        // restart timer and reset call index
+                        restart_timer();
+                        call_idx = 0;
+                        
                         this.CrmScreenPop();
                         break;
                 }
@@ -1431,10 +1540,11 @@ namespace CIC
             catch (System.Exception ex)
             {
                 //Tracing.TraceStatus(scope + "Error info : " + ex.Message);
-                System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
             }
         }
 
+        // Get new infomation set
         private void PreviewCallAdded(object sender, PreviewCallAddedEventArgs e)
         {
             string scope = "CIC::MainForm::PreviewCallAdded()::";
@@ -1457,11 +1567,21 @@ namespace CIC
                         this.Initialize_CallBack();
                         this.Initialize_ContactData();
                         this.ShowActiveCallInfo();
+                        
+                        // restart timer and reset call index
+                        restart_timer();
+                        call_idx = 0;
+                        
                         this.CrmScreenPop();
                         break;
                     case InteractionType.Call:
                         this.Initialize_ContactData();
                         this.ShowActiveCallInfo();
+                        
+                        // restart timer and reset call index
+                        restart_timer();
+                        call_idx = 0;
+                        
                         this.CrmScreenPop();
                         break;
                 }
@@ -1470,7 +1590,7 @@ namespace CIC
             catch (System.Exception ex)
             {
                 //Tracing.TraceStatus(scope + "Error info : " + ex.Message);
-                System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
             }
         }
 
@@ -1509,7 +1629,7 @@ namespace CIC
                 catch (System.Exception ex)
                 {
                     //Tracing.TraceStatus(scope + "Error info : " + ex.Message);
-                    System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                    //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
                     //this.MainWebBrowser.Url = new System.Uri(global::CIC.Properties.Settings.Default.StartupUrl, System.UriKind.Absolute);
                 }
             }
@@ -1622,7 +1742,7 @@ namespace CIC
                 catch (System.Exception ex)
                 {
                     //Tracing.TraceStatus(scope + "Error info : " + ex.Message);
-                    System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                    //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
                 }
             }
         }
@@ -1754,7 +1874,48 @@ namespace CIC
 
         private void BreakGranted(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            string scope = "CIC::MainForm::BreakGranted(): ";
+            //Tracing.TraceStatus(scope + "Starting.");
+            if (this.InvokeRequired == true)
+            {
+                this.BeginInvoke(new EventHandler<EventArgs>(BreakGranted), new object[] { sender, e });
+            }
+            else
+            {
+                try
+                {
+                    switch (break_requested)
+                    {
+                        case true:
+                            state_change(FormMainState.Break);
+                            //this.RequestBreakToolStripButton.Text = "End Break";
+
+                            //this.SetToDoNotDisturb_UserStatusMsg();
+                            /*
+                             * Note : need CIC to use WorkLogoutFlag 
+                            */
+                            
+                            //if (this.WorkLogoutFlag != true)
+                            //{
+                                // Shiw Break Status Message.
+                                // System.Windows.Forms.MessageBox.Show(global::CIC.Properties.Settings.Default.CompletedBreak, "System Info.", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            //}
+                            break;
+                        default:
+                            state_change(FormMainState.Break);
+                            //this.RequestBreakToolStripButton.Text = "Request Break";
+                            break;
+                    }
+                    
+                    //Tracing.TraceStatus(scope + "Completed.");
+                }
+                catch (System.Exception ex)
+                {
+                    //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                    //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                }
+            }
+            //throw new NotImplementedException();
         }
 
         private void LogoutGranted(object sender, EventArgs e)
@@ -1807,7 +1968,7 @@ namespace CIC
                 catch (System.Exception ex)
                 {
                     //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                    System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                    //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
                 }
             }
         }
@@ -1828,7 +1989,87 @@ namespace CIC
                     if (this.ActiveDialerInteraction != null)
                     {
                         state_info_label.Text = "Calling: " + this.ActiveDialerInteraction.ContactData["is_attr_numbertodial"];
-                        this.ActiveDialerInteraction.PlacePreviewCall();
+                        
+                        // find a strategy to make a call by using PlacePreviewCall() and make a normal call for the other 6 numbers 
+                        switch (call_idx)
+                        {
+                            case 0:
+                                this.ActiveDialerInteraction.PlacePreviewCall();
+                                break;
+                            case 1:
+                                if (name1_box2.Text.Length == 0)
+                                {
+                                    call_idx = 2;
+                                    goto case 2;
+                                }
+                                else 
+                                {
+                                    // TODO: make a hilight at name1_box{1,2}
+                                    // TODO: make a call by a number in name1_box2.Text
+                                }
+                                break;
+                            case 2:
+                            if (name1_box2.Text.Length == 0)
+                                {
+                                    call_idx = 3;
+                                    goto case 3;
+                                }
+                                else 
+                                {
+                                    // TODO: make a hilight at name2_box{1,2}
+                                    // TODO: make a call by a number in name2_box2.Text
+                                }
+                                break;
+                            case 3:
+                                if (name1_box2.Text.Length == 0)
+                                {
+                                    call_idx = 4;
+                                    goto case 4;
+                                }
+                                else 
+                                {
+                                    // TODO: make a hilight at name3_box{1,2}
+                                    // TODO: make a call by a number in name3_box2.Text
+                                }
+                                break;
+                            case 4:
+                                if (name1_box2.Text.Length == 0)
+                                {
+                                    call_idx = 5;
+                                    goto case 5;
+                                }
+                                else 
+                                {
+                                    // TODO: make a hilight at name4_box{1,2}
+                                    // TODO: make a call by a number in name4_box2.Text
+                                }
+                                break;
+                            case 5:
+                                if (name1_box2.Text.Length == 0)
+                                {
+                                    call_idx = 6;
+                                    goto case 6;
+                                }
+                                else 
+                                {
+                                    // TODO: make a hilight at name5_box{1,2}
+                                    // TODO: make a call by a number in name5_box2.Text
+                                }
+                                break;
+                            case 6:
+                                if (name1_box2.Text.Length == 0)
+                                {
+                                    break;
+                                }
+                                else 
+                                {
+                                    // TODO: make a hilight at name6_box{1,2}
+                                    // TODO: make a call by a number in name6_box2.Text
+                                }
+                                break;
+                        }
+                        call_idx++;
+                        
                     }
                     // Tracing.TraceStatus(scope + "Completed.[Place Call]");
                 }
