@@ -23,6 +23,7 @@ namespace CIC
             {
                 // TODO: hold current call
                 // call the number
+                Program.MainDashboard.MakeConsultCall(ext_number_box.Text);
                 ext_number_box.Enabled = false;
                 conference_button.Enabled = true;
                 call_button.Enabled = false;
@@ -33,7 +34,6 @@ namespace CIC
         {
             // TODO: 
             // complete the merge line and close the form
-            //if (this.TransferTxtDestination.Text.Trim() != "")
 
             this.Close();
         }
@@ -42,6 +42,7 @@ namespace CIC
         {
             // TODO: do not merge the line and close the form
             // TODO: unhold line
+            Program.MainDashboard.DisconnectConsultCall();
             this.Close();
         }
 

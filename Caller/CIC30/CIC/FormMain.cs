@@ -47,23 +47,25 @@ namespace CIC
         private ArrayList InteractionList { get; set; }
 
         private DataSet DsReasonCode { get; set; }
+        private Interaction mInteraction { get; set; }
         private StatusMessageList AllStatusMessageList { get; set; }
         private UserStatusList AllStatusMessageListOfUser { get; set; }
         private UserStatus CurrentUserStatus { get; set; }
         private StatusMessageDetails AvailableStatusMessageDetails { get; set; }
-
         private WorkgroupDetails ActiveWorkgroupDetails { get; set; }
+        private InteractionsManager NormalInterationManager = null;
         private PeopleManager mPeopleManager { get; set; }
+        private DialerCallInteraction ActiveDialerInteraction = null;
         private ININ.IceLib.Connection.Session IC_Session = null;
-        private ININ.IceLib.Dialer.DialerCallInteraction ActiveDialerInteraction = null;
         private ININ.IceLib.Dialer.DialerSession DialerSession = null;
-        private ININ.IceLib.Interactions.InteractionsManager NormalInterationManager = null;
         private FormMainState prev_state = FormMainState.Preview;
         private FormMainState current_state = FormMainState.Preview;
         private InteractionState StrConnectionState = InteractionState.None;
 
         private static ICWorkFlow IcWorkFlow = null;
         private static Interaction ActiveNormalInteraction { get; set; }
+        private static Interaction ActiveConsultInteraction { get; set; }
+        private static InteractionConference ActiveConferenceInteraction = null;
         private static NameValueCollection mDialerData { get; set; }
 
         private float timer;
@@ -134,7 +136,7 @@ namespace CIC
                             if (mConnectionState == ININ.IceLib.Connection.ConnectionState.Up)
                             {
                                 this.Initial_NormalInteraction();
-                                //this.InitializeQueueWatcher();
+                                this.InitializeQueueWatcher();
                                 //this.UnifiedMessaging_StartWatching();
                                
                                 //Tracing.TraceStatus(scope + "Completed.");
@@ -156,6 +158,257 @@ namespace CIC
                     //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
                 }
             }
+        }
+
+        private void InitializeQueueWatcher()
+        {
+            string scope = "CIC::MainForm::InitializeQueueWatcher():: ";
+            //Tracing.TraceStatus(scope + "Starting.");
+            try
+            {
+                //Tracing.TraceStatus(scope + "Creating instance of InteractionQueue");
+                if (this.NormalInterationManager != null)
+                {
+                    this.m_InteractionQueue = new ININ.IceLib.Interactions.InteractionQueue(this.NormalInterationManager, new QueueId(QueueType.MyInteractions, this.IC_Session.UserId));
+                    //Tracing.TraceStatus(scope + "Attaching event handlers");
+                    this.m_InteractionQueue.InteractionAdded += new EventHandler<InteractionAttributesEventArgs>(m_InteractionQueue_InteractionAdded);
+                    this.m_InteractionQueue.InteractionChanged += new EventHandler<InteractionAttributesEventArgs>(m_InteractionQueue_InteractionChanged);
+                    this.m_InteractionQueue.InteractionRemoved += new EventHandler<InteractionEventArgs>(m_InteractionQueue_InteractionRemoved);
+                    this.m_InteractionQueue.ConferenceInteractionAdded += new EventHandler<ConferenceInteractionAttributesEventArgs>(m_InteractionQueue_ConferenceInteractionAdded);
+                    this.m_InteractionQueue.ConferenceInteractionChanged += new EventHandler<ConferenceInteractionAttributesEventArgs>(m_InteractionQueue_ConferenceInteractionChanged);
+                    this.m_InteractionQueue.ConferenceInteractionRemoved += new EventHandler<ConferenceInteractionEventArgs>(m_InteractionQueue_ConferenceInteractionRemoved);
+                    //Tracing.TraceStatus(scope + "Start watching for queue events");
+                    this.Initialize_InteractionAttributes();
+                    this.m_InteractionQueue.StartWatchingAsync(this.InteractionAttributes, null, null);
+                }
+                //Tracing.TraceStatus(scope + "Completed.");
+            }
+            catch (System.Exception ex)
+            {
+                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+            }
+        }
+
+        private void m_InteractionQueue_ConferenceInteractionRemoved(object sender, ConferenceInteractionEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void m_InteractionQueue_ConferenceInteractionChanged(object sender, ConferenceInteractionAttributesEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void m_InteractionQueue_ConferenceInteractionAdded(object sender, ConferenceInteractionAttributesEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void m_InteractionQueue_InteractionRemoved(object sender, InteractionEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void m_InteractionQueue_InteractionChanged(object sender, InteractionAttributesEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void m_InteractionQueue_InteractionAdded(object sender, InteractionAttributesEventArgs e)
+        {
+            string scope = "CIC::MainForm::m_InteractionQueue_InteractionAdded():: ";
+            //Tracing.TraceStatus(scope + "Starting.");
+            try
+            {
+                if (e.Interaction.IsWatching() != true)
+                {
+                    e.Interaction.AttributesChanged += new EventHandler<AttributesEventArgs>(NormalInteraction_AttributesChanged);
+                    e.Interaction.StartWatching(this.InteractionAttributes);
+                }
+                if (this.IsMuted == true)
+                {
+                    e.Interaction.Mute(true);
+                }
+                switch (e.Interaction.InteractionType)
+                {
+                    case InteractionType.Email:
+                        ActiveNormalEmailInteraction = new EmailInteraction(this.NormalInterationManager, e.Interaction.InteractionId);
+                        //this.SetActiveEmailQueue();
+                        ActiveNormalInteraction = e.Interaction;
+                        this.ShowActiveCallInfo();
+                        break;
+                    case InteractionType.Chat:
+                        //
+                        break;
+                    case InteractionType.Callback:
+                        this.ActiveCallbackInteraction = new CallbackInteraction(this.NormalInterationManager, e.Interaction.InteractionId);
+                        ActiveNormalInteraction = e.Interaction;
+                        this.StrConnectionState = ActiveNormalInteraction.State;
+                        this.ShowActiveCallInfo();
+                        break;
+                    case InteractionType.Call:
+                        if (e.Interaction.IsDisconnected != true)
+                        {
+                            this.Add_InteractionListObject(e.Interaction);
+                            ActiveNormalInteraction = e.Interaction;
+                            this.StrConnectionState = ActiveNormalInteraction.State;
+                            if (ActiveNormalInteraction.GetStringAttribute("CallerHost") != null)
+                            {
+                                if (ActiveNormalInteraction.GetStringAttribute("CallerHost").ToString().Trim() != "")
+                                {
+                                    this.CallerHost = ActiveNormalInteraction.GetStringAttribute("CallerHost");
+                                }
+                                else
+                                {
+                                    ININ.IceLib.Connection.SessionSettings session_Setting = ActiveNormalInteraction.InteractionsManager.Session.GetSessionSettings();
+                                    this.CallerHost = session_Setting.MachineName.ToString();
+                                }
+                            }
+                            this.ShowActiveCallInfo();
+                            if (this.IsManualDialing != true)
+                            {
+                                this.CrmScreenPop();
+                            }
+                            else
+                            {
+                                this.IsManualDialing = false;
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                //Tracing.TraceStatus(scope + "Completed.");
+            }
+            catch (System.Exception ex)
+            {
+                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+            }
+        }
+
+        private void NormalInteraction_AttributesChanged(object sender, AttributesEventArgs e)
+        {
+            string scope = "CIC::MainForm::NormalInteraction_AttributesChanged():: ";
+            //Tracing.TraceStatus(scope + "Starting.");
+            try
+            {
+                if (ActiveNormalInteraction != null)
+                {
+                    this.StrConnectionState = ActiveNormalInteraction.State;
+                }
+                else
+                {
+                    if (this.InteractionList != null)
+                    {
+                        if (this.InteractionList.Count <= 0)
+                        {
+                            this.StrConnectionState = InteractionState.None;
+                        }
+                        else
+                        {
+                            //
+                        }
+                    }
+                }
+                //Tracing.TraceStatus(scope + "Completed.");
+            }
+            catch
+            {
+                //Get Connection State.
+                            this.StrConnectionState = InteractionState.None;
+            }
+        }
+
+        private void Add_InteractionListObject(Interaction interaction)
+        {
+            int chk_idx = -1;
+            string scope = "CIC::MainForm::Add_InteractionListObject():: ";
+            //Tracing.TraceStatus(scope + "Starting.");
+            try
+            {
+                if (mInteraction != null)
+                {
+                    if (this.InteractionList != null)
+                    {
+                        for (int i = 0; i < this.InteractionList.Count; i++)
+                        {
+                            if (((ININ.IceLib.Interactions.Interaction)this.InteractionList[i]).InteractionId == mInteraction.InteractionId)
+                            {
+                                chk_idx = i;
+                                break;
+                            }
+                        }
+                        if ((chk_idx >= 0) && (chk_idx < this.InteractionList.Count))
+                        {
+                            //Update
+                            this.InteractionList[chk_idx] = mInteraction;
+                        }
+                        else
+                        {
+                            //Insert
+                            this.InteractionList.Add(mInteraction);
+                        }
+                    }
+                }
+                //Tracing.TraceStatus(scope + "Completed.");
+            }
+            catch (System.Exception ex)
+            {
+                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+            }
+        }
+
+        private void Initialize_InteractionAttributes()
+        {
+            string scope = "CIC::MainForm::Initial_InteractionAttributes():: ";
+            //Tracing.TraceStatus(scope + "Starting.");
+            this.InteractionAttributes = new string[] 
+            {
+                InteractionAttributeName.AccountCodeId,
+                InteractionAttributeName.AlertSound,
+                InteractionAttributeName.CallIdKey,
+                InteractionAttributeName.Capabilities,
+                InteractionAttributeName.ClientMessage,
+                InteractionAttributeName.ConferenceId,
+                InteractionAttributeName.DeallocationTime,
+                InteractionAttributeName.Direction,
+                InteractionAttributeName.DisconnectionTime,
+                InteractionAttributeName.DisconnectRingNoAnswer,
+                InteractionAttributeName.ImmediateAccess,
+                InteractionAttributeName.InitiationTime,
+                InteractionAttributeName.InteractionId,
+                InteractionAttributeName.InteractionType,
+                InteractionAttributeName.LineQueueName,
+                InteractionAttributeName.LocalAddress,
+                InteractionAttributeName.LocalId,
+                InteractionAttributeName.LocalName,
+                InteractionAttributeName.Log,
+                InteractionAttributeName.Monitors,
+                InteractionAttributeName.MonitorsCombinedCount,
+                InteractionAttributeName.MonitorType,
+                InteractionAttributeName.Muted,
+                InteractionAttributeName.Notes,
+                InteractionAttributeName.OrbitQueueName,
+                InteractionAttributeName.PopApplication,
+                InteractionAttributeName.Private,
+                InteractionAttributeName.Recorders,
+                InteractionAttributeName.RecordersCombinedCount,
+                InteractionAttributeName.RemoteAddress,
+                InteractionAttributeName.RemoteId,
+                InteractionAttributeName.RemoteName,
+                InteractionAttributeName.State,
+                InteractionAttributeName.StateDescription,
+                InteractionAttributeName.StationQueueNames,
+                InteractionAttributeName.SupervisorMonitors,
+                InteractionAttributeName.SupervisorRecorders,
+                InteractionAttributeName.UserQueueNames,
+                InteractionAttributeName.WorkgroupQueueDisplayName,
+                InteractionAttributeName.WorkgroupQueueName,
+                InteractionAttributeName.WrapUpCodeId
+            };
         }
 
         private void Initial_NormalInteraction()
@@ -668,16 +921,7 @@ namespace CIC
                             }
                         }
                     }
-                    //this.DispositionToolStripButton.Enabled = false;
-                    //this.CallActivityCodeToolStripComboBox.Enabled = false;
-                    //this.PlaceCallToolStripButton.Enabled = false;
-                    //this.SkipCallToolStripButton.Enabled = false;
-                    //this.CallToolStripSplitButton.Enabled = false;
-                    //this.PickupToolStripButton.Enabled = false;
-                    //this.MuteToolStripButton.Enabled = false;
-                    //this.HoldToolStripButton.Enabled = false;
-                    //this.DisconnectToolStripButton.Enabled = false;
-                    //this.DialpadToolStripDropDownButton.Enabled = false;
+                    // TODO: change state.
                     //Tracing.TraceStatus(scope + "Completed.[Disposition]");
                 }
                 catch (ININ.IceLib.IceLibException ex)
@@ -720,6 +964,225 @@ namespace CIC
                 //Tracing.TraceStatus(scope + "Error info.Logon to Workflow[" + ((ToolStripMenuItem)sender).Text + "] : " + ex.Message);
                 //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info.Logon to Workflow[" + ((ToolStripMenuItem)sender).Text + "] : " + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
             }  
+        }
+
+        public void conference_invoke(string transferTxtDestination)
+        {
+            string scope = "CIC::frmMain::CreateConferenceToolStripButton_Click()::";
+            //Tracing.TraceStatus(scope + "Starting.");
+            int idx = 0;
+            ININ.IceLib.Interactions.Interaction[] TmpInteraction;
+            try
+            {
+                if (IcWorkFlow.LoginResult)
+                {
+                    if (this.ActiveDialerInteraction != null &&
+                        ActiveNormalInteraction != null && 
+                        this.InteractionList != null)
+                    {
+                        if (this.InteractionList.Count > 1)
+                        {
+                            TmpInteraction = new ININ.IceLib.Interactions.Interaction[this.InteractionList.Count];
+                            foreach (ININ.IceLib.Interactions.Interaction interact in this.InteractionList)
+                            {
+                                if (interact.InteractionType == InteractionType.Call)
+                                {
+                                    if (interact.IsDisconnected != true)
+                                    {
+                                        TmpInteraction[idx] = interact;
+                                        idx++;
+                                    }
+                                }
+                            }
+                            this.NormalInterationManager.MakeNewConferenceAsync(TmpInteraction, MakeNewConferenceCompleted, null);
+                        }
+                    }
+                }
+                else
+                {
+                    if (ActiveNormalInteraction != null &&
+                        this.InteractionList != null)
+                    {
+                        if (this.InteractionList.Count > 1)
+                        {
+                            TmpInteraction = new ININ.IceLib.Interactions.Interaction[this.InteractionList.Count];
+                            foreach (ININ.IceLib.Interactions.Interaction interact in this.InteractionList)
+                            {
+                                if (interact.InteractionType == InteractionType.Call)
+                                {
+                                    if (interact.IsDisconnected != true)
+                                    {
+                                        TmpInteraction[idx] = interact;
+                                        idx++;
+                                    }
+                                }
+                            }
+                            this.NormalInterationManager.MakeNewConferenceAsync(TmpInteraction, MakeNewConferenceCompleted, null);
+                        }
+                    }
+                }
+                // TODO: change state
+                //this.CreateConferenceToolStripButton.Enabled = false;
+                //this.LeaveConferenceToolStripButton.Enabled = true;
+                //Tracing.TraceStatus(scope + "Completed.");
+            }
+            catch (System.Exception ex)
+            {
+                // TODO: change state
+                //this.CreateConferenceToolStripButton.Enabled = false;
+                //this.LeaveConferenceToolStripButton.Enabled = false;
+                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+            }
+        }
+
+        private void MakeNewConferenceCompleted(object sender, MakeNewConferenceCompletedEventArgs e)
+        {
+            string scope = "CIC::frmMain::MakeNewConferenceCompleted()::";
+            //Tracing.TraceStatus(scope + "Starting.");
+            try
+            {
+                //Conference variable
+                ActiveConferenceInteraction = e.InteractionConference;
+                bool ConferenceCancel = e.Cancelled;
+                object ConferenceuserState = e.UserState;
+                System.Exception ConferenceErrMsg = e.Error;
+                ActiveConsultInteraction = null;
+                //Tracing.TraceStatus(scope + "Completed.");
+            }
+            catch (System.Exception ex)
+            {
+                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+            }
+        }
+
+        public void transfer_invoke(string transferTxtDestination)
+        {
+            string scope = "CIC::frmMain::TransferNowToolStripButton_Click()::";
+            //Tracing.TraceStatus(scope + "Starting.");
+            this.BlindTransferFlag = false;
+            try
+            {
+                if (IcWorkFlow.LoginResult && ActiveNormalInteraction != null && this.ActiveDialerInteraction != null)
+                {
+                    if (ActiveConsultInteraction != null)
+                    {
+                        //Tracing.TraceNote(scope + "Performing consult transfer");
+                        ActiveNormalInteraction.ConsultTransferAsync(ActiveConsultInteraction.InteractionId, TransferCompleted, null);
+                    }
+                    else
+                    {
+                        if (transferTxtDestination != "")
+                        {
+                            if (ActiveNormalInteraction != null)
+                            {
+                                ActiveNormalInteraction.BlindTransfer(transferTxtDestination);
+                            }
+                            //Tracing.TraceNote(scope + "Performing blind transfer");
+                        }
+                    }
+                    ININ.IceLib.People.UserStatusUpdate statusUpdate = new UserStatusUpdate(this.mPeopleManager);
+                    string sFinishcode = global::CIC.Properties.Settings.Default.ReasonCode_Transfereded;
+                    ININ.IceLib.Dialer.ReasonCode sReasoncode = ININ.IceLib.Dialer.ReasonCode.Transferred;
+                    CallCompletionParameters callCompletionParameters = new CallCompletionParameters(sReasoncode, sFinishcode);
+                    this.ActiveDialerInteraction.CallComplete(callCompletionParameters);
+                    statusUpdate.StatusMessageDetails = this.AvailableStatusMessageDetails;
+                    statusUpdate.UpdateRequest();
+                    //this.imgcmbAgentStatus.SetMessage(this.AvailableStatusMessageDetails.MessageText);  //Set Available status for a new call.
+                }
+                else
+                {
+                    if (ActiveNormalInteraction != null)
+                    {
+                        if (ActiveConsultInteraction != null)
+                        {
+                            //Tracing.TraceNote(scope + "Performing consult transfer");
+                            if (ActiveConsultInteraction.InteractionId != ActiveNormalInteraction.InteractionId)
+                            {
+                                ActiveNormalInteraction.ConsultTransferAsync(ActiveConsultInteraction.InteractionId, TransferCompleted, null);
+                                // TODO: activate these code
+                                //this.RemoveNormalInteractionFromList(this.ActiveNormalInteraction);
+                                //this.RemoveNormalInteractionFromList(this.ActiveConsultInteraction);
+                                this.BlindTransferFlag = true;
+                            }
+                            else
+                            {
+                                ActiveConsultInteraction = null;
+                                if (this.InteractionList != null)
+                                {
+                                    if (this.InteractionList.Count > 0)
+                                    {
+                                        foreach (ININ.IceLib.Interactions.Interaction CurrentInteraction in this.InteractionList)
+                                        {
+                                            if (CurrentInteraction.IsDisconnected != true)
+                                            {
+                                                if (CurrentInteraction.InteractionId != ActiveNormalInteraction.InteractionId)
+                                                {
+                                                    ActiveConsultInteraction = CurrentInteraction;  //Find Consult Call
+                                                    break;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                //
+                                            }
+                                        }
+                                        if (ActiveConsultInteraction != null)
+                                        {
+                                            ActiveNormalInteraction.ConsultTransferAsync(ActiveConsultInteraction.InteractionId, TransferCompleted, null);
+                                            // TODO: activate these code
+                                            //this.RemoveNormalInteractionFromList(this.ActiveNormalInteraction);
+                                            //this.RemoveNormalInteractionFromList(this.ActiveConsultInteraction);
+                                            this.BlindTransferFlag = true;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (transferTxtDestination != "")
+                                        {
+                                            ActiveNormalInteraction.BlindTransfer(transferTxtDestination);
+                                            // TODO: activate this code
+                                            //this.RemoveNormalInteractionFromList(this.ActiveNormalInteraction);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            //Tracing.TraceNote(scope + "Performing blind transfer");
+                            if (transferTxtDestination != "")
+                            {
+                                ActiveNormalInteraction.BlindTransfer(transferTxtDestination);
+                                // TODO: activate this code
+                                //this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
+                            }
+                        }
+                    }
+                
+                }
+                // TODO: activate this code
+                //this.ResetActiveCallInfo();
+                //Tracing.TraceStatus(scope + "Completed.");
+            }
+            catch (System.Exception ex)
+            {
+                // TODO: activate this code
+                //this.ResetActiveCallInfo();
+                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+            }
+        }
+
+        private void TransferCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            this.BlindTransferFlag = true;
+            this.ShowActiveCallInfo();
+            this.BlindTransferFlag = false;
+            // TODO: activate this code
+            //this.RemoveNormalInteractionFromList(this.ActiveNormalInteraction);
+            //this.toolStripButtonClear_Click(sender, new System.EventArgs()); 
         }
 
         private void UpdateUserStatus()
@@ -1804,16 +2267,159 @@ namespace CIC
             return callbackAttributeNames;
         }
 
-        public static void MakeManualCall(string number)
+        public void MakeManualCall(string number)
         {
             //Tracing.TraceStatus(scope + "Call button clicked.Log On to Basic station.");
-            ININ.IceLib.Interactions.CallInteractionParameters callParams =
-                new ININ.IceLib.Interactions.CallInteractionParameters(number, CallMadeStage.Allocated);
-            ININ.IceLib.Connection.SessionSettings sessionSetting = Program.m_Session.GetSessionSettings();
+            CallInteractionParameters callParams =
+                new CallInteractionParameters(number, CallMadeStage.Allocated);
+            SessionSettings sessionSetting = Program.m_Session.GetSessionSettings();
             callParams.AdditionalAttributes.Add("CallerHost", sessionSetting.MachineName.ToString());
             //this.IsManualDialing = true;
-            InteractionsManager.GetInstance(Program.m_Session).MakeCallAsync(callParams, FormMain.MakeCallCompleted, null);
+            this.NormalInterationManager.MakeCallAsync(callParams, FormMain.MakeCallCompleted, null);
             //this.SetCallHistory();
+        }
+
+        public void MakeConsultCall(string transferTxtDestination)
+        {
+            string scope = "CIC::frmMain::MakeConsultCallToolStripButton_Click()::";
+            //Tracing.TraceStatus(scope + "Starting.");
+            ININ.IceLib.Interactions.CallInteractionParameters callParams = null;
+            try
+            {
+                switch (IcWorkFlow.LoginResult)
+                {
+                    case true:   //Log On to Dialer Server.  use same normal to call before using dialer object to blind/consult transfer.
+                        //Tracing.TraceStatus(scope + "Call button clicked. Log On to Dialer Server.");
+                        if (transferTxtDestination != "")
+                        {
+                            //Tracing.TraceStatus(scope + "Making consult call to " + transferTxtDestination);
+                            callParams = new CallInteractionParameters(transferTxtDestination, CallMadeStage.Allocated);
+                            if (NormalInterationManager != null)
+                            {
+                                NormalInterationManager.ConsultMakeCallAsync(callParams, MakeConsultCompleted, null);
+                            }
+                        }
+                        break;
+                    default:     // Not Log On to Dialer Server.
+                        //Tracing.TraceStatus(scope + "Call button clicked. Not log on to Dialer Server.");
+                        if (transferTxtDestination != "")
+                        {
+                            //Tracing.TraceStatus(scope + "Making consult call to " + transferTxtDestination);
+                            callParams = new CallInteractionParameters(transferTxtDestination, CallMadeStage.Allocated);
+                        }
+                        if (callParams != null)
+                        {
+                            NormalInterationManager.ConsultMakeCallAsync(callParams, MakeConsultCompleted, null);
+                        }
+                        break;
+                }
+                //this.EnabledTransferToolStripDisplayed();
+                //Tracing.TraceStatus(scope + "Completed.");
+            }
+            catch (System.Exception ex)
+            {
+                // TODO: Activate this code
+                //this.ResetActiveCallInfo();
+                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+            }
+        }
+
+        public void DisconnectConsultCall()
+        {
+            string scope = "CIC::frmMain::CancelTransferToolStripButton_Click()::";
+            //Tracing.TraceStatus(scope + "Starting.");
+            try
+            {
+                if (IcWorkFlow.LoginResult)
+                {
+                    if (ActiveDialerInteraction != null && ActiveNormalInteraction != null)
+                    {
+                        if (InteractionList.Count > 0)
+                        {
+                            if (ActiveConsultInteraction != null)
+                            {
+                                ActiveConsultInteraction.Disconnect();
+                                // TODO: activate this code
+                                //this.RemoveNormalInteractionFromList(ActiveConsultInteraction);
+                                ActiveConsultInteraction = null;
+                            }
+                            else
+                            {
+                                ActiveConsultInteraction = ActiveNormalInteraction;
+                                ActiveConsultInteraction.Disconnect();
+                                // TODO: activate this code
+                                //this.RemoveNormalInteractionFromList(this.ActiveConsultInteraction);
+                                ActiveConsultInteraction = null;
+                            }
+                            if (InteractionList != null)
+                            {
+                                foreach (ININ.IceLib.Interactions.Interaction CurrentInteraction in InteractionList)
+                                {
+                                    if (CurrentInteraction.IsHeld == true)
+                                    {
+                                        ActiveNormalInteraction = CurrentInteraction;
+                                        ActiveNormalInteraction.Pickup();
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    if (ActiveNormalInteraction != null)
+                    {
+                        if (InteractionList.Count > 0)
+                        {
+                            if (ActiveConsultInteraction != null)
+                            {
+                                ActiveConsultInteraction.Disconnect();
+                                // TODO: activate this code
+                                //this.RemoveNormalInteractionFromList(this.ActiveConsultInteraction);
+                                ActiveConsultInteraction = null;
+                            }
+                            else
+                            {
+                                ActiveConsultInteraction = ActiveNormalInteraction;
+                                ActiveConsultInteraction.Disconnect();
+                                // TODO: activate this code
+                                //this.RemoveNormalInteractionFromList(this.ActiveConsultInteraction);
+                                ActiveConsultInteraction = null;
+                            }
+                            if (InteractionList != null)
+                            {
+                                foreach (ININ.IceLib.Interactions.Interaction CurrentInteraction in InteractionList)
+                                {
+                                    if (CurrentInteraction.IsHeld == true)
+                                    {
+                                        ActiveNormalInteraction = CurrentInteraction;
+                                        ActiveNormalInteraction.Pickup();
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                }
+                // TODO: activate this code
+                //this.ShowActiveCallInfo();
+                //Tracing.TraceStatus(scope + "Completed.");
+            }
+            catch (System.Exception ex)
+            {
+                // TODO: activate this code
+                //this.EnabledTransferToolStripDisplayed();
+                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+            }
+        }
+
+        private static void MakeConsultCompleted(object sender, InteractionCompletedEventArgs e)
+        {
+            ActiveConsultInteraction = e.Interaction;
         }
 
         private string GetDialerNumber()
@@ -2161,5 +2767,17 @@ namespace CIC
         public string CallBackPhone { get; set; }
 
         public string ScheduleAgent { get; set; }
+
+        public InteractionQueue m_InteractionQueue { get; set; }
+
+        public bool IsMuted { get; set; }
+
+        public EmailInteraction ActiveNormalEmailInteraction { get; set; }
+
+        public CallbackInteraction ActiveCallbackInteraction { get; set; }
+
+        public string CallerHost { get; set; }
+
+        public bool IsManualDialing { get; set; }
     }
 }

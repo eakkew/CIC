@@ -42,7 +42,7 @@ namespace CIC
                 //this.CallToolStripSplitButton.Enabled = false;
                 if (this.CheckEmptyPhoneNumber() != true)
                 {
-                    FormMain.MakeManualCall(phone_box.Text);
+                    Program.MainDashboard.MakeManualCall(phone_box.Text);
                 }
                 
                 //Tracing.TraceStatus(scope + "Completed.");
