@@ -192,22 +192,261 @@ namespace CIC
 
         private void m_InteractionQueue_ConferenceInteractionRemoved(object sender, ConferenceInteractionEventArgs e)
         {
-            throw new NotImplementedException();
+            string scope = "CIC::MainForm::m_InteractionQueue_ConferenceInteractionChanged():: ";
+            //Tracing.TraceStatus(scope + "Starting.");
+            if (this.InvokeRequired)
+            {
+                this.BeginInvoke(new EventHandler<ConferenceInteractionEventArgs>(m_InteractionQueue_ConferenceInteractionRemoved), new object[] { sender, e });
+            }
+            else
+            {
+                try
+                {
+                    if (e.Interaction.IsWatching() != true)
+                    {
+                        e.Interaction.AttributesChanged += new EventHandler<AttributesEventArgs>(DialerInteraction_AttributesChanged);
+                        e.Interaction.StartWatching(this.InteractionAttributes);
+                    }
+                    switch (e.Interaction.InteractionType)
+                    {
+                        case InteractionType.Email:
+                            break;
+                        case InteractionType.Chat:
+                            break;
+                        case InteractionType.Callback:
+                            break;
+                        case InteractionType.Call:
+                            ActiveNormalInteraction = e.Interaction;
+                            if (e.ConferenceItem.IsDisconnected == true)
+                            {
+                                // this.RemoveNormalInteractionFromList(this.ActiveNormalInteraction);
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    //this.Set_ConferenceToolStrip();
+                    this.ShowActiveCallInfo();
+                    //Tracing.TraceStatus(scope + "Completed.");
+                }
+                catch (System.Exception ex)
+                {
+                    //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                    //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                }
+            }
         }
+
+        /*
+         * TODO : add this.Set_ConferenceToolStrip();
+         */
 
         private void m_InteractionQueue_ConferenceInteractionChanged(object sender, ConferenceInteractionAttributesEventArgs e)
         {
-            throw new NotImplementedException();
+            string scope = "CIC::MainForm::m_InteractionQueue_ConferenceInteractionChanged():: ";
+            //Tracing.TraceStatus(scope + "Starting.");
+            if (this.InvokeRequired)
+            {
+                this.BeginInvoke(new EventHandler<ConferenceInteractionAttributesEventArgs>(m_InteractionQueue_ConferenceInteractionChanged), new object[] { sender, e });
+            }
+            else
+            {
+                try
+                {
+                    if (e.Interaction.IsWatching() != true)
+                    {
+                        e.Interaction.AttributesChanged += new EventHandler<AttributesEventArgs>(DialerInteraction_AttributesChanged);
+                        e.Interaction.StartWatching(this.InteractionAttributes);
+                    }
+                    if (e.ConferenceItem.IsWatching() != true)
+                    {
+                        e.ConferenceItem.StartWatching(this.InteractionAttributes);
+                    }
+                    switch (e.Interaction.InteractionType)
+                    {
+                        case InteractionType.Email:
+                            break;
+                        case InteractionType.Chat:
+                            break;
+                        case InteractionType.Callback:
+                            break;
+                        case InteractionType.Call:
+                            ActiveNormalInteraction = e.Interaction;
+                            if (e.ConferenceItem.IsDisconnected == true)
+                            {
+                                this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    //this.Set_ConferenceToolStrip();
+                    this.ShowActiveCallInfo();
+                    //Tracing.TraceStatus(scope + "Completed.");
+                }
+                catch (System.Exception ex)
+                {
+                    //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                    //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                    this.ShowActiveCallInfo();
+                }
+            }
         }
-
+        /*
+         * TODO : add IsActiveConference_frag
+         */
         private void m_InteractionQueue_ConferenceInteractionAdded(object sender, ConferenceInteractionAttributesEventArgs e)
         {
-            throw new NotImplementedException();
+            string scope = "CIC::MainForm::m_InteractionQueue_ConferenceInteractionAdded():: ";
+            //Tracing.TraceStatus(scope + "Starting.");
+            if (this.InvokeRequired)
+            {
+                this.BeginInvoke(new EventHandler<ConferenceInteractionAttributesEventArgs>(m_InteractionQueue_ConferenceInteractionAdded), new object[] { sender, e });
+            }
+            else
+            {
+                try
+                {
+                    if (e.Interaction.IsWatching() != true)
+                    {
+                        e.Interaction.AttributesChanged += new EventHandler<AttributesEventArgs>(DialerInteraction_AttributesChanged);
+                        e.Interaction.StartWatching(this.InteractionAttributes);
+                    }
+                    //this.IsActiveConference_flag = true;
+                    switch (e.Interaction.InteractionType)
+                    {
+                        case InteractionType.Email:
+                            break;
+                        case InteractionType.Chat:
+                            break;
+                        case InteractionType.Callback:
+                            //
+                            break;
+                        case InteractionType.Call:
+                            if (e.Interaction.IsDisconnected != true)
+                            {
+                                ActiveConferenceInteraction = new InteractionConference(this.NormalInterationManager, e.Interaction.InteractionType, e.ConferenceItem.ConferenceId);
+                                ActiveNormalInteraction = e.Interaction;
+                                this.ShowActiveCallInfo();
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    //Tracing.TraceStatus(scope + "Completed.");
+                }
+                catch (System.Exception ex)
+                {
+                    //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                }
+            }
         }
 
+        /*
+         * TODO: resetActiveInfo?
+         */
         private void m_InteractionQueue_InteractionRemoved(object sender, InteractionEventArgs e)
         {
-            throw new NotImplementedException();
+            string scope = "CIC::MainForm::m_InteractionQueue_InteractionRemoved():: ";
+            //Tracing.TraceStatus(scope + "Starting.");
+            try
+            {
+                if (e.Interaction.IsWatching() != true)
+                {
+                    e.Interaction.AttributesChanged += new EventHandler<AttributesEventArgs>(NormalInteraction_AttributesChanged);
+                    e.Interaction.StartWatching(this.InteractionAttributes);
+                }
+                switch (e.Interaction.InteractionType)
+                {
+                    case InteractionType.Email:
+                        ActiveNormalInteraction = e.Interaction;
+                        if (ActiveNormalInteraction != null)
+                        {
+                            if (ActiveNormalInteraction.IsDisconnected == true)
+                            {
+                                this.Remove_ActiveCallSelPopMenu();
+                                this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
+                                this.CallerHost = "";
+                                ActiveNormalInteraction = this.GetAvailableInteractionFromList();gg
+                                if (ActiveNormalInteraction.State != InteractionState.None)  //chk EIC_STATE
+                                {
+                                    this.ShowActiveCallInfo();
+                                }
+                            }
+                        }
+                        break;
+                    case InteractionType.Chat:
+                        //
+                        break;
+                    case InteractionType.Callback:
+                        ActiveNormalInteraction = e.Interaction;
+                        if (ActiveNormalInteraction != null)
+                        {
+                            if (ActiveNormalInteraction.IsDisconnected == true)
+                            {
+                                this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
+                                this.CallerHost = "";
+                                ActiveNormalInteraction = this.GetAvailableInteractionFromList();
+                                if (ActiveNormalInteraction != null)
+                                {
+                                    this.StrConnectionState = ActiveNormalInteraction.State;
+                                }
+                                else
+                                {
+                                    this.StrConnectionState = InteractionState.None; //"None"
+                                }
+                                if (ActiveNormalInteraction.State != InteractionState.None)  //chk EIC_STATE
+                                {
+                                    this.ShowActiveCallInfo();
+                                }
+                            }
+                        }
+                        break;
+                    case InteractionType.Call:
+                        ActiveNormalInteraction = e.Interaction;
+                        if (ActiveNormalInteraction.IsConnected != true)
+                        {
+                            if (ActiveNormalInteraction != null)
+                            {
+                                this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
+                                this.CallerHost = "";
+                                ActiveNormalInteraction = this.GetAvailableInteractionFromList();
+                                if (ActiveNormalInteraction != null)
+                                {
+                                    this.StrConnectionState = ActiveNormalInteraction.State;
+                                }
+                                else
+                                {
+                                    this.StrConnectionState = InteractionState.None; //"None"
+                                }
+                                this.ShowActiveCallInfo();
+                            }
+                        }
+                        break;
+                }
+                //Tracing.TraceStatus(scope + "Completed.");
+            }
+            catch (System.Exception ex)
+            {
+                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                //this.ResetActiveCallInfo();
+                this.CallerHost = "";
+                if (ActiveNormalInteraction != null)
+                {
+                    try
+                    {
+                        ActiveNormalInteraction.Disconnect();
+                    }
+                    catch
+                    {
+                        //Emty catch block
+                    }
+                    this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
+                }
+                ActiveNormalInteraction = null;
+                this.ShowActiveCallInfo();
+            }
         }
 
         private void m_InteractionQueue_InteractionChanged(object sender, InteractionAttributesEventArgs e)
@@ -296,10 +535,154 @@ namespace CIC
                 }
             }
         }
+        /*
+         * * TODO : Add ctmActiveCallSelection and Check this stuff
+         * 
+         */
+        private void Remove_ActiveCallSelPopMenu()
+        {
+            /*
+            string scope = "CIC::MainForm::Remove_ActiveCallSelPopMenu():: ";
+            //Tracing.TraceStatus(scope + "Starting.");
+            int RemoveIndex = -1;
+            string MenuValue = "";
+            if (this.InvokeRequired == true)
+            {
+                this.BeginInvoke(new MethodInvoker(Remove_ActiveCallSelPopMenu));
+            }
+            else
+            {
+                try
+                {
+                    if (ActiveNormalInteraction != null)
+                    {
+                        MenuValue = ActiveNormalInteraction.InteractionId.Id.ToString();
+                        if (this.ctmActiveCallSelection != null)
+                        {
+                            for (int i = 0; i < this.ctmActiveCallSelection.Items.Count; i++)
+                            {
+                                if (((System.Windows.Forms.ToolStripMenuItem)this.ctmActiveCallSelection.Items[i]).Name.Trim() == MenuValue.Trim())
+                                {
+                                    RemoveIndex = i;
+                                    break;
+                                }
+                            }
+                            if ((RemoveIndex < this.ctmActiveCallSelection.Items.Count) && (RemoveIndex >= 0))
+                            {
+                                if (this.ctmActiveCallSelection.Items.Count > 0)
+                                {
+                                    this.ctmActiveCallSelection.Items.RemoveAt(RemoveIndex);
+                                }
+                            }
+                            if (this.ctmActiveCallSelection.Items.Count <= 0)
+                            {
+                                this.Reset_ActiveCallSelPopMenu();
+                            }
+                            if (this.ctmActiveCallSelection.Items.Count <= 0)
+                            {
+                                this.ActiveNormalInteraction = null;
+                                this.ActiveConsultInteraction = null;
+                                this.ActiveConferenceInteraction = null;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        this.ActiveNormalInteraction = this.GetAvailableInteractionFromList();
+                        if (this.ActiveNormalInteraction != null)
+                        {
+                            MenuValue = this.ActiveNormalInteraction.InteractionId.Id.ToString();
+                            if (this.ctmActiveCallSelection != null)
+                            {
+                                for (int i = 0; i < this.ctmActiveCallSelection.Items.Count; i++)
+                                {
+                                    if (((System.Windows.Forms.ToolStripMenuItem)this.ctmActiveCallSelection.Items[i]).Name.Trim() == MenuValue.Trim())
+                                    {
+                                        RemoveIndex = i;
+                                        break;
+                                    }
+                                }
+                                if ((RemoveIndex < this.ctmActiveCallSelection.Items.Count) && (RemoveIndex >= 0))
+                                {
+                                    if (this.ctmActiveCallSelection.Items.Count > 0)
+                                    {
+                                        this.ctmActiveCallSelection.Items.RemoveAt(RemoveIndex);
+                                    }
+                                }
+                                if (this.ctmActiveCallSelection.Items.Count <= 0)
+                                {
+                                    this.Reset_ActiveCallSelPopMenu();
+                                }
+                                if (this.ctmActiveCallSelection.Items.Count <= 0)
+                                {
+                                    this.ActiveNormalInteraction = null;
+                                    this.ActiveConsultInteraction = null;
+                                    this.ActiveConferenceInteraction = null;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            this.Reset_ActiveCallSelPopMenu();
+                            this.ActiveNormalInteraction = null;
+                            this.ActiveConsultInteraction = null;
+                            this.ActiveConferenceInteraction = null;
+                        }
+                    }
+                    Tracing.TraceStatus(scope + "Completed.");
+                }
+                catch (System.Exception ex)
+                {
+                    Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                    System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                }
+            }
+             * */
+            
+        }
 
+        /*
+         * TODO : add InteractionID
+         */
         private void RemoveNormalInteractionFromList(Interaction ActiveNormalInteraction)
         {
-            throw new NotImplementedException();
+            
+            
+            string scope = "CIC::frmMain::RemoveNormalInteractionFromList(InteractionID)::";      //Over load I
+            //Tracing.TraceStatus(scope + "Starting.");
+            int retIndex = -1;
+            int i = 0;
+            //if (InteractionID != null)
+            //{
+                if (this.InteractionList != null)
+                {
+                    if (this.InteractionList.Count > 0)
+                    {
+                        for (i = 0; i < this.InteractionList.Count; i++)
+                        {
+                            if (((ININ.IceLib.Interactions.Interaction)this.InteractionList[i]).InteractionId.Id == InteractionID.Id)
+                            {
+                                retIndex = i;
+                                break;
+                            }
+                            i++;
+                        }
+                        if (retIndex >= 0)
+                        {
+                            FormMain.ActiveNormalInteraction = (ININ.IceLib.Interactions.Interaction)this.InteractionList[retIndex];
+                            this.InteractionList.RemoveAt(retIndex);
+                        }
+                    //}
+                //}
+            }
+            else
+            {
+                this.InteractionList.Clear();
+                this.IsMuted = false;
+            }
+            this.Remove_ActiveCallSelPopMenu();
+            //Tracing.TraceStatus(scope + "Completed.");
+            //throw new NotImplementedException();
         }
 
         private void Set_ActiveCallSelPopMenu()

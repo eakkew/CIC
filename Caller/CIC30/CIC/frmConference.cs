@@ -11,6 +11,20 @@ namespace CIC
 {
     public partial class frmConference : Form
     {
+        private static frmConference instance = null;
+
+        public static frmConference getInstance()
+        {
+            if (instance == null)
+            {
+                instance = new frmConference();
+
+            }
+            return instance;
+        }
+        /*
+         * TODO change from public to private
+         */
         public frmConference()
         {
             InitializeComponent();

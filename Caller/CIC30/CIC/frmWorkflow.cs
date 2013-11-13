@@ -20,6 +20,18 @@ namespace CIC
 
         }
 
+        private static frmWorkflow instance = null;
+
+        public static frmWorkflow getInstance(Session IC_Session)
+        {
+            if (instance == null)
+            {
+                instance = new frmWorkflow(IC_Session);
+
+            }
+            return instance;
+        }
+
         public frmWorkflow(Session IC_Session)
         {
             string scope = "CIC::MainForm::LoginToolStripMenuItem_DropDownOpening()::";

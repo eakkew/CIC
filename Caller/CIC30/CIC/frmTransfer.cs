@@ -11,11 +11,28 @@ namespace CIC
 {
     public partial class frmTransfer : Form
     {
+        
+        private static frmTransfer instance = null;
+
+        public static frmTransfer getInstance()
+        {
+            if (instance == null)
+            {
+                instance = new frmTransfer();
+
+            }
+            return instance;
+        }
+        /*
+         * TODO change from public to private
+         */
         public frmTransfer()
         {
             InitializeComponent();
             transfer_button.Enabled = false;
         }
+
+        
 
         private void call_button_Click(object sender, EventArgs e)
         {
