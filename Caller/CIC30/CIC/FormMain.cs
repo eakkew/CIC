@@ -1819,7 +1819,86 @@ namespace CIC
                     {
                         state_info_label.Text = "Calling: " + this.ActiveDialerInteraction.ContactData["is_attr_numbertodial"];
                         
-                        this.ActiveDialerInteraction.PlacePreviewCall();
+                        // find a strategy to make a call by using PlacePreviewCall() and make a normal call for the other 6 numbers 
+                        switch (call_idx)
+                        {
+                            case 0:
+                                this.ActiveDialerInteraction.PlacePreviewCall();
+                                break;
+                            case 1:
+                                if (name1_box2.Text.Length == 0)
+                                {
+                                    call_idx = 2;
+                                    goto case 2;
+                                }
+                                else 
+                                {
+                                    // TODO: make a hilight at name1_box{1,2}
+                                    // TODO: make a call by a number in name1_box2.Text
+                                }
+                                break;
+                            case 2:
+                            if (name1_box2.Text.Length == 0)
+                                {
+                                    call_idx = 3;
+                                    goto case 3;
+                                }
+                                else 
+                                {
+                                    // TODO: make a hilight at name2_box{1,2}
+                                    // TODO: make a call by a number in name2_box2.Text
+                                }
+                                break;
+                            case 3:
+                                if (name1_box2.Text.Length == 0)
+                                {
+                                    call_idx = 4;
+                                    goto case 4;
+                                }
+                                else 
+                                {
+                                    // TODO: make a hilight at name3_box{1,2}
+                                    // TODO: make a call by a number in name3_box2.Text
+                                }
+                                break;
+                            case 4:
+                                if (name1_box2.Text.Length == 0)
+                                {
+                                    call_idx = 5;
+                                    goto case 5;
+                                }
+                                else 
+                                {
+                                    // TODO: make a hilight at name4_box{1,2}
+                                    // TODO: make a call by a number in name4_box2.Text
+                                }
+                                break;
+                            case 5:
+                                if (name1_box2.Text.Length == 0)
+                                {
+                                    call_idx = 6;
+                                    goto case 6;
+                                }
+                                else 
+                                {
+                                    // TODO: make a hilight at name5_box{1,2}
+                                    // TODO: make a call by a number in name5_box2.Text
+                                }
+                                break;
+                            case 6:
+                                if (name1_box2.Text.Length == 0)
+                                {
+                                    break;
+                                }
+                                else 
+                                {
+                                    // TODO: make a hilight at name6_box{1,2}
+                                    // TODO: make a call by a number in name6_box2.Text
+                                }
+                                break;
+                        }
+                        call_idx++;
+                        
                     }
                     // Tracing.TraceStatus(scope + "Completed.[Place Call]");
                 }
