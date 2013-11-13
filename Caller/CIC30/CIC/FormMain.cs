@@ -1100,7 +1100,7 @@ namespace CIC
         private void preview_state()
         {
             // starts the next number in line
-            timer1.Start();
+            // timer1.Start();
             state_info_label.Text = "Next Calling Number: " + calling_phone;
 
             reset_state();
@@ -1387,11 +1387,13 @@ namespace CIC
                         this.Initialize_CallBack();
                         this.Initialize_ContactData();
                         this.ShowActiveCallInfo();
+                        timer1.Start();
                         this.CrmScreenPop();
                         break;
                     case InteractionType.Call:
                         this.Initialize_ContactData();
                         this.ShowActiveCallInfo();
+                        timer1.Start();
                         this.CrmScreenPop();
                         break;
                 }
@@ -1426,11 +1428,13 @@ namespace CIC
                         this.Initialize_CallBack();
                         this.Initialize_ContactData();
                         this.ShowActiveCallInfo();
+                        timer1.Start()
                         this.CrmScreenPop();
                         break;
                     case InteractionType.Call:
                         this.Initialize_ContactData();
                         this.ShowActiveCallInfo();
+                        timer1.Start();
                         this.CrmScreenPop();
                         break;
                 }
