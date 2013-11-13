@@ -143,7 +143,7 @@ namespace CIC
                   string eDescription = "CIC::Program::Main()::" + e.Message;
                   global::CIC.Properties.Settings.Default.Reset();
                   global::CIC.Properties.Settings.Default.Reload();
-                  System.Diagnostics.EventLog.WriteEntry(Application.ProductName, "CIC::Program::Main()::Error info." + e.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                  //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, "CIC::Program::Main()::Error info." + e.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
                   Tracing.TraceNote(eDescription);
               }
               global::CIC.Properties.Settings.Default.Save();
@@ -154,7 +154,7 @@ namespace CIC
               //Reset All Registry
               global::CIC.Properties.Settings.Default.Reset();
               global::CIC.Properties.Settings.Default.Reload();
-              System.Diagnostics.EventLog.WriteEntry(Application.ProductName, AppError, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+              //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, AppError, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
               MessageBox.Show(AppError,"Application Error!", MessageBoxButtons.OK, MessageBoxIcon.Information);
           }
           Application.Exit();
@@ -169,14 +169,14 @@ namespace CIC
               if (rKey.ProcessKeyAuthorize() != true)
               {
                   System.Windows.Forms.MessageBox.Show("Please check your key file.", "Error Information!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                  System.Diagnostics.EventLog.WriteEntry(Application.ProductName, "KeyFile :: Error info.Please check your key file.", System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                  //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, "KeyFile :: Error info.Please check your key file.", System.Diagnostics.EventLogEntryType.Error); //Window Event Log
                   Application.Exit();
               }
           }
           catch (System.Exception ex)
           {
               System.Windows.Forms.MessageBox.Show("Please check your key file.", "Error Information!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-              System.Diagnostics.EventLog.WriteEntry(Application.ProductName, "KeyFile :: Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+              //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, "KeyFile :: Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
               Application.Exit();
           }
           global::CIC.Program.mLoginParam.WindowsAuthentication = true;  // Aways true on this mode
@@ -369,7 +369,7 @@ namespace CIC
           }
           catch (System.Exception ex)
           {
-              System.Diagnostics.EventLog.WriteEntry(Application.ProductName, "CIC::Program::InitialSkin()::Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+              //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, "CIC::Program::InitialSkin()::Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
           }
       }
 

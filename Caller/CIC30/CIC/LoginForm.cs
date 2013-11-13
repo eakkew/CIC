@@ -506,7 +506,7 @@ namespace CIC
                 this.lblLogInStatusMsg.Text = "Please check your key file.";
                 System.Windows.Forms.MessageBox.Show("Please check your key file.", "CIC-Agent error info.", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
                 this.mResult = CIC.Utils.LoginResult.Cancelled;
-                System.Diagnostics.EventLog.WriteEntry(Application.ProductName, "KeyFile :: Error info.Please check your key file.", System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, "KeyFile :: Error info.Please check your key file.", System.Diagnostics.EventLogEntryType.Error); //Window Event Log
                 Application.Exit();
             }
             else
@@ -524,7 +524,7 @@ namespace CIC
             this.lblLogInStatusMsg.Text = "Please check your key file.";
             System.Windows.Forms.MessageBox.Show("Please check your key file.", "CIC-Agent error info.", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
             this.mResult = CIC.Utils.LoginResult.Cancelled;
-            System.Diagnostics.EventLog.WriteEntry(Application.ProductName, "KeyFile :: Error info."+ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+            //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, "KeyFile :: Error info."+ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
             Application.Exit();
         }
       }

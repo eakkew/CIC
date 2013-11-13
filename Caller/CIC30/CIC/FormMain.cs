@@ -151,7 +151,7 @@ namespace CIC
                 {
                     // TODO: set state to no active connection
                     //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                    System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                    //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
                 }
             }
         }
@@ -191,7 +191,7 @@ namespace CIC
             catch (System.Exception ex)
             {
                 //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
             }
         }
 
@@ -431,12 +431,85 @@ namespace CIC
         private void break_button_Click(object sender, EventArgs e)
         {
             //state_change(FormMainState.Break);
-            break_requested = true;
+
+            try
+            {
+                if (this.ActiveDialerInteraction == null)
+                {
+                    break_requested = false;
+                }
+                else
+                {
+                    switch (!break_requested)
+                    {
+                        case true:
+                            this.ActiveDialerInteraction.DialerSession.RequestBreak();
+                            break_requested = true;
+                            break_requested_state();
+                            //this.RequestBreakToolStripButton.Text = "Break Pending";
+                            /*if (this.WorkLogoutFlag == true)
+                            {
+                                System.Windows.Forms.MessageBox.Show(global::CIC.Properties.Settings.Default.IncompletedCall, "Error Info.", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            }*/
+                            break;
+                        default:
+                            break_requested = false;
+                            break_requested_state();
+                            //this.RequestBreakToolStripButton.Text = "Break Pending";
+                            /*if (this.WorkLogoutFlag == true)
+                            {
+                                System.Windows.Forms.MessageBox.Show(global::CIC.Properties.Settings.Default.IncompletedCall, "Error Info.", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            }*/
+                            break;
+                    }
+                }
+                //Tracing.TraceStatus(scope + "Completed.");
+            }
+            catch (System.Exception ex)
+            {
+                //this.RequestBreakToolStripButton.Enabled = false;
+                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+            }
         }
 
         private void endbreak_button_Click(object sender, EventArgs e)
         {
-            state_change(FormMainState.Preview);
+            try
+            {
+                if (this.ActiveDialerInteraction == null)
+                {
+                    break_requested = false;
+                }
+                else
+                {
+                    switch (break_requested)
+                    {
+                        case true:
+                            //this.SetToAvailable_UserStatusMsg();
+                            this.ActiveDialerInteraction.DialerSession.EndBreak();
+                            break_requested = false;
+                            break_requested_state();
+                            //this.RequestBreakToolStripButton.Text = "Request Break";
+                            break;
+                        default :
+                            break_requested = true;
+                            break_requested_state();
+                            //this.RequestBreakToolStripButton.Text = "Break Pending";
+                            /*if (this.WorkLogoutFlag == true)
+                            {
+                                System.Windows.Forms.MessageBox.Show(global::CIC.Properties.Settings.Default.IncompletedCall, "Error Info.", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            }*/
+                            break;
+                    }
+                }
+            }
+            catch (System.Exception ex)
+            {
+                //this.RequestBreakToolStripButton.Enabled = false;
+                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+            }
         }
 
         private void logout_workflow_button_Click(object sender, EventArgs e)
@@ -484,7 +557,7 @@ namespace CIC
             catch (System.Exception ex)
             {
                 //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
             }
         }
 
@@ -602,7 +675,7 @@ namespace CIC
                 catch (ININ.IceLib.IceLibException ex)
                 {
                     //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                    System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                    //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
                 }
             }
         }
@@ -790,7 +863,7 @@ namespace CIC
             catch (System.Exception ex)
             {
                 //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
             }
         }
 
@@ -964,7 +1037,7 @@ namespace CIC
             catch (System.Exception ex)
             {
                 //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
             }
         }
 
@@ -986,7 +1059,7 @@ namespace CIC
             catch (System.Exception ex)
             {
                 //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
             }
         }
 
@@ -1058,7 +1131,10 @@ namespace CIC
                     mute_state();
                     break;
                 case FormMainState.Break:
-                    break_state();
+                    if (break_requested)
+                        break_state();
+                    else
+                        preview_state();
                     break;
                 case FormMainState.Loggedout:
                     logged_out_state();
@@ -1166,6 +1242,11 @@ namespace CIC
             endbreak_button.Enabled = true;
             logout_workflow_button.Enabled = true;
             exit_button.Enabled = true;
+        }
+        
+        private void break_requested_state()
+        {
+            break_button.Enabled = break_requested;
         }
 
 
@@ -1406,7 +1487,7 @@ namespace CIC
             catch (System.Exception ex)
             {
                 //Tracing.TraceStatus(scope + "Error info : " + ex.Message);
-                System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
             }
         }
 
@@ -1445,7 +1526,7 @@ namespace CIC
             catch (System.Exception ex)
             {
                 //Tracing.TraceStatus(scope + "Error info : " + ex.Message);
-                System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
             }
         }
 
@@ -1484,7 +1565,7 @@ namespace CIC
                 catch (System.Exception ex)
                 {
                     //Tracing.TraceStatus(scope + "Error info : " + ex.Message);
-                    System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                    //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
                     //this.MainWebBrowser.Url = new System.Uri(global::CIC.Properties.Settings.Default.StartupUrl, System.UriKind.Absolute);
                 }
             }
@@ -1597,7 +1678,7 @@ namespace CIC
                 catch (System.Exception ex)
                 {
                     //Tracing.TraceStatus(scope + "Error info : " + ex.Message);
-                    System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                    //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
                 }
             }
         }
@@ -1717,7 +1798,48 @@ namespace CIC
 
         private void BreakGranted(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            string scope = "CIC::MainForm::BreakGranted(): ";
+            //Tracing.TraceStatus(scope + "Starting.");
+            if (this.InvokeRequired == true)
+            {
+                this.BeginInvoke(new EventHandler<EventArgs>(BreakGranted), new object[] { sender, e });
+            }
+            else
+            {
+                try
+                {
+                    switch (break_requested)
+                    {
+                        case true:
+                            state_change(FormMainState.Break);
+                            //this.RequestBreakToolStripButton.Text = "End Break";
+
+                            //this.SetToDoNotDisturb_UserStatusMsg();
+                            /*
+                             * Note : need CIC to use WorkLogoutFlag 
+                            */
+                            
+                            //if (this.WorkLogoutFlag != true)
+                            //{
+                                // Shiw Break Status Message.
+                                // System.Windows.Forms.MessageBox.Show(global::CIC.Properties.Settings.Default.CompletedBreak, "System Info.", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            //}
+                            break;
+                        default:
+                            state_change(FormMainState.Break);
+                            //this.RequestBreakToolStripButton.Text = "Request Break";
+                            break;
+                    }
+                    
+                    //Tracing.TraceStatus(scope + "Completed.");
+                }
+                catch (System.Exception ex)
+                {
+                    //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                    //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                }
+            }
+            //throw new NotImplementedException();
         }
 
         private void LogoutGranted(object sender, EventArgs e)
@@ -1770,7 +1892,7 @@ namespace CIC
                 catch (System.Exception ex)
                 {
                     //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                    System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                    //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
                 }
             }
         }
