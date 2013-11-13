@@ -76,7 +76,8 @@ namespace CIC
        
         public FormMain()
         {
-            InitializeComponent();
+            InitializeComponent(); 
+            state_change(FormMainState.Disconnect);
             InitializeSession();
             this.IsActiveConnection = true; // FIXME: remove the placeholder
         }
@@ -200,6 +201,7 @@ namespace CIC
             switch (e.State)
             {
                 case ININ.IceLib.Connection.ConnectionState.Attempting:
+                    state_change(FormMainState.Disconnect);
                     break;
                 case ININ.IceLib.Connection.ConnectionState.Up:
                     if (this.IsActiveConnection == false)
@@ -208,16 +210,14 @@ namespace CIC
                         this.IsActiveConnection = true;       //Set to ActiveConnection.
                         //this.SetStatusBarStripMsg();
                         //this.InitialAllComponents();
+                        this.login_workflow();
                     }
                     break;
                 case ININ.IceLib.Connection.ConnectionState.Down:
-                    if (this.IsActiveConnection == true)
-                    {
                         this.IsActiveConnection = false;       //Set to InActiveConnection.
                         //this.Dispose_QueueWatcher();
                         //this.DisabledAll();
                         //this.SetStatusBarStripMsg();
-                    }
 
                     if (global::CIC.Program.m_Session != null)
                     {
@@ -1134,14 +1134,9 @@ namespace CIC
         private void  disconnect_state()
         {
             // TODO: rename typo enable_all_button()
-            enable_all_button();
-            disconnect_button.Enabled = false;
-            hold_button.Enabled = false;
-            mute_button.Enabled = false;
-            transfer_button.Enabled = false;
-            conference_button.Enabled = false;
-
-
+            reset_state();
+            workflow_button.Enabled = true;
+            exit_button.Enabled = true;
             // calling a new number
             reset_timer();
         }

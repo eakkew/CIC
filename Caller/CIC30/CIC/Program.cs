@@ -129,7 +129,6 @@ namespace CIC
                       m_Session = null;
                       //MainApp = new CIC.frmMain();
                       MainDashboard = new CIC.FormMain();
-                      MainDashboard.login_workflow();
                       Application.Run(MainDashboard);
                   }
                   if (m_Session != null)
