@@ -33,7 +33,6 @@ namespace CIC
         ManualCall,
         Loggedout,
         None,
-
     };
     //private bool IsLoggedIntoDialer = false;
 
@@ -269,6 +268,12 @@ namespace CIC
         {
             timer1.Stop();
             timer = 10.0f;
+        }
+        
+        private void restart_timer()
+        {
+            restart_timer();
+            timer1.Start();
         }
 
         public void login_workflow()
@@ -860,6 +865,7 @@ namespace CIC
                                     {
                                         this.SetActiveCallInfo();
                                         this.ShowActiveCallInfo();
+                                        restart_timer();
                                     }
                                     else
                                     {
@@ -1387,13 +1393,13 @@ namespace CIC
                         this.Initialize_CallBack();
                         this.Initialize_ContactData();
                         this.ShowActiveCallInfo();
-                        timer1.Start();
+                        restart_timer();
                         this.CrmScreenPop();
                         break;
                     case InteractionType.Call:
                         this.Initialize_ContactData();
                         this.ShowActiveCallInfo();
-                        timer1.Start();
+                        restart_timer();
                         this.CrmScreenPop();
                         break;
                 }
@@ -1406,6 +1412,7 @@ namespace CIC
             }
         }
 
+        // Get new infomation set
         private void PreviewCallAdded(object sender, PreviewCallAddedEventArgs e)
         {
             string scope = "CIC::MainForm::PreviewCallAdded()::";
@@ -1428,13 +1435,13 @@ namespace CIC
                         this.Initialize_CallBack();
                         this.Initialize_ContactData();
                         this.ShowActiveCallInfo();
-                        timer1.Start()
+                        restart_timer();
                         this.CrmScreenPop();
                         break;
                     case InteractionType.Call:
                         this.Initialize_ContactData();
                         this.ShowActiveCallInfo();
-                        timer1.Start();
+                        restart_timer();
                         this.CrmScreenPop();
                         break;
                 }
@@ -1789,6 +1796,7 @@ namespace CIC
                     if (this.ActiveDialerInteraction != null)
                     {
                         state_info_label.Text = "Calling: " + this.ActiveDialerInteraction.ContactData["is_attr_numbertodial"];
+                        
                         this.ActiveDialerInteraction.PlacePreviewCall();
                     }
                     // Tracing.TraceStatus(scope + "Completed.[Place Call]");
