@@ -783,8 +783,8 @@ namespace CIC
         private void call_button_Click(object sender, EventArgs e)
         {   
             //change state from workflow.
-            name1_panel.BackColor = Color.Yellow;
-            reset_timer();
+            // name1_panel.BackColor = Color.Yellow;
+            // reset_timer();
             state_info_label.Text = "Calling: " + calling_phone;
 
             // make a call or pickup
@@ -2827,7 +2827,8 @@ namespace CIC
                                 }
                                 else 
                                 {
-                                    // TODO: make a hilight at name1_box{1,2}
+                                    reset_color_panel();
+                                    name1_panel.BackColor = Color.Yellow;
                                     // TODO: make a call by a number in name1_box2.Text
                                 }
                                 break;
@@ -2839,7 +2840,8 @@ namespace CIC
                                 }
                                 else 
                                 {
-                                    // TODO: make a hilight at name2_box{1,2}
+                                    reset_color_panel();
+                                    name2_panel.BackColor = Color.Yellow;
                                     // TODO: make a call by a number in name2_box2.Text
                                 }
                                 break;
@@ -2851,7 +2853,8 @@ namespace CIC
                                 }
                                 else 
                                 {
-                                    // TODO: make a hilight at name3_box{1,2}
+                                    reset_color_panel();
+                                    name3_panel.BackColor = Color.Yellow;
                                     // TODO: make a call by a number in name3_box2.Text
                                 }
                                 break;
@@ -2863,7 +2866,8 @@ namespace CIC
                                 }
                                 else 
                                 {
-                                    // TODO: make a hilight at name4_box{1,2}
+                                    reset_color_panel();
+                                    name4_panel.BackColor = Color.Yellow;
                                     // TODO: make a call by a number in name4_box2.Text
                                 }
                                 break;
@@ -2875,7 +2879,8 @@ namespace CIC
                                 }
                                 else 
                                 {
-                                    // TODO: make a hilight at name5_box{1,2}
+                                    reset_color_panel();
+                                    name5_panel.BackColor = Color.Yellow;
                                     // TODO: make a call by a number in name5_box2.Text
                                 }
                                 break;
@@ -2886,7 +2891,8 @@ namespace CIC
                                 }
                                 else 
                                 {
-                                    // TODO: make a hilight at name6_box{1,2}
+                                    reset_color_panel();
+                                    name6_panel.BackColor = Color.Yellow;
                                     // TODO: make a call by a number in name6_box2.Text
                                 }
                                 break;
@@ -2975,6 +2981,16 @@ namespace CIC
         private void MuteCompleted(object sender, AsyncCompletedEventArgs e)
         {
             // TODO: check UAT for detail if we need this.
+        }
+        
+        private void reset_color_panel()
+        {
+            name1_panel.BackColor = SystemColors.Control;
+            name2_panel.BackColor = SystemColors.Control;
+            name3_panel.BackColor = SystemColors.Control;
+            name4_panel.BackColor = SystemColors.Control;
+            name5_panel.BackColor = SystemColors.Control;
+            name6_panel.BackColor = SystemColors.Control;
         }
 
         public ScheduleCallbackForm frmScheduleCallbackForm { get; set; }
