@@ -214,7 +214,7 @@ namespace CIC
                     }
                     break;
                 case ININ.IceLib.Connection.ConnectionState.Down:
-                        this.IsActiveConnection = false;       //Set to InActiveConnection.
+                    this.IsActiveConnection = false;       //Set to InActiveConnection.
                         //this.Dispose_QueueWatcher();
                         //this.DisabledAll();
                         //this.SetStatusBarStripMsg();
@@ -825,7 +825,7 @@ namespace CIC
                          *       set call state
                          *       set dialer number
                          */
-                        this.name1_box1.Text = this.ActiveDialerInteraction.ContactData["is_attr_FName"];
+                        update_info_on_dashboard();
                         //this.CallIdToolStripStatusLabel.Text = this.ActiveDialerInteraction.CallIdKey.ToString().Trim();
                         //this.DirectiontoolStripStatus.Text = this.ActiveDialerInteraction.Direction.ToString();
                         //this.CallTypeToolStripStatusLabel.Text = "Campaign Call";
@@ -906,6 +906,37 @@ namespace CIC
                 //this.SetInfoBarColor(); // TODO: update playing sound
                 update_conference_status();
             }
+        }
+
+        private void update_info_on_dashboard()
+        {
+            this.contractNo_box.Text = this.ActiveDialerInteraction.ContactData["is_attr_ContractNumber"];
+            this.license_plate_box.Text = this.ActiveDialerInteraction.ContactData["is_attr_CarLicenseNumber"];
+            this.product_name_box.Text = this.ActiveDialerInteraction.ContactData["is_attr_ProductName"];
+            this.name1_box1.Text = this.ActiveDialerInteraction.ContactData["is_attr_FullName_Relation1"];
+            this.name2_box1.Text = this.ActiveDialerInteraction.ContactData["is_attr_FullName_Relation2"];
+            this.name3_box1.Text = this.ActiveDialerInteraction.ContactData["is_attr_FullName_Relation3"];
+            this.name4_box1.Text = this.ActiveDialerInteraction.ContactData["is_attr_FullName_Relation4"];
+            this.name5_box1.Text = this.ActiveDialerInteraction.ContactData["is_attr_FullName_Relation5"];
+            this.name6_box2.Text = this.ActiveDialerInteraction.ContactData["is_attr_FullName_Relation6"];
+            this.name1_box2.Text = this.ActiveDialerInteraction.ContactData["is_attr_PhoneNo1"];
+            this.name2_box2.Text = this.ActiveDialerInteraction.ContactData["is_attr_PhoneNo2"];
+            this.name3_box2.Text = this.ActiveDialerInteraction.ContactData["is_attr_PhoneNo3"];
+            this.name4_box2.Text = this.ActiveDialerInteraction.ContactData["is_attr_PhoneNo4"];
+            this.name5_box2.Text = this.ActiveDialerInteraction.ContactData["is_attr_PhoneNo5"];
+            this.name6_box2.Text = this.ActiveDialerInteraction.ContactData["is_attr_PhoneNo6"];
+            this.aging_box.Text = this.ActiveDialerInteraction.ContactData["is_attr_Aging"];
+            this.base_debt_box.Text = this.ActiveDialerInteraction.ContactData["is_attr_BaseDebt"];
+            this.number_due_box.Text = this.ActiveDialerInteraction.ContactData["is_attr_NumberDue"];
+            this.last_amount_payment_box.Text = this.ActiveDialerInteraction.ContactData["is_attr_LastReceiveAmountPayment"];
+            this.last_date_payment_box.Text = this.ActiveDialerInteraction.ContactData["is_attr_LastReceiveDatePayment"];
+            this.initial_amount_box.Text = this.ActiveDialerInteraction.ContactData["is_attr_InitialAmount"];
+            this.monthly_payment_box.Text = this.ActiveDialerInteraction.ContactData["is_attr_MonthlyPayment"];
+            this.debt_status_box.Text = this.ActiveDialerInteraction.ContactData["is_attr_DebStuatus"];
+            this.start_overdue_date_box.Text = this.ActiveDialerInteraction.ContactData["is_attr_StartOverDueDate"];
+            this.followup_status_box.Text = this.ActiveDialerInteraction.ContactData["is_attr_FollowupStatus"];
+            this.payment_appoint_box.Text = this.ActiveDialerInteraction.ContactData["is_attr_PaymentAppoint"];
+            this.date_callback_box.Text = this.ActiveDialerInteraction.ContactData["is_attr_DateAppointCallback"];
         }
 
         private void update_conference_status()
