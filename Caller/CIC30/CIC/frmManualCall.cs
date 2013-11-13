@@ -69,5 +69,17 @@ namespace CIC
             //check the phone
             return !Util.form_validation_telephone_number(phone_box.Text);
         }
+
+        private void phone_box_TextChanged(object sender, EventArgs e)
+        {
+            if (!Util.form_validation_telephone_number(phone_box.Text))
+            {
+                phone_box.ForeColor = Color.Red;
+            }
+            else
+            {
+                phone_box.ForeColor = Color.Black;
+            }
+        }
     }
 }

@@ -40,5 +40,17 @@ namespace CIC
             this.Close();
         }
 
+        private void ext_number_box_TextChanged(object sender, EventArgs e)
+        {
+            if (!Util.form_validation_telephone_number(ext_number_box.Text))
+            {
+                ext_number_box.ForeColor = Color.Red;
+            }
+            else
+            {
+                ext_number_box.ForeColor = Color.Black;
+            }
+        }
+
     }
 }

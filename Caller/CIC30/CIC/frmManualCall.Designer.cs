@@ -50,6 +50,7 @@
             this.phone_box.Name = "phone_box";
             this.phone_box.Size = new System.Drawing.Size(100, 20);
             this.phone_box.TabIndex = 1;
+            this.phone_box.TextChanged += new System.EventHandler(this.phone_box_TextChanged);
             // 
             // call_button
             // 
