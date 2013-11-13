@@ -367,7 +367,7 @@ namespace CIC
                                 this.Remove_ActiveCallSelPopMenu();
                                 this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
                                 this.CallerHost = "";
-                                ActiveNormalInteraction = this.GetAvailableInteractionFromList();gg
+                                ActiveNormalInteraction = this.GetAvailableInteractionFromList();
                                 if (ActiveNormalInteraction.State != InteractionState.None)  //chk EIC_STATE
                                 {
                                     this.ShowActiveCallInfo();
@@ -646,14 +646,13 @@ namespace CIC
          */
         private void RemoveNormalInteractionFromList(Interaction ActiveNormalInteraction)
         {
-            
-            
+            /*
             string scope = "CIC::frmMain::RemoveNormalInteractionFromList(InteractionID)::";      //Over load I
             //Tracing.TraceStatus(scope + "Starting.");
             int retIndex = -1;
             int i = 0;
-            //if (InteractionID != null)
-            //{
+            if (InteractionID != null)
+            {
                 if (this.InteractionList != null)
                 {
                     if (this.InteractionList.Count > 0)
@@ -672,17 +671,20 @@ namespace CIC
                             FormMain.ActiveNormalInteraction = (ININ.IceLib.Interactions.Interaction)this.InteractionList[retIndex];
                             this.InteractionList.RemoveAt(retIndex);
                         }
-                    //}
-                //}
+                        //}
+                        //}
+                    }
+                    else
+                    {
+                        this.InteractionList.Clear();
+                        this.IsMuted = false;
+                    }
+                    this.Remove_ActiveCallSelPopMenu();
+                    //Tracing.TraceStatus(scope + "Completed.");
+                    //throw new NotImplementedException();
+                }
             }
-            else
-            {
-                this.InteractionList.Clear();
-                this.IsMuted = false;
-            }
-            this.Remove_ActiveCallSelPopMenu();
-            //Tracing.TraceStatus(scope + "Completed.");
-            //throw new NotImplementedException();
+             */
         }
 
         private void Set_ActiveCallSelPopMenu()
