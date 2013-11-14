@@ -1189,25 +1189,14 @@ namespace CIC
             state_info_label.Text = "Disconnected from: " + calling_phone;
             try
             {
-                if (this.ActiveDialerInteraction.IsConnected)
-                {
-                    frmDisposition disposition = new frmDisposition();
-                    disposition.ShowDialog();
-                }
-            }
+                frmDisposition disposition = new frmDisposition();
+                disposition.ShowDialog();
+             }
             catch (Exception ex)
             {
                 string output = String.Format("Something really bad happened: {0}", ex.Message);
                 MessageBox.Show(output, "CIC Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-
-            if (break_requested || prev_state == FormMainState.ManualCall)
-            {
-                break_requested = false;
-                state_change(FormMainState.Break);
-            }
-            else
-                state_change(FormMainState.Preview);
         }
 
         private void hold_button_Click(object sender, EventArgs e)
@@ -1530,6 +1519,16 @@ namespace CIC
                         }
                     }
                     // TODO: change state.
+                    if (call_idx < 6)
+                        restart_timer();
+                    
+                    if (break_requested || prev_state == FormMainState.ManualCall)
+                    {
+                        break_requested = false;
+                        state_change(FormMainState.Break);
+                    }
+                    else
+                        state_change(FormMainState.Preview);
                     //Tracing.TraceStatus(scope + "Completed.[Disposition]");
                 }
                 catch (ININ.IceLib.IceLibException ex)
@@ -3316,7 +3315,7 @@ namespace CIC
                                 break;
                         }
                         call_idx++;
-                        
+                        reset_timer();
                     }
                     // Tracing.TraceStatus(scope + "Completed.[Place Call]");
                 }
