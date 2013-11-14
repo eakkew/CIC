@@ -2383,6 +2383,7 @@ namespace CIC
         {
             reset_state();
             workflow_button.Enabled = true;
+            exit_button.Enabled = true;
         }
 
         private void disable_break_request()
