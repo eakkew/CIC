@@ -1147,9 +1147,10 @@ namespace CIC
 
         private void FormMain_Load(object sender, EventArgs e)
         {
-            timer1.Enabled = true;
+            timer1.Enabled = false;
             timer = 10.0f;
             state_info_label.Text = "Next Calling Number: " + calling_phone;
+
         }
 
         private void workflow_button_Click(object sender, EventArgs e)
@@ -2066,33 +2067,34 @@ namespace CIC
 
         private void update_info_on_dashboard()
         {
-            this.contractNo_box.Text = this.ActiveDialerInteraction.ContactData["is_attr_ContractNumber"];
-            this.license_plate_box.Text = this.ActiveDialerInteraction.ContactData["is_attr_CarLicenseNumber"];
-            this.product_name_box.Text = this.ActiveDialerInteraction.ContactData["is_attr_ProductName"];
-            this.name1_box1.Text = this.ActiveDialerInteraction.ContactData["is_attr_FullName_Relation1"];
-            this.name2_box1.Text = this.ActiveDialerInteraction.ContactData["is_attr_FullName_Relation2"];
-            this.name3_box1.Text = this.ActiveDialerInteraction.ContactData["is_attr_FullName_Relation3"];
-            this.name4_box1.Text = this.ActiveDialerInteraction.ContactData["is_attr_FullName_Relation4"];
-            this.name5_box1.Text = this.ActiveDialerInteraction.ContactData["is_attr_FullName_Relation5"];
-            this.name6_box2.Text = this.ActiveDialerInteraction.ContactData["is_attr_FullName_Relation6"];
-            this.name1_box2.Text = this.ActiveDialerInteraction.ContactData["is_attr_PhoneNo1"];
-            this.name2_box2.Text = this.ActiveDialerInteraction.ContactData["is_attr_PhoneNo2"];
-            this.name3_box2.Text = this.ActiveDialerInteraction.ContactData["is_attr_PhoneNo3"];
-            this.name4_box2.Text = this.ActiveDialerInteraction.ContactData["is_attr_PhoneNo4"];
-            this.name5_box2.Text = this.ActiveDialerInteraction.ContactData["is_attr_PhoneNo5"];
-            this.name6_box2.Text = this.ActiveDialerInteraction.ContactData["is_attr_PhoneNo6"];
-            this.aging_box.Text = this.ActiveDialerInteraction.ContactData["is_attr_Aging"];
-            this.base_debt_box.Text = this.ActiveDialerInteraction.ContactData["is_attr_BaseDebt"];
-            this.number_due_box.Text = this.ActiveDialerInteraction.ContactData["is_attr_NumberDue"];
-            this.last_amount_payment_box.Text = this.ActiveDialerInteraction.ContactData["is_attr_LastReceiveAmountPayment"];
-            this.last_date_payment_box.Text = this.ActiveDialerInteraction.ContactData["is_attr_LastReceiveDatePayment"];
-            this.initial_amount_box.Text = this.ActiveDialerInteraction.ContactData["is_attr_InitialAmount"];
-            this.monthly_payment_box.Text = this.ActiveDialerInteraction.ContactData["is_attr_MonthlyPayment"];
-            this.debt_status_box.Text = this.ActiveDialerInteraction.ContactData["is_attr_DebStuatus"];
-            this.start_overdue_date_box.Text = this.ActiveDialerInteraction.ContactData["is_attr_StartOverDueDate"];
-            this.followup_status_box.Text = this.ActiveDialerInteraction.ContactData["is_attr_FollowupStatus"];
-            this.payment_appoint_box.Text = this.ActiveDialerInteraction.ContactData["is_attr_PaymentAppoint"];
-            this.date_callback_box.Text = this.ActiveDialerInteraction.ContactData["is_attr_DateAppointCallback"];
+            Dictionary<string, string> data = this.ActiveDialerInteraction.ContactData;
+            this.contractNo_box.Text = data.ContainsKey("is_attr_ContractNumber") ? data["is_attr_ContractNumber"] : "";
+            this.license_plate_box.Text = data.ContainsKey("is_attr_CarLicenseNumber") ? data["is_attr_CarLicenseNumber"] : "";
+            this.product_name_box.Text = data.ContainsKey("is_attr_ProductName") ? data["is_attr_ProductName"] : "";
+            this.name1_box1.Text = data.ContainsKey("is_attr_FullName_Relation1") ? data["is_attr_FullName_Relation1"] : "";
+            this.name2_box1.Text = data.ContainsKey("is_attr_FullName_Relation2") ? data["is_attr_FullName_Relation2"] : "";
+            this.name3_box1.Text = data.ContainsKey("is_attr_FullName_Relation3") ? data["is_attr_FullName_Relation3"] : "";
+            this.name4_box1.Text = data.ContainsKey("is_attr_FullName_Relation4") ? data["is_attr_FullName_Relation4"] : "";
+            this.name5_box1.Text = data.ContainsKey("is_attr_FullName_Relation5") ? data["is_attr_FullName_Relation5"] : "";
+            this.name6_box2.Text = data.ContainsKey("is_attr_FullName_Relation6") ? data["is_attr_FullName_Relation6"] : "";
+            this.name1_box2.Text = data.ContainsKey("is_attr_PhoneNo1") ? data["is_attr_PhoneNo1"] : "";
+            this.name2_box2.Text = data.ContainsKey("is_attr_PhoneNo2") ? data["is_attr_PhoneNo2"] : "";
+            this.name3_box2.Text = data.ContainsKey("is_attr_PhoneNo3") ? data["is_attr_PhoneNo3"] : "";
+            this.name4_box2.Text = data.ContainsKey("is_attr_PhoneNo4") ? data["is_attr_PhoneNo4"] : "";
+            this.name5_box2.Text = data.ContainsKey("is_attr_PhoneNo5") ? data["is_attr_PhoneNo5"] : "";
+            this.name6_box2.Text = data.ContainsKey("is_attr_PhoneNo6") ? data["is_attr_PhoneNo6"] : "";
+            this.aging_box.Text = data.ContainsKey("is_attr_Aging") ? data["is_attr_Aging"] : "";
+            this.base_debt_box.Text = data.ContainsKey("is_attr_BaseDebt") ? data["is_attr_BaseDebt"] : "";
+            this.number_due_box.Text = data.ContainsKey("is_attr_NumberDue") ? data["is_attr_NumberDue"] : "";
+            this.last_amount_payment_box.Text = data.ContainsKey("is_attr_LastReceiveAmountPayment") ? data["is_attr_LastReceiveAmountPayment"] : "";
+            this.last_date_payment_box.Text = data.ContainsKey("is_attr_LastReceiveDatePayment") ? data["is_attr_LastReceiveDatePayment"] : "";
+            this.initial_amount_box.Text = data.ContainsKey("is_attr_InitialAmount") ? data["is_attr_InitialAmount"] : "";
+            this.monthly_payment_box.Text = data.ContainsKey("is_attr_MonthlyPayment") ? data["is_attr_MonthlyPayment"] : "";
+            this.debt_status_box.Text = data.ContainsKey("is_attr_DebStuatus") ? data["is_attr_DebStuatus"] : "";
+            this.start_overdue_date_box.Text = data.ContainsKey("is_attr_StartOverDueDate") ? data["is_attr_StartOverDueDate"] : "";
+            this.followup_status_box.Text = data.ContainsKey("is_attr_FollowupStatus") ? data["is_attr_FollowupStatus"] : "";
+            this.payment_appoint_box.Text = data.ContainsKey("is_attr_PaymentAppoint") ? data["is_attr_PaymentAppoint"] : "";
+            this.date_callback_box.Text = data.ContainsKey("is_attr_DateAppointCallback") ? data["is_attr_DateAppointCallback"] : "";
         }
 
         private void update_conference_status()
@@ -2596,7 +2598,7 @@ namespace CIC
                         // restart timer and reset call index
                         restart_timer();
                         call_idx = 0;
-                        
+                        this.state_change(FormMainState.Preview);
                         this.CrmScreenPop();
                         break;
                 }
@@ -2636,6 +2638,7 @@ namespace CIC
                         // restart timer and reset call index
                         restart_timer();
                         call_idx = 0;
+                        this.state_change(FormMainState.Preview);
                         
                         this.CrmScreenPop();
                         break;
@@ -2646,7 +2649,7 @@ namespace CIC
                         // restart timer and reset call index
                         restart_timer();
                         call_idx = 0;
-                        
+                        this.state_change(FormMainState.Preview);
                         this.CrmScreenPop();
                         break;
                 }
