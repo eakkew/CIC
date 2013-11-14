@@ -24,9 +24,10 @@ namespace CIC
 
     public enum FormMainState
     {
+        Connected,
         Preview,
         Calling,
-        Disconnect,
+        Disconnected,
         Hold,
         Mute,
         Break,
@@ -81,7 +82,7 @@ namespace CIC
         public FormMain()
         {
             InitializeComponent(); 
-            state_change(FormMainState.Disconnect);
+            state_change(FormMainState.Disconnected);
             InitializeSession();
             this.IsActiveConnection = true; // FIXME: remove the placeholder
         }
@@ -1064,7 +1065,7 @@ namespace CIC
             switch (e.State)
             {
                 case ININ.IceLib.Connection.ConnectionState.Attempting:
-                    state_change(FormMainState.Disconnect);
+                    state_change(FormMainState.Disconnected);
                     break;
                 case ININ.IceLib.Connection.ConnectionState.Up:
                     if (this.IsActiveConnection == false)
@@ -1075,6 +1076,8 @@ namespace CIC
                         //this.InitialAllComponents();
                         this.login_workflow();
                     }
+                    //this.state_change(FormMainState.Preview);
+                    this.BeginInvoke(new MethodInvoker(connected_state));
                     break;
                 case ININ.IceLib.Connection.ConnectionState.Down:
                     this.IsActiveConnection = false;       //Set to InActiveConnection.
@@ -1130,6 +1133,8 @@ namespace CIC
 
         private void reset_timer()
         {
+            if (!timer1.Enabled)
+                timer1.Enabled = true;
             timer1.Stop();
             timer = 10.0f;
         }
@@ -1202,7 +1207,7 @@ namespace CIC
                 state_change(FormMainState.Break);
             }
             else
-                state_change(FormMainState.Disconnect);
+                state_change(FormMainState.Disconnected);
         }
 
         private void hold_button_Click(object sender, EventArgs e)
@@ -1262,7 +1267,7 @@ namespace CIC
             // check if there is still a connection or if transfer complete.
             if (transfer_complete)
             {
-                state_change(FormMainState.Disconnect);
+                state_change(FormMainState.Disconnected);
             }
         }
 
@@ -1386,7 +1391,7 @@ namespace CIC
                 {
                     // FIX ME: check the state of calling
                     //if (/*this.CallStateToolStripStatusLabel.Text.ToLower().Trim() == "n/a"*/ true)
-                    if (this.current_state == FormMainState.Disconnect)
+                    if (this.current_state == FormMainState.Disconnected)
                     {
                         this.LogoutGranted(sender, e);      //No call object from this campaign;permit to logging out.
                     }
@@ -2015,7 +2020,7 @@ namespace CIC
                                         this.ShowActiveCallInfo();
                         
                                         // restart timer and reset call index
-                                        restart_timer();
+                                        this.BeginInvoke(new MethodInvoker(restart_timer));
                                         call_idx = 0;
                                     }
                                     else
@@ -2090,7 +2095,7 @@ namespace CIC
             this.last_date_payment_box.Text = data.ContainsKey("is_attr_LastReceiveDatePayment") ? data["is_attr_LastReceiveDatePayment"] : "";
             this.initial_amount_box.Text = data.ContainsKey("is_attr_InitialAmount") ? data["is_attr_InitialAmount"] : "";
             this.monthly_payment_box.Text = data.ContainsKey("is_attr_MonthlyPayment") ? data["is_attr_MonthlyPayment"] : "";
-            this.debt_status_box.Text = data.ContainsKey("is_attr_DebStuatus") ? data["is_attr_DebStuatus"] : "";
+            this.debt_status_box.Text = data.ContainsKey("is_attr_DebtStatus") ? data["is_attr_DebtStatus"] : "";
             this.start_overdue_date_box.Text = data.ContainsKey("is_attr_StartOverDueDate") ? data["is_attr_StartOverDueDate"] : "";
             this.followup_status_box.Text = data.ContainsKey("is_attr_FollowupStatus") ? data["is_attr_FollowupStatus"] : "";
             this.payment_appoint_box.Text = data.ContainsKey("is_attr_PaymentAppoint") ? data["is_attr_PaymentAppoint"] : "";
@@ -2181,78 +2186,79 @@ namespace CIC
         private void state_change(FormMainState state)
         {
             switch (state)
-            {
-                case FormMainState.Preview:
-                    preview_state();
-                    break;
-                case FormMainState.Calling :
-                    calling_state();
-                    break;
-                case FormMainState.ManualCall:
-                    calling_state();
-                    break;
-                case FormMainState.Disconnect:
-                    disconnect_state();
-                    break;
-                case FormMainState.Hold:
-                    switch (current_state)
-                    {
-                        // case calling state -> change to hold state
-                        case FormMainState.Calling:
-                            hold_button.Text = "Unhold";
-                            state_info_label.Text = "Hold call from: " + calling_phone;
-                            break;
-                        // case Mute state -> change to hold state.
-                        case FormMainState.Mute:
-                            hold_button.Text = "Unhold";
-                            mute_button.Text = "Mute";
-                            state_info_label.Text = "Hold call from: " + calling_phone;
-                            break;
-                        // case Hold state -> change to calling state
-                        case FormMainState.Hold:
-                            hold_button.Text = "Hold";
-                            state_info_label.Text = "Continue call from: " + calling_phone;
-                            state = FormMainState.Calling;
-                            break;
-                    }
-                    hold_state();
-                    break;
-                case FormMainState.Mute:
-                    switch (current_state)
-                    {
-                        // case calling state -> change to hold state
-                        case FormMainState.Calling:
-                            mute_button.Text = "Unmute";
-                            state_info_label.Text = "Mute call from: " + calling_phone;
-                            break;
-                        // case Mute state -> change to hold state.
-                        case FormMainState.Hold:
-                            mute_button.Text = "Unmute";
-                            hold_button.Text = "Hold";
-                            state_info_label.Text = "Mute call from: " + calling_phone;
-                            break;
-                        // case Hold state -> change to calling state
-                        case FormMainState.Mute:
-                            mute_button.Text = "Mute";
-                            state_info_label.Text = "Continue call from: " + calling_phone;
-                            state = FormMainState.Calling;
-                            break;
-                    }
-                    mute_state();
-                    break;
-                case FormMainState.Break:
-                    if (break_requested)
-                        break_state();
-                    else
+                {
+                    case FormMainState.Preview:
                         preview_state();
-                    break;
-                case FormMainState.Loggedout:
-                    logged_out_state();
-                    break;
-            }
-            prev_state = current_state;
-            current_state = state;
-            req_state_change = FormMainState.None;
+                        break;
+                    case FormMainState.Calling :
+                        calling_state();
+                        break;
+                    case FormMainState.ManualCall:
+                        calling_state();
+                        break;
+                    case FormMainState.Disconnected:
+                        disconnect_state();
+                        break;
+                    case FormMainState.Hold:
+                        switch (current_state)
+                        {
+                            // case calling state -> change to hold state
+                            case FormMainState.Calling:
+                                hold_button.Text = "Unhold";
+                                state_info_label.Text = "Hold call from: " + calling_phone;
+                                break;
+                            // case Mute state -> change to hold state.
+                            case FormMainState.Mute:
+                                hold_button.Text = "Unhold";
+                                mute_button.Text = "Mute";
+                                state_info_label.Text = "Hold call from: " + calling_phone;
+                                break;
+                            // case Hold state -> change to calling state
+                            case FormMainState.Hold:
+                                hold_button.Text = "Hold";
+                                state_info_label.Text = "Continue call from: " + calling_phone;
+                                state = FormMainState.Calling;
+                                break;
+                        }
+                        hold_state();
+                        break;
+                    case FormMainState.Mute:
+                        switch (current_state)
+                        {
+                            // case calling state -> change to hold state
+                            case FormMainState.Calling:
+                                mute_button.Text = "Unmute";
+                                state_info_label.Text = "Mute call from: " + calling_phone;
+                                break;
+                            // case Mute state -> change to hold state.
+                            case FormMainState.Hold:
+                                mute_button.Text = "Unmute";
+                                hold_button.Text = "Hold";
+                                state_info_label.Text = "Mute call from: " + calling_phone;
+                                break;
+                            // case Hold state -> change to calling state
+                            case FormMainState.Mute:
+                                mute_button.Text = "Mute";
+                                state_info_label.Text = "Continue call from: " + calling_phone;
+                                state = FormMainState.Calling;
+                                break;
+                        }
+                        mute_state();
+                        break;
+                    case FormMainState.Break:
+                        if (break_requested)
+                            break_state();
+                        else
+                            preview_state();
+                        break;
+                    case FormMainState.Loggedout:
+                        logged_out_state();
+                        break;
+                }
+                prev_state = current_state;
+                current_state = state;
+                req_state_change = FormMainState.None;
+            
         }
 
         private void reset_state()
@@ -2286,6 +2292,22 @@ namespace CIC
             logout_workflow_button.Enabled = true;
             exit_button.Enabled = true;
         }
+
+        private void connected_state()
+        {
+            // starts the next number in line
+            // timer1.Start();
+            state_info_label.Text = "Next Calling Number: " + calling_phone;
+
+            reset_state();
+            workflow_button.Enabled = true;
+            logout_workflow_button.Enabled = true;
+            exit_button.Enabled = true;
+
+            prev_state = current_state;
+            current_state = FormMainState.Connected;
+        }
+
         /*
          * //TODO : seperate break case to break_request
          */
@@ -2296,7 +2318,14 @@ namespace CIC
             state_info_label.Text = "Next Calling Number: " + calling_phone;
 
             reset_state();
+            workflow_button.Enabled = true;
             call_button.Enabled = true;
+            manual_call_button.Enabled = true;
+            logout_workflow_button.Enabled = true;
+            exit_button.Enabled = true;
+
+            prev_state = current_state;
+            current_state = FormMainState.Preview;
         }
 
         private void calling_state()
@@ -2327,7 +2356,6 @@ namespace CIC
         {
             // TODO: rename typo enable_all_button()
             reset_state();
-            workflow_button.Enabled = true;
             exit_button.Enabled = true;
             // calling a new number
             reset_timer();
@@ -2584,21 +2612,23 @@ namespace CIC
                         this.Initialize_CallBack();
                         this.Initialize_ContactData();
                         this.ShowActiveCallInfo();
-                        
+
                         // restart timer and reset call index
-                        restart_timer();
+                        this.BeginInvoke(new MethodInvoker(restart_timer));
                         call_idx = 0;
-                        
+
+                        this.BeginInvoke(new MethodInvoker(preview_state));
                         this.CrmScreenPop();
                         break;
                     case InteractionType.Call:
                         this.Initialize_ContactData();
                         this.ShowActiveCallInfo();
-                        
+
                         // restart timer and reset call index
-                        restart_timer();
+                        this.BeginInvoke(new MethodInvoker(restart_timer));
                         call_idx = 0;
-                        this.state_change(FormMainState.Preview);
+                        this.BeginInvoke(new MethodInvoker(preview_state));
+                        //this.state_change(FormMainState.Preview);
                         this.CrmScreenPop();
                         break;
                 }
@@ -2634,22 +2664,22 @@ namespace CIC
                         this.Initialize_CallBack();
                         this.Initialize_ContactData();
                         this.ShowActiveCallInfo();
-                        
+
                         // restart timer and reset call index
-                        restart_timer();
+                        this.BeginInvoke(new MethodInvoker(restart_timer));
                         call_idx = 0;
-                        this.state_change(FormMainState.Preview);
+                        this.BeginInvoke(new MethodInvoker(preview_state));
                         
                         this.CrmScreenPop();
                         break;
                     case InteractionType.Call:
                         this.Initialize_ContactData();
                         this.ShowActiveCallInfo();
-                        
+
                         // restart timer and reset call index
-                        restart_timer();
+                        this.BeginInvoke(new MethodInvoker(restart_timer));
                         call_idx = 0;
-                        this.state_change(FormMainState.Preview);
+                        this.BeginInvoke(new MethodInvoker(preview_state));
                         this.CrmScreenPop();
                         break;
                 }
