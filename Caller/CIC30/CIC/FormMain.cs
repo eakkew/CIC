@@ -1136,7 +1136,7 @@ namespace CIC
         
         private void restart_timer()
         {
-            restart_timer();
+            reset_timer();
             timer1.Start();
         }
 
