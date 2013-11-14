@@ -1207,7 +1207,7 @@ namespace CIC
                 state_change(FormMainState.Break);
             }
             else
-                state_change(FormMainState.Connected);
+                state_change(FormMainState.Preview);
         }
 
         private void hold_button_Click(object sender, EventArgs e)
