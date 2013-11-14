@@ -2042,7 +2042,6 @@ namespace CIC
                                     //this.CampaignIdToolStripStatusLabel.Text = "Non-campaign Call";
                                     //this.QueueNameToolStripStatusLabel.Text = ActiveNormalInteraction.WorkgroupQueueName.ToString();
                                     //this.NumberToolStripStatusLabel.Text = ActiveNormalInteraction.RemoteDisplay.ToString();
-                                    this.state_info_label.Text = "calling: " + ActiveNormalInteraction.CallIdKey.ToString().Trim();
                                     break;
                                 default:
                                     // TODO: set info as below
@@ -2052,7 +2051,6 @@ namespace CIC
                                     //this.QueueNameToolStripStatusLabel.Text = ActiveNormalInteraction.WorkgroupQueueName.ToString();
                                     //this.NumberToolStripStatusLabel.Text = ActiveNormalInteraction.RemoteDisplay.ToString();
                                     this.toolStripStatus.Text = ActiveNormalInteraction.State.ToString();
-                                    this.state_info_label.Text = "calling: " + ActiveNormalInteraction.CallIdKey.ToString().Trim();
                                     break;
                             }
                         }
