@@ -1207,7 +1207,7 @@ namespace CIC
                 state_change(FormMainState.Break);
             }
             else
-                state_change(FormMainState.Disconnected);
+                state_change(FormMainState.Connected);
         }
 
         private void hold_button_Click(object sender, EventArgs e)
@@ -1465,7 +1465,7 @@ namespace CIC
                     {
                         if (this.ActiveDialerInteraction != null)
                         {
-                            ININ.IceLib.People.UserStatusUpdate statusUpdate = new UserStatusUpdate(this.mPeopleManager);
+                            //ININ.IceLib.People.UserStatusUpdate statusUpdate = new UserStatusUpdate(this.mPeopleManager);
                             if (this.ActiveDialerInteraction.DialingMode == DialingMode.Preview ||
                                 this.ActiveDialerInteraction.DialingMode == DialingMode.Regular)
                             {
