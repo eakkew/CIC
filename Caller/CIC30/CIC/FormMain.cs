@@ -76,9 +76,6 @@ namespace CIC
  
         public FormMainState req_state_change = FormMainState.None;
         
-        // index for running place call number
-        private int call_idx = 0;
-       
         public FormMain()
         {
             InitializeComponent(); 
@@ -1519,8 +1516,6 @@ namespace CIC
                         }
                     }
                     // TODO: change state.
-                    if (call_idx < 6)
-                        restart_timer();
                     
                     if (break_requested || prev_state == FormMainState.ManualCall)
                     {
@@ -2020,7 +2015,6 @@ namespace CIC
                         
                                         // restart timer and reset call index
                                         this.BeginInvoke(new MethodInvoker(restart_timer));
-                                        call_idx = 0;
                                     }
                                     else
                                     {
@@ -2614,7 +2608,6 @@ namespace CIC
 
                         // restart timer and reset call index
                         this.BeginInvoke(new MethodInvoker(restart_timer));
-                        call_idx = 0;
 
                         this.BeginInvoke(new MethodInvoker(preview_state));
                         this.CrmScreenPop();
@@ -2625,7 +2618,6 @@ namespace CIC
 
                         // restart timer and reset call index
                         this.BeginInvoke(new MethodInvoker(restart_timer));
-                        call_idx = 0;
                         this.BeginInvoke(new MethodInvoker(preview_state));
                         //this.state_change(FormMainState.Preview);
                         this.CrmScreenPop();
@@ -2666,7 +2658,6 @@ namespace CIC
 
                         // restart timer and reset call index
                         this.BeginInvoke(new MethodInvoker(restart_timer));
-                        call_idx = 0;
                         this.BeginInvoke(new MethodInvoker(preview_state));
                         
                         this.CrmScreenPop();
@@ -2677,7 +2668,6 @@ namespace CIC
 
                         // restart timer and reset call index
                         this.BeginInvoke(new MethodInvoker(restart_timer));
-                        call_idx = 0;
                         this.BeginInvoke(new MethodInvoker(preview_state));
                         this.CrmScreenPop();
                         break;
@@ -3229,92 +3219,41 @@ namespace CIC
                     if (this.ActiveDialerInteraction != null)
                     {
                         state_info_label.Text = "Calling: " + this.ActiveDialerInteraction.ContactData["is_attr_numbertodial"];
-                        
+                        String phone1 = this.ActiveDialerInteraction.ContactData["is_attr_PhoneNo1"];
                         // find a strategy to make a call by using PlacePreviewCall() and make a normal call for the other 6 numbers 
-                        switch (call_idx)
+                        if (this.ActiveDialerInteraction.ContactData["is_attr_numbertodial"].CompareTo(this.ActiveDialerInteraction.ContactData["is_attr_PhoneNo1"]) == 0)
                         {
-                            case 0:
-                                this.ActiveDialerInteraction.PlacePreviewCall();
-                                break;
-                            case 1:
-                                if (name1_box2.Text.Length == 0)
-                                {
-                                    call_idx = 2;
-                                    goto case 2;
-                                }
-                                else 
-                                {
-                                    reset_color_panel();
-                                    name1_panel.BackColor = Color.Yellow;
-                                    // TODO: make a call by a number in name1_box2.Text
-                                }
-                                break;
-                            case 2:
-                            if (name1_box2.Text.Length == 0)
-                                {
-                                    call_idx = 3;
-                                    goto case 3;
-                                }
-                                else 
-                                {
-                                    reset_color_panel();
-                                    name2_panel.BackColor = Color.Yellow;
-                                    // TODO: make a call by a number in name2_box2.Text
-                                }
-                                break;
-                            case 3:
-                                if (name1_box2.Text.Length == 0)
-                                {
-                                    call_idx = 4;
-                                    goto case 4;
-                                }
-                                else 
-                                {
-                                    reset_color_panel();
-                                    name3_panel.BackColor = Color.Yellow;
-                                    // TODO: make a call by a number in name3_box2.Text
-                                }
-                                break;
-                            case 4:
-                                if (name1_box2.Text.Length == 0)
-                                {
-                                    call_idx = 5;
-                                    goto case 5;
-                                }
-                                else 
-                                {
-                                    reset_color_panel();
-                                    name4_panel.BackColor = Color.Yellow;
-                                    // TODO: make a call by a number in name4_box2.Text
-                                }
-                                break;
-                            case 5:
-                                if (name1_box2.Text.Length == 0)
-                                {
-                                    call_idx = 6;
-                                    goto case 6;
-                                }
-                                else 
-                                {
-                                    reset_color_panel();
-                                    name5_panel.BackColor = Color.Yellow;
-                                    // TODO: make a call by a number in name5_box2.Text
-                                }
-                                break;
-                            case 6:
-                                if (name1_box2.Text.Length == 0)
-                                {
-                                    break;
-                                }
-                                else 
-                                {
-                                    reset_color_panel();
-                                    name6_panel.BackColor = Color.Yellow;
-                                    // TODO: make a call by a number in name6_box2.Text
-                                }
-                                break;
+                            reset_color_panel();
+                            name1_panel.BackColor = Color.Yellow;
                         }
-                        call_idx++;
+                        else if (this.ActiveDialerInteraction.ContactData["is_attr_numbertodial"].CompareTo(this.ActiveDialerInteraction.ContactData["is_attr_PhoneNo2"]) == 0)
+                        {
+                            reset_color_panel();
+                            name2_panel.BackColor = Color.Yellow;
+                        }
+                        else if (this.ActiveDialerInteraction.ContactData["is_attr_numbertodial"].CompareTo(this.ActiveDialerInteraction.ContactData["is_attr_PhoneNo3"]) == 0)
+                        {
+                            reset_color_panel();
+                            name3_panel.BackColor = Color.Yellow;
+                        }
+                        else if (this.ActiveDialerInteraction.ContactData["is_attr_numbertodial"].CompareTo(this.ActiveDialerInteraction.ContactData["is_attr_PhoneNo4"]) == 0)
+                        {
+                            reset_color_panel();
+                            name4_panel.BackColor = Color.Yellow;
+                        }
+                        else if (this.ActiveDialerInteraction.ContactData["is_attr_numbertodial"].CompareTo(this.ActiveDialerInteraction.ContactData["is_attr_PhoneNo5"]) == 0)
+                        {
+                            reset_color_panel();
+                            name5_panel.BackColor = Color.Yellow;
+                        }
+                        else if (this.ActiveDialerInteraction.ContactData["is_attr_numbertodial"].CompareTo(this.ActiveDialerInteraction.ContactData["is_attr_PhoneNo6"]) == 0)
+                        {
+                            reset_color_panel();
+                            name6_panel.BackColor = Color.Yellow;
+                        }
+                               
+
+                        this.ActiveDialerInteraction.PlacePreviewCall();
                         reset_timer();
                     }
                     // Tracing.TraceStatus(scope + "Completed.[Place Call]");
