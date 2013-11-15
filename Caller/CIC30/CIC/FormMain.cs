@@ -1378,9 +1378,9 @@ namespace CIC
                         {
                             // TODO: validate the condition of log out request while not on break
                             //if (/*this.RequestBreakToolStripButton.Text.Trim() != "End Break"*/ false)
-                            if (!this.break_requested)
+                            if (!this.break_granted)
                             {
-                                this.break_requested = true;
+                                this.break_granted = true;
                                 this.break_button_Click(sender, e);               //wait for breakgrant
                                 this.ActiveDialerInteraction.DialerSession.RequestLogout();
                             }
@@ -1395,7 +1395,7 @@ namespace CIC
                 {
                     disconnect_normal_interaction();
                     disconnect_IC_session();
-                    // TODO: disable functions as dialer is not connect
+                    state_change(FormMainState.Loggedout);
                 }
                 
                 //Tracing.TraceStatus(scope + "Completed.");
@@ -3166,9 +3166,7 @@ namespace CIC
                             //this.DialerSession = null;
                             
                             //this.InitializeStatusMessageDetails();
-                            //this.SetToDoNotDisturb_UserStatusMsg();
-                            //this.CallActivityCodeToolStripComboBox.Items.Clear();
-                            //this.ShowActiveCallInfo();
+                            this.SetToDoNotDisturb_UserStatusMsg();
                             //this.CrmScreenPop();
                             state_change(FormMainState.Loggedout);
                             System.Windows.Forms.MessageBox.Show(global::CIC.Properties.Settings.Default.CompletedWorkflowMsg, "System Info.", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -3194,6 +3192,32 @@ namespace CIC
                     //Tracing.TraceStatus(scope + "Error info." + ex.Message);
                     //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
                 }
+            }
+        }
+
+        private void SetToDoNotDisturb_UserStatusMsg()
+        {
+            string scope = "CIC::MainForm::SetToDoNotDisturb_UserStatusMsg(): ";
+            ININ.IceLib.People.UserStatusUpdate statusUpdate = null;
+            try
+            {
+                //Tracing.TraceStatus(scope + "Starting.");
+                if (this.DoNotDisturbStatusMessageDetails != null)
+                {
+                    if (this.mPeopleManager != null)
+                    {
+                        statusUpdate = new UserStatusUpdate(this.mPeopleManager);
+                        statusUpdate.StatusMessageDetails = this.DoNotDisturbStatusMessageDetails;
+                        statusUpdate.UpdateRequest();
+                    }
+                }
+
+                //Tracing.TraceStatus(scope + "completed.");
+            }
+            catch (System.Exception ex)
+            {
+                //Tracing.TraceStatus(scope + "Error info : " + ex.Message);
+                System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
             }
         }
 
@@ -3362,5 +3386,7 @@ namespace CIC
         public string CallerHost { get; set; }
 
         public bool IsManualDialing { get; set; }
+
+        public StatusMessageDetails DoNotDisturbStatusMessageDetails { get; set; }
     }
 }
