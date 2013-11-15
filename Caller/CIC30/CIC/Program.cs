@@ -31,7 +31,7 @@ namespace CIC
       public static CIC.ICStation IcStation = null;
       public static CIC.frmICStation mICStation = null;
       public static ININ.IceLib.Dialer.DialingManager mDialingManager = null;
-      //public static CIC.frmMain MainApp = null;
+      public static CIC.frmMain MainApp = null;
       public static CIC.FormMain MainDashboard = null;
       public static CIC.frmWorkflow Workflow = null;
       public static ININ.IceLib.Dialer.DialingManager DialingManager
@@ -72,7 +72,7 @@ namespace CIC
       public static string ApplicationPath;
       public static string ResourcePath;
       public static string ApplicationImagePath;
-      public static bool ReGenKeyEnabled = false;
+      public static bool ReGenKeyEnabled = true;
 
 #endregion
 

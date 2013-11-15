@@ -48,7 +48,7 @@ namespace CIC
         {
             // TODO: 
             // complete the merge line and close the form
-
+            Program.MainDashboard.conference_invoke(this.ext_number_box.Text);
             this.Close();
         }
 
