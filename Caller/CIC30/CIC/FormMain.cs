@@ -24,16 +24,16 @@ namespace CIC
 
     public enum FormMainState
     {
-        Connected,
-        Preview,
-        Calling,
-        Disconnected,
-        Hold,
-        Mute,
-        Break,
-        ManualCall,
-        Loggedout,
-        None,
+        Connected,              // connect to workflow
+        Preview,                // get information from workflow
+        Calling,                // call connected
+        Disconnected,           // disconnect ot workflow
+        Hold,                   // hold current call
+        Mute,                   // mute current call
+        Break,                  // pause current workflow not to put new set of information after disposition
+        ManualCall,             // manual call connected
+        Loggedout,              // log out from workflow
+        None,                   // nothing at all
     };
     //private bool IsLoggedIntoDialer = false;
 
