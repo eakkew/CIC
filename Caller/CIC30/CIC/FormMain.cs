@@ -1442,7 +1442,7 @@ namespace CIC
                     {
                         if (this.ActiveDialerInteraction != null)
                         {
-                            //ININ.IceLib.People.UserStatusUpdate statusUpdate = new UserStatusUpdate(this.mPeopleManager);
+                            ININ.IceLib.People.UserStatusUpdate statusUpdate = new UserStatusUpdate(this.mPeopleManager);
                             if (this.ActiveDialerInteraction.DialingMode == DialingMode.Preview ||
                                 this.ActiveDialerInteraction.DialingMode == DialingMode.Regular)
                             {
@@ -1477,7 +1477,6 @@ namespace CIC
                                     if (this.AvailableStatusMessageDetails != null)
                                     {
                                         //this.userManualStatusChangeFlag = true;
-                                        ININ.IceLib.People.UserStatusUpdate statusUpdate = new UserStatusUpdate(this.mPeopleManager);
                                         statusUpdate.StatusMessageDetails = this.AvailableStatusMessageDetails;
                                         statusUpdate.UpdateRequest();
                                         // TODO: check what this chuck does. wtf?
