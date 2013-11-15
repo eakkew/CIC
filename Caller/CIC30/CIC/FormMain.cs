@@ -40,12 +40,14 @@ namespace CIC
     public partial class FormMain : Form
     {
         private bool break_requested { get; set; }
+        private bool break_granted { get; set; }
         private bool BlindTransferFlag { get; set; }
         private int AutoReconnect = 2;
         private bool IsActiveConnection { get; set; }
         private bool SwapPartyFlag { get; set; }
         private string[] InteractionAttributes { get; set; }
         private ArrayList InteractionList { get; set; }
+        private string callingNumber { get; set; }
 
         private DataSet DsReasonCode { get; set; }
         private Interaction mInteraction { get; set; }
@@ -70,7 +72,6 @@ namespace CIC
         private static NameValueCollection mDialerData { get; set; }
 
         private float timer;
-        private string calling_phone = "0881149998";
 
         public bool transfer_complete = false;
  
@@ -1151,8 +1152,6 @@ namespace CIC
         {
             timer1.Enabled = false;
             timer = 10.0f;
-            state_info_label.Text = "Next Calling Number: " + calling_phone;
-
         }
 
         private void workflow_button_Click(object sender, EventArgs e)
@@ -1173,7 +1172,6 @@ namespace CIC
             //change state from workflow.
             // name1_panel.BackColor = Color.Yellow;
             // reset_timer();
-            state_info_label.Text = "Calling: " + calling_phone;
 
             // make a call or pickup
             placecall_or_pickup();
@@ -1183,11 +1181,18 @@ namespace CIC
 
         private void disconnect_button_Click(object sender, EventArgs e)
         {
-            state_info_label.Text = "Disconnected from: " + calling_phone;
+            state_info_label.Text = "Disconnected.";
             try
             {
-                frmDisposition disposition = new frmDisposition();
-                disposition.ShowDialog();
+                if (this.current_state == FormMainState.Connected)
+                {
+                    frmDisposition disposition = new frmDisposition();
+                    disposition.ShowDialog();
+                }
+                if (this.current_state == FormMainState.ManualCall && ActiveNormalInteraction.IsConnected)
+                {
+                    ActiveNormalInteraction.Disconnect();
+                }
              }
             catch (Exception ex)
             {
@@ -1289,7 +1294,7 @@ namespace CIC
 
             try
             {
-                if (this.ActiveDialerInteraction == null)
+                if (!IcWorkFlow.LoginResult && this.ActiveDialerInteraction == null)
                 {
                     break_requested = false;
                 }
@@ -1300,7 +1305,6 @@ namespace CIC
                         case true:
                             this.ActiveDialerInteraction.DialerSession.RequestBreak();
                             break_requested = true;
-                            break_requested_state();
                             //this.RequestBreakToolStripButton.Text = "Break Pending";
                             /*if (this.WorkLogoutFlag == true)
                             {
@@ -1309,7 +1313,6 @@ namespace CIC
                             break;
                         default:
                             break_requested = false;
-                            break_requested_state();
                             //this.RequestBreakToolStripButton.Text = "Break Pending";
                             /*if (this.WorkLogoutFlag == true)
                             {
@@ -1338,24 +1341,12 @@ namespace CIC
                 }
                 else
                 {
-                    switch (break_requested)
+                    if (this.current_state == FormMainState.Break)
                     {
-                        case true:
-                            //this.SetToAvailable_UserStatusMsg();
                             this.ActiveDialerInteraction.DialerSession.EndBreak();
                             break_requested = false;
-                            break_requested_state();
-                            //this.RequestBreakToolStripButton.Text = "Request Break";
-                            break;
-                        default :
-                            break_requested = true;
-                            break_requested_state();
-                            //this.RequestBreakToolStripButton.Text = "Break Pending";
-                            /*if (this.WorkLogoutFlag == true)
-                            {
-                                System.Windows.Forms.MessageBox.Show(global::CIC.Properties.Settings.Default.IncompletedCall, "Error Info.", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            }*/
-                            break;
+                            break_granted = false;
+                            //break_requested_state();
                     }
                 }
             }
@@ -1481,17 +1472,18 @@ namespace CIC
                                     this.ActiveDialerInteraction.CallComplete(callCompletionParameters);
                                 }
 
-                                // TODO: check what this chuck does. wtf?
-                                //if (this.BreakStatus.Trim() != "End Break")
-                                //{
-                                //    if (this.AvailableStatusMessageDetails != null)
-                                //    {
-                                //        this.userManualStatusChangeFlag = true;
-                                //        statusUpdate.StatusMessageDetails = this.AvailableStatusMessageDetails;
-                                //        statusUpdate.UpdateRequest();
-                                //        this.imgcmbAgentStatus.SetMessage(this.AvailableStatusMessageDetails.MessageText);  //Set Available status for a new call.
-                                //    }
-                                //}
+                                if (this.break_granted)
+                                {
+                                    if (this.AvailableStatusMessageDetails != null)
+                                    {
+                                        //this.userManualStatusChangeFlag = true;
+                                        ININ.IceLib.People.UserStatusUpdate statusUpdate = new UserStatusUpdate(this.mPeopleManager);
+                                        statusUpdate.StatusMessageDetails = this.AvailableStatusMessageDetails;
+                                        statusUpdate.UpdateRequest();
+                                        // TODO: check what this chuck does. wtf?
+                                        //this.imgcmbAgentStatus.SetMessage(this.AvailableStatusMessageDetails.MessageText);  //Set Available status for a new call.
+                                    }
+                                }
                             }
                             else if (this.ActiveDialerInteraction.DialingMode == DialingMode.Precise)
                             {
@@ -1516,8 +1508,8 @@ namespace CIC
                         }
                     }
                     // TODO: change state.
-                    
-                    if (break_requested || prev_state == FormMainState.ManualCall)
+
+                    if (this.break_granted || current_state == FormMainState.ManualCall)
                     {
                         break_requested = false;
                         state_change(FormMainState.Break);
@@ -2091,6 +2083,8 @@ namespace CIC
             this.followup_status_box.Text = data.ContainsKey("is_attr_FollowupStatus") ? data["is_attr_FollowupStatus"] : "";
             this.payment_appoint_box.Text = data.ContainsKey("is_attr_PaymentAppoint") ? data["is_attr_PaymentAppoint"] : "";
             this.date_callback_box.Text = data.ContainsKey("is_attr_DateAppointCallback") ? data["is_attr_DateAppointCallback"] : "";
+            this.callingNumber = data.ContainsKey("is_attr_numbertodial") ? this.ActiveDialerInteraction.ContactData["is_attr_numbertodial"] : "";
+            this.state_info_label.Text = "Next Calling Number: " + callingNumber;
         }
 
         private void update_conference_status()
@@ -2196,18 +2190,18 @@ namespace CIC
                             // case calling state -> change to hold state
                             case FormMainState.Calling:
                                 hold_button.Text = "Unhold";
-                                state_info_label.Text = "Hold call from: " + calling_phone;
+                                state_info_label.Text = "Hold call from: " + callingNumber;
                                 break;
                             // case Mute state -> change to hold state.
                             case FormMainState.Mute:
                                 hold_button.Text = "Unhold";
                                 mute_button.Text = "Mute";
-                                state_info_label.Text = "Hold call from: " + calling_phone;
+                                state_info_label.Text = "Hold call from: " + callingNumber;
                                 break;
                             // case Hold state -> change to calling state
                             case FormMainState.Hold:
                                 hold_button.Text = "Hold";
-                                state_info_label.Text = "Continue call from: " + calling_phone;
+                                state_info_label.Text = "Continue call from: " + callingNumber;
                                 state = FormMainState.Calling;
                                 break;
                         }
@@ -2219,18 +2213,18 @@ namespace CIC
                             // case calling state -> change to hold state
                             case FormMainState.Calling:
                                 mute_button.Text = "Unmute";
-                                state_info_label.Text = "Mute call from: " + calling_phone;
+                                state_info_label.Text = "Mute call from: " + callingNumber;
                                 break;
                             // case Mute state -> change to hold state.
                             case FormMainState.Hold:
                                 mute_button.Text = "Unmute";
                                 hold_button.Text = "Hold";
-                                state_info_label.Text = "Mute call from: " + calling_phone;
+                                state_info_label.Text = "Mute call from: " + callingNumber;
                                 break;
                             // case Hold state -> change to calling state
                             case FormMainState.Mute:
                                 mute_button.Text = "Mute";
-                                state_info_label.Text = "Continue call from: " + calling_phone;
+                                state_info_label.Text = "Continue call from: " + callingNumber;
                                 state = FormMainState.Calling;
                                 break;
                         }
@@ -2288,7 +2282,11 @@ namespace CIC
         {
             // starts the next number in line
             // timer1.Start();
-            state_info_label.Text = "Next Calling Number: " + calling_phone;
+            if (IcWorkFlow.LoginResult)
+            {
+                if (this.ActiveDialerInteraction != null)
+                    state_info_label.Text = "Next Calling Number: " + this.ActiveDialerInteraction.ContactData["is_attr_numbertodial"];
+            }
 
             reset_state();
             workflow_button.Enabled = true;
@@ -2306,7 +2304,6 @@ namespace CIC
         {
             // starts the next number in line
             // timer1.Start();
-            state_info_label.Text = "Next Calling Number: " + calling_phone;
 
             reset_state();
             workflow_button.Enabled = true;
@@ -2413,7 +2410,6 @@ namespace CIC
                 placecall(sender, e);
                 
                 state_change(FormMainState.Calling);
-                state_info_label.Text = "Calling: " + calling_phone;
             }
         }
 
@@ -2892,14 +2888,14 @@ namespace CIC
 
         public void MakeManualCall(string number)
         {
-            //Tracing.TraceStatus(scope + "Call button clicked.Log On to Basic station.");
+            //Tracing.TraceStatus(scope + "CIC::FormMain::MakeManualCall(string)::");
+            callingNumber = number;
+            this.state_info_label.Text = "Next Calling Number: " + callingNumber;
             CallInteractionParameters callParams =
                 new CallInteractionParameters(number, CallMadeStage.Allocated);
             SessionSettings sessionSetting = Program.m_Session.GetSessionSettings();
             callParams.AdditionalAttributes.Add("CallerHost", sessionSetting.MachineName.ToString());
-            //this.IsManualDialing = true;
             this.NormalInterationManager.MakeCallAsync(callParams, FormMain.MakeCallCompleted, null);
-            //this.SetCallHistory();
         }
 
         public void MakeConsultCall(string transferTxtDestination)
@@ -3250,8 +3246,8 @@ namespace CIC
                             reset_color_panel();
                             name6_panel.BackColor = Color.Yellow;
                         }
-                               
 
+                        state_info_label.Text = "calling: " + this.ActiveDialerInteraction.ContactData["is_attr_numbertodial"];
                         this.ActiveDialerInteraction.PlacePreviewCall();
                         reset_timer();
                     }
