@@ -2784,6 +2784,162 @@ namespace CIC
             }
         }
 
+        private void InitializeStatusMessageDetails()
+        {
+            int iIndex = 0;
+            int AvailableIndex = 0;
+            string sIconName;
+            string sIconPath = "";
+            
+            System.Drawing.Icon Status_icon = null;
+            this.AllStatusMessageList = null;
+            this.AllStatusMessageListOfUser = null;
+            UserStatusUpdate statusUpdate = null;
+            
+            // string scope = "CIC::frmMain::InitializeStatusMessageDetails()::";
+            // Tracing.TraceStatus(scope + "Starting.");
+            // this.imgcmbAgentStatus.ImageList.Images.Clear();
+            // this.imgcmbAgentStatus.Items.Clear();
+            try
+            {
+                switch (IcWorkFlow.LoginResult)
+                {
+                    case true: //Log On to Workflow
+                        if (this.mPeopleManager != null)
+                        {
+                            this.AllStatusMessageList = new StatusMessageList(this.mPeopleManager);
+                            this.AllStatusMessageListOfUser = new UserStatusList(this.mPeopleManager);
+                            this.AllStatusMessageListOfUser.WatchedObjectsChanged += new EventHandler<WatchedObjectsEventArgs<UserStatusProperty>>(AllStatusMessageListOfUser_WatchedObjectsChanged);
+                            string[] dusers = { Program.DialingManager.Session.UserId };   //Make value to array 
+                            this.AllStatusMessageListOfUser.StartWatching(dusers);
+                            this.CurrentUserStatus = this.AllStatusMessageListOfUser.GetUserStatus(Program.DialingManager.Session.UserId);
+                            // this.imgcmbAgentStatus.ImageList = this.imsLstServerStatus;
+                            // this.CmbImgAgentStatus.ImageList = this.imsLstServerStatus;
+                            // this.imsLstServerStatus.Images.Clear();
+                            // sIconPath = CIC.Program.ResourcePath;
+                            this.AllStatusMessageList.StartWatching();
+                            foreach (StatusMessageDetails status in this.AllStatusMessageList.GetList())
+                            {
+                                // sIconName = this.GetFilenameFromFilePath(status.IconFileName.ToString());
+//                                 sIconPath += sIconName;
+//                                 if (System.IO.File.Exists(sIconPath) == true)
+//                                 {
+//                                     Status_icon = new System.Drawing.Icon(sIconPath);
+//                                     this.imsLstServerStatus.Images.Add(status.MessageText, Status_icon);
+//                                 }
+//                                 else
+//                                 {
+//                                     this.imsLstServerStatus.Images.Add(status.MessageText, status.Icon);
+//                                 }
+                                if (status.MessageText.ToLower().Trim() == "available")
+                                {
+                                    AvailableStatusMessageDetails = status;
+                                    AvailableIndex = iIndex;
+                                }
+                                if (status.MessageText.ToLower().Trim() == "do not disturb")
+                                {
+                                    DoNotDisturbStatusMessageDetails = status;
+                                }
+                                // this.imgcmbAgentStatus.Items.Add(new ImageComboBoxItem(status.MessageText, iIndex));
+                                iIndex++;
+                                Tracing.TraceNote(scope + "Id=" + status.Id + ", MessageText=" + status.MessageText);
+                            }
+                        }
+                        break;
+                    default:    //Not Log On to Workflow
+                        // Tracing.TraceNote(scope + "Creating instance of StatusMessageList");
+                        if (this.mPeopleManager != null)
+                        {
+                            string[] nusers = { this.IC_Session.UserId };   //Make value to array 
+                            this.AllStatusMessageList = new StatusMessageList(this.mPeopleManager);
+                            this.AllStatusMessageListOfUser = new UserStatusList(this.mPeopleManager);
+                            this.AllStatusMessageListOfUser.WatchedObjectsChanged += new EventHandler<WatchedObjectsEventArgs<UserStatusProperty>>(AllStatusMessageListOfUser_WatchedObjectsChanged);
+                            this.AllStatusMessageListOfUser.StartWatching(nusers);
+                            this.CurrentUserStatus = this.AllStatusMessageListOfUser.GetUserStatus(this.IC_Session.UserId);
+                            // this.imgcmbAgentStatus.ImageList = this.imsLstServerStatus;
+                            // this.CmbImgAgentStatus.ImageList = this.imsLstServerStatus;
+                            // this.imsLstServerStatus.Images.Clear();
+                            // sIconPath = CIC.Program.ResourcePath;
+                            this.AllStatusMessageList.StartWatching();
+                            foreach (StatusMessageDetails status in this.AllStatusMessageList.GetList())
+                            {
+                                if (status.IsSelectableStatus == true)
+                                {
+                                    // sIconName = this.GetFilenameFromFilePath(status.IconFileName.ToString());
+                                    // sIconPath += sIconName;
+                                    // if (System.IO.File.Exists(sIconPath) == true)
+                                    // {
+                                    //     Status_icon = new System.Drawing.Icon(sIconPath);
+                                    //     this.imsLstServerStatus.Images.Add(status.MessageText, Status_icon);
+                                    // }
+                                    // else
+                                    // {
+                                    //     this.imsLstServerStatus.Images.Add(status.MessageText, status.Icon);
+                                    // }
+                                    if (status.MessageText.ToLower().Trim() == "available")
+                                    {
+                                        AvailableStatusMessageDetails = status;
+                                        AvailableIndex = iIndex;
+                                    }
+                                    if (status.MessageText.ToLower().Trim() == "do not disturb")
+                                    {
+                                        DoNotDisturbStatusMessageDetails = status;
+                                    }
+                                    // imgcmbAgentStatus.Items.Add(new ImageComboBoxItem(status.MessageText, iIndex));
+                                    iIndex++;
+                                }
+                                // Tracing.TraceNote(scope + "Id=" + status.Id + ", MessageText=" + status.MessageText);
+                            }
+                        }
+                        break;
+                }
+                
+                //Set Current User Status Display 
+            //     if (this.mPeopleManager != null)
+            //     {
+            //         statusUpdate = new UserStatusUpdate(this.mPeopleManager);
+            //         if (this.CurrentUserStatus != null)
+            //         {
+            //             if (global::CIC.Properties.Settings.Default.AutoResetUserStatus == true)
+            //             {
+            //                 statusUpdate.StatusMessageDetails = this.AvailableStatusMessageDetails;
+            //                 statusUpdate.UpdateRequest();
+            //                 this.imgcmbAgentStatus.SetMessage(this.CurrentUserStatus.StatusMessageDetails.MessageText);
+            //             }
+            //             else
+            //             {
+            //                 if (this.CurrentUserStatus.StatusMessageDetails.IsSelectableStatus == true)
+            //                 {
+            //                     statusUpdate.StatusMessageDetails = this.CurrentUserStatus.StatusMessageDetails;
+            //                     statusUpdate.UpdateRequest();
+            //                 }
+            //                 else
+            //                 {
+            //                     if (this.IsLoggedIntoDialer == true)
+            //                     {
+            //                         statusUpdate.StatusMessageDetails = this.AvailableStatusMessageDetails;
+            //                         statusUpdate.UpdateRequest();
+            //                     }
+            //                     else
+            //                     {
+            //                         //Display last user status.
+            //                     }
+            //                 }
+            //                 if (this.imgcmbAgentStatus.Items.Count > 0)
+            //                 {
+            //                     this.imgcmbAgentStatus.SetMessage(this.CurrentUserStatus.StatusMessageDetails.MessageText);
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }
+            // catch (System.Exception ex)
+            // {
+            //     // Tracing.TraceStatus(scope + "Error info." + ex.Message);
+            //     System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+            // }
+        }
+
         private void CallBackInteration_StartWatchingCompleted(object sender, AsyncCompletedEventArgs e)
         {
             string scope = "CIC::MainForm::CallBackInteration_StartWatchingCompleted()::";
