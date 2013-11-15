@@ -25,6 +25,7 @@ namespace CIC
     public enum FormMainState
     {
         Connected,              // connect to workflow
+        ConferenceCall,         // connected to conference call
         Preview,                // get information from workflow
         Calling,                // call connected
         Disconnected,           // disconnect ot workflow
@@ -118,9 +119,6 @@ namespace CIC
                         bResult = this.SetActiveSession(session);
                         if (this.IC_Session != null)
                         {
-                            // TODO: Revise these chunk
-                            //this.Load_ApplicationSkin();
-                            //this.Additional_InitializeComponent();
                             ININ.IceLib.Connection.ConnectionState mConnectionState;
                             try
                             {
@@ -131,7 +129,7 @@ namespace CIC
                                 mConnectionState = ININ.IceLib.Connection.ConnectionState.None;
 
                             }
-                            ///this.SetStatusBarStripMsg();
+
                             if (mConnectionState == ININ.IceLib.Connection.ConnectionState.Up)
                             {
                                 this.Initial_NormalInteraction();
@@ -143,8 +141,7 @@ namespace CIC
                             else
                             {
                                 //No active connection. 
-                                // TODO: set state to no active connection
-
+                                state_change(FormMainState.Disconnected);
                                 //Tracing.TraceStatus(scope + "Cannot log on to station.please try again.");
                             }
                         }
@@ -152,7 +149,7 @@ namespace CIC
                 }
                 catch (System.Exception ex)
                 {
-                    // TODO: set state to no active connection
+                    state_change(FormMainState.Disconnected);
                     //Tracing.TraceStatus(scope + "Error info." + ex.Message);
                     //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
                 }
@@ -236,10 +233,6 @@ namespace CIC
             }
         }
 
-        /*
-         * TODO : add this.Set_ConferenceToolStrip();
-         */
-
         private void m_InteractionQueue_ConferenceInteractionChanged(object sender, ConferenceInteractionAttributesEventArgs e)
         {
             string scope = "CIC::MainForm::m_InteractionQueue_ConferenceInteractionChanged():: ";
@@ -279,6 +272,10 @@ namespace CIC
                         default:
                             break;
                     }
+
+                    /*
+                     * TODO : add this.Set_ConferenceToolStrip();
+                     */
                     //this.Set_ConferenceToolStrip();
                     this.ShowActiveCallInfo();
                     //Tracing.TraceStatus(scope + "Completed.");
@@ -311,7 +308,7 @@ namespace CIC
                         e.Interaction.AttributesChanged += new EventHandler<AttributesEventArgs>(DialerInteraction_AttributesChanged);
                         e.Interaction.StartWatching(this.InteractionAttributes);
                     }
-                    //this.IsActiveConference_flag = true;
+                    this.IsActiveConference_flag = true;
                     switch (e.Interaction.InteractionType)
                     {
                         case InteractionType.Email:
@@ -429,6 +426,7 @@ namespace CIC
             {
                 //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
                 //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                // TODO: activate this code
                 //this.ResetActiveCallInfo();
                 this.CallerHost = "";
                 if (ActiveNormalInteraction != null)
@@ -1053,12 +1051,44 @@ namespace CIC
 
         private void SessionConnectCompleted(object sender, AsyncCompletedEventArgs e)
         {
-            // TODO: implement ln 477
+            string scope = "CIC::frmMain::SessionConnectCompleted()::";
+            //Tracing.TraceStatus(scope + "Starting");
+            this.MustChangePassword();
+            //Tracing.TraceStatus(scope + "Completed.");
+        }
+
+        private void MustChangePassword()
+        {
+            string scope = "CIC::MainForm::MustChangePassword()::";
+            //Tracing.TraceStatus(scope + "Starting.");
+            if (this.InvokeRequired == true)
+            {
+                this.BeginInvoke(new MethodInvoker(MustChangePassword));
+            }
+            else
+            {
+                if (global::CIC.Program.m_Session != null)
+                {
+                    ININ.IceLib.Connection.Extensions.Security SecurityObject = new ININ.IceLib.Connection.Extensions.Security(global::CIC.Program.m_Session);
+                    ININ.IceLib.Connection.Extensions.PasswordPolicy passwordPolicyObject = SecurityObject.GetPasswordPolicy();
+                    if (passwordPolicyObject.MustChangePassword == true)
+                    {
+                        this.ShowChangePasswordDialog();
+                    }
+                }
+            }
+            //Tracing.TraceStatus(scope + "Starting.");
+        }
+
+        private void ShowChangePasswordDialog()
+        {
+            CIC.frmChangePassword changePasswordObject = new frmChangePassword();
+            changePasswordObject.Show();
         }
 
         private void mSession_Changed(object sender, ConnectionStateChangedEventArgs e)
         {
-            // TODO: 
+            // TODO: clean up this function
             Application.DoEvents();
             switch (e.State)
             {
@@ -1163,7 +1193,7 @@ namespace CIC
             }
             else
             {
-                // TODO: change the state back to no connected.
+                state_change(FormMainState.Disconnected);
             }
         }
 
@@ -1279,19 +1309,14 @@ namespace CIC
             }
             else
             {
-                MessageBox.Show("Please logged into Dialer first");  
-                /*
-                 * TODO : Change state to match manual call condition
-                 * 
-                 */
+                MessageBox.Show("Please logged into Dialer first", "Please logged into Dialer first");  
+                state_change(FormMainState.Disconnected);
             } 
             
         }
 
         private void break_button_Click(object sender, EventArgs e)
         {
-            //state_change(FormMainState.Break);
-
             try
             {
                 if (!IcWorkFlow.LoginResult && this.ActiveDialerInteraction == null)
@@ -1305,19 +1330,11 @@ namespace CIC
                         case true:
                             this.ActiveDialerInteraction.DialerSession.RequestBreak();
                             break_requested = true;
-                            //this.RequestBreakToolStripButton.Text = "Break Pending";
-                            /*if (this.WorkLogoutFlag == true)
-                            {
-                                System.Windows.Forms.MessageBox.Show(global::CIC.Properties.Settings.Default.IncompletedCall, "Error Info.", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            }*/
+                            
                             break;
                         default:
                             break_requested = false;
-                            //this.RequestBreakToolStripButton.Text = "Break Pending";
-                            /*if (this.WorkLogoutFlag == true)
-                            {
-                                System.Windows.Forms.MessageBox.Show(global::CIC.Properties.Settings.Default.IncompletedCall, "Error Info.", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            }*/
+                           
                             break;
                     }
                 }
@@ -1325,7 +1342,6 @@ namespace CIC
             }
             catch (System.Exception ex)
             {
-                //this.RequestBreakToolStripButton.Enabled = false;
                 //Tracing.TraceStatus(scope + "Error info." + ex.Message);
                 //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
             }
@@ -1346,13 +1362,11 @@ namespace CIC
                             this.ActiveDialerInteraction.DialerSession.EndBreak();
                             break_requested = false;
                             break_granted = false;
-                            //break_requested_state();
                     }
                 }
             }
             catch (System.Exception ex)
             {
-                //this.RequestBreakToolStripButton.Enabled = false;
                 //Tracing.TraceStatus(scope + "Error info." + ex.Message);
                 //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
             }
@@ -1376,8 +1390,6 @@ namespace CIC
                     {
                         if (this.ActiveDialerInteraction != null)
                         {
-                            // TODO: validate the condition of log out request while not on break
-                            //if (/*this.RequestBreakToolStripButton.Text.Trim() != "End Break"*/ false)
                             if (!this.break_granted)
                             {
                                 this.break_granted = true;
@@ -1476,11 +1488,10 @@ namespace CIC
                                 {
                                     if (this.AvailableStatusMessageDetails != null)
                                     {
+                                        // TODO: check if we need this code?
                                         //this.userManualStatusChangeFlag = true;
                                         statusUpdate.StatusMessageDetails = this.AvailableStatusMessageDetails;
                                         statusUpdate.UpdateRequest();
-                                        // TODO: check what this chuck does. wtf?
-                                        //this.imgcmbAgentStatus.SetMessage(this.AvailableStatusMessageDetails.MessageText);  //Set Available status for a new call.
                                     }
                                 }
                             }
@@ -1506,7 +1517,6 @@ namespace CIC
                             }
                         }
                     }
-                    // TODO: change state.
 
                     if (this.break_granted || current_state == FormMainState.ManualCall)
                     {
@@ -1540,20 +1550,18 @@ namespace CIC
                     this.RegisterHandlers();
 
                     //Tracing.TraceStatus(scope + "Completed.");
-                    // TODO: change state to something
                     this.Initial_NormalInteraction();
                     this.UpdateUserStatus();
                 }
                 else
                 {
-                    // TODO: goto logout state
                     //Tracing.TraceStatus(scope + "WorkFlow [" + ((ToolStripMenuItem)sender).Text + "] logon Fail.Please try again.");
                 }
-                //this.ShowActiveCallInfo(); // TODO: change to state change
+                //this.ShowActiveCallInfo(); // TODO: check if we really need to call this?
             }
             catch (System.Exception ex)
             {
-                // TODO: goto logout state
+                this.state_change(FormMainState.Disconnected);
                 //Tracing.TraceStatus(scope + "Error info.Logon to Workflow[" + ((ToolStripMenuItem)sender).Text + "] : " + ex.Message);
                 //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info.Logon to Workflow[" + ((ToolStripMenuItem)sender).Text + "] : " + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
             }  
@@ -1615,8 +1623,7 @@ namespace CIC
                     }
                 }
                 // TODO: change state
-                //this.CreateConferenceToolStripButton.Enabled = false;
-                //this.LeaveConferenceToolStripButton.Enabled = true;
+                state_change(FormMainState.ConferenceCall);
                 //Tracing.TraceStatus(scope + "Completed.");
             }
             catch (System.Exception ex)
@@ -2090,25 +2097,22 @@ namespace CIC
         {
             // TODO update this method
             string scope = "CIC::FormMain::update_conference_status()::";
-            //this.Set_ConferenceToolStrip(); // TODO: update conference status
-                //
-                //>>>>>>>> from here
-            //if (this.InteractionList != null && this.InteractionList.Count <= 0)
-            //{
-            //        this.ActiveConsultInteraction = null;
-            //        this.IsActiveConference_flag = false;
-            //        this.ActiveConferenceInteraction = null;
-            //        if (ActiveNormalInteraction != null)
-            //        {
-            //            ActiveNormalInteraction.Disconnect();
-            //            ActiveNormalInteraction = null;
-            //        }
-            //        if (IcWorkFlow.LoginResult != true)
-            //        {
-            //            this.ActiveDialerInteraction = null;
-            //        }
-            //}
-            // <<<<<<<< to here
+            //this.Set_ConferenceToolStrip();
+            if (this.InteractionList != null && this.InteractionList.Count <= 0)
+            {
+                    ActiveConsultInteraction = null;
+                    this.IsActiveConference_flag = false;
+                    ActiveConferenceInteraction = null;
+                    if (ActiveNormalInteraction != null)
+                    {
+                        ActiveNormalInteraction.Disconnect();
+                        ActiveNormalInteraction = null;
+                    }
+                    if (IcWorkFlow.LoginResult != true)
+                    {
+                        this.ActiveDialerInteraction = null;
+                    }
+            }
             //Tracing.TraceStatus(scope + "Completed.");
         }
 
@@ -2169,6 +2173,7 @@ namespace CIC
 
         private void state_change(FormMainState state)
         {
+            // TODO: implement all states
             switch (state)
                 {
                     case FormMainState.Preview:
@@ -2238,6 +2243,9 @@ namespace CIC
                     case FormMainState.Loggedout:
                         logged_out_state();
                         break;
+                    case FormMainState.ConferenceCall:
+                        connected_state();
+                        break;
                 }
                 prev_state = current_state;
                 current_state = state;
@@ -2296,9 +2304,6 @@ namespace CIC
             current_state = FormMainState.Connected;
         }
 
-        /*
-         * //TODO : seperate break case to break_request
-         */
         private void preview_state()
         {
             // starts the next number in line
@@ -2324,8 +2329,6 @@ namespace CIC
             transfer_button.Enabled = true;
             conference_button.Enabled = true;
             break_button.Enabled = true; 
-            
-            // TODO hilight the calling name and number in the GUI
         }
 
         private void hold_state()
@@ -2339,9 +2342,8 @@ namespace CIC
             break_button.Enabled = !break_requested;
         }
 
-        private void  disconnect_state()
+        private void disconnect_state()
         {
-            // TODO: rename typo enable_all_button()
             reset_state();
             exit_button.Enabled = true;
             // calling a new number
@@ -2449,24 +2451,6 @@ namespace CIC
                 }
                 else placecall(this, null);
             }
-            //// default function
-            //switch (mySwitch)
-            //{
-            //    case true:
-            //    // TODO calling logic for calling
-            //    // PlaceCallToolStripButton will enable when 
-            //    // 1. WorkflowToolStripMenuItem_Click()
-            //    // 2. EnabledDialerCallTools() and CallStateToolStripStatusLabel.Text == initializing
-            //    placecall();
-            //    break;
-            //    case false:
-            //    // TODO calling logic for pickup
-            //    // PickupToolStripButton will enable when 
-            //    // 1. EnabledNormalCallTools() and CallStateToolStripStatusLabel.Text == initializing | alerting | messaging | offering | held
-            //    // 2. EnabledDialerCallTools() and CallStateToolStripStatusLabel.Text ==                alerting | messaging | offering | held | mute
-            //    pickup();
-            //    break;
-            //}
         }
 
         private bool IsDialerInteractionAvailableForPickup()
@@ -2485,19 +2469,6 @@ namespace CIC
                 || ActiveNormalInteraction.State == InteractionState.Messaging
                 || ActiveNormalInteraction.State == InteractionState.Offering;
         }
-
-        //private void SetCallHistory(string phone)
-        //{
-        //    string scope = "CIC::frmMain::SetCallHistory()::";
-        //    //Tracing.TraceStatus(scope + "Starting.");
-        //    if (this.PhoneNumberToolStripTextBox.Text.Trim() != String.Empty)
-        //    {
-        //        this.PhoneNumberToolStripTextBox.Items.Add(this.PhoneNumberToolStripTextBox.Text);
-        //    }
-        //    //Tracing.TraceStatus(scope + "Completed.");
-        //}
-
-
 
         /****************************************************
         *****************************************************
@@ -3112,6 +3083,7 @@ namespace CIC
                     {
                         case true:
                             state_change(FormMainState.Break);
+                            // TODO: activate these chunk
                             //this.RequestBreakToolStripButton.Text = "End Break";
 
                             //this.SetToDoNotDisturb_UserStatusMsg();
@@ -3162,12 +3134,12 @@ namespace CIC
                                 this.ActiveDialerInteraction = null;
                             }
                             // TODO: need to clean up
-                            //this.IcWorkFlow = null;
-                            //this.DialerSession = null;
+                            IcWorkFlow = null;
+                            this.DialerSession = null;
                             
                             //this.InitializeStatusMessageDetails();
                             this.SetToDoNotDisturb_UserStatusMsg();
-                            //this.CrmScreenPop();
+                            this.CrmScreenPop();
                             state_change(FormMainState.Loggedout);
                             System.Windows.Forms.MessageBox.Show(global::CIC.Properties.Settings.Default.CompletedWorkflowMsg, "System Info.", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             break;
@@ -3388,5 +3360,7 @@ namespace CIC
         public bool IsManualDialing { get; set; }
 
         public StatusMessageDetails DoNotDisturbStatusMessageDetails { get; set; }
+
+        public bool IsActiveConference_flag { get; set; }
     }
 }
