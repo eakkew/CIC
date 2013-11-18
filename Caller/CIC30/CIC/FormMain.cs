@@ -581,7 +581,6 @@ namespace CIC
                 {
                     this.SetInfoBarColor();
                     this.transfer_button.Enabled = true;
-                    //this.EnabledTransferToolStripDisplayed();
                 }
                 else
                 {
@@ -611,13 +610,9 @@ namespace CIC
                 switch (this.StrConnectionState)
                 {
                     case InteractionState.Alerting:
-                        //this.CallInfoStatusStrip.BackgroundImage = global::CIC.Program.AppImageList.Images["WorkFlowBar_Info"];
-                        //this.CallInfoStatusStrip.BackgroundImageLayout = ImageLayout.Stretch;
                         this.Start_AlertingWav();
                         break;
                     case InteractionState.Offering:
-                        //this.CallInfoStatusStrip.BackgroundImage = global::CIC.Program.AppImageList.Images["WorkFlowBar_Info"];
-                        //this.CallInfoStatusStrip.BackgroundImageLayout = ImageLayout.Stretch;
                         this.Start_AlertingWav();
                         break;
                     case InteractionState.Held:
@@ -630,7 +625,7 @@ namespace CIC
                         this.Stop_AlertingWav();
                         break;
                 }
-                //this.EnabledDialerCallTools();
+                this.EnabledDialerCallTools();
             }
             else
             {
@@ -646,7 +641,286 @@ namespace CIC
                         this.Stop_AlertingWav();
                         break;
                 }
-                //this.EnabledNormalCallTools();
+                this.EnabledDialerCallTools();
+            }
+            //Tracing.TraceStatus(scope + "Completed.");
+        }
+
+        private void EnabledDialerCallTools()
+        {
+            string scope = "CIC::frmMain::EnabledNormalCallTools()::";
+            //Tracing.TraceStatus(scope + "Starting.");
+            //Color OldColor = this.TelephonyToolStrip.BackColor;  //Save Original Trasparent Color
+            if (break_requested)
+            {
+                this.break_button.Enabled = false;
+            }
+            else
+            {
+                this.break_button.Enabled = true;
+            }
+            switch (this.StrConnectionState)
+            {
+                case InteractionState.System:
+                    //this.DispositionToolStripButton.Enabled = false;
+                    //this.CallActivityCodeToolStripComboBox.Enabled = false;
+                    //this.PlaceCallToolStripButton.Enabled = true;
+                    //this.SkipCallToolStripButton.Enabled = true;
+                    //this.CallToolStripSplitButton.Enabled = false;
+                    //this.PickupToolStripButton.Enabled = false;
+                    //this.MuteToolStripButton.Enabled = false;
+                    //this.MuteToolStripButton.Checked = this.IsMuted;
+                    //this.HoldToolStripButton.Checked = false;
+                    //this.HoldToolStripButton.Enabled = false;
+                    //this.DisconnectToolStripButton.Enabled = false;
+                    //this.DialpadToolStripDropDownButton.Enabled = false;
+                    break;
+                case InteractionState.Alerting:
+                    //this.DispositionToolStripButton.Enabled = true;
+                    //this.CallActivityCodeToolStripComboBox.Enabled = true;
+                    //this.PlaceCallToolStripButton.Enabled = false;
+                    //this.SkipCallToolStripButton.Enabled = false;
+                    //if (this.IsDialingEnabled == true)
+                    //{
+                    //    this.CallToolStripSplitButton.Enabled = true;
+                    //}
+                    //else
+                    //{
+                    //    this.CallToolStripSplitButton.Enabled = false;
+                    //}
+                    //this.PickupToolStripButton.Enabled = true;
+                    //this.MuteToolStripButton.Enabled = true;
+                    //this.HoldToolStripButton.Enabled = true;
+                    //this.MuteToolStripButton.Checked = this.IsMuted;
+                    //this.HoldToolStripButton.Checked = false;
+                    //this.SkipCallToolStripButton.Enabled = true;
+                    //this.DisconnectToolStripButton.Enabled = true;
+                    //this.DialpadToolStripDropDownButton.Enabled = true;
+                    //this.TelephonyToolStrip.BackColor = Color.Aqua;
+                    //this.TelephonyToolStrip.BackColor = OldColor;
+                    break;
+                case InteractionState.Messaging:
+                    //this.DispositionToolStripButton.Enabled = true;
+                    ////this.CallActivityCodeToolStripComboBox.SelectedIndex = -1;
+                    //this.CallActivityCodeToolStripComboBox.Enabled = true;
+                    //this.PlaceCallToolStripButton.Enabled = false;
+                    //this.SkipCallToolStripButton.Enabled = false;
+                    //if (this.IsDialingEnabled == true)
+                    //{
+                    //    this.CallToolStripSplitButton.Enabled = true;
+                    //}
+                    //else
+                    //{
+                    //    this.CallToolStripSplitButton.Enabled = false;
+                    //}
+                    //this.PickupToolStripButton.Enabled = true;
+                    //this.MuteToolStripButton.Enabled = true;
+                    //this.HoldToolStripButton.Enabled = true;
+                    //this.MuteToolStripButton.Checked = this.IsMuted;
+                    //this.HoldToolStripButton.Checked = false;
+                    //this.SkipCallToolStripButton.Enabled = true;
+                    //this.DisconnectToolStripButton.Enabled = true;
+                    //this.DialpadToolStripDropDownButton.Enabled = true;
+                    //this.TelephonyToolStrip.BackColor = Color.Aqua;
+                    //this.TelephonyToolStrip.BackColor = OldColor;
+                    break;
+                case InteractionState.Offering:
+                    //this.DispositionToolStripButton.Enabled = true;
+                    //this.CallActivityCodeToolStripComboBox.Enabled = true;
+                    //this.PlaceCallToolStripButton.Enabled = false;
+                    //this.SkipCallToolStripButton.Enabled = false;
+                    //if (this.IsDialingEnabled == true)
+                    //{
+                    //    this.CallToolStripSplitButton.Enabled = true;
+                    //}
+                    //else
+                    //{
+                    //    this.CallToolStripSplitButton.Enabled = false;
+                    //}
+                    //this.PickupToolStripButton.Enabled = true;
+                    //this.MuteToolStripButton.Enabled = true;
+                    //this.HoldToolStripButton.Enabled = true;
+                    //this.MuteToolStripButton.Checked = this.IsMuted;
+                    //this.HoldToolStripButton.Checked = false;
+                    //this.DisconnectToolStripButton.Enabled = true;
+                    //this.DialpadToolStripDropDownButton.Enabled = true;
+                    //this.TelephonyToolStrip.BackColor = Color.Aqua;
+                    //this.TelephonyToolStrip.BackColor = OldColor;
+                    break;
+                //case "dialing":
+                //    this.DispositionToolStripButton.Enabled = true;
+                //    this.CallActivityCodeToolStripComboBox.Enabled = true;
+                //    this.PlaceCallToolStripButton.Enabled = false;
+                //    this.SkipCallToolStripButton.Enabled = false;
+                //    this.CallToolStripSplitButton.Enabled = false;
+                //    this.PickupToolStripButton.Enabled = false;
+                //    this.MuteToolStripButton.Enabled = false;
+                //    this.HoldToolStripButton.Enabled = false;
+                //    this.MuteToolStripButton.Checked = this.IsMuted;
+                //    this.HoldToolStripButton.Checked = false;
+                //    this.DisconnectToolStripButton.Enabled = true;
+                //    this.DialpadToolStripDropDownButton.Enabled = false;
+                //    this.TelephonyToolStrip.BackColor = Color.Aqua;
+                //    this.TelephonyToolStrip.BackColor = OldColor;
+                //    break;
+                case InteractionState.Proceeding:
+                    //this.DispositionToolStripButton.Enabled = true;
+                    //this.CallActivityCodeToolStripComboBox.Enabled = true;
+                    //this.PlaceCallToolStripButton.Enabled = false;
+                    //this.SkipCallToolStripButton.Enabled = false;
+                    //this.CallToolStripSplitButton.Enabled = false;
+                    //this.PickupToolStripButton.Enabled = false;
+                    //this.MuteToolStripButton.Enabled = false;
+                    //this.HoldToolStripButton.Enabled = false;
+                    //this.MuteToolStripButton.Checked = this.IsMuted;
+                    //this.HoldToolStripButton.Checked = false;
+                    //this.DisconnectToolStripButton.Enabled = true;
+                    //this.DialpadToolStripDropDownButton.Enabled = false;
+                    //this.TelephonyToolStrip.BackColor = Color.Aqua;
+                    //this.TelephonyToolStrip.BackColor = OldColor;
+                    break;
+                case InteractionState.Held:
+                    //this.DispositionToolStripButton.Enabled = true;
+                    //this.CallActivityCodeToolStripComboBox.Enabled = true;
+                    //this.PlaceCallToolStripButton.Enabled = false;
+                    //this.SkipCallToolStripButton.Enabled = false;
+                    //if (this.IsDialingEnabled == true)
+                    //{
+                    //    this.CallToolStripSplitButton.Enabled = true;
+                    //}
+                    //else
+                    //{
+                    //    this.CallToolStripSplitButton.Enabled = false;
+                    //}
+                    //this.PickupToolStripButton.Enabled = true;
+                    //this.MuteToolStripButton.Enabled = true;
+                    //this.HoldToolStripButton.Enabled = true;
+                    //this.MuteToolStripButton.Checked = this.IsMuted;
+                    //this.HoldToolStripButton.Checked = true;
+                    //this.DisconnectToolStripButton.Enabled = true;
+                    //this.DialpadToolStripDropDownButton.Enabled = true;
+                    //this.TelephonyToolStrip.BackColor = Color.Aqua;
+                    //this.TelephonyToolStrip.BackColor = OldColor;
+                    break;
+                case InteractionState.Connected:
+                    //if (IsMuted)
+                    //{
+                    //    this.DispositionToolStripButton.Enabled = true;
+                    //    this.CallActivityCodeToolStripComboBox.Enabled = true;
+                    //    this.PlaceCallToolStripButton.Enabled = false;
+                    //    this.SkipCallToolStripButton.Enabled = false;
+                    //    if (this.IsDialingEnabled == true)
+                    //    {
+                    //        this.CallToolStripSplitButton.Enabled = true;
+                    //    }
+                    //    else
+                    //    {
+                    //        this.CallToolStripSplitButton.Enabled = false;
+                    //    }
+                    //    this.PickupToolStripButton.Enabled = true;
+                    //    this.MuteToolStripButton.Enabled = true;
+                    //    this.HoldToolStripButton.Enabled = true;
+                    //    this.MuteToolStripButton.Checked = this.IsMuted;
+                    //    this.HoldToolStripButton.Checked = false;
+                    //    this.DisconnectToolStripButton.Enabled = true;
+                    //    this.DialpadToolStripDropDownButton.Enabled = true;
+                    //    this.TelephonyToolStrip.BackColor = Color.Aqua;
+                    //    this.TelephonyToolStrip.BackColor = OldColor;
+                    //}
+                    //else
+                    //{
+                    //    this.DispositionToolStripButton.Enabled = true;
+                    //    this.CallActivityCodeToolStripComboBox.Enabled = true;
+                    //    this.PlaceCallToolStripButton.Enabled = false;
+                    //    this.SkipCallToolStripButton.Enabled = false;
+                    //    if (this.IsDialingEnabled == true)
+                    //    {
+                    //        this.CallToolStripSplitButton.Enabled = true;
+                    //    }
+                    //    else
+                    //    {
+                    //        this.CallToolStripSplitButton.Enabled = false;
+                    //    }
+                    //    this.PickupToolStripButton.Enabled = false;
+                    //    this.MuteToolStripButton.Enabled = true;
+                    //    this.HoldToolStripButton.Enabled = true;
+                    //    this.MuteToolStripButton.Checked = this.IsMuted;
+                    //    this.HoldToolStripButton.Checked = false;
+                    //    this.DisconnectToolStripButton.Enabled = true;
+                    //    this.DialpadToolStripDropDownButton.Enabled = true;
+                    //    this.TelephonyToolStrip.BackColor = Color.Aqua;
+                    //    this.TelephonyToolStrip.BackColor = OldColor;
+                    //}
+                    break;
+                case InteractionState.None:
+                    //this.DispositionToolStripButton.Enabled = false;
+                    //this.CallActivityCodeToolStripComboBox.Enabled = false;
+                    //this.PlaceCallToolStripButton.Enabled = false;
+                    //this.SkipCallToolStripButton.Enabled = false;
+                    //this.CallToolStripSplitButton.Enabled = false;
+                    //this.PickupToolStripButton.Enabled = false;
+                    //this.MuteToolStripButton.Enabled = false;
+                    //this.HoldToolStripButton.Enabled = false;
+                    //this.MuteToolStripButton.Checked = this.IsMuted;
+                    //this.HoldToolStripButton.Checked = false;
+                    //this.DisconnectToolStripButton.Enabled = false;
+                    //this.DialpadToolStripDropDownButton.Enabled = false;
+                    //this.TelephonyToolStrip.BackColor = Color.Aqua;
+                    //this.TelephonyToolStrip.BackColor = OldColor;
+                    break;
+                default:
+                    //if (this.CallStateToolStripStatusLabel.Text.ToLower().Trim().Substring(0, 3).Equals("acd"))
+                    //{
+                    //    this.DispositionToolStripButton.Enabled = true;
+                    //    this.CallActivityCodeToolStripComboBox.Enabled = true;
+                    //    this.PlaceCallToolStripButton.Enabled = false;
+                    //    this.SkipCallToolStripButton.Enabled = false;
+                    //    this.CallToolStripSplitButton.Enabled = false;
+                    //    this.PickupToolStripButton.Enabled = false;
+                    //    this.MuteToolStripButton.Enabled = false;
+                    //    this.HoldToolStripButton.Enabled = false;
+                    //    this.MuteToolStripButton.Checked = this.IsMuted;
+                    //    this.HoldToolStripButton.Checked = false;
+                    //    this.DisconnectToolStripButton.Enabled = true;
+                    //    this.DialpadToolStripDropDownButton.Enabled = false;
+                    //    this.TelephonyToolStrip.BackColor = Color.Aqua;
+                    //    this.TelephonyToolStrip.BackColor = OldColor;
+                    //}
+                    //else if (this.CallStateToolStripStatusLabel.Text.ToLower().Trim().Substring(0, 10).Equals("disconnect"))
+                    //{
+                    //    this.DispositionToolStripButton.Enabled = true;
+                    //    this.CallActivityCodeToolStripComboBox.Enabled = true;
+                    //    this.PlaceCallToolStripButton.Enabled = false;
+                    //    this.SkipCallToolStripButton.Enabled = false;
+                    //    this.CallToolStripSplitButton.Enabled = false;
+                    //    this.PickupToolStripButton.Enabled = false;
+                    //    this.MuteToolStripButton.Enabled = false;
+                    //    this.HoldToolStripButton.Enabled = false;
+                    //    this.MuteToolStripButton.Checked = this.IsMuted;
+                    //    this.HoldToolStripButton.Checked = false;
+                    //    this.DisconnectToolStripButton.Enabled = false;
+                    //    this.DialpadToolStripDropDownButton.Enabled = false;
+                    //    this.TelephonyToolStrip.BackColor = Color.Aqua;
+                    //    this.TelephonyToolStrip.BackColor = OldColor;
+                    //}
+                    //else
+                    //{
+                    //    this.DispositionToolStripButton.Enabled = false;
+                    //    this.CallActivityCodeToolStripComboBox.Enabled = false;
+                    //    this.PlaceCallToolStripButton.Enabled = false;
+                    //    this.SkipCallToolStripButton.Enabled = false;
+                    //    this.CallToolStripSplitButton.Enabled = false;
+                    //    this.PickupToolStripButton.Enabled = false;
+                    //    this.MuteToolStripButton.Enabled = false;
+                    //    this.HoldToolStripButton.Enabled = false;
+                    //    this.MuteToolStripButton.Checked = this.IsMuted;
+                    //    this.HoldToolStripButton.Checked = false;
+                    //    this.DisconnectToolStripButton.Enabled = false;
+                    //    this.DialpadToolStripDropDownButton.Enabled = false;
+                    //    this.TelephonyToolStrip.BackColor = Color.Aqua;
+                    //    this.TelephonyToolStrip.BackColor = OldColor;
+                    //}
+                    break;
             }
             //Tracing.TraceStatus(scope + "Completed.");
         }
