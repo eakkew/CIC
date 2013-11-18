@@ -40,31 +40,48 @@ namespace CIC
 
     public partial class FormMain : Form
     {
+        private ScheduleCallbackForm frmScheduleCallbackForm { get; set; }
+
         private bool break_requested { get; set; }
         private bool break_granted { get; set; }
         private bool BlindTransferFlag { get; set; }
-        private int AutoReconnect = 2;
+        private bool IsMuted { get; set; }
         private bool IsActiveConnection { get; set; }
         private bool SwapPartyFlag { get; set; }
+        private bool IsManualDialing { get; set; }
+        private bool IsActiveConference_flag { get; set; }
+        private bool transfer_complete = false;
+        private int AutoReconnect = 2;
         private string[] InteractionAttributes { get; set; }
         private ArrayList InteractionList { get; set; }
         private string callingNumber { get; set; }
+        private string ScheduleAgent { get; set; }
+        private string CallBackPhone { get; set; }
+        private string CallerHost { get; set; }
+        private float timer;
+
+        private DateTime CallBackDateTime { get; set; }
 
         private DataSet DsReasonCode { get; set; }
-        private Interaction mInteraction { get; set; }
         private StatusMessageList AllStatusMessageList { get; set; }
         private UserStatusList AllStatusMessageListOfUser { get; set; }
         private UserStatus CurrentUserStatus { get; set; }
-        private StatusMessageDetails AvailableStatusMessageDetails { get; set; }
         private WorkgroupDetails ActiveWorkgroupDetails { get; set; }
         private InteractionsManager NormalInterationManager = null;
         private PeopleManager mPeopleManager { get; set; }
         private DialerCallInteraction ActiveDialerInteraction = null;
-        private ININ.IceLib.Connection.Session IC_Session = null;
-        private ININ.IceLib.Dialer.DialerSession DialerSession = null;
+        private EmailInteraction ActiveNormalEmailInteraction { get; set; }
+        private CallbackInteraction ActiveCallbackInteraction { get; set; }
+        private Session IC_Session = null;
+        private DialerSession DialerSession = null;
         private FormMainState prev_state = FormMainState.Preview;
         private FormMainState current_state = FormMainState.Preview;
+        private Interaction mInteraction { get; set; }
         private InteractionState StrConnectionState = InteractionState.None;
+        private InteractionQueue m_InteractionQueue { get; set; }
+
+        private StatusMessageDetails AvailableStatusMessageDetails { get; set; }
+        private StatusMessageDetails DoNotDisturbStatusMessageDetails { get; set; }
 
         private static ICWorkFlow IcWorkFlow = null;
         private static Interaction ActiveNormalInteraction { get; set; }
@@ -72,10 +89,7 @@ namespace CIC
         private static InteractionConference ActiveConferenceInteraction = null;
         private static NameValueCollection mDialerData { get; set; }
 
-        private float timer;
-
-        public bool transfer_complete = false;
- 
+        
         public FormMainState req_state_change = FormMainState.None;
         
         public FormMain()
@@ -215,7 +229,7 @@ namespace CIC
                             ActiveNormalInteraction = e.Interaction;
                             if (e.ConferenceItem.IsDisconnected == true)
                             {
-                                // this.RemoveNormalInteractionFromList(this.ActiveNormalInteraction);
+                                this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
                             }
                             break;
                         default:
@@ -643,50 +657,103 @@ namespace CIC
             
         }
 
-        /*
-         * TODO : add InteractionID
-         */
-        private void RemoveNormalInteractionFromList(Interaction ActiveNormalInteraction)
+        private void RemoveNormalInteractionFromList(Interaction Interaction_Object)
         {
-            /*
-            string scope = "CIC::frmMain::RemoveNormalInteractionFromList(InteractionID)::";      //Over load I
+            string scope = "CIC::frmMain::RemoveNormalInteractionFromList(Interaction_Object)::";      //Over load II
             //Tracing.TraceStatus(scope + "Starting.");
             int retIndex = -1;
             int i = 0;
-            if (InteractionID != null)
+            try
             {
-                if (this.InteractionList != null)
+                if (Interaction_Object != null)
                 {
-                    if (this.InteractionList.Count > 0)
+                    if (this.InteractionList != null)
                     {
-                        for (i = 0; i < this.InteractionList.Count; i++)
+                        if (this.InteractionList.Count > 0)
                         {
-                            if (((ININ.IceLib.Interactions.Interaction)this.InteractionList[i]).InteractionId.Id == InteractionID.Id)
+                            do    //Remove junk CallObject
                             {
-                                retIndex = i;
-                                break;
+                                retIndex = -1;
+                                for (i = 0; i < this.InteractionList.Count; i++)
+                                {
+                                    if (((ININ.IceLib.Interactions.Interaction)this.InteractionList[i]) == null)
+                                    {
+                                        retIndex = i;
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        if (((ININ.IceLib.Interactions.Interaction)this.InteractionList[i]).IsDisconnected == true)
+                                        {
+                                            retIndex = i;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (this.InteractionList != null)
+                                {
+                                    if ((retIndex >= 0) && (retIndex < this.InteractionList.Count))
+                                    {
+                                        //this.CtmMenuIndex = retIndex;
+                                        //this.Remove_CtmContextMenuByIndex();
+                                        this.InteractionList.RemoveAt(retIndex);
+                                    }
+                                }
                             }
-                            i++;
+                            while (retIndex >= 0);
+                            if (this.InteractionList != null)
+                            {
+                                for (i = 0; i < this.InteractionList.Count; i++)
+                                {
+                                    if (((ININ.IceLib.Interactions.Interaction)this.InteractionList[i]).InteractionId.Id == Interaction_Object.InteractionId.Id)
+                                    {
+                                        retIndex = i;
+                                        break;
+                                    }
+                                }
+                                if ((retIndex >= 0) && (retIndex < this.InteractionList.Count))
+                                {
+                                    ActiveNormalInteraction = (ININ.IceLib.Interactions.Interaction)this.InteractionList[retIndex];
+                                    //this.CtmMenuIndex = retIndex;
+                                    //this.Remove_CtmContextMenuByIndex();
+                                    this.InteractionList.RemoveAt(retIndex);
+                                }
+                                else
+                                {
+                                    //
+                                }
+                            }
+                            if (this.InteractionList != null)
+                            {
+                                if (this.InteractionList.Count <= 0)
+                                {
+                                    this.IsMuted = false;
+                                }
+                            }
                         }
-                        if (retIndex >= 0)
-                        {
-                            FormMain.ActiveNormalInteraction = (ININ.IceLib.Interactions.Interaction)this.InteractionList[retIndex];
-                            this.InteractionList.RemoveAt(retIndex);
-                        }
-                        //}
-                        //}
                     }
                     else
                     {
-                        this.InteractionList.Clear();
-                        this.IsMuted = false;
+                        ActiveConsultInteraction = null;
+                        ActiveConferenceInteraction = null;
                     }
-                    this.Remove_ActiveCallSelPopMenu();
-                    //Tracing.TraceStatus(scope + "Completed.");
-                    //throw new NotImplementedException();
                 }
+                else
+                {
+                    if (this.InteractionList != null)
+                    {
+                        this.InteractionList.Clear();
+                    }
+                    this.IsMuted = false;
+                }
+                //Tracing.TraceStatus(scope + "Completed.");
             }
-             */
+            catch (System.Exception ex)
+            {
+                //this.EnabledTransferToolStripDisplayed();
+                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+            }
         }
 
         private void Set_ActiveCallSelPopMenu()
@@ -938,28 +1005,25 @@ namespace CIC
             //Tracing.TraceStatus(scope + "Starting.");
             try
             {
-                if (mInteraction != null)
+                if (mInteraction != null && this.InteractionList != null)
                 {
-                    if (this.InteractionList != null)
+                    for (int i = 0; i < this.InteractionList.Count; i++)
                     {
-                        for (int i = 0; i < this.InteractionList.Count; i++)
+                        if (((Interaction)this.InteractionList[i]).InteractionId == mInteraction.InteractionId)
                         {
-                            if (((Interaction)this.InteractionList[i]).InteractionId == mInteraction.InteractionId)
-                            {
-                                chk_idx = i;
-                                break;
-                            }
+                            chk_idx = i;
+                            break;
                         }
-                        if ((chk_idx >= 0) && (chk_idx < this.InteractionList.Count))
-                        {
-                            //Update
-                            this.InteractionList[chk_idx] = mInteraction;
-                        }
-                        else
-                        {
-                            //Insert
-                            this.InteractionList.Add(mInteraction);
-                        }
+                    }
+                    if ((chk_idx >= 0) && (chk_idx < this.InteractionList.Count))
+                    {
+                        //Update
+                        this.InteractionList[chk_idx] = mInteraction;
+                    }
+                    else
+                    {
+                        //Insert
+                        this.InteractionList.Add(mInteraction);
                     }
                 }
                 //Tracing.TraceStatus(scope + "Completed.");
@@ -1019,6 +1083,7 @@ namespace CIC
                 InteractionAttributeName.WorkgroupQueueName,
                 InteractionAttributeName.WrapUpCodeId
             };
+            //Tracing.TraceStatus(scope + "Completed.");
         }
 
         private void Initial_NormalInteraction()
@@ -1113,17 +1178,20 @@ namespace CIC
                         global::CIC.Program.IcStation.ConnectionTimes = 0;
                         this.IsActiveConnection = true;       //Set to ActiveConnection.
                         //this.SetStatusBarStripMsg();
-                        //this.InitialAllComponents();
+                        this.InitializeSession();
                         this.BeginInvoke(new MethodInvoker(login_workflow)); 
                     }
                     //this.state_change(FormMainState.Preview);
                     this.BeginInvoke(new MethodInvoker(connected_state));
                     break;
                 case ININ.IceLib.Connection.ConnectionState.Down:
-                    this.IsActiveConnection = false;       //Set to InActiveConnection.
-                        //this.Dispose_QueueWatcher();
+                    if (this.IsActiveConnection)
+                    {
+                        this.IsActiveConnection = false;       //Set to InActiveConnection.
+                        this.Dispose_QueueWatcher();
                         //this.DisabledAll();
                         //this.SetStatusBarStripMsg();
+                    }
 
                     if (global::CIC.Program.m_Session != null)
                     {
@@ -1150,6 +1218,34 @@ namespace CIC
                     break;
                 default:
                     break;
+            }
+        }
+
+        private void Dispose_QueueWatcher()
+        {
+            string scope = "CIC::MainForm::Dispose_QueueWatcher():: ";
+            //Tracing.TraceStatus(scope + "Starting.");
+            try
+            {
+                //Tracing.TraceStatus(scope + "Creating instance of InteractionQueue");
+                if (this.m_InteractionQueue != null)
+                {
+                    //Tracing.TraceStatus(scope + "Attaching event handlers");
+                    this.m_InteractionQueue.InteractionAdded -= new EventHandler<InteractionAttributesEventArgs>(this.m_InteractionQueue_InteractionAdded);
+                    this.m_InteractionQueue.InteractionChanged -= new EventHandler<InteractionAttributesEventArgs>(m_InteractionQueue_InteractionChanged);
+                    this.m_InteractionQueue.InteractionRemoved -= new EventHandler<InteractionEventArgs>(m_InteractionQueue_InteractionRemoved);
+                    this.m_InteractionQueue.ConferenceInteractionAdded -= new EventHandler<ConferenceInteractionAttributesEventArgs>(m_InteractionQueue_ConferenceInteractionAdded);
+                    this.m_InteractionQueue.ConferenceInteractionChanged -= new EventHandler<ConferenceInteractionAttributesEventArgs>(m_InteractionQueue_ConferenceInteractionChanged);
+                    this.m_InteractionQueue.ConferenceInteractionRemoved -= new EventHandler<ConferenceInteractionEventArgs>(m_InteractionQueue_ConferenceInteractionRemoved);
+                    this.m_InteractionQueue.StopWatchingAsync(null, null);
+                    this.m_InteractionQueue = null;
+                }
+                //Tracing.TraceStatus(scope + "Completed.");
+            }
+            catch (System.Exception ex)
+            {
+                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
             }
         }
 
@@ -3472,28 +3568,5 @@ namespace CIC
             name6_panel.BackColor = SystemColors.Control;
         }
 
-        public ScheduleCallbackForm frmScheduleCallbackForm { get; set; }
-
-        public DateTime CallBackDateTime { get; set; }
-
-        public string CallBackPhone { get; set; }
-
-        public string ScheduleAgent { get; set; }
-
-        public InteractionQueue m_InteractionQueue { get; set; }
-
-        public bool IsMuted { get; set; }
-
-        public EmailInteraction ActiveNormalEmailInteraction { get; set; }
-
-        public CallbackInteraction ActiveCallbackInteraction { get; set; }
-
-        public string CallerHost { get; set; }
-
-        public bool IsManualDialing { get; set; }
-
-        public StatusMessageDetails DoNotDisturbStatusMessageDetails { get; set; }
-
-        public bool IsActiveConference_flag { get; set; }
     }
 }
