@@ -62,23 +62,23 @@ namespace CIC
 
         private DateTime CallBackDateTime { get; set; }
 
+        private FormMainState prev_state = FormMainState.Preview;
+        private FormMainState current_state = FormMainState.Preview;
         private DataSet DsReasonCode { get; set; }
         private StatusMessageList AllStatusMessageList { get; set; }
         private UserStatusList AllStatusMessageListOfUser { get; set; }
         private UserStatus CurrentUserStatus { get; set; }
         private WorkgroupDetails ActiveWorkgroupDetails { get; set; }
-        private InteractionsManager NormalInterationManager = null;
         private PeopleManager mPeopleManager { get; set; }
-        private DialerCallInteraction ActiveDialerInteraction = null;
-        private EmailInteraction ActiveNormalEmailInteraction { get; set; }
-        private CallbackInteraction ActiveCallbackInteraction { get; set; }
         private Session IC_Session = null;
         private DialerSession DialerSession = null;
-        private FormMainState prev_state = FormMainState.Preview;
-        private FormMainState current_state = FormMainState.Preview;
         private Interaction mInteraction { get; set; }
         private InteractionState StrConnectionState = InteractionState.None;
         private InteractionQueue m_InteractionQueue { get; set; }
+        private DialerCallInteraction ActiveDialerInteraction = null;
+        private EmailInteraction ActiveNormalEmailInteraction { get; set; }
+        private CallbackInteraction ActiveCallbackInteraction { get; set; }
+        private InteractionsManager NormalInterationManager = null;
 
         private StatusMessageDetails AvailableStatusMessageDetails { get; set; }
         private StatusMessageDetails DoNotDisturbStatusMessageDetails { get; set; }
