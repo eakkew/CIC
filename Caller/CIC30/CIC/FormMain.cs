@@ -148,7 +148,7 @@ namespace CIC
                             {
                                 this.Initial_NormalInteraction();
                                 this.InitializeQueueWatcher();
-                                //this.UnifiedMessaging_StartWatching();
+                                this.UnifiedMessaging_StartWatching();
                                
                                 //Tracing.TraceStatus(scope + "Completed.");
                             }
@@ -164,6 +164,79 @@ namespace CIC
                 catch (System.Exception ex)
                 {
                     state_change(FormMainState.Disconnected);
+                    //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                    //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                }
+            }
+        }
+
+        private void UnifiedMessaging_StartWatching()
+        {
+            string scope = "CIC::frmMain::UnifiedMessaging_StartWatching()::";
+            //Tracing.TraceStatus(scope + "Starting");
+            try
+            {
+                this.NormalUnifiedMessagingManager = ININ.IceLib.UnifiedMessaging.UnifiedMessagingManager.GetInstance(this.IC_Session);
+                this.NormalUnifiedMessagingManager.VoicemailWaitingChanged += new System.EventHandler(UnifiedMessagingManager_VoicemailWaitingChanged);
+                this.NormalUnifiedMessagingManager.StartWatchingVoicemailWaitingAsync(UnifiedMessagingManager_StartWatchingVoicemailWaitingCompleted, null);
+                this.NormalUnifiedMessagingManager.RefreshVoicemailCacheAsync(-1, UnifiedMessagingManager_RefreshVoicemailCacheCompleted, null);
+                //Tracing.TraceStatus(scope + "Completed.");
+            }
+            catch (System.Exception ex)
+            {
+                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+            }
+        }
+
+        private void UnifiedMessagingManager_RefreshVoicemailCacheCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            string scope = "CIC::frmMain::UnifiedMessagingManager_RefreshVoicemailCacheCompleted()::";
+            //Tracing.TraceStatus(scope + "Starting");
+            try
+            {
+                //_VoicemailListAvailable = true;
+                //Tracing.TraceStatus(scope + "Completed.");
+            }
+            catch (System.Exception ex)
+            {
+                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+            }
+        }
+
+        private void UnifiedMessagingManager_StartWatchingVoicemailWaitingCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            string scope = "CIC::frmMain::UnifiedMessagingManager_RefreshVoicemailCacheCompleted()::";
+            //Tracing.TraceStatus(scope + "Starting");
+            try
+            {
+                //_WatchingVoicemailWaiting = true;
+                //Tracing.TraceStatus(scope + "Completed.");
+            }
+            catch (System.Exception ex)
+            {
+                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+            }
+        }
+
+        private void UnifiedMessagingManager_VoicemailWaitingChanged(object sender, EventArgs e)
+        {
+            string scope = "CIC::frmMain::UnifiedMessagingManager_RefreshVoicemailCacheCompleted()::";
+            //Tracing.TraceStatus(scope + "Starting");
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new EventHandler(UnifiedMessagingManager_VoicemailWaitingChanged));
+            }
+            else
+            {
+                try
+                {
+                    //Tracing.TraceStatus(scope + "Completed.");
+                }
+                catch (System.Exception ex)
+                {
                     //Tracing.TraceStatus(scope + "Error info." + ex.Message);
                     //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
                 }
@@ -235,7 +308,7 @@ namespace CIC
                         default:
                             break;
                     }
-                    //this.Set_ConferenceToolStrip();
+                    this.Set_ConferenceToolStrip();
                     this.ShowActiveCallInfo();
                     //Tracing.TraceStatus(scope + "Completed.");
                 }
@@ -244,6 +317,43 @@ namespace CIC
                     //Tracing.TraceStatus(scope + "Error info." + ex.Message);
                     //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
                 }
+            }
+        }
+
+        private void Set_ConferenceToolStrip()
+        {
+            string scope = "CIC::MainForm::Set_ConferenceToolStrip():: ";
+            //Tracing.TraceStatus(scope + "Starting.");
+            bool AllConferencePartyConected = true;
+            try
+            {
+                if (InteractionList.Count >= 2)
+                {
+                    if (ActiveConferenceInteraction == null)
+                    {
+                        for (int i = 0; i < this.InteractionList.Count; i++)
+                        {
+                            if (((ININ.IceLib.Interactions.Interaction)this.InteractionList[i]) != null &&
+                                ((ININ.IceLib.Interactions.Interaction)this.InteractionList[i]).State != InteractionState.Connected &&
+                                ((ININ.IceLib.Interactions.Interaction)this.InteractionList[i]).State != InteractionState.Held)
+                            {
+                                AllConferencePartyConected = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                else if (ActiveConferenceInteraction != null)
+                {
+                    this.state_change(FormMainState.ConferenceCall);
+                }
+                //Tracing.TraceStatus(scope + "Completed.");
+            }
+            catch (System.Exception ex)
+            {
+                //this.CreateConferenceToolStripButton.Enabled = false;
+                //this.LeaveConferenceToolStripButton.Enabled = false;
+                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
             }
         }
 
@@ -289,10 +399,7 @@ namespace CIC
                             break;
                     }
 
-                    /*
-                     * TODO : add this.Set_ConferenceToolStrip();
-                     */
-                    //this.Set_ConferenceToolStrip();
+                    this.Set_ConferenceToolStrip();
                     this.ShowActiveCallInfo();
                     //Tracing.TraceStatus(scope + "Completed.");
                 }
@@ -304,9 +411,7 @@ namespace CIC
                 }
             }
         }
-        /*
-         * TODO : add IsActiveConference_frag
-         */
+        
         private void m_InteractionQueue_ConferenceInteractionAdded(object sender, ConferenceInteractionAttributesEventArgs e)
         {
             string scope = "CIC::MainForm::m_InteractionQueue_ConferenceInteractionAdded():: ";
@@ -334,13 +439,13 @@ namespace CIC
                         case InteractionType.Chat:
                             break;
                         case InteractionType.Callback:
-                            //
                             break;
                         case InteractionType.Call:
                             if (e.Interaction.IsDisconnected != true)
                             {
                                 ActiveConferenceInteraction = new InteractionConference(
-                                    this.NormalInterationManager, e.Interaction.InteractionType, e.ConferenceItem.ConferenceId);
+                                    this.NormalInterationManager, e.Interaction.InteractionType,
+                                    e.ConferenceItem.ConferenceId);
                                 ActiveNormalInteraction = e.Interaction;
                                 this.ShowActiveCallInfo();
                             }
@@ -357,9 +462,7 @@ namespace CIC
             }
         }
 
-        /*
-         * TODO: resetActiveInfo?
-         */
+
         private void m_InteractionQueue_InteractionRemoved(object sender, InteractionEventArgs e)
         {
             string scope = "CIC::MainForm::m_InteractionQueue_InteractionRemoved():: ";
@@ -379,7 +482,6 @@ namespace CIC
                         {
                             if (ActiveNormalInteraction.IsDisconnected == true)
                             {
-                                this.Remove_ActiveCallSelPopMenu();
                                 this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
                                 this.CallerHost = "";
                                 ActiveNormalInteraction = this.GetAvailableInteractionFromList();
@@ -446,7 +548,7 @@ namespace CIC
                 //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
                 //Tracing.TraceStatus(scope + "Error info." + ex.Message);
                 // TODO: activate this code
-                //this.ResetActiveCallInfo();
+                this.ResetActiveCallInfo();
                 this.CallerHost = "";
                 if (ActiveNormalInteraction != null)
                 {
@@ -462,6 +564,203 @@ namespace CIC
                 }
                 ActiveNormalInteraction = null;
                 this.ShowActiveCallInfo();
+            }
+        }
+
+        private void ResetActiveCallInfo()
+        {
+            string scope = "CIC::frmMain::ResetActiveCallInfo()::";
+            //Tracing.TraceStatus(scope + "Starting.");
+            if (this.InvokeRequired == true)
+            {
+                this.BeginInvoke(new MethodInvoker(ResetActiveCallInfo));
+            }
+            else
+            {
+                if (ActiveConsultInteraction != null)
+                {
+                    this.SetInfoBarColor();
+                    this.transfer_button.Enabled = true;
+                    //this.EnabledTransferToolStripDisplayed();
+                }
+                else
+                {
+                    if (this.BlindTransferFlag == true)
+                    {
+                        this.InteractionList.Clear();
+                        //this.DirectiontoolStripStatus.Text = "None";
+                        //this.CallTypeToolStripStatusLabel.Text = "N/A";
+                        //this.CampaignIdToolStripStatusLabel.Text = "N/A";
+                        //this.QueueNameToolStripStatusLabel.Text = "N/A";
+                        //this.NumberToolStripStatusLabel.Text = "N/A";
+                        //this.CallStateToolStripStatusLabel.Text = "N/A";
+                        this.SetInfoBarColor();
+                        this.transfer_button.Enabled = true;
+                    }
+                }
+                //Tracing.TraceStatus(scope + "Completed.");
+            }
+        }
+
+        private void SetInfoBarColor()
+        {
+            string scope = "CIC::frmMain::SetInfoBarColor()::";
+            //Tracing.TraceStatus(scope + "Starting.");
+            if (IcWorkFlow.LoginResult)
+            {
+                switch (this.StrConnectionState)
+                {
+                    case InteractionState.Alerting:
+                        //this.CallInfoStatusStrip.BackgroundImage = global::CIC.Program.AppImageList.Images["WorkFlowBar_Info"];
+                        //this.CallInfoStatusStrip.BackgroundImageLayout = ImageLayout.Stretch;
+                        this.Start_AlertingWav();
+                        break;
+                    case InteractionState.Offering:
+                        //this.CallInfoStatusStrip.BackgroundImage = global::CIC.Program.AppImageList.Images["WorkFlowBar_Info"];
+                        //this.CallInfoStatusStrip.BackgroundImageLayout = ImageLayout.Stretch;
+                        this.Start_AlertingWav();
+                        break;
+                    case InteractionState.Held:
+                        break;
+                    case InteractionState.Connected:
+                        if (!IsMuted)
+                            this.Stop_AlertingWav();
+                        break;
+                    default:
+                        this.Stop_AlertingWav();
+                        break;
+                }
+                //this.EnabledDialerCallTools();
+            }
+            else
+            {
+                switch (this.StrConnectionState)
+                {
+                    case InteractionState.Alerting:
+                        this.Start_AlertingWav();
+                        break;
+                    case InteractionState.Offering:
+                        this.Start_AlertingWav();
+                        break;
+                    default:
+                        this.Stop_AlertingWav();
+                        break;
+                }
+                //this.EnabledNormalCallTools();
+            }
+            //Tracing.TraceStatus(scope + "Completed.");
+        }
+
+        private void Stop_AlertingWav()
+        {
+            string scope = "CIC::MainForm::Stop_AlertingWav():: ";
+            //Tracing.TraceStatus(scope + "Starting.");
+            if (AlertSoundFileType.ToLower().Trim() == "mp3")
+            {
+                if (this.cicMp3Player != null)
+                {
+                    this.cicMp3Player.Stop();
+                }
+            }
+            else
+            {
+                try
+                {
+                    if (this.IsPlayAlerting == true)
+                    {
+                        if (this.soundPlayer != null)
+                        {
+                            this.soundPlayer.Stop();
+                        }
+                        this.IsPlayAlerting = false;
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    this.IsPlayAlerting = false;
+                    //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                    //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                }
+            }
+        }
+
+        private void Start_AlertingWav()
+        {
+            string scope = "CIC::MainForm::Start_AlertingWav():: ";
+            //Tracing.TraceStatus(scope + "Starting.");
+            string sPathWavPath = "";
+            bool AlertFlag = false;
+            bool Play_Looping = false;
+            int RingCount = 0;
+            int PlayCount = 0;
+            if (IcWorkFlow.LoginResult)
+            {
+                    sPathWavPath = CIC.Program.ResourcePath + global::CIC.Properties.Settings.Default.DialerAlertSound;
+                    AlertFlag = global::CIC.Properties.Settings.Default.DialerAlerting;
+                    Play_Looping = global::CIC.Properties.Settings.Default.DialerLooping;
+                    RingCount = global::CIC.Properties.Settings.Default.DialerRingCount;
+            }
+            else
+            {
+                    sPathWavPath = CIC.Program.ResourcePath + global::CIC.Properties.Settings.Default.NormalAlertSound;
+                    AlertFlag = global::CIC.Properties.Settings.Default.NormalAlertting;
+                    Play_Looping = global::CIC.Properties.Settings.Default.NormalLooping;
+                    RingCount = global::CIC.Properties.Settings.Default.NormalRingCount;
+            }
+
+            this.AlertSoundFileType = sPathWavPath.Trim().Substring(sPathWavPath.Trim().Length - 3, 3);
+            if (AlertSoundFileType.ToLower().Trim() == "mp3")
+            {
+                this.cicMp3Player = new Locus.Control.MP3Player();
+                this.cicMp3Player.Play(sPathWavPath, false);
+            }
+            else if (AlertFlag == true)
+            {
+                try
+                {
+                    if (this.CurrentUserStatus != null &&
+                        this.CurrentUserStatus.StatusMessageDetails.IsDoNotDisturbStatus != true)
+                    {
+                        if (System.IO.File.Exists(sPathWavPath) == true)
+                        {
+                            if (!this.IsPlayAlerting)
+                            {
+                                this.soundPlayer = new System.Media.SoundPlayer(sPathWavPath);
+                                this.IsPlayAlerting = true;
+                                if (Play_Looping)
+                                {
+                                    this.soundPlayer.PlayLooping();
+                                }
+                                else
+                                {
+                                    if (RingCount <= 0)
+                                    {
+                                        this.soundPlayer.PlaySync();
+                                    }
+                                    else
+                                    {
+                                        PlayCount = 0;
+                                        while (RingCount >= PlayCount)
+                                        {
+                                            this.soundPlayer.PlaySync();
+                                            PlayCount++;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            //Tracing.TraceStatus(scope + "Error info. : WAV File not found.");
+                        }
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    this.IsPlayAlerting = false;
+                    //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                    //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                }
             }
         }
 
@@ -495,21 +794,18 @@ namespace CIC
                             if (ActiveNormalInteraction.IsDisconnected == true)
                             {
                                 // TODO: activate this code
-                                //this.RemoveNormalInteractionFromList(this.ActiveNormalInteraction);
+                                this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
                                 ActiveNormalInteraction = this.GetAvailableInteractionFromList();
                             }
                             else
                             {
-                                if (!this.BlindTransferFlag)
-                                {
-                                    this.Set_ActiveCallSelPopMenu();
-                                }
+                                // TODO: check if there's no blind transfer flag allow pickup
                             }
                         }
                         if (this.BlindTransferFlag)
                         {
                             // TODO: activate this code
-                            //this.ResetActiveCallInfo();
+                            this.ResetActiveCallInfo();
                         }
                         this.ShowActiveCallInfo();
                         break;
@@ -540,7 +836,6 @@ namespace CIC
                 if (ActiveNormalInteraction != null)
                 {
                     this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
-                    this.Remove_ActiveCallSelPopMenu();
                     ActiveNormalInteraction = this.GetAvailableInteractionFromList();
                     if (this.BlindTransferFlag)
                     {
@@ -550,111 +845,6 @@ namespace CIC
                     this.ShowActiveCallInfo();
                 }
             }
-        }
-        /*
-         * * TODO : Add ctmActiveCallSelection and Check this stuff
-         * 
-         */
-        private void Remove_ActiveCallSelPopMenu()
-        {
-            /*
-            string scope = "CIC::MainForm::Remove_ActiveCallSelPopMenu():: ";
-            //Tracing.TraceStatus(scope + "Starting.");
-            int RemoveIndex = -1;
-            string MenuValue = "";
-            if (this.InvokeRequired == true)
-            {
-                this.BeginInvoke(new MethodInvoker(Remove_ActiveCallSelPopMenu));
-            }
-            else
-            {
-                try
-                {
-                    if (ActiveNormalInteraction != null)
-                    {
-                        MenuValue = ActiveNormalInteraction.InteractionId.Id.ToString();
-                        if (this.ctmActiveCallSelection != null)
-                        {
-                            for (int i = 0; i < this.ctmActiveCallSelection.Items.Count; i++)
-                            {
-                                if (((System.Windows.Forms.ToolStripMenuItem)this.ctmActiveCallSelection.Items[i]).Name.Trim() == MenuValue.Trim())
-                                {
-                                    RemoveIndex = i;
-                                    break;
-                                }
-                            }
-                            if ((RemoveIndex < this.ctmActiveCallSelection.Items.Count) && (RemoveIndex >= 0))
-                            {
-                                if (this.ctmActiveCallSelection.Items.Count > 0)
-                                {
-                                    this.ctmActiveCallSelection.Items.RemoveAt(RemoveIndex);
-                                }
-                            }
-                            if (this.ctmActiveCallSelection.Items.Count <= 0)
-                            {
-                                this.Reset_ActiveCallSelPopMenu();
-                            }
-                            if (this.ctmActiveCallSelection.Items.Count <= 0)
-                            {
-                                this.ActiveNormalInteraction = null;
-                                this.ActiveConsultInteraction = null;
-                                this.ActiveConferenceInteraction = null;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        this.ActiveNormalInteraction = this.GetAvailableInteractionFromList();
-                        if (this.ActiveNormalInteraction != null)
-                        {
-                            MenuValue = this.ActiveNormalInteraction.InteractionId.Id.ToString();
-                            if (this.ctmActiveCallSelection != null)
-                            {
-                                for (int i = 0; i < this.ctmActiveCallSelection.Items.Count; i++)
-                                {
-                                    if (((System.Windows.Forms.ToolStripMenuItem)this.ctmActiveCallSelection.Items[i]).Name.Trim() == MenuValue.Trim())
-                                    {
-                                        RemoveIndex = i;
-                                        break;
-                                    }
-                                }
-                                if ((RemoveIndex < this.ctmActiveCallSelection.Items.Count) && (RemoveIndex >= 0))
-                                {
-                                    if (this.ctmActiveCallSelection.Items.Count > 0)
-                                    {
-                                        this.ctmActiveCallSelection.Items.RemoveAt(RemoveIndex);
-                                    }
-                                }
-                                if (this.ctmActiveCallSelection.Items.Count <= 0)
-                                {
-                                    this.Reset_ActiveCallSelPopMenu();
-                                }
-                                if (this.ctmActiveCallSelection.Items.Count <= 0)
-                                {
-                                    this.ActiveNormalInteraction = null;
-                                    this.ActiveConsultInteraction = null;
-                                    this.ActiveConferenceInteraction = null;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            this.Reset_ActiveCallSelPopMenu();
-                            this.ActiveNormalInteraction = null;
-                            this.ActiveConsultInteraction = null;
-                            this.ActiveConferenceInteraction = null;
-                        }
-                    }
-                    Tracing.TraceStatus(scope + "Completed.");
-                }
-                catch (System.Exception ex)
-                {
-                    Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                    System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
-                }
-            }
-             * */
-            
         }
 
         private void RemoveNormalInteractionFromList(Interaction Interaction_Object)
@@ -753,113 +943,6 @@ namespace CIC
                 //this.EnabledTransferToolStripDisplayed();
                 //Tracing.TraceStatus(scope + "Error info." + ex.Message);
                 //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
-            }
-        }
-
-        private void Set_ActiveCallSelPopMenu()
-        {
-            string scope = "CIC::MainForm::set_ActiveCallSelPopMenu():: ";
-            //Tracing.TraceStatus(scope + "Starting.");
-            string MenuNameValue = "";
-            string MenuNameText = "";
-            int EmtyMenuIndex = -1;
-            if (this.InvokeRequired == true)
-            {
-                this.BeginInvoke(new MethodInvoker(Set_ActiveCallSelPopMenu));
-            }
-            else
-            {
-                try
-                {
-                    if (ActiveNormalInteraction != null)
-                    {
-                        switch (ActiveNormalInteraction.Direction)
-                        {
-                            case InteractionDirection.Incoming:
-                                MenuNameText = "{" + ActiveNormalInteraction.InteractionId.Id.ToString() + 
-                                    "} [" + ActiveNormalInteraction.LocalName + "] <- [" + ActiveNormalInteraction.RemoteDisplay + "]";
-                                break;
-                            case InteractionDirection.Outgoing:
-                                MenuNameText = "{" + ActiveNormalInteraction.InteractionId.Id.ToString() + 
-                                    "} [" + ActiveNormalInteraction.LocalName + "] -> [" + ActiveNormalInteraction.RemoteDisplay + "]";
-                                break;
-                            default:
-                                MenuNameText = "{" + ActiveNormalInteraction.InteractionId.Id.ToString() + 
-                                    "} [" + ActiveNormalInteraction.LocalName + "] <?> [" + ActiveNormalInteraction.RemoteDisplay + "]";
-                                break;
-                        }
-                        MenuNameValue = ActiveNormalInteraction.InteractionId.Id.ToString();
-                        if (MenuNameValue != null)
-                        {
-                            // TODO: recheck this code
-                            //if (ActiveNormalInteraction.ImmediateAccess == true)
-                            //{
-                            //    System.Windows.Forms.ToolStripMenuItem menu = new System.Windows.Forms.ToolStripMenuItem(MenuNameValue, null, POPSelMenu_Clicked);
-                            //    bool IsExist = false;
-                            //    menu.Name = MenuNameValue;
-                            //    menu.Text = MenuNameText;
-                            //    switch (ActiveNormalInteraction.InteractionType)
-                            //    {
-                            //        case InteractionType.Email:
-                            //            menu.Image = global::CIC.Properties.Resources.Exchange;
-                            //            break;
-                            //        case InteractionType.Chat:
-                            //            menu.Image = global::CIC.Properties.Resources.information;
-                            //            break;
-                            //        case InteractionType.Call:
-                            //            if (ActiveNormalInteraction.ConferenceId.Id.ToString().Trim() != "0")
-                            //            {
-                            //                menu.Image = global::CIC.Properties.Resources.Training;     //Conference Object
-                            //            }
-                            //            else
-                            //            {
-                            //                // TODO: check this code
-                            //                //this.Set_ConferenceToolStrip();
-                            //                menu.Image = global::CIC.Properties.Resources.HmPhone1;
-                            //            }
-                            //            break;
-                            //        default:
-                            //            menu.Image = global::CIC.Properties.Resources.HmPhone1;
-                            //            break;
-                            //    }
-                            //    menu.Checked = false;
-                            //    if (this.ctmActiveCallSelection != null)
-                            //    {
-                            //        for (int i = 0; i < this.ctmActiveCallSelection.Items.Count; i++)
-                            //        {
-                            //            if (((System.Windows.Forms.ToolStripMenuItem)this.ctmActiveCallSelection.Items[i]).Text.Trim() == "Empty")
-                            //            {
-                            //                EmtyMenuIndex = i;
-                            //                break;
-                            //            }
-                            //        }
-                            //        if (EmtyMenuIndex >= 0)
-                            //        {
-                            //            this.ctmActiveCallSelection.Items.RemoveAt(EmtyMenuIndex);
-                            //        }
-                            //        for (int i = 0; i < this.ctmActiveCallSelection.Items.Count; i++)
-                            //        {
-                            //            if (((System.Windows.Forms.ToolStripMenuItem)this.ctmActiveCallSelection.Items[i]).Name.Trim() == MenuNameValue.Trim())
-                            //            {
-                            //                IsExist = true;
-                            //                break;
-                            //            }
-                            //        }
-                            //        if (IsExist != true)
-                            //        {
-                            //            this.ctmActiveCallSelection.Items.Add(menu);
-                            //        }
-                            //    }
-                            //}
-                        }
-                    }
-                    //Tracing.TraceStatus(scope + "Completed.");
-                }
-                catch (System.Exception ex)
-                {
-                    //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                    //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
-                }
             }
         }
 
@@ -1328,16 +1411,44 @@ namespace CIC
                     frmDisposition disposition = new frmDisposition();
                     disposition.ShowDialog();
                 }
-                if (this.current_state == FormMainState.ManualCall &&
-                    ActiveNormalInteraction != null && 
-                    ActiveNormalInteraction.IsConnected)
+                if (IcWorkFlow.LoginResult)
                 {
-                    ActiveNormalInteraction.Disconnect();
+                    if (ActiveDialerInteraction != null)
+                    {
+                        ActiveDialerInteraction.Disconnect();
+                        this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
+                        ActiveNormalInteraction.Disconnect();
+                        this.ShowActiveCallInfo();
+                        this.CrmScreenPop();
+                    }
                 }
-
-                if (ActiveConsultInteraction != null && ActiveNormalInteraction.IsConnected)
-                {
-                    ActiveConsultInteraction.Disconnect();
+                else
+                { // Not Log On to Dialer Server.
+                    if (this.ActiveDialerInteraction != null)
+                    {
+                        this.ActiveDialerInteraction.Disconnect();
+                        this.ActiveDialerInteraction = null;
+                    }
+                    if (ActiveNormalInteraction != null)
+                    {
+                        this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
+                        ActiveNormalInteraction.Disconnect();
+                        ActiveNormalInteraction = this.GetNormalInteractionFromList();
+                    }
+                    else
+                    {
+                        ActiveNormalInteraction = this.GetNormalInteractionFromList();
+                        if (ActiveNormalInteraction != null)
+                        {
+                            ActiveNormalInteraction.Disconnect();
+                        }
+                    }
+                    this.ShowActiveCallInfo();
+                    if (this.InteractionList.Count <= 0)
+                    {
+                        ActiveConferenceInteraction = null;
+                        ActiveConsultInteraction = null;
+                    }
                 }
 
                 this.state_change(FormMainState.Preview);
@@ -1347,6 +1458,26 @@ namespace CIC
                 string output = String.Format("Something really bad happened: {0}", ex.Message);
                 MessageBox.Show(output, "CIC Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+        }
+
+        private Interaction GetNormalInteractionFromList()
+        {
+            string scope = "CIC::frmMain::GetNormalInteractionFromList()::";
+            //Tracing.TraceStatus(scope + "Starting.");
+            ININ.IceLib.Interactions.Interaction retInteraction = null;
+            if (this.InteractionList != null)
+            {
+                if (InteractionList.Count > 0)
+                {
+                    foreach (Interaction CurrentInteraction in this.InteractionList)
+                    {
+                        retInteraction = CurrentInteraction;
+                        break;
+                    }
+                }
+            }
+            //Tracing.TraceStatus(scope + "Completed.");
+            return retInteraction;
         }
 
         private void hold_button_Click(object sender, EventArgs e)
@@ -2175,7 +2306,7 @@ namespace CIC
                         }
                      }
                 }
-                //this.SetInfoBarColor(); // TODO: update playing sound
+                this.SetInfoBarColor();
                 update_conference_status();
             }
         }
@@ -3568,5 +3699,14 @@ namespace CIC
             name6_panel.BackColor = SystemColors.Control;
         }
 
+        public ININ.IceLib.UnifiedMessaging.UnifiedMessagingManager NormalUnifiedMessagingManager { get; set; }
+
+        public string AlertSoundFileType { get; set; }
+
+        public Locus.Control.MP3Player cicMp3Player { get; set; }
+
+        public bool IsPlayAlerting { get; set; }
+
+        public System.Media.SoundPlayer soundPlayer { get; set; }
     }
 }
