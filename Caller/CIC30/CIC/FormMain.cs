@@ -1769,29 +1769,34 @@ namespace CIC
         {
             if (IcWorkFlow.LoginResult)
             {
-                
+                // TODO: fix hold not going into normal interaction case
                 if (this.ActiveDialerInteraction != null)
                 {
-                    if (this.ActiveDialerInteraction.IsMuted)
+                    if (this.ActiveDialerInteraction.IsConnected)
                     {
-                        this.ActiveDialerInteraction.Mute(false);
+                        if (this.ActiveDialerInteraction.IsMuted)
+                        {
+                            this.ActiveDialerInteraction.Mute(false);
+                        }
+                        this.ActiveDialerInteraction.Hold(!this.ActiveDialerInteraction.IsHeld);
+                        state_change(FormMainState.Hold);
                     }
-                    this.ActiveDialerInteraction.Hold(!this.ActiveDialerInteraction.IsHeld);
-                }
-                else if (ActiveNormalInteraction != null)
-                {
-                    if (ActiveNormalInteraction.IsMuted)
+                    else if (ActiveNormalInteraction != null)
                     {
-                        ActiveNormalInteraction.Mute(false);
+                        if (ActiveNormalInteraction.IsMuted)
+                        {
+                            ActiveNormalInteraction.Mute(false);
+                        }
+                        ActiveNormalInteraction.Hold(!ActiveNormalInteraction.IsHeld);
+                        state_change(FormMainState.Hold);
                     }
-                    ActiveNormalInteraction.Hold(!ActiveNormalInteraction.IsHeld);
                 }
-                state_change(FormMainState.Hold);
             }
         }
 
         private void mute_button_Click(object sender, EventArgs e)
         {
+            // TODO: fix mute not going into normal interaction case
             if (IcWorkFlow.LoginResult)
             {
                 if (this.ActiveDialerInteraction != null)
@@ -1801,6 +1806,7 @@ namespace CIC
                         this.ActiveDialerInteraction.Hold(false);
                     }
                     this.ActiveDialerInteraction.MuteAsync(!this.ActiveDialerInteraction.IsMuted, MuteCompleted, null);
+                    state_change(FormMainState.Mute);
                 }
                 else if (ActiveNormalInteraction != null)
                 {
@@ -1809,8 +1815,8 @@ namespace CIC
                         ActiveNormalInteraction.Hold(false);
                     }
                     ActiveNormalInteraction.MuteAsync(!ActiveNormalInteraction.IsMuted, MuteCompleted, null);
+                    state_change(FormMainState.Mute);
                 }
-                state_change(FormMainState.Mute);
             }
         }
 
