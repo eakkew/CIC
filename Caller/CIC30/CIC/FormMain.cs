@@ -26,15 +26,15 @@ namespace CIC
     {
         Connected,              // connect to workflow
         ConferenceCall,         // connected to conference call
-        Preview,                // get information from workflow
+        Preview,                // got information from workflow, timer starts
         Calling,                // call connected
-        Disconnected,           // disconnect ot workflow
+        Disconnected,           // disconnect from workflow
         Hold,                   // hold current call
         Mute,                   // mute current call
         Break,                  // pause current workflow not to put new set of information after disposition
         ManualCall,             // manual call connected
         Loggedout,              // log out from workflow
-        None,                   // nothing at all
+        None,                   // nothing at all or error state
     };
     //private bool IsLoggedIntoDialer = false;
 
@@ -113,17 +113,20 @@ namespace CIC
             {
                 try
                 {
-                    global::CIC.Program.m_Session = new Session();
-                    global::CIC.Program.IcStation = new ICStation(global::CIC.Program.m_Session);
-                    global::CIC.Program.m_Session.SetAutoReconnectInterval(this.AutoReconnect);   //Time in seccond to Reconnected.
-                    global::CIC.Program.m_Session.ConnectionStateChanged += new EventHandler<ConnectionStateChangedEventArgs>(mSession_Changed);
-                    global::CIC.Program.IcStation.LogIn(
-                        global::CIC.Program.mLoginParam.WindowsAuthentication, global::CIC.Program.mLoginParam.UserId,
-                        global::CIC.Program.mLoginParam.Password, global::CIC.Program.mLoginParam.Server,
-                        global::CIC.Program.mLoginParam.StationType, global::CIC.Program.mLoginParam.StationId,
-                        global::CIC.Program.mLoginParam.PhoneNumber, global::CIC.Program.mLoginParam.Persistent,
-                        this.SessionConnectCompleted, null
-                    );
+                    if (global::CIC.Program.m_Session == null)
+                    {
+                        global::CIC.Program.m_Session = new Session();
+                        global::CIC.Program.IcStation = new ICStation(global::CIC.Program.m_Session);
+                        global::CIC.Program.m_Session.SetAutoReconnectInterval(this.AutoReconnect);   //Time in seccond to Reconnected.
+                        global::CIC.Program.m_Session.ConnectionStateChanged += new EventHandler<ConnectionStateChangedEventArgs>(mSession_Changed);
+                        global::CIC.Program.IcStation.LogIn(
+                            global::CIC.Program.mLoginParam.WindowsAuthentication, global::CIC.Program.mLoginParam.UserId,
+                            global::CIC.Program.mLoginParam.Password, global::CIC.Program.mLoginParam.Server,
+                            global::CIC.Program.mLoginParam.StationType, global::CIC.Program.mLoginParam.StationId,
+                            global::CIC.Program.mLoginParam.PhoneNumber, global::CIC.Program.mLoginParam.Persistent,
+                            this.SessionConnectCompleted, null
+                        );
+                    }
 
                     ININ.IceLib.Connection.Session session = global::CIC.Program.m_Session;
                     Program.Initialize_dialingManager(session);
@@ -146,10 +149,7 @@ namespace CIC
 
                             if (mConnectionState == ININ.IceLib.Connection.ConnectionState.Up)
                             {
-                                this.Initial_NormalInteraction();
-                                this.InitializeQueueWatcher();
-                                this.UnifiedMessaging_StartWatching();
-                               
+                                this.BeginInvoke(new MethodInvoker(connected_state));
                                 //Tracing.TraceStatus(scope + "Completed.");
                             }
                             else
@@ -929,7 +929,7 @@ namespace CIC
         {
             string scope = "CIC::MainForm::Stop_AlertingWav():: ";
             //Tracing.TraceStatus(scope + "Starting.");
-            if (AlertSoundFileType.ToLower().Trim() == "mp3")
+            if (AlertSoundFileType != null && AlertSoundFileType.ToLower().Trim() == "mp3")
             {
                 if (this.cicMp3Player != null)
                 {
@@ -1535,10 +1535,11 @@ namespace CIC
                         global::CIC.Program.IcStation.ConnectionTimes = 0;
                         this.IsActiveConnection = true;       //Set to ActiveConnection.
                         //this.SetStatusBarStripMsg();
-                        this.InitializeSession();
-                        this.BeginInvoke(new MethodInvoker(login_workflow)); 
                     }
-                    //this.state_change(FormMainState.Preview);
+                    //this.BeginInvoke(new MethodInvoker(login_workflow)); 
+                    this.Initial_NormalInteraction();
+                    this.InitializeQueueWatcher();
+                    this.UnifiedMessaging_StartWatching();
                     this.BeginInvoke(new MethodInvoker(connected_state));
                     break;
                 case ININ.IceLib.Connection.ConnectionState.Down:
@@ -1636,7 +1637,7 @@ namespace CIC
         private void restart_timer()
         {
             reset_timer();
-            timer1.Start();
+            //timer1.Start();
         }
 
         public void login_workflow()
@@ -1690,8 +1691,11 @@ namespace CIC
                     if (ActiveDialerInteraction != null)
                     {
                         ActiveDialerInteraction.Disconnect();
-                        this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
-                        ActiveNormalInteraction.Disconnect();
+                        if (ActiveNormalInteraction != null)
+                        {
+                            this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
+                            ActiveNormalInteraction.Disconnect();
+                        }
                         this.ShowActiveCallInfo();
                         this.CrmScreenPop();
                     }
@@ -2148,7 +2152,6 @@ namespace CIC
                         }
                     }
                 }
-                state_change(FormMainState.ConferenceCall);
                 //Tracing.TraceStatus(scope + "Completed.");
             }
             catch (System.Exception ex)
@@ -2173,6 +2176,7 @@ namespace CIC
                 object ConferenceuserState = e.UserState;
                 System.Exception ConferenceErrMsg = e.Error;
                 ActiveConsultInteraction = null;
+                state_change(FormMainState.ConferenceCall);
                 //Tracing.TraceStatus(scope + "Completed.");
             }
             catch (System.Exception ex)
@@ -2207,14 +2211,16 @@ namespace CIC
                             //Tracing.TraceNote(scope + "Performing blind transfer");
                         }
                     }
-                    ININ.IceLib.People.UserStatusUpdate statusUpdate = new UserStatusUpdate(this.mPeopleManager);
+                    // complete workflow
                     string sFinishcode = global::CIC.Properties.Settings.Default.ReasonCode_Transfereded;
                     ININ.IceLib.Dialer.ReasonCode sReasoncode = ININ.IceLib.Dialer.ReasonCode.Transferred;
                     CallCompletionParameters callCompletionParameters = new CallCompletionParameters(sReasoncode, sFinishcode);
                     this.ActiveDialerInteraction.CallComplete(callCompletionParameters);
+
+                    // update user status
+                    ININ.IceLib.People.UserStatusUpdate statusUpdate = new UserStatusUpdate(this.mPeopleManager);
                     statusUpdate.StatusMessageDetails = this.AvailableStatusMessageDetails;
                     statusUpdate.UpdateRequest();
-                    //this.imgcmbAgentStatus.SetMessage(this.AvailableStatusMessageDetails.MessageText);  //Set Available status for a new call.
                 }
                 else
                 {
@@ -2257,8 +2263,8 @@ namespace CIC
                                         {
                                             ActiveNormalInteraction.ConsultTransferAsync(ActiveConsultInteraction.InteractionId, TransferCompleted, null);
                                             // TODO: activate these code
-                                            //this.RemoveNormalInteractionFromList(this.ActiveNormalInteraction);
-                                            //this.RemoveNormalInteractionFromList(this.ActiveConsultInteraction);
+                                            this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
+                                            this.RemoveNormalInteractionFromList(ActiveConsultInteraction);
                                             this.BlindTransferFlag = true;
                                         }
                                     }
@@ -2267,8 +2273,7 @@ namespace CIC
                                         if (transferTxtDestination != "")
                                         {
                                             ActiveNormalInteraction.BlindTransfer(transferTxtDestination);
-                                            // TODO: activate this code
-                                            //this.RemoveNormalInteractionFromList(this.ActiveNormalInteraction);
+                                            this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
                                         }
                                     }
                                 }
@@ -2280,8 +2285,7 @@ namespace CIC
                             if (transferTxtDestination != "")
                             {
                                 ActiveNormalInteraction.BlindTransfer(transferTxtDestination);
-                                // TODO: activate this code
-                                //this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
+                                this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
                             }
                         }
                     }
@@ -2305,9 +2309,8 @@ namespace CIC
             this.BlindTransferFlag = true;
             this.ShowActiveCallInfo();
             this.BlindTransferFlag = false;
-            // TODO: activate this code
-            //this.RemoveNormalInteractionFromList(this.ActiveNormalInteraction);
-            //this.toolStripButtonClear_Click(sender, new System.EventArgs()); 
+            this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
+            state_change(FormMainState.Connected);
         }
 
         private void UpdateUserStatus()
@@ -2937,12 +2940,18 @@ namespace CIC
             }
         }
 
-        public static void MakeCallCompleted(object sender,InteractionCompletedEventArgs e)
+        public void MakePreviewCallComplete(object sender, AsyncCompletedEventArgs e)
+        {
+
+        }
+
+        public void MakeCallCompleted(object sender,InteractionCompletedEventArgs e)
         {
             if (!e.Cancelled)
             {
                 ActiveNormalInteraction = e.Interaction;
             }
+            state_change(FormMainState.ManualCall);
         }
 
         private void ChangeWatchedAttributesCompleted(object sender, AsyncCompletedEventArgs e)
@@ -3493,7 +3502,7 @@ namespace CIC
                 new CallInteractionParameters(number, CallMadeStage.Allocated);
             SessionSettings sessionSetting = Program.m_Session.GetSessionSettings();
             callParams.AdditionalAttributes.Add("CallerHost", sessionSetting.MachineName.ToString());
-            this.NormalInterationManager.MakeCallAsync(callParams, FormMain.MakeCallCompleted, null);
+            this.NormalInterationManager.MakeCallAsync(callParams, MakeCallCompleted, null);
         }
 
         public void MakeConsultCall(string transferTxtDestination)

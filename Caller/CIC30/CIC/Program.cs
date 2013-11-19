@@ -51,9 +51,12 @@ namespace CIC
       }
       public static void Initialize_dialingManager(Session session)
       {
-          mDialingManager = null;
-          mDialingManager = new ININ.IceLib.Dialer.DialingManager(session);
-          _Initialized = true;
+          if (!_Initialized)
+          {
+              mDialingManager = null;
+              mDialingManager = new ININ.IceLib.Dialer.DialingManager(session);
+              _Initialized = true;
+          }
       }
       public static bool EstablishPersistentConnection
       {
