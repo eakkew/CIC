@@ -2738,46 +2738,53 @@ namespace CIC
                         {
                             // case calling state -> change to hold state
                             case FormMainState.Calling:
+                            case FormMainState.ConferenceCall:
+                            case FormMainState.ManualCall:
                                 hold_button.Text = "Unhold";
                                 state_info_label.Text = "Hold call from: " + callingNumber;
+                                hold_state();
                                 break;
                             // case Mute state -> change to hold state.
                             case FormMainState.Mute:
                                 hold_button.Text = "Unhold";
                                 mute_button.Text = "Mute";
                                 state_info_label.Text = "Hold call from: " + callingNumber;
+                                hold_state();
                                 break;
                             // case Hold state -> change to calling state
                             case FormMainState.Hold:
                                 hold_button.Text = "Hold";
                                 state_info_label.Text = "Continue call from: " + callingNumber;
-                                state = FormMainState.Calling;
+                                state_change(FormMainState.Calling);
                                 break;
                         }
-                        hold_state();
                         break;
                     case FormMainState.Mute:
                         switch (current_state)
                         {
                             // case calling state -> change to hold state
                             case FormMainState.Calling:
+                            case FormMainState.ConferenceCall:
+                            case FormMainState.ManualCall:
                                 mute_button.Text = "Unmute";
                                 state_info_label.Text = "Mute call from: " + callingNumber;
+                                mute_state();
                                 break;
                             // case Mute state -> change to hold state.
                             case FormMainState.Hold:
                                 mute_button.Text = "Unmute";
                                 hold_button.Text = "Hold";
                                 state_info_label.Text = "Mute call from: " + callingNumber;
+                                mute_state();
                                 break;
                             // case Hold state -> change to calling state
                             case FormMainState.Mute:
                                 mute_button.Text = "Mute";
                                 state_info_label.Text = "Continue call from: " + callingNumber;
                                 state = FormMainState.Calling;
+                                state_change(FormMainState.Calling);
                                 break;
                         }
-                        mute_state();
                         break;
                     case FormMainState.Break:
                         if (break_requested)
