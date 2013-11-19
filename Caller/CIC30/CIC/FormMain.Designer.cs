@@ -1017,7 +1017,7 @@
             this.Controls.Add(this.flowLayoutPanel1);
             this.Name = "FormMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "FormMain";
+            this.Text = "CIC";
             this.Load += new System.EventHandler(this.FormMain_Load);
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel2.ResumeLayout(false);
