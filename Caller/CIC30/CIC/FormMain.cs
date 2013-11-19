@@ -48,6 +48,7 @@ namespace CIC
         private bool IsMuted { get; set; }
         private bool IsActiveConnection { get; set; }
         private bool SwapPartyFlag { get; set; }
+        private bool ExitFlag { get; set; }
         private bool IsManualDialing { get; set; }
         private bool IsActiveConference_flag { get; set; }
         private bool transfer_complete = false;
@@ -72,7 +73,6 @@ namespace CIC
         private PeopleManager mPeopleManager { get; set; }
         private Session IC_Session = null;
         private DialerSession DialerSession = null;
-        private Interaction mInteraction { get; set; }
         private InteractionState StrConnectionState = InteractionState.None;
         private InteractionQueue m_InteractionQueue { get; set; }
         private DialerCallInteraction ActiveDialerInteraction = null;
@@ -94,6 +94,7 @@ namespace CIC
         
         public FormMain()
         {
+            ExitFlag = false;
             InitializeComponent(); 
             state_change(FormMainState.Disconnected);
             InitializeSession();
@@ -149,6 +150,10 @@ namespace CIC
 
                             if (mConnectionState == ININ.IceLib.Connection.ConnectionState.Up)
                             {
+                                this.Initial_NormalInteraction();
+                                this.InitializeQueueWatcher();
+                                this.UnifiedMessaging_StartWatching();
+                                this.BeginInvoke(new MethodInvoker(connected_state));
                                 this.BeginInvoke(new MethodInvoker(connected_state));
                                 //Tracing.TraceStatus(scope + "Completed.");
                             }
@@ -1362,11 +1367,11 @@ namespace CIC
             //Tracing.TraceStatus(scope + "Starting.");
             try
             {
-                if (mInteraction != null && this.InteractionList != null)
+                if (interaction != null && this.InteractionList != null)
                 {
                     for (int i = 0; i < this.InteractionList.Count; i++)
                     {
-                        if (((Interaction)this.InteractionList[i]).InteractionId == mInteraction.InteractionId)
+                        if (((Interaction)this.InteractionList[i]).InteractionId == interaction.InteractionId)
                         {
                             chk_idx = i;
                             break;
@@ -1375,12 +1380,12 @@ namespace CIC
                     if ((chk_idx >= 0) && (chk_idx < this.InteractionList.Count))
                     {
                         //Update
-                        this.InteractionList[chk_idx] = mInteraction;
+                        this.InteractionList[chk_idx] = interaction;
                     }
                     else
                     {
                         //Insert
-                        this.InteractionList.Add(mInteraction);
+                        this.InteractionList.Add(interaction);
                     }
                 }
                 //Tracing.TraceStatus(scope + "Completed.");
@@ -1450,7 +1455,7 @@ namespace CIC
             try
             {
                 //Tracing.TraceStatus(scope + "Getting an instance of Normal InteractionsManager.");
-                this.NormalInterationManager = InteractionsManager.GetInstance(this.IC_Session);
+                this.NormalInterationManager = InteractionsManager.GetInstance(global::CIC.Program.m_Session);
                 if (this.InteractionList == null)
                 {
                     this.InteractionList = new System.Collections.ArrayList();
@@ -1538,7 +1543,6 @@ namespace CIC
                     }
                     //this.BeginInvoke(new MethodInvoker(login_workflow)); 
                     this.Initial_NormalInteraction();
-                    this.InitializeQueueWatcher();
                     this.UnifiedMessaging_StartWatching();
                     this.BeginInvoke(new MethodInvoker(connected_state));
                     break;
@@ -1556,17 +1560,21 @@ namespace CIC
                         global::CIC.Program.m_Session.Disconnect();
                         global::CIC.Program.m_Session = null;
                     }
-                    global::CIC.Program.m_Session = new Session();
-                    global::CIC.Program.m_Session.ConnectionStateChanged += 
-                        new EventHandler<ConnectionStateChangedEventArgs>(mSession_Changed);
-                    global::CIC.Program.IcStation.CurrentSession = global::CIC.Program.m_Session;
-                    try
-                    {
-                        global::CIC.Program.IcStation.ICConnect();
-                    }
-                    catch
-                    {
 
+                    if (!ExitFlag)
+                    {
+                        global::CIC.Program.m_Session = new Session();
+                        global::CIC.Program.m_Session.ConnectionStateChanged +=
+                            new EventHandler<ConnectionStateChangedEventArgs>(mSession_Changed);
+                        global::CIC.Program.IcStation.CurrentSession = global::CIC.Program.m_Session;
+                        try
+                        {
+                            global::CIC.Program.IcStation.ICConnect();
+                        }
+                        catch
+                        {
+
+                        }
                     }
                     //this.SetStatusBarStripMsg();
                     break;
@@ -1921,7 +1929,8 @@ namespace CIC
                             {
                                 this.break_granted = true;
                                 this.break_button_Click(sender, e);               //wait for breakgrant
-                                this.ActiveDialerInteraction.DialerSession.RequestLogout();
+                                this.ActiveDialerInteraction.DialerSession.RequestLogoutAsync(LogoutGranted, null);
+                                
                             }
                             else
                             {
@@ -1935,6 +1944,8 @@ namespace CIC
                     disconnect_normal_interaction();
                     disconnect_IC_session();
                     state_change(FormMainState.Loggedout);
+                    if (ExitFlag)
+                        this.Close();
                 }
                 
                 //Tracing.TraceStatus(scope + "Completed.");
@@ -2081,6 +2092,7 @@ namespace CIC
                     this.SetActiveSession(Program.m_Session);
                     //Tracing.TraceStatus(scope + "Completed.");
                     this.Initial_NormalInteraction();
+                    this.InitializeQueueWatcher();
                     this.UpdateUserStatus();
                 }
                 else
@@ -2126,6 +2138,7 @@ namespace CIC
                                 }
                             }
                             this.NormalInterationManager.MakeNewConferenceAsync(TmpInteraction, MakeNewConferenceCompleted, null);
+                            this.NormalInterationManager.MakeNewConference(TmpInteraction);
                         }
                     }
                 }
@@ -2697,7 +2710,9 @@ namespace CIC
 
         private void exit_button_Click(object sender, EventArgs e)
         {
-            this.Close();
+            this.ExitFlag = true;
+            this.disconnect_button_Click(sender, e);
+            this.logout_workflow_button_Click(sender, e);
         }
 
         private void state_change(FormMainState state)
@@ -2773,7 +2788,7 @@ namespace CIC
                         logged_out_state();
                         break;
                     case FormMainState.ConferenceCall:
-                        connected_state();
+                        calling_state();
                         break;
                 }
                 prev_state = current_state;
@@ -2902,7 +2917,6 @@ namespace CIC
             break_button.Enabled = break_requested;
         }
 
-
         private void logged_out_state()
         {
             reset_state();
@@ -2942,7 +2956,7 @@ namespace CIC
 
         public void MakePreviewCallComplete(object sender, AsyncCompletedEventArgs e)
         {
-
+            state_info_label.Text = "Connected to: " + this.ActiveDialerInteraction.ContactData["is_attr_numbertodial"];
         }
 
         public void MakeCallCompleted(object sender,InteractionCompletedEventArgs e)
@@ -2951,6 +2965,8 @@ namespace CIC
             {
                 ActiveNormalInteraction = e.Interaction;
             }
+            // TODO: should update message to conntected to: ####
+            //state_info_label.Text = "Connected to: " + ActiveNormalInteraction.
             state_change(FormMainState.ManualCall);
         }
 
@@ -3796,6 +3812,9 @@ namespace CIC
                             state_change(FormMainState.Loggedout);
                             break;
                     }
+                    // TODO: add more clean up state
+                    if (ExitFlag)
+                        this.Close();
                     //Tracing.TraceStatus(scope + "Completed.");
                 }
                 catch (System.Exception ex)
@@ -3848,46 +3867,49 @@ namespace CIC
                     if (this.ActiveDialerInteraction != null)
                     {
                         Dictionary<string, string> data = this.ActiveDialerInteraction.ContactData;
-                        state_info_label.Text = "Calling: " + this.ActiveDialerInteraction.ContactData["is_attr_numbertodial"];
-                        String phone1 = this.ActiveDialerInteraction.ContactData["is_attr_PhoneNo1"];
-                        // find a strategy to make a call by using PlacePreviewCall() and make a normal call for the other 6 numbers 
-                        if (data["is_attr_numbertodial"].CompareTo(data["is_attr_PhoneNo1"]) == 0)
+                        if (data.ContainsKey("is_attr_numbertodial"))
                         {
-                            reset_color_panel();
-                            name1_panel.BackColor = Color.Yellow;
-                        }
-                        else if (data["is_attr_numbertodial"].CompareTo(data["is_attr_PhoneNo2"]) == 0)
-                        {
-                            reset_color_panel();
-                            name2_panel.BackColor = Color.Yellow;
-                        }
-                        else if (data["is_attr_numbertodial"].CompareTo(data["is_attr_PhoneNo3"]) == 0)
-                        {
-                            reset_color_panel();
-                            name3_panel.BackColor = Color.Yellow;
-                        }
-                        else if (data["is_attr_numbertodial"].CompareTo(data["is_attr_PhoneNo4"]) == 0)
-                        {
-                            reset_color_panel();
-                            name4_panel.BackColor = Color.Yellow;
-                        }
-                        else if (data["is_attr_numbertodial"].CompareTo(data["is_attr_PhoneNo5"]) == 0)
-                        {
-                            reset_color_panel();
-                            name5_panel.BackColor = Color.Yellow;
-                        }
-                        else if (data["is_attr_numbertodial"].CompareTo(data["is_attr_PhoneNo6"]) == 0)
-                        {
-                            reset_color_panel();
-                            name6_panel.BackColor = Color.Yellow;
-                        }
+                            state_info_label.Text = "Calling: " + data["is_attr_numbertodial"];
+                            String phone1 = data["is_attr_PhoneNo1"];
+                            // find a strategy to make a call by using PlacePreviewCall() and make a normal call for the other 6 numbers 
+                            if (data["is_attr_numbertodial"].CompareTo(data["is_attr_PhoneNo1"]) == 0)
+                            {
+                                reset_color_panel();
+                                name1_panel.BackColor = Color.Yellow;
+                            }
+                            else if (data["is_attr_numbertodial"].CompareTo(data["is_attr_PhoneNo2"]) == 0)
+                            {
+                                reset_color_panel();
+                                name2_panel.BackColor = Color.Yellow;
+                            }
+                            else if (data["is_attr_numbertodial"].CompareTo(data["is_attr_PhoneNo3"]) == 0)
+                            {
+                                reset_color_panel();
+                                name3_panel.BackColor = Color.Yellow;
+                            }
+                            else if (data["is_attr_numbertodial"].CompareTo(data["is_attr_PhoneNo4"]) == 0)
+                            {
+                                reset_color_panel();
+                                name4_panel.BackColor = Color.Yellow;
+                            }
+                            else if (data["is_attr_numbertodial"].CompareTo(data["is_attr_PhoneNo5"]) == 0)
+                            {
+                                reset_color_panel();
+                                name5_panel.BackColor = Color.Yellow;
+                            }
+                            else if (data["is_attr_numbertodial"].CompareTo(data["is_attr_PhoneNo6"]) == 0)
+                            {
+                                reset_color_panel();
+                                name6_panel.BackColor = Color.Yellow;
+                            }
 
-                        state_info_label.Text = "calling: " + this.ActiveDialerInteraction.ContactData["is_attr_numbertodial"];
-                        this.ActiveDialerInteraction.PlacePreviewCall();
-                        this.toolStripStatus.Text = (this.ActiveDialerInteraction != null) ?
-                            this.ActiveDialerInteraction.State.ToString() + ":" + 
-                            this.ActiveDialerInteraction.StateDescription.ToString() : "N/A";
-                        reset_timer();
+                            state_info_label.Text = "calling: " + this.ActiveDialerInteraction.ContactData["is_attr_numbertodial"];
+                            this.ActiveDialerInteraction.PlacePreviewCallAsync(MakePreviewCallComplete, null);
+                            this.toolStripStatus.Text = (this.ActiveDialerInteraction != null) ?
+                                this.ActiveDialerInteraction.State.ToString() + ":" +
+                                this.ActiveDialerInteraction.StateDescription.ToString() : "N/A";
+                            reset_timer();
+                        }
                     }
                     // Tracing.TraceStatus(scope + "Completed.[Place Call]");
                 }
