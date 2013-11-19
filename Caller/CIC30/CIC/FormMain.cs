@@ -1769,7 +1769,6 @@ namespace CIC
         {
             if (IcWorkFlow.LoginResult)
             {
-                // TODO: fix hold not going into normal interaction case
                 if (this.ActiveDialerInteraction != null)
                 {
                     if (this.ActiveDialerInteraction.IsConnected)
@@ -1781,22 +1780,22 @@ namespace CIC
                         this.ActiveDialerInteraction.Hold(!this.ActiveDialerInteraction.IsHeld);
                         state_change(FormMainState.Hold);
                     }
-                    else if (ActiveNormalInteraction != null)
+                }
+
+                if (ActiveNormalInteraction != null)
+                {
+                    if (ActiveNormalInteraction.IsMuted)
                     {
-                        if (ActiveNormalInteraction.IsMuted)
-                        {
-                            ActiveNormalInteraction.Mute(false);
-                        }
-                        ActiveNormalInteraction.Hold(!ActiveNormalInteraction.IsHeld);
-                        state_change(FormMainState.Hold);
+                        ActiveNormalInteraction.Mute(false);
                     }
+                    ActiveNormalInteraction.Hold(!ActiveNormalInteraction.IsHeld);
+                    state_change(FormMainState.Hold);
                 }
             }
         }
 
         private void mute_button_Click(object sender, EventArgs e)
         {
-            // TODO: fix mute not going into normal interaction case
             if (IcWorkFlow.LoginResult)
             {
                 if (this.ActiveDialerInteraction != null)
@@ -1808,7 +1807,8 @@ namespace CIC
                     this.ActiveDialerInteraction.MuteAsync(!this.ActiveDialerInteraction.IsMuted, MuteCompleted, null);
                     state_change(FormMainState.Mute);
                 }
-                else if (ActiveNormalInteraction != null)
+                
+                if (ActiveNormalInteraction != null)
                 {
                     if (ActiveNormalInteraction.IsHeld)
                     {
