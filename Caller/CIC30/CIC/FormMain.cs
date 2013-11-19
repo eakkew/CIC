@@ -59,7 +59,7 @@ namespace CIC
         private string ScheduleAgent { get; set; }
         private string CallBackPhone { get; set; }
         private string CallerHost { get; set; }
-        private float timer;
+        private float timer; // TODO: get the countdown timer from config file
 
         private DateTime CallBackDateTime { get; set; }
 
@@ -1639,7 +1639,7 @@ namespace CIC
             if (!timer1.Enabled)
                 timer1.Enabled = true;
             timer1.Stop();
-            timer = 10.0f;
+            timer = 10.0f; // TODO: get countdown timer from config
         }
         
         private void restart_timer()
@@ -1656,7 +1656,6 @@ namespace CIC
         private void FormMain_Load(object sender, EventArgs e)
         {
             timer1.Enabled = false;
-            timer = 10.0f;
         }
 
         private void workflow_button_Click(object sender, EventArgs e)
@@ -2710,6 +2709,8 @@ namespace CIC
 
         private void exit_button_Click(object sender, EventArgs e)
         {
+            if (IcWorkFlow == null)
+                this.Close();
             this.ExitFlag = true;
             this.disconnect_button_Click(sender, e);
             this.logout_workflow_button_Click(sender, e);
@@ -3903,7 +3904,7 @@ namespace CIC
                                 name6_panel.BackColor = Color.Yellow;
                             }
 
-                            state_info_label.Text = "calling: " + this.ActiveDialerInteraction.ContactData["is_attr_numbertodial"];
+                            state_info_label.Text = "calling: " + data["is_attr_numbertodial"];
                             this.ActiveDialerInteraction.PlacePreviewCallAsync(MakePreviewCallComplete, null);
                             this.toolStripStatus.Text = (this.ActiveDialerInteraction != null) ?
                                 this.ActiveDialerInteraction.State.ToString() + ":" +

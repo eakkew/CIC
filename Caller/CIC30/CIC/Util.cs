@@ -83,7 +83,7 @@ namespace CIC
 
         public static bool form_validation_telephone_number(string number)
         {
-            // 1 plus + 3 maximum hyphen or space
+            // TODO: make config file for regex to validate 4digit number, # and 4 digit number, and 9 or 10 digit
             Regex r = new Regex(@"^[\d]+\d$"); // extension      -
             Match m = r.Match(number);
             return m.Success;
