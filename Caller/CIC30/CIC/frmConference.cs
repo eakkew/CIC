@@ -22,6 +22,7 @@ namespace CIC
             }
             return instance;
         }
+
         private frmConference()
         {
             InitializeComponent();
@@ -46,6 +47,9 @@ namespace CIC
             // TODO: 
             // complete the merge line and close the form
             Program.MainDashboard.conference_invoke(this.ext_number_box.Text);
+            ext_number_box.Enabled = true;
+            conference_button.Enabled = false;
+            call_button.Enabled = true;
             this.Close();
         }
 

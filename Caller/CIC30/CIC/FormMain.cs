@@ -1648,10 +1648,10 @@ namespace CIC
 
         private void disconnect_button_Click(object sender, EventArgs e)
         {
-            state_info_label.Text = "Disconnected.";
             tryDisconnect();
 
-            this.ShowActiveCallInfo();
+            //this.ShowActiveCallInfo();
+            state_info_label.Text = "Disconnected.";
             this.CrmScreenPop();
             this.state_change(FormMainState.Preview);
         }
@@ -1812,7 +1812,7 @@ namespace CIC
 
         private void conference_button_Click(object sender, EventArgs e)
         {
-            frmConference conference = new frmConference();
+            frmConference conference = frmConference.getInstance();
             conference.ShowDialog();
         }
 
@@ -2016,6 +2016,8 @@ namespace CIC
                                         statusUpdate.UpdateRequest();
                                     }
                                 }
+
+                                this.reset_info_on_dashboard();
                             }
                             else if (this.ActiveDialerInteraction.DialingMode == DialingMode.Precise)
                             {
@@ -2111,7 +2113,7 @@ namespace CIC
                             {
                                 if (interact.InteractionType == InteractionType.Call)
                                 {
-                                    if (interact.IsConnected)
+                                    if (interact.IsConnected || interact.IsHeld || interact.IsMuted)
                                     {
                                         TmpInteraction[idx] = interact;
                                         idx++;
@@ -2169,6 +2171,7 @@ namespace CIC
                 object ConferenceuserState = e.UserState;
                 System.Exception ConferenceErrMsg = e.Error;
                 ActiveConsultInteraction = null;
+                state_info_label.Text = "Conferencing";
                 state_change(FormMainState.ConferenceCall);
                 //Tracing.TraceStatus(scope + "Completed.");
             }
@@ -2762,7 +2765,7 @@ namespace CIC
                 prev_state = current_state;
                 current_state = state;
         }
-
+        
         private void reset_state()
         {
             workflow_button.Enabled = false;
@@ -2854,6 +2857,7 @@ namespace CIC
                 prev_state = current_state;
             }
             current_state = FormMainState.Hold;
+            state_info_label.Text = "Holding:" + callingNumber;
         }
 
         private void disconnect_state()
@@ -3110,7 +3114,7 @@ namespace CIC
                         // restart timer and reset call index
                         this.BeginInvoke(new MethodInvoker(restart_timer));
 
-                        this.BeginInvoke(new MethodInvoker(preview_state));
+                        this.BeginInvoke(new MethodInvoker(preview_call_state));
                         this.CrmScreenPop();
                         break;
                     case InteractionType.Call:
@@ -3119,7 +3123,7 @@ namespace CIC
 
                         // restart timer and reset call index
                         this.BeginInvoke(new MethodInvoker(restart_timer));
-                        this.BeginInvoke(new MethodInvoker(preview_state));
+                        this.BeginInvoke(new MethodInvoker(preview_call_state));
                         //this.state_change(FormMainState.Preview);
                         this.CrmScreenPop();
                         break;
@@ -3526,6 +3530,7 @@ namespace CIC
                         callParams = new CallInteractionParameters(transferTxtDestination, CallMadeStage.Allocated);
                         if (NormalInterationManager != null)
                         {
+                            callingNumber = transferTxtDestination;
                             NormalInterationManager.ConsultMakeCallAsync(callParams, MakeConsultCompleted, null);
                         }
                     }
@@ -3635,6 +3640,7 @@ namespace CIC
 
         private void MakeConsultCompleted(object sender, InteractionCompletedEventArgs e)
         {
+            state_info_label.Text = "Consulting:" + callingNumber;
             ActiveConsultInteraction = e.Interaction;
         }
 
@@ -3865,7 +3871,8 @@ namespace CIC
                                 name6_panel.BackColor = Color.Yellow;
                             }
 
-                            state_info_label.Text = "calling: " + data["is_attr_numbertodial"];
+                            this.callingNumber = data["is_attr_numbertodial"];
+                            state_info_label.Text = "calling: " + this.callingNumber;
                             this.ActiveDialerInteraction.PlacePreviewCallAsync(MakePreviewCallComplete, null);
                             this.toolStripStatus.Text = (this.ActiveDialerInteraction != null) ?
                                 this.ActiveDialerInteraction.State.ToString() + ":" +
