@@ -863,9 +863,9 @@ namespace CIC.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("10")]
-        public float CountdownTimer {
+        public float CountdownTime {
             get {
-                return ((float)(this["CountdownTimer"]));
+                return ((float)(this["CountdownTime"]));
             }
         }
     }
