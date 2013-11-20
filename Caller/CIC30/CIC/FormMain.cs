@@ -3463,32 +3463,19 @@ namespace CIC
             ININ.IceLib.Interactions.CallInteractionParameters callParams = null;
             try
             {
-                switch (IcWorkFlow.LoginResult)
+                if (IcWorkFlow.LoginResult)
                 {
-                    case true:   //Log On to Dialer Server.  use same normal to call before using dialer object to blind/consult transfer.
-                        //Tracing.TraceStatus(scope + "Call button clicked. Log On to Dialer Server.");
-                        if (transferTxtDestination != "")
-                        {
-                            //Tracing.TraceStatus(scope + "Making consult call to " + transferTxtDestination);
-                            callParams = new CallInteractionParameters(transferTxtDestination, CallMadeStage.Allocated);
-                            if (NormalInterationManager != null)
-                            {
-                                NormalInterationManager.ConsultMakeCallAsync(callParams, MakeConsultCompleted, null);
-                            }
-                        }
-                        break;
-                    default:     // Not Log On to Dialer Server.
-                        //Tracing.TraceStatus(scope + "Call button clicked. Not log on to Dialer Server.");
-                        if (transferTxtDestination != "")
-                        {
-                            //Tracing.TraceStatus(scope + "Making consult call to " + transferTxtDestination);
-                            callParams = new CallInteractionParameters(transferTxtDestination, CallMadeStage.Allocated);
-                        }
-                        if (callParams != null)
+                    //Log On to Dialer Server.  use same normal to call before using dialer object to blind/consult transfer.
+                    //Tracing.TraceStatus(scope + "Call button clicked. Log On to Dialer Server.");
+                    if (transferTxtDestination != "")
+                    {
+                        //Tracing.TraceStatus(scope + "Making consult call to " + transferTxtDestination);
+                        callParams = new CallInteractionParameters(transferTxtDestination, CallMadeStage.Allocated);
+                        if (NormalInterationManager != null)
                         {
                             NormalInterationManager.ConsultMakeCallAsync(callParams, MakeConsultCompleted, null);
                         }
-                        break;
+                    }
                 }
                 //this.EnabledTransferToolStripDisplayed();
                 //Tracing.TraceStatus(scope + "Completed.");
