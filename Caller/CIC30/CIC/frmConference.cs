@@ -22,10 +22,7 @@ namespace CIC
             }
             return instance;
         }
-        /*
-         * TODO change from public to private
-         */
-        public frmConference()
+        private frmConference()
         {
             InitializeComponent();
             conference_button.Enabled = false;
