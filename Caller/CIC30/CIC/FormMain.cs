@@ -60,7 +60,7 @@ namespace CIC
         private string CallBackPhone { get; set; }
         private string CallerHost { get; set; }
         private string AlertSoundFileType { get; set; }
-        private float timer; // TODO: get the countdown timer from config file
+        private float timer = global::CIC.Properties.Settings.Default.CountdownTime;
 
 
         private bool IsPlayAlerting { get; set; }
@@ -1602,7 +1602,7 @@ namespace CIC
             if (!timer1.Enabled)
                 timer1.Enabled = true;
             timer1.Stop();
-            timer = 10.0f; // TODO: get countdown timer from config
+            timer = global::CIC.Properties.Settings.Default.CountdownTime;
         }
         
         private void restart_timer()
