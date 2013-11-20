@@ -25,15 +25,15 @@ namespace CIC
     public enum FormMainState
     {
         Connected,              // connect to workflow
-        ConferenceCall,         // connected to conference call
         Preview,                // got information from workflow, timer starts
-        Calling,                // call connected
-        Disconnected,           // disconnect from workflow
+        ConferenceCall,         // connected to conference call
+        PreviewCall,            // workflow call connected
+        ManualCall,             // manual call connected
         Hold,                   // hold current call
         Mute,                   // mute current call
         Break,                  // pause current workflow not to put new set of information after disposition
-        ManualCall,             // manual call connected
         Loggedout,              // log out from workflow
+        Disconnected,           // disconnect from session
         None,                   // nothing at all or error state
     };
     //private bool IsLoggedIntoDialer = false;
@@ -1645,7 +1645,7 @@ namespace CIC
             // make a call or pickup
             placecall_or_pickup();
                 
-            state_change(FormMainState.Calling);
+            state_change(FormMainState.PreviewCall);
         }
 
         private void disconnect_button_Click(object sender, EventArgs e)
@@ -1662,7 +1662,7 @@ namespace CIC
         {
             try
             {
-                if (this.current_state == FormMainState.Connected)
+                if (this.current_state == FormMainState.PreviewCall)
                 {
                     frmDisposition disposition = new frmDisposition();
                     disposition.ShowDialog();
@@ -2193,7 +2193,7 @@ namespace CIC
             {
                 if (IcWorkFlow.LoginResult)
                 {
-                    if (this.ActiveDialerInteraction != null && this.current_state == FormMainState.Calling)
+                    if (this.ActiveDialerInteraction != null && this.current_state == FormMainState.PreviewCall)
                     {
                         if (ActiveConsultInteraction != null)
                         {
@@ -2232,7 +2232,7 @@ namespace CIC
                             }
                             else
                             {
-                                ActiveNormalInteraction = null;
+                                ActiveNormalInteraction = ActiveDialerInteraction;
                                 if (this.InteractionList != null && this.InteractionList.Count > 1)
                                 {
                                     foreach (ININ.IceLib.Interactions.Interaction CurrentInteraction in this.InteractionList)
@@ -2245,6 +2245,7 @@ namespace CIC
                                                 break;
                                         }
                                     }
+
                                     if (ActiveNormalInteraction != null)
                                     {
                                         ActiveNormalInteraction.ConsultTransferAsync(ActiveConsultInteraction.InteractionId, TransferCompleted, null);
@@ -2675,8 +2676,6 @@ namespace CIC
 
         private void exit_button_Click(object sender, EventArgs e)
         {
-            if (IcWorkFlow == null)
-                this.Close();
             this.ExitFlag = true;
             this.Close();
         }
@@ -2689,7 +2688,7 @@ namespace CIC
                     case FormMainState.Preview:
                         preview_state();
                         break;
-                    case FormMainState.Calling :
+                    case FormMainState.PreviewCall :
                         calling_state();
                         break;
                     case FormMainState.ManualCall:
@@ -2702,7 +2701,7 @@ namespace CIC
                         switch (current_state)
                         {
                             // case calling state -> change to hold state
-                            case FormMainState.Calling:
+                            case FormMainState.PreviewCall:
                             case FormMainState.ConferenceCall:
                             case FormMainState.ManualCall:
                                 hold_button.Text = "Unhold";
@@ -2720,7 +2719,7 @@ namespace CIC
                             case FormMainState.Hold:
                                 hold_button.Text = "Hold";
                                 state_info_label.Text = "Continue call from: " + callingNumber;
-                                state_change(FormMainState.Calling);
+                                state_change(FormMainState.PreviewCall);
                                 break;
                         }
                         break;
@@ -2728,7 +2727,7 @@ namespace CIC
                         switch (current_state)
                         {
                             // case calling state -> change to hold state
-                            case FormMainState.Calling:
+                            case FormMainState.PreviewCall:
                             case FormMainState.ConferenceCall:
                             case FormMainState.ManualCall:
                                 mute_button.Text = "Unmute";
@@ -2746,8 +2745,8 @@ namespace CIC
                             case FormMainState.Mute:
                                 mute_button.Text = "Mute";
                                 state_info_label.Text = "Continue call from: " + callingNumber;
-                                state = FormMainState.Calling;
-                                state_change(FormMainState.Calling);
+                                state = FormMainState.PreviewCall;
+                                state_change(FormMainState.PreviewCall);
                                 break;
                         }
                         break;
@@ -2923,7 +2922,7 @@ namespace CIC
                 // make a call or pickup
                 placecall(sender, e);
                 
-                state_change(FormMainState.Calling);
+                state_change(FormMainState.PreviewCall);
             }
         }
 

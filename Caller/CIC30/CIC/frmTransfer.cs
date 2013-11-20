@@ -43,7 +43,7 @@ namespace CIC
                 call_button.Enabled = false;
                 transfer_button.Enabled = true;
                 ext_number_box.Enabled = false;
-                cancel_button.Enabled = false;
+                cancel_button.Enabled = true;
             }
         }
 
