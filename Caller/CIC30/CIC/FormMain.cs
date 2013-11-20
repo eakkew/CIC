@@ -33,7 +33,7 @@ namespace CIC
         Mute,                   // mute current call
         Break,                  // pause current workflow not to put new set of information after disposition
         Loggedout,              // log out from workflow
-        Disconnected,           // disconnect from session
+        Disconnected,           // disconnect from workflow
         None,                   // nothing at all or error state
     };
     //private bool IsLoggedIntoDialer = false;
@@ -95,8 +95,6 @@ namespace CIC
         private static InteractionConference ActiveConferenceInteraction = null;
         private static NameValueCollection mDialerData { get; set; }
 
-        public FormMainState req_state_change = FormMainState.None;
-        
         public FormMain()
         {
             ExitFlag = false;
@@ -1810,10 +1808,6 @@ namespace CIC
             frmTransfer transfer = new frmTransfer();
             transfer.ShowDialog();
             // check if there is still a connection or if transfer complete.
-            if (transfer_complete)
-            {
-                state_change(FormMainState.Disconnected);
-            }
         }
 
         private void conference_button_Click(object sender, EventArgs e)
@@ -1857,6 +1851,7 @@ namespace CIC
                     {
                         this.ActiveDialerInteraction.DialerSession.RequestBreak();
                         break_requested = true;
+                        break_requested_state();
                     }
                 }
                 //Tracing.TraceStatus(scope + "Completed.");
@@ -2229,6 +2224,7 @@ namespace CIC
                                 this.RemoveNormalInteractionFromList(ActiveConsultInteraction);
                                 this.BlindTransferFlag = true;
                                 this.transfer_complete = true;
+                                
                             }
                             else
                             {
@@ -2267,10 +2263,7 @@ namespace CIC
                             }
                         }
                     }
-
-                    
                 }
-                
                 this.ResetActiveCallInfo();
                 //Tracing.TraceStatus(scope + "Completed.");
             }
@@ -2688,14 +2681,17 @@ namespace CIC
                     case FormMainState.Preview:
                         preview_state();
                         break;
+                    case FormMainState.Connected:
+                        connected_state();
+                        break;
                     case FormMainState.PreviewCall :
-                        calling_state();
+                        preview_call_state();
+                        break;
+                    case FormMainState.ConferenceCall:
+                        preview_call_state();
                         break;
                     case FormMainState.ManualCall:
-                        calling_state();
-                        break;
-                    case FormMainState.Disconnected:
-                        disconnect_state();
+                        preview_call_state();
                         break;
                     case FormMainState.Hold:
                         switch (current_state)
@@ -2750,6 +2746,9 @@ namespace CIC
                                 break;
                         }
                         break;
+                    case FormMainState.Disconnected:
+                        disconnect_state();
+                        break;
                     case FormMainState.Break:
                         if (break_requested)
                             break_state();
@@ -2759,14 +2758,9 @@ namespace CIC
                     case FormMainState.Loggedout:
                         logged_out_state();
                         break;
-                    case FormMainState.ConferenceCall:
-                        calling_state();
-                        break;
                 }
                 prev_state = current_state;
                 current_state = state;
-                req_state_change = FormMainState.None;
-            
         }
 
         private void reset_state()
@@ -2831,7 +2825,7 @@ namespace CIC
             current_state = FormMainState.Preview;
         }
 
-        private void calling_state()
+        private void preview_call_state()
         {
             reset_state();
             disconnect_button.Enabled = true;
@@ -2839,7 +2833,10 @@ namespace CIC
             mute_button.Enabled = true;
             transfer_button.Enabled = true;
             conference_button.Enabled = true;
-            break_button.Enabled = true; 
+            break_button.Enabled = true;
+
+            prev_state = current_state;
+            current_state = FormMainState.PreviewCall;
         }
 
         private void hold_state()
@@ -2851,6 +2848,12 @@ namespace CIC
             transfer_button.Enabled = true;
             conference_button.Enabled = true;
             break_button.Enabled = !break_requested;
+
+            if (current_state != FormMainState.Mute)
+            {
+                prev_state = current_state;
+            }
+            current_state = FormMainState.Hold;
         }
 
         private void disconnect_state()
@@ -2872,6 +2875,12 @@ namespace CIC
             transfer_button.Enabled = true;
             conference_button.Enabled = true;
             break_button.Enabled = !break_requested;
+
+            if (current_state != FormMainState.Hold)
+            {
+                prev_state = current_state;
+            }
+            current_state = FormMainState.Mute;
         }
 
         private void break_state()
@@ -2882,6 +2891,9 @@ namespace CIC
             endbreak_button.Enabled = true;
             logout_workflow_button.Enabled = true;
             exit_button.Enabled = true;
+
+            prev_state = current_state;
+            current_state = FormMainState.Break;
         }
         
         private void break_requested_state()
@@ -2894,6 +2906,9 @@ namespace CIC
             reset_state();
             workflow_button.Enabled = true;
             exit_button.Enabled = true;
+
+            prev_state = current_state;
+            current_state = FormMainState.Loggedout;
         }
 
         private void disable_break_request()
@@ -2929,6 +2944,7 @@ namespace CIC
         public void MakePreviewCallComplete(object sender, AsyncCompletedEventArgs e)
         {
             state_info_label.Text = "Connected to: " + this.ActiveDialerInteraction.ContactData["is_attr_numbertodial"];
+            state_change(FormMainState.PreviewCall);
         }
 
         public void MakeCallCompleted(object sender,InteractionCompletedEventArgs e)
@@ -3012,7 +3028,7 @@ namespace CIC
             //this.TransferPanelToolStripButton.Enabled = true;
             //this.RequestBreakToolStripButton.Visible = false;
             enable_transfer();
-            disable_break_request();
+            this.disable_break_request();
             //Tracing.TraceStatus(scope + "Completed.");
         }
 
@@ -3694,23 +3710,11 @@ namespace CIC
                     {
                         case true:
                             state_change(FormMainState.Break);
-                            // TODO: activate these chunk
-                            //this.RequestBreakToolStripButton.Text = "End Break";
-
-                            //this.SetToDoNotDisturb_UserStatusMsg();
-                            /*
-                             * Note : need CIC to use WorkLogoutFlag 
-                            */
-                            
-                            //if (this.WorkLogoutFlag != true)
-                            //{
-                                // Shiw Break Status Message.
-                                // System.Windows.Forms.MessageBox.Show(global::CIC.Properties.Settings.Default.CompletedBreak, "System Info.", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            //}
+                            // TODO: add message that user is on break on dashboards
+                            this.SetToDoNotDisturb_UserStatusMsg();
                             break;
                         default:
                             state_change(FormMainState.Break);
-                            //this.RequestBreakToolStripButton.Text = "Request Break";
                             break;
                     }
                     
@@ -3867,6 +3871,7 @@ namespace CIC
                                 this.ActiveDialerInteraction.State.ToString() + ":" +
                                 this.ActiveDialerInteraction.StateDescription.ToString() : "N/A";
                             reset_timer();
+                            
                         }
                     }
                     // Tracing.TraceStatus(scope + "Completed.[Place Call]");
