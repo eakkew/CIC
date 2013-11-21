@@ -156,7 +156,6 @@ namespace CIC
                                 this.Initial_NormalInteraction();
                                 this.InitializeQueueWatcher();
                                 this.BeginInvoke(new MethodInvoker(connected_state));
-                                this.BeginInvoke(new MethodInvoker(connected_state));
                                 //Tracing.TraceStatus(scope + "Completed.");
                             }
                             else
@@ -1125,8 +1124,6 @@ namespace CIC
                                 {
                                     if ((retIndex >= 0) && (retIndex < this.InteractionList.Count))
                                     {
-                                        //this.CtmMenuIndex = retIndex;
-                                        //this.Remove_CtmContextMenuByIndex();
                                         this.InteractionList.RemoveAt(retIndex);
                                     }
                                 }
@@ -1145,8 +1142,6 @@ namespace CIC
                                 if ((retIndex >= 0) && (retIndex < this.InteractionList.Count))
                                 {
                                     ActiveNormalInteraction = (ININ.IceLib.Interactions.Interaction)this.InteractionList[retIndex];
-                                    //this.CtmMenuIndex = retIndex;
-                                    //this.Remove_CtmContextMenuByIndex();
                                     this.InteractionList.RemoveAt(retIndex);
                                 }
                                 else
@@ -1511,7 +1506,7 @@ namespace CIC
                     if (this.IsActiveConnection)
                     {
                         this.IsActiveConnection = false;       //Set to InActiveConnection.
-                        this.Dispose_QueueWatcher();
+                        this.DisposeQueueWatcher();
                         //this.DisabledAll();
                         //this.SetStatusBarStripMsg();
                     }
@@ -1548,7 +1543,7 @@ namespace CIC
             }
         }
 
-        private void Dispose_QueueWatcher()
+        private void DisposeQueueWatcher()
         {
             string scope = "CIC::MainForm::Dispose_QueueWatcher():: ";
             //Tracing.TraceStatus(scope + "Starting.");
@@ -1876,6 +1871,7 @@ namespace CIC
                             this.ActiveDialerInteraction.DialerSession.EndBreak();
                             break_requested = false;
                             break_granted = false;
+                            this.state_info_label.Text = "Break ended. Waiting for a new call from workflow.";
                     }
                 }
             }
@@ -2069,7 +2065,7 @@ namespace CIC
                 //IcWorkFlow.LoginResult = IcWorkFlow.LoginResult;
                 if (IcWorkFlow.LoginResult)
                 {
-                    this.RegisterHandlers();
+                    this.InitializeDialerSession();
                     this.SetActiveSession(Program.m_Session);
                     //Tracing.TraceStatus(scope + "Completed.");
                     this.Initial_NormalInteraction();
@@ -2646,7 +2642,7 @@ namespace CIC
             }
         }
 
-        private void RegisterHandlers()
+        private void InitializeDialerSession()
         {
             string scope = "CIC::MainForm::RegisterHandlers()::";
             //Tracing.TraceStatus(scope + "Starting.");
@@ -2659,6 +2655,26 @@ namespace CIC
                 this.DialerSession.LogoutGranted += new EventHandler(LogoutGranted);
                 Program.mDialingManager.WorkflowStopped += new EventHandler<WorkflowStoppedEventArgs>(WorkflowStopped);
                 Program.mDialingManager.WorkflowStarted += new EventHandler<WorkflowStartedEventArgs>(WorkflowStarted);
+                //Tracing.TraceStatus(scope + "Completed.");
+            }
+            catch (System.Exception ex)
+            {
+                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+            }
+        }
+
+        private void DisposeDialerSession()
+        {
+            try
+            {
+                this.DialerSession.PreviewCallAdded -= new EventHandler<ININ.IceLib.Dialer.PreviewCallAddedEventArgs>(PreviewCallAdded);
+                this.DialerSession.DataPop -= new EventHandler<ININ.IceLib.Dialer.DataPopEventArgs>(DataPop);
+                this.DialerSession.CampaignTransition -= new EventHandler<CampaignTransistionEventArgs>(CampaignTransition);
+                this.DialerSession.BreakGranted -= new EventHandler(BreakGranted);
+                this.DialerSession.LogoutGranted -= new EventHandler(LogoutGranted);
+                Program.mDialingManager.WorkflowStopped -= new EventHandler<WorkflowStoppedEventArgs>(WorkflowStopped);
+                Program.mDialingManager.WorkflowStarted -= new EventHandler<WorkflowStartedEventArgs>(WorkflowStarted);
                 //Tracing.TraceStatus(scope + "Completed.");
             }
             catch (System.Exception ex)
@@ -2801,6 +2817,7 @@ namespace CIC
 
             reset_state();
             workflow_button.Enabled = true;
+            manual_call_button.Enabled = true;
             logout_workflow_button.Enabled = true;
             exit_button.Enabled = true;
 
@@ -3714,6 +3731,7 @@ namespace CIC
                             state_change(FormMainState.Break);
                             // TODO: add message that user is on break on dashboards
                             this.SetToDoNotDisturb_UserStatusMsg();
+                            this.state_info_label.Text = "On Break.";
                             break;
                         default:
                             state_change(FormMainState.Break);
@@ -3972,8 +3990,9 @@ namespace CIC
 
         private void FormMain_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Dispose_QueueWatcher();
-            Dispose_Session();
+            DisposeQueueWatcher();
+            DisposeSession();
+            DisposeDialerSession();
             tryDisconnect();
             tryDisconnectAllInteractions();
             if (this.ActiveDialerInteraction != null)
@@ -3991,32 +4010,35 @@ namespace CIC
 
         private void tryDisconnectAllInteractions()
         {
-            foreach (ININ.IceLib.Interactions.Interaction CurrentInteraction in this.InteractionList)
+            if (this.InteractionList != null)
             {
-                if (CurrentInteraction != null)
+                foreach (ININ.IceLib.Interactions.Interaction CurrentInteraction in this.InteractionList)
                 {
-                    try
+                    if (CurrentInteraction != null)
                     {
-                        CurrentInteraction.Disconnect();
-                    }
-                    catch (Exception ex)
-                    {
+                        try
+                        {
+                            CurrentInteraction.Disconnect();
+                        }
+                        catch (Exception ex)
+                        {
 
+                        }
                     }
                 }
+                this.InteractionList.Clear();
+                this.InteractionList = null;
             }
-            this.InteractionList.Clear();
-            this.InteractionList = null;
         }
 
-        private void Dispose_Session()
+        private void DisposeSession()
         {
             string scope = "CIC::MainForm::Dispose_QueueWatcher():: ";
             //Tracing.TraceStatus(scope + "Starting.");
             try
             {
                 //Tracing.TraceStatus(scope + "Creating instance of InteractionQueue");
-                if (this.m_InteractionQueue != null)
+                if (global::CIC.Program.m_Session != null)
                 {
                     global::CIC.Program.m_Session.ConnectionStateChanged -= new EventHandler<ConnectionStateChangedEventArgs>(mSession_Changed);
                 }
