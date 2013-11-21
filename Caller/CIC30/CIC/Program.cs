@@ -75,6 +75,7 @@ namespace CIC
       public static string ApplicationPath;
       public static string ResourcePath;
       public static string ApplicationImagePath;
+      // TODO: disable regen key
       public static bool ReGenKeyEnabled = true;
 
 #endregion
@@ -111,7 +112,7 @@ namespace CIC
                       mICStation = new CIC.frmICStation(m_Session);
                       LogInFormClosed = false;
                       Application.Run(mICStation);
-                      // bypass the server login
+                      // TODO: undo bypass the server login
                       global::CIC.Program.SessionLogInResult = Utils.LoginResult.Success;
                       //global::CIC.Program.SessionLogInResult = mICStation.LogInResult;
                   }

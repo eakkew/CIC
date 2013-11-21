@@ -122,7 +122,8 @@
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripDatetime = new System.Windows.Forms.ToolStripStatusLabel();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.previewCallTimer = new System.Windows.Forms.Timer(this.components);
+            this.dateTimeTimer = new System.Windows.Forms.Timer(this.components);
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
@@ -973,9 +974,9 @@
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripDatetime,
             this.toolStripStatusLabel,
-            this.toolStripStatus,
-            this.toolStripDatetime});
+            this.toolStripStatus});
             this.statusStrip1.Location = new System.Drawing.Point(0, 546);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(1274, 22);
@@ -1000,9 +1001,14 @@
             this.toolStripDatetime.Size = new System.Drawing.Size(54, 17);
             this.toolStripDatetime.Text = "datetime";
             // 
-            // timer1
+            // previewCallTimer
             // 
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            this.previewCallTimer.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // dateTimeTimer
+            // 
+            this.dateTimeTimer.Enabled = true;
+            this.dateTimeTimer.Tick += new System.EventHandler(this.dateTimeTimer_Tick);
             // 
             // FormMain
             // 
@@ -1170,8 +1176,9 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatus;
         private System.Windows.Forms.ToolStripStatusLabel toolStripDatetime;
         private System.Windows.Forms.Label timer_info;
-        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Timer previewCallTimer;
         private System.Windows.Forms.Label state_info_label;
+        private System.Windows.Forms.Timer dateTimeTimer;
 
     }
 }

@@ -66,7 +66,8 @@ namespace CIC
         private bool IsPlayAlerting { get; set; }
         private Locus.Control.MP3Player cicMp3Player { get; set; }
         private System.Media.SoundPlayer soundPlayer { get; set; }
-        
+
+        private DateTime currentTime { get; set; }
         private DateTime CallBackDateTime { get; set; }
 
         private FormMainState prev_state = FormMainState.Preview;
@@ -101,7 +102,6 @@ namespace CIC
             InitializeComponent(); 
             state_change(FormMainState.Disconnected);
             InitializeSession();
-            this.IsActiveConnection = true; // FIXME: remove the placeholder
         }
 
         private void InitializeSession()
@@ -478,7 +478,6 @@ namespace CIC
             {
                 //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
                 //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                // TODO: activate this code
                 this.ResetActiveCallInfo();
                 this.CallerHost = "";
                 if (ActiveNormalInteraction != null)
@@ -537,6 +536,7 @@ namespace CIC
 
         private void reset_info_on_dashboard()
         {
+            this.reset_color_panel();
             this.contractNo_box.Text = "";
             this.license_plate_box.Text = "";
             this.product_name_box.Text = "";
@@ -1027,13 +1027,16 @@ namespace CIC
                         //
                         break;
                     case InteractionType.Call:
+                        if (ActiveNormalInteraction.IsDisconnected && e.Interaction.IsConnected)
+                        {
+                            state_info_label.Text = "Connected to: " + callingNumber;
+                        }
                         ActiveNormalInteraction = e.Interaction;
                         this.StrConnectionState = ActiveNormalInteraction.State;
                         if (ActiveNormalInteraction != null)
                         {
                             if (ActiveNormalInteraction.IsDisconnected)
                             {
-                                // TODO: activate this code
                                 this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
                                 ActiveNormalInteraction = this.GetAvailableInteractionFromList();
                             }
@@ -1044,7 +1047,6 @@ namespace CIC
                         }
                         if (this.BlindTransferFlag)
                         {
-                            // TODO: activate this code
                             this.ResetActiveCallInfo();
                         }
                         this.ShowActiveCallInfo();
@@ -1176,7 +1178,6 @@ namespace CIC
             }
             catch (System.Exception ex)
             {
-                //this.EnabledTransferToolStripDisplayed();
                 //Tracing.TraceStatus(scope + "Error info." + ex.Message);
                 //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
             }
@@ -1508,7 +1509,7 @@ namespace CIC
                     {
                         this.IsActiveConnection = false;       //Set to InActiveConnection.
                         this.DisposeQueueWatcher();
-                        //this.DisabledAll();
+                        this.BeginInvoke(new MethodInvoker(disconnect_state));
                         //this.SetStatusBarStripMsg();
                     }
 
@@ -1593,9 +1594,9 @@ namespace CIC
 
         private void reset_timer()
         {
-            if (!timer1.Enabled)
-                timer1.Enabled = true;
-            timer1.Stop();
+            if (!previewCallTimer.Enabled)
+                previewCallTimer.Enabled = true;
+            previewCallTimer.Stop();
             timer = global::CIC.Properties.Settings.Default.CountdownTime;
         }
         
@@ -1612,7 +1613,7 @@ namespace CIC
 
         private void FormMain_Load(object sender, EventArgs e)
         {
-            timer1.Enabled = false;
+            previewCallTimer.Enabled = false;
         }
 
         private void workflow_button_Click(object sender, EventArgs e)
@@ -1645,6 +1646,7 @@ namespace CIC
             tryDisconnect();
 
             //this.ShowActiveCallInfo();
+            this.reset_info_on_dashboard();
             state_info_label.Text = "Disconnected.";
             this.CrmScreenPop();
             this.state_change(FormMainState.Preview);
@@ -1654,12 +1656,15 @@ namespace CIC
         {
             try
             {
-                if (this.current_state == FormMainState.PreviewCall)
+                if (!ActiveDialerInteraction.IsDisconnected &&
+                    (this.current_state == FormMainState.PreviewCall || this.current_state == FormMainState.ConferenceCall))
                 {
                     frmDisposition disposition = new frmDisposition();
                     disposition.ShowDialog();
                 }
-                if (IcWorkFlow.LoginResult)
+                if (IcWorkFlow.LoginResult &&
+                    this.IC_Session != null &&
+                    this.IC_Session.ConnectionState == ININ.IceLib.Connection.ConnectionState.Up)
                 {
                     if (ActiveDialerInteraction != null)
                     {
@@ -1800,7 +1805,6 @@ namespace CIC
         {
             frmTransfer transfer = new frmTransfer();
             transfer.ShowDialog();
-            // check if there is still a connection or if transfer complete.
         }
 
         private void conference_button_Click(object sender, EventArgs e)
@@ -1890,7 +1894,7 @@ namespace CIC
             {
                 if (IcWorkFlow.LoginResult)
                 {
-                    // FIX ME: check the state of calling
+                    // TODO: check the state of calling from the commented one
                     //if (/*this.CallStateToolStripStatusLabel.Text.ToLower().Trim() == "n/a"*/ true)
                     if (this.current_state == FormMainState.Disconnected)
                     {
@@ -2004,8 +2008,6 @@ namespace CIC
                                 {
                                     if (this.AvailableStatusMessageDetails != null)
                                     {
-                                        // TODO: check if we need this code?
-                                        //this.userManualStatusChangeFlag = true;
                                         statusUpdate.StatusMessageDetails = this.AvailableStatusMessageDetails;
                                         statusUpdate.UpdateRequest();
                                     }
@@ -2076,7 +2078,6 @@ namespace CIC
                 {
                     //Tracing.TraceStatus(scope + "WorkFlow [" + ((ToolStripMenuItem)sender).Text + "] logon Fail.Please try again.");
                 }
-                //this.ShowActiveCallInfo(); // TODO: check if we really need to call this?
             }
             catch (System.Exception ex)
             {
@@ -2146,8 +2147,6 @@ namespace CIC
             catch (System.Exception ex)
             {
                 // TODO: change state
-                //this.CreateConferenceToolStripButton.Enabled = false;
-                //this.LeaveConferenceToolStripButton.Enabled = false;
                 //Tracing.TraceStatus(scope + "Error info." + ex.Message);
                 System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
             }
@@ -2262,8 +2261,7 @@ namespace CIC
             }
             catch (System.Exception ex)
             {
-                // TODO: activate this code
-                //this.ResetActiveCallInfo();
+                this.ResetActiveCallInfo();
                 //Tracing.TraceStatus(scope + "Error info." + ex.Message);
                 //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
             }
@@ -2438,7 +2436,7 @@ namespace CIC
                         {
                             if (global::CIC.Properties.Settings.Default.AutoAnswer)
                             {
-                                // TODO: pickup call
+                                this.pickup();
                                 //this.PickupToolStripButton_Click(this, new EventArgs());
                             }
                         }
@@ -2825,7 +2823,7 @@ namespace CIC
 
             prev_state = current_state;
             current_state = FormMainState.PreviewCall;
-            state_info_label.Text = "Connected to: " + callingNumber;
+            //state_info_label.Text = "Connected to: " + callingNumber;
         }
 
         private void hold_state()
@@ -2914,7 +2912,7 @@ namespace CIC
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            timer -= (float)timer1.Interval / 1000;
+            timer -= (float)previewCallTimer.Interval / 1000;
             timer_info.Text = "Time until call: " + timer.ToString("F1");
             if (timer <= 0)
             {
@@ -2929,7 +2927,7 @@ namespace CIC
 
         public void MakePreviewCallComplete(object sender, AsyncCompletedEventArgs e)
         {
-            state_info_label.Text = "Connected to: " + this.ActiveDialerInteraction.ContactData["is_attr_numbertodial"];
+            //state_info_label.Text = "Connected to: " + this.ActiveDialerInteraction.ContactData["is_attr_numbertodial"];
             state_change(FormMainState.PreviewCall);
         }
 
@@ -4019,6 +4017,11 @@ namespace CIC
                 //Tracing.TraceStatus(scope + "Error info." + ex.Message);
                 //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
             }
+        }
+
+        private void dateTimeTimer_Tick(object sender, EventArgs e)
+        {
+            toolStripDatetime.Text = DateTime.Now.ToString("F");
         }
     }
 }
