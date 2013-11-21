@@ -4064,5 +4064,149 @@ namespace CIC
         {
             toolStripDatetime.Text = DateTime.Now.ToString("F");
         }
+
+        private void workflow_button_EnabledChanged(object sender, EventArgs e)
+        {
+            if (workflow_button.Enabled)
+            {
+                workflow_button.BackgroundImage = CIC.Properties.Resources.Icon_LogInWF;
+            }
+            else
+            {
+                workflow_button.BackgroundImage = CIC.Properties.Resources.disable_Icon_LogInWF;
+            }
+        }
+
+        private void call_button_EnabledChanged(object sender, EventArgs e)
+        {
+            if (call_button.Enabled)
+            {
+                call_button.BackgroundImage = CIC.Properties.Resources.Icon_Call;
+            }
+            else
+            {
+                call_button.BackgroundImage = CIC.Properties.Resources.disable_Icon_Call;
+            }
+        }
+
+        private void disconnect_button_EnabledChanged(object sender, EventArgs e)
+        {
+            if (disconnect_button.Enabled)
+            {
+                disconnect_button.BackgroundImage = CIC.Properties.Resources.Icon_Disconnect;
+            }
+            else
+            {
+                disconnect_button.BackgroundImage = CIC.Properties.Resources.disable_Icon_Disconnect;
+            }
+        }
+
+        private void hold_button_EnabledChanged(object sender, EventArgs e)
+        {
+            if (hold_button.Enabled)
+            {
+                hold_button.BackgroundImage = CIC.Properties.Resources.Icon_Hold;
+            }
+            else
+            {
+                hold_button.BackgroundImage = CIC.Properties.Resources.disable_Icon_Hold;
+            }
+        }
+
+        private void mute_button_EnabledChanged(object sender, EventArgs e)
+        {
+            if (mute_button.Enabled)
+            {
+                mute_button.BackgroundImage = CIC.Properties.Resources.Icon_Mute;
+            }
+            else
+            {
+                mute_button.BackgroundImage = CIC.Properties.Resources.disable_Icon_Mute;
+            }
+        }
+
+        private void transfer_button_EnabledChanged(object sender, EventArgs e)
+        {
+            if (transfer_button.Enabled)
+            {
+                transfer_button.BackgroundImage = CIC.Properties.Resources.Icon_Transfer;
+            }
+            else
+            {
+                transfer_button.BackgroundImage = CIC.Properties.Resources.disable_Icon_Transfer;
+            }
+        }
+
+        private void conference_button_EnabledChanged(object sender, EventArgs e)
+        {
+            if (conference_button.Enabled)
+            {
+                conference_button.BackgroundImage = CIC.Properties.Resources.Icon_Conference;
+            }
+            else
+            {
+                conference_button.BackgroundImage = CIC.Properties.Resources.disable_Icon_Conference;
+            }
+        }
+
+        private void manual_call_button_EnabledChanged(object sender, EventArgs e)
+        {
+            if (manual_call_button.Enabled)
+            {
+                manual_call_button.BackgroundImage = CIC.Properties.Resources.Icon_ManualCall;
+            }
+            else
+            {
+                manual_call_button.BackgroundImage = CIC.Properties.Resources.disable_Icon_ManualCall;
+            }
+        }
+
+        private void break_button_EnabledChanged(object sender, EventArgs e)
+        {
+            if (break_button.Enabled)
+            {
+                break_button.BackgroundImage = CIC.Properties.Resources.Icon_Break;
+            }
+            else
+            {
+                break_button.BackgroundImage = CIC.Properties.Resources.disable_Icon_Break;
+            }
+        }
+
+        private void endbreak_button_EnabledChanged(object sender, EventArgs e)
+        {
+            if (endbreak_button.Enabled)
+            {
+                endbreak_button.BackgroundImage = CIC.Properties.Resources.Icon_EndBreak;
+            }
+            else
+            {
+                endbreak_button.BackgroundImage = CIC.Properties.Resources.disable_Icon_EndBreak;
+            }
+        }
+
+        private void logout_workflow_button_EnabledChanged(object sender, EventArgs e)
+        {
+            if (logout_workflow_button.Enabled)
+            {
+                logout_workflow_button.BackgroundImage = CIC.Properties.Resources.Icon_LogoutWF;
+            }
+            else
+            {
+                logout_workflow_button.BackgroundImage = CIC.Properties.Resources.disable_Icon_LogoutWF;
+            }
+        }
+
+        private void exit_button_EnabledChanged(object sender, EventArgs e)
+        {
+            if (exit_button.Enabled)
+            {
+                exit_button.BackgroundImage = CIC.Properties.Resources.Icon_Exit;
+            }
+            else
+            {
+                exit_button.BackgroundImage = CIC.Properties.Resources.disable_Icon_Exit;
+            }
+        }
     }
 }

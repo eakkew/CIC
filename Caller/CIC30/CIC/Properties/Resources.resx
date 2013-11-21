@@ -352,4 +352,76 @@
   <data name="transPanel" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\bin\Debug\Resources\transPanel.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="disable_Icon_Break" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\disable_Icon_Break.jpg;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="disable_Icon_Call" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\disable_Icon_Call.jpg;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="disable_Icon_Conference" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\disable_Icon_Conference.jpg;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="disable_Icon_Disconnect" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\disable_Icon_Disconnect.jpg;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="disable_Icon_EndBreak" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\disable_Icon_EndBreak.jpg;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="disable_Icon_Exit" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\disable_Icon_Exit.jpg;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="disable_Icon_Hold" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\disable_Icon_Hold.jpg;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="disable_Icon_LogInWF" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\disable_Icon_LogInWF.jpg;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="disable_Icon_LogoutWF" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\disable_Icon_LogoutWF.jpg;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="disable_Icon_ManualCall" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\disable_Icon_ManualCall.jpg;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="disable_Icon_Mute" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\disable_Icon_Mute.jpg;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="disable_Icon_Transfer" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\disable_Icon_Transfer.jpg;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_Break" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon_Break.jpg;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_Call" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon_Call.jpg;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_Conference" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon_Conference.jpg;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_Disconnect" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon_Disconnect.jpg;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_EndBreak" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon_EndBreak.jpg;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_Exit" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon_Exit.jpg;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_Hold" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon_Hold.jpg;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_LogInWF" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon_LogInWF.jpg;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_LogoutWF" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon_LogoutWF.jpg;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_ManualCall" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon_ManualCall.jpg;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_Mute" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon_Mute.jpg;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_Transfer" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon_Transfer.jpg;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>
