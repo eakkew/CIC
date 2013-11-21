@@ -26,6 +26,7 @@ namespace CIC
     {
         Connected,              // connect to workflow
         Preview,                // got information from workflow, timer starts
+        Predictive,             // got information from workflow, waiting to pickup call
         ConferenceCall,         // connected to conference call
         PreviewCall,            // workflow call connected
         ManualCall,             // manual call connected
@@ -1500,7 +1501,7 @@ namespace CIC
                     //this.BeginInvoke(new MethodInvoker(login_workflow)); 
                     this.Initial_NormalInteraction();
                     this.BeginInvoke(new MethodInvoker(connected_state));
-                    this.state_info_label.Text = "Connected to the server."
+                    this.state_info_label.Text = "Connected to the server.";
                     break;
                 case ININ.IceLib.Connection.ConnectionState.Down:
                     if (this.IsActiveConnection)
@@ -2275,7 +2276,7 @@ namespace CIC
             this.BlindTransferFlag = false;
             this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
             state_change(FormMainState.Connected);
-            state_info_label.Text = "Transfer complete."
+            state_info_label.Text = "Transfer complete.";
         }
 
         private void UpdateUserStatus()
@@ -2804,15 +2805,12 @@ namespace CIC
             // timer1.Start();
 
             reset_state();
-            workflow_button.Enabled = true;
             call_button.Enabled = true;
-            manual_call_button.Enabled = true;
-            logout_workflow_button.Enabled = true;
-            exit_button.Enabled = true;
+            break_button.Enabled = true;
 
             prev_state = current_state;
             current_state = FormMainState.Preview;
-            state_info_label.Text = "Acquired information from workflow."
+            state_info_label.Text = "Acquired information from workflow.";
         }
 
         private void preview_call_state()
@@ -3162,6 +3160,7 @@ namespace CIC
 
                         // restart timer and reset call index
                         this.BeginInvoke(new MethodInvoker(restart_timer));
+                        // TODO: need to check whether it is predictive or preview
                         this.BeginInvoke(new MethodInvoker(preview_state));
                         this.CrmScreenPop();
                         break;
