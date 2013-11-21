@@ -51,7 +51,6 @@ namespace CIC
         private bool ExitFlag { get; set; }
         private bool IsManualDialing { get; set; }
         private bool IsActiveConference_flag { get; set; }
-        private bool transfer_complete = false;
         private int AutoReconnect = 2;
         private string[] InteractionAttributes { get; set; }
         private ArrayList InteractionList { get; set; }
@@ -1501,6 +1500,7 @@ namespace CIC
                     //this.BeginInvoke(new MethodInvoker(login_workflow)); 
                     this.Initial_NormalInteraction();
                     this.BeginInvoke(new MethodInvoker(connected_state));
+                    this.state_info_label.Text = "Connected to the server."
                     break;
                 case ININ.IceLib.Connection.ConnectionState.Down:
                     if (this.IsActiveConnection)
@@ -1797,7 +1797,6 @@ namespace CIC
 
         private void transfer_button_Click(object sender, EventArgs e)
         {
-            transfer_complete = false;
             frmTransfer transfer = new frmTransfer();
             transfer.ShowDialog();
             // check if there is still a connection or if transfer complete.
@@ -2204,7 +2203,6 @@ namespace CIC
                             ININ.IceLib.People.UserStatusUpdate statusUpdate = new UserStatusUpdate(this.mPeopleManager);
                             statusUpdate.StatusMessageDetails = this.AvailableStatusMessageDetails;
                             statusUpdate.UpdateRequest();
-                            this.transfer_complete = true;
                         }
                     }
                     
@@ -2220,8 +2218,6 @@ namespace CIC
                                 this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
                                 this.RemoveNormalInteractionFromList(ActiveConsultInteraction);
                                 this.BlindTransferFlag = true;
-                                this.transfer_complete = true;
-                                
                             }
                             else
                             {
@@ -2245,7 +2241,6 @@ namespace CIC
                                         this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
                                         this.RemoveNormalInteractionFromList(ActiveConsultInteraction);
                                         this.BlindTransferFlag = true;
-                                        transfer_complete = true;
                                     }
                                 }
                             }
@@ -2280,6 +2275,7 @@ namespace CIC
             this.BlindTransferFlag = false;
             this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
             state_change(FormMainState.Connected);
+            state_info_label.Text = "Transfer complete."
         }
 
         private void UpdateUserStatus()
@@ -2294,8 +2290,6 @@ namespace CIC
             UserStatusUpdate statusUpdate = null;
             string scope = "CIC::frmMain::InitializeStatusMessageDetails()::";
             //Tracing.TraceStatus(scope + "Starting.");
-            //this.imgcmbAgentStatus.ImageList.Images.Clear();
-            //this.imgcmbAgentStatus.Items.Clear();
             try
             {
                 switch (IcWorkFlow.LoginResult)
@@ -2309,9 +2303,6 @@ namespace CIC
                             string[] dusers = { Program.DialingManager.Session.UserId };   //Make value to array 
                             this.AllStatusMessageListOfUser.StartWatching(dusers);
                             this.CurrentUserStatus = this.AllStatusMessageListOfUser.GetUserStatus(Program.DialingManager.Session.UserId);
-                            //this.imgcmbAgentStatus.ImageList = this.imsLstServerStatus;
-                            //this.CmbImgAgentStatus.ImageList = this.imsLstServerStatus;
-                            //this.imsLstServerStatus.Images.Clear();
                             sIconPath = CIC.Program.ResourcePath;
                             this.AllStatusMessageList.StartWatching();
                             foreach (StatusMessageDetails status in this.AllStatusMessageList.GetList())
@@ -2321,22 +2312,18 @@ namespace CIC
                                 if (System.IO.File.Exists(sIconPath))
                                 {
                                     Status_icon = new System.Drawing.Icon(sIconPath);
-                                    //this.imsLstServerStatus.Images.Add(status.MessageText, Status_icon);
                                 }
-                                else
-                                {
-                                    //this.imsLstServerStatus.Images.Add(status.MessageText, status.Icon);
-                                }
+
                                 if (status.MessageText.ToLower().Trim() == "available")
                                 {
                                     AvailableStatusMessageDetails = status;
                                     AvailableIndex = iIndex;
                                 }
+
                                 if (status.MessageText.ToLower().Trim() == "do not disturb")
                                 {
                                     //DoNotDisturbStatusMessageDetails = status;
                                 }
-                               // this.imgcmbAgentStatus.Items.Add(new ImageComboBoxItem(status.MessageText, iIndex));
                                 iIndex++;
                                 //Tracing.TraceNote(scope + "Id=" + status.Id + ", MessageText=" + status.MessageText);
                             }
@@ -2353,9 +2340,6 @@ namespace CIC
                                 new EventHandler<WatchedObjectsEventArgs<UserStatusProperty>>(AllStatusMessageListOfUser_WatchedObjectsChanged);
                             this.AllStatusMessageListOfUser.StartWatching(nusers);
                             this.CurrentUserStatus = this.AllStatusMessageListOfUser.GetUserStatus(this.IC_Session.UserId);
-                            //this.imgcmbAgentStatus.ImageList = this.imsLstServerStatus;
-                            //this.CmbImgAgentStatus.ImageList = this.imsLstServerStatus;
-                            //this.imsLstServerStatus.Images.Clear();
                             sIconPath = CIC.Program.ResourcePath;
                             this.AllStatusMessageList.StartWatching();
                             foreach (StatusMessageDetails status in this.AllStatusMessageList.GetList())
@@ -2367,11 +2351,6 @@ namespace CIC
                                     if (System.IO.File.Exists(sIconPath))
                                     {
                                         Status_icon = new System.Drawing.Icon(sIconPath);
-                                        //this.imsLstServerStatus.Images.Add(status.MessageText, Status_icon);
-                                    }
-                                    else
-                                    {
-                                        //this.imsLstServerStatus.Images.Add(status.MessageText, status.Icon);
                                     }
                                     if (status.MessageText.ToLower().Trim() == "available")
                                     {
@@ -2382,7 +2361,6 @@ namespace CIC
                                     {
                                         //DoNotDisturbStatusMessageDetails = status;
                                     }
-                                    //imgcmbAgentStatus.Items.Add(new ImageComboBoxItem(status.MessageText, iIndex));
                                     iIndex++;
                                 }
                                // Tracing.TraceNote(scope + "Id=" + status.Id + ", MessageText=" + status.MessageText);
@@ -2400,7 +2378,6 @@ namespace CIC
                         {
                             statusUpdate.StatusMessageDetails = this.AvailableStatusMessageDetails;
                             statusUpdate.UpdateRequest();
-                            //this.imgcmbAgentStatus.SetMessage(this.CurrentUserStatus.StatusMessageDetails.MessageText);
                         }
                         else
                         {
@@ -2421,10 +2398,6 @@ namespace CIC
                                     //Display last user status.
                                 }
                             }
-                            //if (this.imgcmbAgentStatus.Items.Count > 0)
-                            //{
-                            //    this.imgcmbAgentStatus.SetMessage(this.CurrentUserStatus.StatusMessageDetails.MessageText);
-                            //}
                         }
                     }
                 }
@@ -2839,6 +2812,7 @@ namespace CIC
 
             prev_state = current_state;
             current_state = FormMainState.Preview;
+            state_info_label.Text = "Acquired information from workflow."
         }
 
         private void preview_call_state()
@@ -2853,6 +2827,7 @@ namespace CIC
 
             prev_state = current_state;
             current_state = FormMainState.PreviewCall;
+            state_info_label.Text = "Connected to: " + callingNumber;
         }
 
         private void hold_state()
@@ -2870,7 +2845,7 @@ namespace CIC
                 prev_state = current_state;
             }
             current_state = FormMainState.Hold;
-            state_info_label.Text = "Holding:" + callingNumber;
+            state_info_label.Text = "Connected to: " + callingNumber + " (Held)";
         }
 
         private void disconnect_state()
@@ -2898,6 +2873,7 @@ namespace CIC
                 prev_state = current_state;
             }
             current_state = FormMainState.Mute;
+            state_info_label.Text = "Connected to: " + callingNumber + " (Muted)";
         }
 
         private void break_state()
