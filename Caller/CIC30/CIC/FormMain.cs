@@ -2834,8 +2834,6 @@ namespace CIC
             disconnect_button.Enabled = true;
             hold_button.Enabled = true;
             mute_button.Enabled = true;
-            transfer_button.Enabled = true;
-            conference_button.Enabled = true;
             break_button.Enabled = !break_requested;
 
             if (current_state != FormMainState.Mute)
@@ -2862,8 +2860,6 @@ namespace CIC
             disconnect_button.Enabled = true;
             hold_button.Enabled = true;
             mute_button.Enabled = true;
-            transfer_button.Enabled = true;
-            conference_button.Enabled = true;
             break_button.Enabled = !break_requested;
 
             if (current_state != FormMainState.Hold)
@@ -2877,11 +2873,9 @@ namespace CIC
         private void break_state()
         {
             reset_state();
-            workflow_button.Enabled = true;
             manual_call_button.Enabled = true;
             endbreak_button.Enabled = true;
             logout_workflow_button.Enabled = true;
-            exit_button.Enabled = true;
 
             prev_state = current_state;
             current_state = FormMainState.Break;
@@ -2896,6 +2890,7 @@ namespace CIC
         {
             reset_state();
             workflow_button.Enabled = true;
+            manual_call_button.Enabled = true;
             exit_button.Enabled = true;
 
             prev_state = current_state;
