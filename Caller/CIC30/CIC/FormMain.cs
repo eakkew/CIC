@@ -565,6 +565,11 @@ namespace CIC
             this.payment_appoint_box.Text = "";
             this.date_callback_box.Text = "";
             this.callingNumber = "";
+
+            this.toolStripCallIDLabel.Text = "N/A";
+            this.toolStripDirectionLabel.Text = "N/A";
+            this.toolStripCallTypeLabel.Text = "N/A";
+            this.toolStripCampaignIDLabel.Text = "N/A";
         }
 
         private void SetInfoBarColor()
@@ -1895,7 +1900,7 @@ namespace CIC
                 if (IcWorkFlow.LoginResult)
                 {
                     // TODO: check the state of calling from the commented one
-                    //if (/*this.CallStateToolStripStatusLabel.Text.ToLower().Trim() == "n/a"*/ true)
+                    //if (this.CallStateToolStripStatusLabel.Text.ToLower().Trim() == "n/a")
                     if (this.current_state == FormMainState.Disconnected)
                     {
                         this.LogoutGranted(sender, e);      //No call object from this campaign;permit to logging out.
@@ -2446,6 +2451,15 @@ namespace CIC
                          *       set dialer number
                          */
                         update_info_on_dashboard();
+                        this.toolStripCallIDLabel.Text = ActiveDialerInteraction.CallIdKey.ToString().Trim();
+                        this.toolStripDirectionLabel.Text = ActiveDialerInteraction.Direction.ToString();
+                        this.toolStripCallTypeLabel.Text = "Campaign Call";
+                        try
+                        {
+                            this.toolStripCampaignIDLabel.Text = mDialerData[Properties.Settings.Default.Preview_Campaign_ATTR];
+                        }
+                        catch (Exception ex)
+                        { }
                         //this.CallIdToolStripStatusLabel.Text = this.ActiveDialerInteraction.CallIdKey.ToString().Trim();
                         //this.DirectiontoolStripStatus.Text = this.ActiveDialerInteraction.Direction.ToString();
                         //this.CallTypeToolStripStatusLabel.Text = "Campaign Call";
@@ -2491,6 +2505,17 @@ namespace CIC
                                             this.toolStripStatus.Text = "Muted";
                                         else
                                             this.toolStripStatus.Text = ActiveNormalInteraction.State.ToString();
+
+
+                                        this.toolStripCallIDLabel.Text = "N/A";
+                                        this.toolStripDirectionLabel.Text = ActiveNormalInteraction.Direction.ToString();
+                                        this.toolStripCallTypeLabel.Text = ActiveNormalInteraction.InteractionType.ToString();
+                                        try
+                                        {
+                                            this.toolStripCampaignIDLabel.Text = "Non-campaign Call";
+                                        }
+                                        catch (Exception ex)
+                                        { }
                                         //this.DirectiontoolStripStatus.Text = ActiveNormalInteraction.Direction.ToString();
                                         //this.CallTypeToolStripStatusLabel.Text = ActiveNormalInteraction.InteractionType.ToString();
                                         //this.CampaignIdToolStripStatusLabel.Text = "Non-campaign Call";
@@ -2505,6 +2530,15 @@ namespace CIC
                                     else
                                         this.toolStripStatus.Text = ActiveNormalInteraction.State.ToString();
                                     // TODO: set info as below
+                                    this.toolStripCallIDLabel.Text = "N/A";
+                                    this.toolStripDirectionLabel.Text = ActiveNormalInteraction.Direction.ToString();
+                                    this.toolStripCallTypeLabel.Text = ActiveNormalInteraction.InteractionType.ToString();
+                                    try
+                                    {
+                                        this.toolStripCampaignIDLabel.Text = "Non-campaign Call";
+                                    }
+                                    catch (Exception ex)
+                                    { }
                                     //this.DirectiontoolStripStatus.Text = ActiveNormalInteraction.Direction.ToString();
                                     //this.CallTypeToolStripStatusLabel.Text = ActiveNormalInteraction.InteractionType.ToString();
                                     //this.CampaignIdToolStripStatusLabel.Text = "Non-campaign Call";
@@ -2513,11 +2547,19 @@ namespace CIC
                                     break;
                                 default:
                                     // TODO: set info as below
+                                    this.toolStripCallIDLabel.Text = "N/A";
+                                    this.toolStripDirectionLabel.Text = ActiveNormalInteraction.Direction.ToString();
+                                    this.toolStripCallTypeLabel.Text = ActiveNormalInteraction.InteractionType.ToString();
+                                    try
+                                    {
+                                        this.toolStripCampaignIDLabel.Text = "Non-campaign Call";
+                                    }
+                                    catch (Exception ex)
+                                    { }
                                     //this.DirectiontoolStripStatus.Text = ActiveNormalInteraction.Direction.ToString();
                                     //this.CallTypeToolStripStatusLabel.Text = ActiveNormalInteraction.InteractionType.ToString();
                                     //this.CampaignIdToolStripStatusLabel.Text = "Non-campaign Call";
                                     //this.QueueNameToolStripStatusLabel.Text = ActiveNormalInteraction.WorkgroupQueueName.ToString();
-                                    //this.NumberToolStripStatusLabel.Text = ActiveNormalInteraction.RemoteDisplay.ToString();
                                     this.toolStripStatus.Text = ActiveNormalInteraction.State.ToString();
                                     break;
                             }
@@ -2980,7 +3022,6 @@ namespace CIC
                 || ActiveDialerInteraction.State == InteractionState.Messaging
                 || ActiveDialerInteraction.State == InteractionState.Offering;
         }
-
 
         private bool IsNormalInteractionAvailableForPickup()
         {

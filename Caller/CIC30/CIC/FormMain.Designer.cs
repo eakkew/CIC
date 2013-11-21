@@ -124,6 +124,14 @@
             this.toolStripDatetime = new System.Windows.Forms.ToolStripStatusLabel();
             this.previewCallTimer = new System.Windows.Forms.Timer(this.components);
             this.dateTimeTimer = new System.Windows.Forms.Timer(this.components);
+            this.toolStripCallID = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripCallIDLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripDirection = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripDirectionLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripCallType = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripCallTypeLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripCampaignID = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripCampaignIDLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
@@ -976,7 +984,15 @@
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripDatetime,
             this.toolStripStatusLabel,
-            this.toolStripStatus});
+            this.toolStripStatus,
+            this.toolStripCallID,
+            this.toolStripCallIDLabel,
+            this.toolStripDirection,
+            this.toolStripDirectionLabel,
+            this.toolStripCallType,
+            this.toolStripCallTypeLabel,
+            this.toolStripCampaignID,
+            this.toolStripCampaignIDLabel});
             this.statusStrip1.Location = new System.Drawing.Point(0, 546);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(1274, 22);
@@ -1009,6 +1025,54 @@
             // 
             this.dateTimeTimer.Enabled = true;
             this.dateTimeTimer.Tick += new System.EventHandler(this.dateTimeTimer_Tick);
+            // 
+            // toolStripCallID
+            // 
+            this.toolStripCallID.Name = "toolStripCallID";
+            this.toolStripCallID.Size = new System.Drawing.Size(47, 17);
+            this.toolStripCallID.Text = "Call ID: ";
+            // 
+            // toolStripCallIDLabel
+            // 
+            this.toolStripCallIDLabel.Name = "toolStripCallIDLabel";
+            this.toolStripCallIDLabel.Size = new System.Drawing.Size(29, 17);
+            this.toolStripCallIDLabel.Text = "N/A";
+            // 
+            // toolStripDirection
+            // 
+            this.toolStripDirection.Name = "toolStripDirection";
+            this.toolStripDirection.Size = new System.Drawing.Size(61, 17);
+            this.toolStripDirection.Text = "Direction: ";
+            // 
+            // toolStripDirectionLabel
+            // 
+            this.toolStripDirectionLabel.Name = "toolStripDirectionLabel";
+            this.toolStripDirectionLabel.Size = new System.Drawing.Size(29, 17);
+            this.toolStripDirectionLabel.Text = "N/A";
+            // 
+            // toolStripCallType
+            // 
+            this.toolStripCallType.Name = "toolStripCallType";
+            this.toolStripCallType.Size = new System.Drawing.Size(62, 17);
+            this.toolStripCallType.Text = "Call Type: ";
+            // 
+            // toolStripCallTypeLabel
+            // 
+            this.toolStripCallTypeLabel.Name = "toolStripCallTypeLabel";
+            this.toolStripCallTypeLabel.Size = new System.Drawing.Size(29, 17);
+            this.toolStripCallTypeLabel.Text = "N/A";
+            // 
+            // toolStripCampaignID
+            // 
+            this.toolStripCampaignID.Name = "toolStripCampaignID";
+            this.toolStripCampaignID.Size = new System.Drawing.Size(82, 17);
+            this.toolStripCampaignID.Text = "Campaign ID: ";
+            // 
+            // toolStripCampaignIDLabel
+            // 
+            this.toolStripCampaignIDLabel.Name = "toolStripCampaignIDLabel";
+            this.toolStripCampaignIDLabel.Size = new System.Drawing.Size(29, 17);
+            this.toolStripCampaignIDLabel.Text = "N/A";
             // 
             // FormMain
             // 
@@ -1179,6 +1243,14 @@
         private System.Windows.Forms.Timer previewCallTimer;
         private System.Windows.Forms.Label state_info_label;
         private System.Windows.Forms.Timer dateTimeTimer;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripCallID;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripCallIDLabel;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripDirection;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripDirectionLabel;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripCallType;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripCallTypeLabel;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripCampaignID;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripCampaignIDLabel;
 
     }
 }
