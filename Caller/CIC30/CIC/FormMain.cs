@@ -2762,8 +2762,6 @@ namespace CIC
                         logged_out_state();
                         break;
                 }
-                prev_state = current_state;
-                current_state = state;
         }
         
         private void reset_state()
