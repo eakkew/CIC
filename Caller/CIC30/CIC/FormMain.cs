@@ -1661,13 +1661,15 @@ namespace CIC
         {
             try
             {
-                if (!ActiveDialerInteraction.IsDisconnected &&
+                if (ActiveDialerInteraction != null &&
+                    !ActiveDialerInteraction.IsDisconnected &&
                     (this.current_state == FormMainState.PreviewCall || this.current_state == FormMainState.ConferenceCall))
                 {
                     frmDisposition disposition = new frmDisposition();
                     disposition.ShowDialog();
                 }
-                if (IcWorkFlow.LoginResult &&
+                if (IcWorkFlow != null &&
+                    IcWorkFlow.LoginResult &&
                     this.IC_Session != null &&
                     this.IC_Session.ConnectionState == ININ.IceLib.Connection.ConnectionState.Up)
                 {
@@ -1820,19 +1822,16 @@ namespace CIC
 
         private void manual_call_button_Click(object sender, EventArgs e)
         {
-            if (IcWorkFlow.LoginResult)
+            if (IcWorkFlow == null || !IcWorkFlow.LoginResult)
             {
-                //MessageBox.Show("Please logged into dialer first");
                 frmManualCall manualCall = new frmManualCall(NormalInterationManager);
                 manualCall.ShowDialog();
                 state_change(FormMainState.ManualCall);
             }
             else
             {
-                MessageBox.Show("Please logged into Dialer first", "Please logged into Dialer first");  
-                state_change(FormMainState.Disconnected);
-            } 
-            
+                this.manual_call_button.Enabled = false;
+            }
         }
 
         private void break_button_Click(object sender, EventArgs e)
@@ -3249,7 +3248,7 @@ namespace CIC
 
         private string getRefCallID(Dictionary<string, string> data)
         {
-            string refCallID;
+            string refCallID = "";
             if (data.ContainsKey("is_attr_Ref_PhoneNo1") && data["is_attr_Ref_PhoneNo1"] == callingNumber)
                 refCallID = data["is_attr_Ref_PhoneNo1"];
             if (data.ContainsKey("is_attr_Ref_PhoneNo2") && data["is_attr_Ref_PhoneNo2"] == callingNumber)
