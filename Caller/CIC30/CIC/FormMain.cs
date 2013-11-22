@@ -3063,6 +3063,16 @@ namespace CIC
             int i = 0;
         }
 
+        /*
+         * convert a string of dateTime from `oldFormat` into `destFormat`
+         */
+        private string getDateTimeString(String datetime, String oldFormat = "yyyy-MM-dd HH:mm", String destFormat = "dd/MM/yyyy")
+        {
+            DateTime dt = DateTime.ParseExact(datetime, oldFormat,
+                                       System.Globalization.CultureInfo.InvariantCulture);
+            return String.Format(destFormat, dt);
+        }
+
         private ReasonCode GetReasonCode(string sFinishcode)
         {
             ININ.IceLib.Dialer.ReasonCode sRet = 0;
