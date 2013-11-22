@@ -278,5 +278,8 @@
     <Setting Name="MSCRMServerName" Type="System.String" Scope="Application">
       <Value Profile="(Default)">prototype.locus.co.th:7900/login.do?action=login</Value>
     </Setting>
+    <Setting Name="FormatDateTime" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">dd/MM/yyyy</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
