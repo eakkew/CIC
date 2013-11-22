@@ -2606,7 +2606,7 @@ namespace CIC
             this.start_overdue_date_box.Text = data.ContainsKey("is_attr_StartOverDueDate") ? getDateTimeString( data["is_attr_StartOverDueDate"]) : "";
             this.followup_status_box.Text = data.ContainsKey("is_attr_FollowupStatus") ? data["is_attr_FollowupStatus"] : "";
             this.payment_appoint_box.Text = data.ContainsKey("is_attr_PaymentAppoint") ? getDateTimeString(data["is_attr_PaymentAppoint"]) : "";
-            this.date_callback_box.Text = data.ContainsKey("is_attr_DateAppointCallBack") ? getDateTimeString( data["is_attr_DateAppointCallBack"]) : "";
+            this.date_callback_box.Text = data.ContainsKey("is_attr_DateAppointCallBack") ? getDateTimeString( data["is_attr_DateAppointCallBack"], destFormat: "dd/MM/yyyy HH:mm") : "";
             this.callingNumber = data.ContainsKey("is_attr_numbertodial") ? data["is_attr_numbertodial"] : "";
 
             update_currency_on_dashboard(data);
