@@ -868,5 +868,14 @@ namespace CIC.Properties {
                 return ((float)(this["CountdownTime"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("prototype.locus.co.th:7900/login.do?action=login")]
+        public string MSCRMServerName {
+            get {
+                return ((string)(this["MSCRMServerName"]));
+            }
+        }
     }
 }

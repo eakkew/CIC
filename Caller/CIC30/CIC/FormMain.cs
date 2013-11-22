@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -1270,7 +1271,7 @@ namespace CIC
                             this.ShowActiveCallInfo();
                             if (!this.IsManualDialing)
                             {
-                                this.CrmScreenPop();
+
                             }
                             else
                             {
@@ -1653,7 +1654,6 @@ namespace CIC
             //this.ShowActiveCallInfo();
             this.reset_info_on_dashboard();
             state_info_label.Text = "Disconnected.";
-            this.CrmScreenPop();
             this.state_change(FormMainState.Preview);
         }
 
@@ -2582,7 +2582,7 @@ namespace CIC
             this.name3_box1.Text = data.ContainsKey("is_attr_FullName_Relation3") ? data["is_attr_FullName_Relation3"] : "";
             this.name4_box1.Text = data.ContainsKey("is_attr_FullName_Relation4") ? data["is_attr_FullName_Relation4"] : "";
             this.name5_box1.Text = data.ContainsKey("is_attr_FullName_Relation5") ? data["is_attr_FullName_Relation5"] : "";
-            this.name6_box2.Text = data.ContainsKey("is_attr_FullName_Relation6") ? data["is_attr_FullName_Relation6"] : "";
+            this.name6_box1.Text = data.ContainsKey("is_attr_FullName_Relation6") ? data["is_attr_FullName_Relation6"] : "";
             this.name1_box2.Text = data.ContainsKey("is_attr_PhoneNo1") ? data["is_attr_PhoneNo1"] : "";
             this.name2_box2.Text = data.ContainsKey("is_attr_PhoneNo2") ? data["is_attr_PhoneNo2"] : "";
             this.name3_box2.Text = data.ContainsKey("is_attr_PhoneNo3") ? data["is_attr_PhoneNo3"] : "";
@@ -2603,6 +2603,7 @@ namespace CIC
             this.date_callback_box.Text = data.ContainsKey("is_attr_DateAppointCallback") ? data["is_attr_DateAppointCallback"] : "";
             this.callingNumber = data.ContainsKey("is_attr_numbertodial") ? data["is_attr_numbertodial"] : "";
             this.state_info_label.Text = "Next Calling Number: " + callingNumber;
+            this.CrmScreenPop();
         }
 
         private void update_conference_status()
@@ -3134,9 +3135,7 @@ namespace CIC
 
                         // restart timer and reset call index
                         this.BeginInvoke(new MethodInvoker(restart_timer));
-
                         this.BeginInvoke(new MethodInvoker(preview_call_state));
-                        this.CrmScreenPop();
                         break;
                     case InteractionType.Call:
                         this.Initialize_ContactData();
@@ -3146,7 +3145,6 @@ namespace CIC
                         this.BeginInvoke(new MethodInvoker(restart_timer));
                         this.BeginInvoke(new MethodInvoker(preview_call_state));
                         //this.state_change(FormMainState.Preview);
-                        this.CrmScreenPop();
                         break;
                 }
                 //Tracing.TraceStatus(scope + "Completed.");
@@ -3186,7 +3184,6 @@ namespace CIC
                         this.BeginInvoke(new MethodInvoker(restart_timer));
                         this.BeginInvoke(new MethodInvoker(preview_state));
                         
-                        this.CrmScreenPop();
                         break;
                     case InteractionType.Call:
                         this.Initialize_ContactData();
@@ -3196,7 +3193,6 @@ namespace CIC
                         this.BeginInvoke(new MethodInvoker(restart_timer));
                         // TODO: need to check whether it is predictive or preview
                         this.BeginInvoke(new MethodInvoker(preview_state));
-                        this.CrmScreenPop();
                         break;
                 }
                 //Tracing.TraceStatus(scope + "Completed.");
@@ -3221,23 +3217,25 @@ namespace CIC
             {
                 try
                 {
-                    // TODO: figure out what to do with url page
-                    //switch (IcWorkFlow.LoginResult)
-                    //{
-                    //    case true:
-                    //        FullyUrl = this.GetFullyScreenUrl(mDialerData);
-                    //        this.CrmScreenPop_RefreshSession();
-                    //        this.CrmScreenPop_SetMainEntry(FullyUrl);
-                    //        this.CrmScreenPop_RetriveLastSessionID();
-                    //        break;
-                    //    default:
-                    //        if (Properties.Settings.Default.StartupUrl != null)
-                    //        {
-                    //            this.CrmScreenPop_RetriveIVRValue();
-                    //            this.CrmScreenPop_SetACDEntry();
-                    //        }
-                    //        break;
-                    //}
+                    // http://[MS-CRM Server name]/CRM/main.aspx?
+                    // etn=col_collection_history&pagetype=entityrecord&extraqs=col_contract_no={Parameter1}&col_ phone_id={Parameter2}&col_call_id={Parameter3}
+                    // Parameter1 = ProductRefID (ฟิลด์ที่ 1 ใน spec) is_attr_ProductRefID
+                    // Parameter2 = Ref_PhoneNo1 - Ref_PhoneNo6  (ฟิลด์ที่ 32-37 ใน spec อยู่ที่ขณะนั้นโทรติดที่ 
+                    // PhoneNoอะไร) is_attr_Ref_PhoneNo1
+                    // Parameter3 = Call_id (Id ของการโทรออก) is_attr_callid
+                    Dictionary<string, string> data = ActiveDialerInteraction.ContactData;
+                    string productID = data.ContainsKey("is_attr_numbertodial") ? data["is_attr_numbertodial"] : "";
+                    string refCallID = getRefCallID(data);
+                    string callID = data.ContainsKey("is_attr_callid") ? data["is_attr_callid"] : "";
+
+                    string baseURI = "http://" + global::CIC.Properties.Settings.Default["MSCRMServerName"];
+                    baseURI += "etn=col_collection_history&";
+                    baseURI += "pagetype=entityrecord&";
+                    baseURI += string.Format("extraqs=col_contract_no={0}&", productID);
+                    baseURI += string.Format("col_ phone_id={0}&", refCallID);
+                    baseURI += string.Format("col_call_id={0}", callID);
+
+                    Process.Start("baseURI");
                     //Tracing.TraceStatus(scope + "Completed.");
                 }
                 catch (System.Exception ex)
@@ -3247,6 +3245,25 @@ namespace CIC
                     //this.MainWebBrowser.Url = new System.Uri(global::CIC.Properties.Settings.Default.StartupUrl, System.UriKind.Absolute);
                 }
             }
+        }
+
+        private string getRefCallID(Dictionary<string, string> data)
+        {
+            string refCallID;
+            if (data.ContainsKey("is_attr_Ref_PhoneNo1") && data["is_attr_Ref_PhoneNo1"] == callingNumber)
+                refCallID = data["is_attr_Ref_PhoneNo1"];
+            if (data.ContainsKey("is_attr_Ref_PhoneNo2") && data["is_attr_Ref_PhoneNo2"] == callingNumber)
+                refCallID = data["is_attr_Ref_PhoneNo2"];
+            if (data.ContainsKey("is_attr_Ref_PhoneNo3") && data["is_attr_Ref_PhoneNo3"] == callingNumber)
+                refCallID = data["is_attr_Ref_PhoneNo3"];
+            if (data.ContainsKey("is_attr_Ref_PhoneNo4") && data["is_attr_Ref_PhoneNo4"] == callingNumber)
+                refCallID = data["is_attr_Ref_PhoneNo4"];
+            if (data.ContainsKey("is_attr_Ref_PhoneNo5") && data["is_attr_Ref_PhoneNo5"] == callingNumber)
+                refCallID = data["is_attr_Ref_PhoneNo5"];
+            if (data.ContainsKey("is_attr_Ref_PhoneNo6") && data["is_attr_Ref_PhoneNo6"] == callingNumber)
+                refCallID = data["is_attr_Ref_PhoneNo6"];
+
+            return refCallID;
         }
 
         private void Initialize_ContactData()
@@ -3783,7 +3800,6 @@ namespace CIC
                             
                             //this.InitializeStatusMessageDetails();
                             this.SetToDoNotDisturb_UserStatusMsg();
-                            this.CrmScreenPop();
                             state_change(FormMainState.Loggedout);
                             System.Windows.Forms.MessageBox.Show(
                                 global::CIC.Properties.Settings.Default.CompletedWorkflowMsg,
