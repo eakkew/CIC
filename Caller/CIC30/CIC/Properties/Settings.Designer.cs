@@ -877,5 +877,14 @@ namespace CIC.Properties {
                 return ((string)(this["MSCRMServerName"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("dd/MM/yyyy")]
+        public string FormatDateTime {
+            get {
+                return ((string)(this["FormatDateTime"]));
+            }
+        }
     }
 }

@@ -469,7 +469,7 @@ namespace CIC
                 }
             }
         }
-        if (global::CIC.Program.ReGenKeyEnabled == true)
+         if (global::CIC.Program.ReGenKeyEnabled == true)
         {
             try
             {
