@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using ININ.IceLib;
 using ININ.IceLib.Connection;
+using log4net;
 
 namespace CIC
 {
@@ -20,6 +21,7 @@ namespace CIC
     private int SoftPhoneRegistryIndex = 0;
     private string StrSoftPhoneKey = "software\\Interactive Intelligence\\SIP Soft Phone";
     private string SoftPhoneStationNameKey = "Station";
+    //private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 #endregion
 
@@ -33,6 +35,8 @@ namespace CIC
         LogInPreviewStatus.Visible = false;
         lblLogInStatusMsg.Visible = false;
         this.Text = Properties.Settings.Default.ApplicationTitle;
+
+        //log.Debug("this is the first log message");
     }
 
     private string GetSIPSoftPhoneStationID

@@ -116,6 +116,10 @@
       <HintPath>..\..\LocusLib\LocusLib\bin\Debug\Locus.Control.dll</HintPath>
     </Reference>
     <Reference Include="locuslibk, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
@@ -310,6 +314,7 @@
     <Compile Include="ScheduleCallbackForm.Designer.cs">
       <DependentUpon>ScheduleCallbackForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Settings.cs" />
     <Compile Include="UserData.cs" />
     <Compile Include="UserDataEventArgs.cs" />
     <Compile Include="UserStatusGridView.cs">
