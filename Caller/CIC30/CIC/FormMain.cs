@@ -1282,7 +1282,6 @@ namespace CIC
                         }
                         else
                         {
-                            this.call_button.Enabled = true;
                         }
                         break;
                     default:
