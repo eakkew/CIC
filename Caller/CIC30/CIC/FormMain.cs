@@ -2592,12 +2592,12 @@ namespace CIC
             this.name6_box2.Text = data.ContainsKey("is_attr_PhoneNo6") ? data["is_attr_PhoneNo6"] : "";
             this.aging_box.Text = data.ContainsKey("is_attr_Aging") ? data["is_attr_Aging"] : "";
             this.number_due_box.Text = data.ContainsKey("is_attr_NumberDue") ? data["is_attr_NumberDue"] : "";
-            this.last_date_payment_box.Text = data.ContainsKey("is_attr_LastReceiveDatePayment") ? data["is_attr_LastReceiveDatePayment"] : "";
+            this.last_date_payment_box.Text = data.ContainsKey("is_attr_LastReceiveDatePayment") ? getDateTimeString( data["is_attr_LastReceiveDatePayment"]) : "";
             this.debt_status_box.Text = data.ContainsKey("is_attr_DebtStatus") ? data["is_attr_DebtStatus"] : "";
-            this.start_overdue_date_box.Text = data.ContainsKey("is_attr_StartOverDueDate") ? data["is_attr_StartOverDueDate"] : "";
+            this.start_overdue_date_box.Text = data.ContainsKey("is_attr_StartOverDueDate") ? getDateTimeString( data["is_attr_StartOverDueDate"]) : "";
             this.followup_status_box.Text = data.ContainsKey("is_attr_FollowupStatus") ? data["is_attr_FollowupStatus"] : "";
             this.payment_appoint_box.Text = data.ContainsKey("is_attr_PaymentAppoint") ? data["is_attr_PaymentAppoint"] : "";
-            this.date_callback_box.Text = data.ContainsKey("is_attr_DateAppointCallback") ? data["is_attr_DateAppointCallBack"] : "";
+            this.date_callback_box.Text = data.ContainsKey("is_attr_DateAppointCallback") ? getDateTimeString( data["is_attr_DateAppointCallBack"]) : "";
             this.callingNumber = data.ContainsKey("is_attr_numbertodial") ? data["is_attr_numbertodial"] : "";
 
             update_currency_on_dashboard(data);
@@ -3127,7 +3127,8 @@ namespace CIC
         /*
          * convert a string of dateTime from `oldFormat` into `destFormat`
          */
-        private string getDateTimeString(String datetime, String oldFormat = "yyyy-MM-dd HH:mm", String destFormat = "dd/MM/yyyy")
+        private string getDateTimeString(String datetime, 
+            String oldFormat = "yyyy-MM-dd HH:mm", String destFormat = "dd/MM/yyyy")
         {
             DateTime dt = DateTime.ParseExact(datetime, oldFormat,
                                        System.Globalization.CultureInfo.InvariantCulture);
