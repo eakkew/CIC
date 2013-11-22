@@ -11,6 +11,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -28,6 +29,7 @@ namespace CIC
         Connected,              // connect to workflow
         Preview,                // got information from workflow, timer starts
         Predictive,             // got information from workflow, waiting to pickup call
+        Calling,                // Call started
         ConferenceCall,         // connected to conference call
         PreviewCall,            // workflow call connected
         ManualCall,             // manual call connected
@@ -2589,20 +2591,67 @@ namespace CIC
             this.name5_box2.Text = data.ContainsKey("is_attr_PhoneNo5") ? data["is_attr_PhoneNo5"] : "";
             this.name6_box2.Text = data.ContainsKey("is_attr_PhoneNo6") ? data["is_attr_PhoneNo6"] : "";
             this.aging_box.Text = data.ContainsKey("is_attr_Aging") ? data["is_attr_Aging"] : "";
-            this.base_debt_box.Text = data.ContainsKey("is_attr_BaseDebt") ? data["is_attr_BaseDebt"] : "";
             this.number_due_box.Text = data.ContainsKey("is_attr_NumberDue") ? data["is_attr_NumberDue"] : "";
-            this.last_amount_payment_box.Text = data.ContainsKey("is_attr_LastReceiveAmountPayment") ? data["is_attr_LastReceiveAmountPayment"] : "";
             this.last_date_payment_box.Text = data.ContainsKey("is_attr_LastReceiveDatePayment") ? data["is_attr_LastReceiveDatePayment"] : "";
-            this.initial_amount_box.Text = data.ContainsKey("is_attr_InitialAmount") ? data["is_attr_InitialAmount"] : "";
-            this.monthly_payment_box.Text = data.ContainsKey("is_attr_MonthlyPayment") ? data["is_attr_MonthlyPayment"] : "";
             this.debt_status_box.Text = data.ContainsKey("is_attr_DebtStatus") ? data["is_attr_DebtStatus"] : "";
             this.start_overdue_date_box.Text = data.ContainsKey("is_attr_StartOverDueDate") ? data["is_attr_StartOverDueDate"] : "";
             this.followup_status_box.Text = data.ContainsKey("is_attr_FollowupStatus") ? data["is_attr_FollowupStatus"] : "";
             this.payment_appoint_box.Text = data.ContainsKey("is_attr_PaymentAppoint") ? data["is_attr_PaymentAppoint"] : "";
-            this.date_callback_box.Text = data.ContainsKey("is_attr_DateAppointCallback") ? data["is_attr_DateAppointCallback"] : "";
+            this.date_callback_box.Text = data.ContainsKey("is_attr_DateAppointCallback") ? data["is_attr_DateAppointCallBack"] : "";
             this.callingNumber = data.ContainsKey("is_attr_numbertodial") ? data["is_attr_numbertodial"] : "";
+
+            update_currency_on_dashboard(data);
+
             this.state_info_label.Text = "Next Calling Number: " + callingNumber;
             this.CrmScreenPop();
+        }
+
+        private void update_currency_on_dashboard(Dictionary<string, string> data)
+        {
+            // deal with currency data
+            string lastReceiveAmount = data.ContainsKey("is_attr_LastReceiveAmountPayment") ? data["is_attr_LastReceiveAmountPayment"] : "";
+            string initialAmount = data.ContainsKey("is_attr_InitialAmount") ? data["is_attr_InitialAmount"] : "";
+            string monthlyPayment = data.ContainsKey("is_attr_MonthlyPayment") ? data["is_attr_MonthlyPayment"] : "";
+            string baseDebt = data.ContainsKey("is_attr_BaseDebt") ? data["is_attr_BaseDebt"] : "";
+            try
+            {
+                this.last_amount_payment_box.Text = double.Parse(lastReceiveAmount).ToString("C2", CultureInfo.CreateSpecificCulture("th"));
+            }
+            catch (Exception ex)
+            {
+                this.last_amount_payment_box.Text = lastReceiveAmount;
+                // tracing - log that the data cannot be parse to currency format
+            }
+
+            try
+            {
+                this.initial_amount_box.Text = decimal.Parse(initialAmount).ToString("C2", CultureInfo.CreateSpecificCulture("th"));
+            }
+            catch (Exception ex)
+            {
+                this.initial_amount_box.Text = initialAmount;
+                // tracing - log that the data cannot be parse to currency format
+            }
+
+            try
+            {
+                this.monthly_payment_box.Text = decimal.Parse(monthlyPayment).ToString("C2", CultureInfo.CreateSpecificCulture("th"));
+            }
+            catch (Exception ex)
+            {
+                this.monthly_payment_box.Text = monthlyPayment;
+                // tracing - log that the data cannot be parse to currency format
+            }
+
+            try
+            {
+                this.base_debt_box.Text = decimal.Parse(baseDebt).ToString("C2", CultureInfo.CreateSpecificCulture("th"));
+            }
+            catch (Exception ex)
+            {
+                this.base_debt_box.Text = baseDebt;
+                // tracing - log that the data cannot be parse to currency format
+            }
         }
 
         private void update_conference_status()
@@ -2714,6 +2763,9 @@ namespace CIC
                         break;
                     case FormMainState.Connected:
                         connected_state();
+                        break;
+                    case FormMainState.Calling:
+                        calling_state();
                         break;
                     case FormMainState.PreviewCall :
                         preview_call_state();
@@ -2853,6 +2905,16 @@ namespace CIC
             state_info_label.Text = "Acquired information from workflow.";
         }
 
+        private void calling_state()
+        {
+            reset_state();
+            disconnect_button.Enabled = true;
+
+            prev_state = current_state;
+            current_state = FormMainState.Calling;
+            state_info_label.Text = "Calling: " + callingNumber;
+        }
+
         private void preview_call_state()
         {
             reset_state();
@@ -2865,7 +2927,6 @@ namespace CIC
 
             prev_state = current_state;
             current_state = FormMainState.PreviewCall;
-            //state_info_label.Text = "Connected to: " + callingNumber;
         }
 
         private void hold_state()
@@ -2970,7 +3031,7 @@ namespace CIC
         public void MakePreviewCallComplete(object sender, AsyncCompletedEventArgs e)
         {
             //state_info_label.Text = "Connected to: " + this.ActiveDialerInteraction.ContactData["is_attr_numbertodial"];
-            state_change(FormMainState.PreviewCall);
+            state_change(FormMainState.Calling);
         }
 
         public void MakeCallCompleted(object sender,InteractionCompletedEventArgs e)
