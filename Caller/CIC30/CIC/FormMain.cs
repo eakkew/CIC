@@ -3128,7 +3128,7 @@ namespace CIC
          * convert a string of dateTime from `oldFormat` into `destFormat`
          */
         private string getDateTimeString(String datetime, 
-            String oldFormat = "yyyy-MM-dd HH:mm", String destFormat = "dd/MM/yyyy")
+            String oldFormat = "yyyy-dd-MM HH:mm", String destFormat = "dd/MM/yyyy")
         {
             try
             { 
