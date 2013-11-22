@@ -1280,6 +1280,9 @@ namespace CIC
                                 this.IsManualDialing = false;
                             }
                         }
+                        else
+                        {
+                        }
                         break;
                     default:
                         break;
@@ -1508,7 +1511,12 @@ namespace CIC
                         //this.SetStatusBarStripMsg();
                     }
                     //this.BeginInvoke(new MethodInvoker(login_workflow)); 
+                    
+                    this.InitializeDialerSession();
+                    this.SetActiveSession(Program.m_Session);
+                    //Tracing.TraceStatus(scope + "Completed.");
                     this.Initial_NormalInteraction();
+                    this.InitializeQueueWatcher();
                     this.BeginInvoke(new MethodInvoker(connected_state));
                     this.state_info_label.Text = "Connected to the server.";
                     break;
@@ -2079,6 +2087,7 @@ namespace CIC
                     this.Initial_NormalInteraction();
                     this.InitializeQueueWatcher();
                     this.UpdateUserStatus();
+                    this.ShowActiveCallInfo();
                 }
                 else
                 {
@@ -2454,7 +2463,7 @@ namespace CIC
                         update_info_on_dashboard();
                         this.toolStripCallIDLabel.Text = ActiveDialerInteraction.CallIdKey.ToString().Trim();
                         this.toolStripDirectionLabel.Text = ActiveDialerInteraction.Direction.ToString();
-                        this.toolStripCallTypeLabel.Text = "Campaign Call";
+                        this.toolStripCallTypeLabel.Text = "Campaign Call(" + ActiveDialerInteraction.DialingMode.ToString() +")";
                         try
                         {
                             this.toolStripCampaignIDLabel.Text = mDialerData[Properties.Settings.Default.Preview_Campaign_ATTR];
@@ -2596,8 +2605,8 @@ namespace CIC
             this.debt_status_box.Text = data.ContainsKey("is_attr_DebtStatus") ? data["is_attr_DebtStatus"] : "";
             this.start_overdue_date_box.Text = data.ContainsKey("is_attr_StartOverDueDate") ? getDateTimeString( data["is_attr_StartOverDueDate"]) : "";
             this.followup_status_box.Text = data.ContainsKey("is_attr_FollowupStatus") ? data["is_attr_FollowupStatus"] : "";
-            this.payment_appoint_box.Text = data.ContainsKey("is_attr_PaymentAppoint") ? data["is_attr_PaymentAppoint"] : "";
-            this.date_callback_box.Text = data.ContainsKey("is_attr_DateAppointCallback") ? getDateTimeString( data["is_attr_DateAppointCallBack"]) : "";
+            this.payment_appoint_box.Text = data.ContainsKey("is_attr_PaymentAppoint") ? getDateTimeString(data["is_attr_PaymentAppoint"]) : "";
+            this.date_callback_box.Text = data.ContainsKey("is_attr_DateAppointCallBack") ? getDateTimeString( data["is_attr_DateAppointCallBack"]) : "";
             this.callingNumber = data.ContainsKey("is_attr_numbertodial") ? data["is_attr_numbertodial"] : "";
 
             update_currency_on_dashboard(data);
@@ -3130,9 +3139,17 @@ namespace CIC
         private string getDateTimeString(String datetime, 
             String oldFormat = "yyyy-dd-MM HH:mm", String destFormat = "dd/MM/yyyy")
         {
-            DateTime dt = DateTime.ParseExact(datetime, oldFormat,
-                                       System.Globalization.CultureInfo.InvariantCulture);
-            return String.Format(destFormat, dt);
+            try
+            { 
+                DateTime dt = DateTime.ParseExact(datetime, oldFormat,
+                                       null);
+                return  dt.ToString(destFormat);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return "";
         }
 
         private ReasonCode GetReasonCode(string sFinishcode)

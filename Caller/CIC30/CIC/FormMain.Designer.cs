@@ -31,9 +31,21 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.workflow_button = new System.Windows.Forms.Button();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
+            this.call_button = new System.Windows.Forms.Button();
+            this.disconnect_button = new System.Windows.Forms.Button();
+            this.hold_button = new System.Windows.Forms.Button();
+            this.mute_button = new System.Windows.Forms.Button();
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
+            this.transfer_button = new System.Windows.Forms.Button();
+            this.conference_button = new System.Windows.Forms.Button();
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
+            this.manual_call_button = new System.Windows.Forms.Button();
+            this.break_button = new System.Windows.Forms.Button();
+            this.endbreak_button = new System.Windows.Forms.Button();
+            this.logout_workflow_button = new System.Windows.Forms.Button();
+            this.exit_button = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.date_callback_panel = new System.Windows.Forms.Panel();
             this.date_callback_box = new System.Windows.Forms.TextBox();
@@ -120,18 +132,6 @@
             this.toolStripCampaignIDLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.previewCallTimer = new System.Windows.Forms.Timer(this.components);
             this.dateTimeTimer = new System.Windows.Forms.Timer(this.components);
-            this.manual_call_button = new System.Windows.Forms.Button();
-            this.break_button = new System.Windows.Forms.Button();
-            this.endbreak_button = new System.Windows.Forms.Button();
-            this.logout_workflow_button = new System.Windows.Forms.Button();
-            this.exit_button = new System.Windows.Forms.Button();
-            this.transfer_button = new System.Windows.Forms.Button();
-            this.conference_button = new System.Windows.Forms.Button();
-            this.call_button = new System.Windows.Forms.Button();
-            this.disconnect_button = new System.Windows.Forms.Button();
-            this.hold_button = new System.Windows.Forms.Button();
-            this.mute_button = new System.Windows.Forms.Button();
-            this.workflow_button = new System.Windows.Forms.Button();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
@@ -172,6 +172,19 @@
             this.flowLayoutPanel1.Size = new System.Drawing.Size(103, 100);
             this.flowLayoutPanel1.TabIndex = 2;
             // 
+            // workflow_button
+            // 
+            this.workflow_button.BackgroundImage = global::CIC.Properties.Resources.Icon_LogInWF;
+            this.workflow_button.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.workflow_button.Location = new System.Drawing.Point(3, 3);
+            this.workflow_button.Name = "workflow_button";
+            this.workflow_button.Size = new System.Drawing.Size(95, 94);
+            this.workflow_button.TabIndex = 0;
+            this.workflow_button.Text = "&";
+            this.workflow_button.UseVisualStyleBackColor = true;
+            this.workflow_button.EnabledChanged += new System.EventHandler(this.workflow_button_EnabledChanged);
+            this.workflow_button.Click += new System.EventHandler(this.workflow_button_Click);
+            // 
             // flowLayoutPanel2
             // 
             this.flowLayoutPanel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -184,6 +197,58 @@
             this.flowLayoutPanel2.Size = new System.Drawing.Size(409, 100);
             this.flowLayoutPanel2.TabIndex = 4;
             // 
+            // call_button
+            // 
+            this.call_button.BackgroundImage = global::CIC.Properties.Resources.Icon_Call;
+            this.call_button.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.call_button.Location = new System.Drawing.Point(3, 3);
+            this.call_button.Name = "call_button";
+            this.call_button.Size = new System.Drawing.Size(95, 94);
+            this.call_button.TabIndex = 1;
+            this.call_button.Text = "&";
+            this.call_button.UseVisualStyleBackColor = true;
+            this.call_button.EnabledChanged += new System.EventHandler(this.call_button_EnabledChanged);
+            this.call_button.Click += new System.EventHandler(this.call_button_Click);
+            // 
+            // disconnect_button
+            // 
+            this.disconnect_button.BackgroundImage = global::CIC.Properties.Resources.Icon_Disconnect;
+            this.disconnect_button.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.disconnect_button.Location = new System.Drawing.Point(104, 3);
+            this.disconnect_button.Name = "disconnect_button";
+            this.disconnect_button.Size = new System.Drawing.Size(95, 94);
+            this.disconnect_button.TabIndex = 3;
+            this.disconnect_button.Text = "&";
+            this.disconnect_button.UseVisualStyleBackColor = true;
+            this.disconnect_button.EnabledChanged += new System.EventHandler(this.disconnect_button_EnabledChanged);
+            this.disconnect_button.Click += new System.EventHandler(this.disconnect_button_Click);
+            // 
+            // hold_button
+            // 
+            this.hold_button.BackgroundImage = global::CIC.Properties.Resources.Icon_Hold;
+            this.hold_button.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.hold_button.Location = new System.Drawing.Point(205, 3);
+            this.hold_button.Name = "hold_button";
+            this.hold_button.Size = new System.Drawing.Size(95, 94);
+            this.hold_button.TabIndex = 2;
+            this.hold_button.Text = "&";
+            this.hold_button.UseVisualStyleBackColor = true;
+            this.hold_button.EnabledChanged += new System.EventHandler(this.hold_button_EnabledChanged);
+            this.hold_button.Click += new System.EventHandler(this.hold_button_Click);
+            // 
+            // mute_button
+            // 
+            this.mute_button.BackgroundImage = global::CIC.Properties.Resources.Icon_Mute;
+            this.mute_button.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.mute_button.Location = new System.Drawing.Point(306, 3);
+            this.mute_button.Name = "mute_button";
+            this.mute_button.Size = new System.Drawing.Size(95, 94);
+            this.mute_button.TabIndex = 0;
+            this.mute_button.Text = "&";
+            this.mute_button.UseVisualStyleBackColor = true;
+            this.mute_button.EnabledChanged += new System.EventHandler(this.mute_button_EnabledChanged);
+            this.mute_button.Click += new System.EventHandler(this.mute_button_Click);
+            // 
             // flowLayoutPanel3
             // 
             this.flowLayoutPanel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -193,6 +258,32 @@
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
             this.flowLayoutPanel3.Size = new System.Drawing.Size(208, 100);
             this.flowLayoutPanel3.TabIndex = 5;
+            // 
+            // transfer_button
+            // 
+            this.transfer_button.BackgroundImage = global::CIC.Properties.Resources.Icon_Transfer;
+            this.transfer_button.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.transfer_button.Location = new System.Drawing.Point(3, 3);
+            this.transfer_button.Name = "transfer_button";
+            this.transfer_button.Size = new System.Drawing.Size(95, 94);
+            this.transfer_button.TabIndex = 4;
+            this.transfer_button.Text = "&";
+            this.transfer_button.UseVisualStyleBackColor = true;
+            this.transfer_button.EnabledChanged += new System.EventHandler(this.transfer_button_EnabledChanged);
+            this.transfer_button.Click += new System.EventHandler(this.transfer_button_Click);
+            // 
+            // conference_button
+            // 
+            this.conference_button.BackgroundImage = global::CIC.Properties.Resources.Icon_Conference;
+            this.conference_button.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.conference_button.Location = new System.Drawing.Point(104, 3);
+            this.conference_button.Name = "conference_button";
+            this.conference_button.Size = new System.Drawing.Size(95, 94);
+            this.conference_button.TabIndex = 5;
+            this.conference_button.Text = "&";
+            this.conference_button.UseVisualStyleBackColor = true;
+            this.conference_button.EnabledChanged += new System.EventHandler(this.conference_button_EnabledChanged);
+            this.conference_button.Click += new System.EventHandler(this.conference_button_Click);
             // 
             // flowLayoutPanel4
             // 
@@ -206,6 +297,71 @@
             this.flowLayoutPanel4.Name = "flowLayoutPanel4";
             this.flowLayoutPanel4.Size = new System.Drawing.Size(507, 100);
             this.flowLayoutPanel4.TabIndex = 6;
+            // 
+            // manual_call_button
+            // 
+            this.manual_call_button.BackgroundImage = global::CIC.Properties.Resources.Icon_ManualCall;
+            this.manual_call_button.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.manual_call_button.Location = new System.Drawing.Point(3, 3);
+            this.manual_call_button.Name = "manual_call_button";
+            this.manual_call_button.Size = new System.Drawing.Size(95, 94);
+            this.manual_call_button.TabIndex = 5;
+            this.manual_call_button.Text = "&";
+            this.manual_call_button.UseVisualStyleBackColor = true;
+            this.manual_call_button.EnabledChanged += new System.EventHandler(this.manual_call_button_EnabledChanged);
+            this.manual_call_button.Click += new System.EventHandler(this.manual_call_button_Click);
+            // 
+            // break_button
+            // 
+            this.break_button.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("break_button.BackgroundImage")));
+            this.break_button.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.break_button.Location = new System.Drawing.Point(104, 3);
+            this.break_button.Name = "break_button";
+            this.break_button.Size = new System.Drawing.Size(95, 94);
+            this.break_button.TabIndex = 6;
+            this.break_button.Text = "&";
+            this.break_button.UseVisualStyleBackColor = true;
+            this.break_button.EnabledChanged += new System.EventHandler(this.break_button_EnabledChanged);
+            this.break_button.Click += new System.EventHandler(this.break_button_Click);
+            // 
+            // endbreak_button
+            // 
+            this.endbreak_button.BackgroundImage = global::CIC.Properties.Resources.Icon_EndBreak;
+            this.endbreak_button.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.endbreak_button.Location = new System.Drawing.Point(205, 3);
+            this.endbreak_button.Name = "endbreak_button";
+            this.endbreak_button.Size = new System.Drawing.Size(95, 94);
+            this.endbreak_button.TabIndex = 7;
+            this.endbreak_button.Text = "&";
+            this.endbreak_button.UseVisualStyleBackColor = true;
+            this.endbreak_button.EnabledChanged += new System.EventHandler(this.endbreak_button_EnabledChanged);
+            this.endbreak_button.Click += new System.EventHandler(this.endbreak_button_Click);
+            // 
+            // logout_workflow_button
+            // 
+            this.logout_workflow_button.BackgroundImage = global::CIC.Properties.Resources.Icon_LogoutWF;
+            this.logout_workflow_button.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.logout_workflow_button.Location = new System.Drawing.Point(306, 3);
+            this.logout_workflow_button.Name = "logout_workflow_button";
+            this.logout_workflow_button.Size = new System.Drawing.Size(95, 94);
+            this.logout_workflow_button.TabIndex = 8;
+            this.logout_workflow_button.Text = "&";
+            this.logout_workflow_button.UseVisualStyleBackColor = true;
+            this.logout_workflow_button.EnabledChanged += new System.EventHandler(this.logout_workflow_button_EnabledChanged);
+            this.logout_workflow_button.Click += new System.EventHandler(this.logout_workflow_button_Click);
+            // 
+            // exit_button
+            // 
+            this.exit_button.BackgroundImage = global::CIC.Properties.Resources.Icon_Exit;
+            this.exit_button.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.exit_button.Location = new System.Drawing.Point(407, 3);
+            this.exit_button.Name = "exit_button";
+            this.exit_button.Size = new System.Drawing.Size(95, 94);
+            this.exit_button.TabIndex = 9;
+            this.exit_button.Text = "&";
+            this.exit_button.UseVisualStyleBackColor = true;
+            this.exit_button.EnabledChanged += new System.EventHandler(this.exit_button_EnabledChanged);
+            this.exit_button.Click += new System.EventHandler(this.exit_button_Click);
             // 
             // splitContainer1
             // 
@@ -929,162 +1085,6 @@
             // 
             this.dateTimeTimer.Enabled = true;
             this.dateTimeTimer.Tick += new System.EventHandler(this.dateTimeTimer_Tick);
-            // 
-            // manual_call_button
-            // 
-            this.manual_call_button.BackgroundImage = global::CIC.Properties.Resources.Icon_ManualCall;
-            this.manual_call_button.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.manual_call_button.Location = new System.Drawing.Point(3, 3);
-            this.manual_call_button.Name = "manual_call_button";
-            this.manual_call_button.Size = new System.Drawing.Size(95, 94);
-            this.manual_call_button.TabIndex = 5;
-            this.manual_call_button.Text = "&";
-            this.manual_call_button.UseVisualStyleBackColor = true;
-            this.manual_call_button.EnabledChanged += new System.EventHandler(this.manual_call_button_EnabledChanged);
-            this.manual_call_button.Click += new System.EventHandler(this.manual_call_button_Click);
-            // 
-            // break_button
-            // 
-            this.break_button.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("break_button.BackgroundImage")));
-            this.break_button.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.break_button.Location = new System.Drawing.Point(104, 3);
-            this.break_button.Name = "break_button";
-            this.break_button.Size = new System.Drawing.Size(95, 94);
-            this.break_button.TabIndex = 6;
-            this.break_button.Text = "&";
-            this.break_button.UseVisualStyleBackColor = true;
-            this.break_button.EnabledChanged += new System.EventHandler(this.break_button_EnabledChanged);
-            this.break_button.Click += new System.EventHandler(this.break_button_Click);
-            // 
-            // endbreak_button
-            // 
-            this.endbreak_button.BackgroundImage = global::CIC.Properties.Resources.Icon_EndBreak;
-            this.endbreak_button.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.endbreak_button.Location = new System.Drawing.Point(205, 3);
-            this.endbreak_button.Name = "endbreak_button";
-            this.endbreak_button.Size = new System.Drawing.Size(95, 94);
-            this.endbreak_button.TabIndex = 7;
-            this.endbreak_button.Text = "&";
-            this.endbreak_button.UseVisualStyleBackColor = true;
-            this.endbreak_button.EnabledChanged += new System.EventHandler(this.endbreak_button_EnabledChanged);
-            this.endbreak_button.Click += new System.EventHandler(this.endbreak_button_Click);
-            // 
-            // logout_workflow_button
-            // 
-            this.logout_workflow_button.BackgroundImage = global::CIC.Properties.Resources.Icon_LogoutWF;
-            this.logout_workflow_button.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.logout_workflow_button.Location = new System.Drawing.Point(306, 3);
-            this.logout_workflow_button.Name = "logout_workflow_button";
-            this.logout_workflow_button.Size = new System.Drawing.Size(95, 94);
-            this.logout_workflow_button.TabIndex = 8;
-            this.logout_workflow_button.Text = "&";
-            this.logout_workflow_button.UseVisualStyleBackColor = true;
-            this.logout_workflow_button.EnabledChanged += new System.EventHandler(this.logout_workflow_button_EnabledChanged);
-            this.logout_workflow_button.Click += new System.EventHandler(this.logout_workflow_button_Click);
-            // 
-            // exit_button
-            // 
-            this.exit_button.BackgroundImage = global::CIC.Properties.Resources.Icon_Exit;
-            this.exit_button.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.exit_button.Location = new System.Drawing.Point(407, 3);
-            this.exit_button.Name = "exit_button";
-            this.exit_button.Size = new System.Drawing.Size(95, 94);
-            this.exit_button.TabIndex = 9;
-            this.exit_button.Text = "&";
-            this.exit_button.UseVisualStyleBackColor = true;
-            this.exit_button.EnabledChanged += new System.EventHandler(this.exit_button_EnabledChanged);
-            this.exit_button.Click += new System.EventHandler(this.exit_button_Click);
-            // 
-            // transfer_button
-            // 
-            this.transfer_button.BackgroundImage = global::CIC.Properties.Resources.Icon_Transfer;
-            this.transfer_button.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.transfer_button.Location = new System.Drawing.Point(3, 3);
-            this.transfer_button.Name = "transfer_button";
-            this.transfer_button.Size = new System.Drawing.Size(95, 94);
-            this.transfer_button.TabIndex = 4;
-            this.transfer_button.Text = "&";
-            this.transfer_button.UseVisualStyleBackColor = true;
-            this.transfer_button.EnabledChanged += new System.EventHandler(this.transfer_button_EnabledChanged);
-            this.transfer_button.Click += new System.EventHandler(this.transfer_button_Click);
-            // 
-            // conference_button
-            // 
-            this.conference_button.BackgroundImage = global::CIC.Properties.Resources.Icon_Conference;
-            this.conference_button.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.conference_button.Location = new System.Drawing.Point(104, 3);
-            this.conference_button.Name = "conference_button";
-            this.conference_button.Size = new System.Drawing.Size(95, 94);
-            this.conference_button.TabIndex = 5;
-            this.conference_button.Text = "&";
-            this.conference_button.UseVisualStyleBackColor = true;
-            this.conference_button.EnabledChanged += new System.EventHandler(this.conference_button_EnabledChanged);
-            this.conference_button.Click += new System.EventHandler(this.conference_button_Click);
-            // 
-            // call_button
-            // 
-            this.call_button.BackgroundImage = global::CIC.Properties.Resources.Icon_Call;
-            this.call_button.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.call_button.Location = new System.Drawing.Point(3, 3);
-            this.call_button.Name = "call_button";
-            this.call_button.Size = new System.Drawing.Size(95, 94);
-            this.call_button.TabIndex = 1;
-            this.call_button.Text = "&";
-            this.call_button.UseVisualStyleBackColor = true;
-            this.call_button.EnabledChanged += new System.EventHandler(this.call_button_EnabledChanged);
-            this.call_button.Click += new System.EventHandler(this.call_button_Click);
-            // 
-            // disconnect_button
-            // 
-            this.disconnect_button.BackgroundImage = global::CIC.Properties.Resources.Icon_Disconnect;
-            this.disconnect_button.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.disconnect_button.Location = new System.Drawing.Point(104, 3);
-            this.disconnect_button.Name = "disconnect_button";
-            this.disconnect_button.Size = new System.Drawing.Size(95, 94);
-            this.disconnect_button.TabIndex = 3;
-            this.disconnect_button.Text = "&";
-            this.disconnect_button.UseVisualStyleBackColor = true;
-            this.disconnect_button.EnabledChanged += new System.EventHandler(this.disconnect_button_EnabledChanged);
-            this.disconnect_button.Click += new System.EventHandler(this.disconnect_button_Click);
-            // 
-            // hold_button
-            // 
-            this.hold_button.BackgroundImage = global::CIC.Properties.Resources.Icon_Hold;
-            this.hold_button.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.hold_button.Location = new System.Drawing.Point(205, 3);
-            this.hold_button.Name = "hold_button";
-            this.hold_button.Size = new System.Drawing.Size(95, 94);
-            this.hold_button.TabIndex = 2;
-            this.hold_button.Text = "&";
-            this.hold_button.UseVisualStyleBackColor = true;
-            this.hold_button.EnabledChanged += new System.EventHandler(this.hold_button_EnabledChanged);
-            this.hold_button.Click += new System.EventHandler(this.hold_button_Click);
-            // 
-            // mute_button
-            // 
-            this.mute_button.BackgroundImage = global::CIC.Properties.Resources.Icon_Mute;
-            this.mute_button.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.mute_button.Location = new System.Drawing.Point(306, 3);
-            this.mute_button.Name = "mute_button";
-            this.mute_button.Size = new System.Drawing.Size(95, 94);
-            this.mute_button.TabIndex = 0;
-            this.mute_button.Text = "&";
-            this.mute_button.UseVisualStyleBackColor = true;
-            this.mute_button.EnabledChanged += new System.EventHandler(this.mute_button_EnabledChanged);
-            this.mute_button.Click += new System.EventHandler(this.mute_button_Click);
-            // 
-            // workflow_button
-            // 
-            this.workflow_button.BackgroundImage = global::CIC.Properties.Resources.Icon_LogInWF;
-            this.workflow_button.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.workflow_button.Location = new System.Drawing.Point(3, 3);
-            this.workflow_button.Name = "workflow_button";
-            this.workflow_button.Size = new System.Drawing.Size(95, 94);
-            this.workflow_button.TabIndex = 0;
-            this.workflow_button.Text = "&";
-            this.workflow_button.UseVisualStyleBackColor = true;
-            this.workflow_button.EnabledChanged += new System.EventHandler(this.workflow_button_EnabledChanged);
-            this.workflow_button.Click += new System.EventHandler(this.workflow_button_Click);
             // 
             // FormMain
             // 
