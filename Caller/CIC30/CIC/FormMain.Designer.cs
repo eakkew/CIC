@@ -132,6 +132,19 @@
             this.toolStripCampaignIDLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.previewCallTimer = new System.Windows.Forms.Timer(this.components);
             this.dateTimeTimer = new System.Windows.Forms.Timer(this.components);
+            this.Login_button_label = new System.Windows.Forms.Label();
+            this.call_button_label = new System.Windows.Forms.Label();
+            this.disconnect_button_label = new System.Windows.Forms.Label();
+            this.hold_button_label = new System.Windows.Forms.Label();
+            this.mute_button_label = new System.Windows.Forms.Label();
+            this.transfer_button_label = new System.Windows.Forms.Label();
+            this.conference_button_label = new System.Windows.Forms.Label();
+            this.manual_call_button_label = new System.Windows.Forms.Label();
+            this.break_button_label = new System.Windows.Forms.Label();
+            this.end_break_button_label = new System.Windows.Forms.Label();
+            this.logout_button_label = new System.Windows.Forms.Label();
+            this.exit_button_label = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
@@ -161,6 +174,7 @@
             this.license_plate_panel.SuspendLayout();
             this.contractID_panel.SuspendLayout();
             this.statusStrip1.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // flowLayoutPanel1
@@ -366,7 +380,7 @@
             // splitContainer1
             // 
             this.splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.splitContainer1.Location = new System.Drawing.Point(12, 118);
+            this.splitContainer1.Location = new System.Drawing.Point(12, 130);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -397,7 +411,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.state_info_label);
             this.splitContainer1.Panel2.Controls.Add(this.timer_info);
-            this.splitContainer1.Size = new System.Drawing.Size(1245, 418);
+            this.splitContainer1.Size = new System.Drawing.Size(1245, 424);
             this.splitContainer1.SplitterDistance = 827;
             this.splitContainer1.TabIndex = 7;
             // 
@@ -1005,7 +1019,7 @@
             this.toolStripCallTypeLabel,
             this.toolStripCampaignID,
             this.toolStripCampaignIDLabel});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 546);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 562);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(1274, 22);
             this.statusStrip1.TabIndex = 8;
@@ -1086,17 +1100,146 @@
             this.dateTimeTimer.Enabled = true;
             this.dateTimeTimer.Tick += new System.EventHandler(this.dateTimeTimer_Tick);
             // 
+            // Login_button_label
+            // 
+            this.Login_button_label.AutoSize = true;
+            this.Login_button_label.Location = new System.Drawing.Point(3, 4);
+            this.Login_button_label.Name = "Login_button_label";
+            this.Login_button_label.Size = new System.Drawing.Size(96, 13);
+            this.Login_button_label.TabIndex = 0;
+            this.Login_button_label.Text = "Log-in to Workflow";
+            // 
+            // call_button_label
+            // 
+            this.call_button_label.AutoSize = true;
+            this.call_button_label.Location = new System.Drawing.Point(131, 4);
+            this.call_button_label.Name = "call_button_label";
+            this.call_button_label.Size = new System.Drawing.Size(62, 13);
+            this.call_button_label.TabIndex = 1;
+            this.call_button_label.Text = "Call/Pickup";
+            // 
+            // disconnect_button_label
+            // 
+            this.disconnect_button_label.AutoSize = true;
+            this.disconnect_button_label.Location = new System.Drawing.Point(237, 4);
+            this.disconnect_button_label.Name = "disconnect_button_label";
+            this.disconnect_button_label.Size = new System.Drawing.Size(61, 13);
+            this.disconnect_button_label.TabIndex = 2;
+            this.disconnect_button_label.Text = "Disconnect";
+            // 
+            // hold_button_label
+            // 
+            this.hold_button_label.AutoSize = true;
+            this.hold_button_label.Location = new System.Drawing.Point(350, 4);
+            this.hold_button_label.Name = "hold_button_label";
+            this.hold_button_label.Size = new System.Drawing.Size(29, 13);
+            this.hold_button_label.TabIndex = 3;
+            this.hold_button_label.Text = "Hold";
+            // 
+            // mute_button_label
+            // 
+            this.mute_button_label.AutoSize = true;
+            this.mute_button_label.Location = new System.Drawing.Point(446, 4);
+            this.mute_button_label.Name = "mute_button_label";
+            this.mute_button_label.Size = new System.Drawing.Size(31, 13);
+            this.mute_button_label.TabIndex = 4;
+            this.mute_button_label.Text = "Mute";
+            // 
+            // transfer_button_label
+            // 
+            this.transfer_button_label.AutoSize = true;
+            this.transfer_button_label.Location = new System.Drawing.Point(539, 4);
+            this.transfer_button_label.Name = "transfer_button_label";
+            this.transfer_button_label.Size = new System.Drawing.Size(70, 13);
+            this.transfer_button_label.TabIndex = 5;
+            this.transfer_button_label.Text = "Transference";
+            // 
+            // conference_button_label
+            // 
+            this.conference_button_label.AutoSize = true;
+            this.conference_button_label.Location = new System.Drawing.Point(646, 4);
+            this.conference_button_label.Name = "conference_button_label";
+            this.conference_button_label.Size = new System.Drawing.Size(62, 13);
+            this.conference_button_label.TabIndex = 6;
+            this.conference_button_label.Text = "Conference";
+            // 
+            // manual_call_button_label
+            // 
+            this.manual_call_button_label.AutoSize = true;
+            this.manual_call_button_label.Location = new System.Drawing.Point(758, 4);
+            this.manual_call_button_label.Name = "manual_call_button_label";
+            this.manual_call_button_label.Size = new System.Drawing.Size(62, 13);
+            this.manual_call_button_label.TabIndex = 7;
+            this.manual_call_button_label.Text = "Manual Call";
+            // 
+            // break_button_label
+            // 
+            this.break_button_label.AutoSize = true;
+            this.break_button_label.Location = new System.Drawing.Point(854, 4);
+            this.break_button_label.Name = "break_button_label";
+            this.break_button_label.Size = new System.Drawing.Size(78, 13);
+            this.break_button_label.TabIndex = 8;
+            this.break_button_label.Text = "Request Break";
+            // 
+            // end_break_button_label
+            // 
+            this.end_break_button_label.AutoSize = true;
+            this.end_break_button_label.Location = new System.Drawing.Point(966, 4);
+            this.end_break_button_label.Name = "end_break_button_label";
+            this.end_break_button_label.Size = new System.Drawing.Size(57, 13);
+            this.end_break_button_label.TabIndex = 9;
+            this.end_break_button_label.Text = "End Break";
+            // 
+            // logout_button_label
+            // 
+            this.logout_button_label.AutoSize = true;
+            this.logout_button_label.Location = new System.Drawing.Point(1042, 4);
+            this.logout_button_label.Name = "logout_button_label";
+            this.logout_button_label.Size = new System.Drawing.Size(103, 13);
+            this.logout_button_label.TabIndex = 10;
+            this.logout_button_label.Text = "Log-out of Workflow";
+            // 
+            // exit_button_label
+            // 
+            this.exit_button_label.AutoSize = true;
+            this.exit_button_label.Location = new System.Drawing.Point(1185, 4);
+            this.exit_button_label.Name = "exit_button_label";
+            this.exit_button_label.Size = new System.Drawing.Size(24, 13);
+            this.exit_button_label.TabIndex = 11;
+            this.exit_button_label.Text = "Exit";
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.Transparent;
+            this.panel1.Controls.Add(this.exit_button_label);
+            this.panel1.Controls.Add(this.logout_button_label);
+            this.panel1.Controls.Add(this.end_break_button_label);
+            this.panel1.Controls.Add(this.break_button_label);
+            this.panel1.Controls.Add(this.manual_call_button_label);
+            this.panel1.Controls.Add(this.conference_button_label);
+            this.panel1.Controls.Add(this.transfer_button_label);
+            this.panel1.Controls.Add(this.mute_button_label);
+            this.panel1.Controls.Add(this.hold_button_label);
+            this.panel1.Controls.Add(this.disconnect_button_label);
+            this.panel1.Controls.Add(this.call_button_label);
+            this.panel1.Controls.Add(this.Login_button_label);
+            this.panel1.Location = new System.Drawing.Point(12, 108);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(1245, 20);
+            this.panel1.TabIndex = 9;
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1274, 568);
+            this.ClientSize = new System.Drawing.Size(1274, 584);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.flowLayoutPanel4);
             this.Controls.Add(this.flowLayoutPanel3);
             this.Controls.Add(this.flowLayoutPanel2);
             this.Controls.Add(this.flowLayoutPanel1);
+            this.Controls.Add(this.panel1);
             this.Name = "FormMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "CIC";
@@ -1154,6 +1297,8 @@
             this.contractID_panel.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1263,6 +1408,19 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripCallTypeLabel;
         private System.Windows.Forms.ToolStripStatusLabel toolStripCampaignID;
         private System.Windows.Forms.ToolStripStatusLabel toolStripCampaignIDLabel;
+        private System.Windows.Forms.Label Login_button_label;
+        private System.Windows.Forms.Label call_button_label;
+        private System.Windows.Forms.Label disconnect_button_label;
+        private System.Windows.Forms.Label hold_button_label;
+        private System.Windows.Forms.Label mute_button_label;
+        private System.Windows.Forms.Label transfer_button_label;
+        private System.Windows.Forms.Label conference_button_label;
+        private System.Windows.Forms.Label manual_call_button_label;
+        private System.Windows.Forms.Label break_button_label;
+        private System.Windows.Forms.Label end_break_button_label;
+        private System.Windows.Forms.Label logout_button_label;
+        private System.Windows.Forms.Label exit_button_label;
+        private System.Windows.Forms.Panel panel1;
 
     }
 }
