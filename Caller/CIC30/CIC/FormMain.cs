@@ -620,7 +620,7 @@ namespace CIC
         private void EnabledDialerCallTools()
         {
             string scope = "CIC::frmMain::EnabledNormalCallTools()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             //Color OldColor = this.TelephonyToolStrip.BackColor;  //Save Original Trasparent Color
             if (break_requested)
             {
@@ -893,7 +893,7 @@ namespace CIC
                     //}
                     break;
             }
-            //Tracing.TraceStatus(scope + "Completed.");
+            log.Info(scope + "Completed.");
         }
 
         private void Stop_AlertingWav()
