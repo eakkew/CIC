@@ -575,7 +575,7 @@ namespace CIC
         private void SetInfoBarColor()
         {
             string scope = "CIC::frmMain::SetInfoBarColor()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             if (IcWorkFlow.LoginResult)
             {
                 switch (this.StrConnectionState)
@@ -614,7 +614,7 @@ namespace CIC
                 }
                 this.EnabledDialerCallTools();
             }
-            //Tracing.TraceStatus(scope + "Completed.");
+            log.Info(scope + "Completed.");
         }
 
         private void EnabledDialerCallTools()
