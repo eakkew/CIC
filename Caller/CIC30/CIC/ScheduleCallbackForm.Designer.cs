@@ -297,7 +297,6 @@ namespace CIC
             this.AcceptButton = this.OKButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackgroundImage = global::CIC.Properties.Resources.bluebgBar;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.CancelButton = this.CancelScheduleButton;
             this.ClientSize = new System.Drawing.Size(375, 426);
