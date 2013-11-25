@@ -15,7 +15,7 @@ namespace CIC
 
         public static frmConference getInstance()
         {
-            if (instance == null)
+            if (instance == null || instance.IsDisposed)
             {
                 instance = new frmConference();
 

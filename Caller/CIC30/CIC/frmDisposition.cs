@@ -17,7 +17,7 @@ namespace CIC
 
         public static frmDisposition getInstance()
         {
-            if (instance == null)
+            if (instance == null || instance.IsDisposed)
             {
                 instance = new frmDisposition();
 

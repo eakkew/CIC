@@ -16,7 +16,7 @@ namespace CIC
 
         public static frmTransfer getInstance()
         {
-            if (instance == null)
+            if (instance == null || instance.IsDisposed)
             {
                 instance = new frmTransfer();
 

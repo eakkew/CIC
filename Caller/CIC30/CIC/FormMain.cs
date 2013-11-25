@@ -260,7 +260,6 @@ namespace CIC
         {
             string scope = "CIC::MainForm::Set_ConferenceToolStrip():: ";
             log.Info(scope + "Starting.");
-            bool AllConferencePartyConected = true;
             try
             {
                 if (InteractionList.Count >= 2)
@@ -273,7 +272,6 @@ namespace CIC
                                 ((ININ.IceLib.Interactions.Interaction)this.InteractionList[i]).State != InteractionState.Connected &&
                                 ((ININ.IceLib.Interactions.Interaction)this.InteractionList[i]).State != InteractionState.Held)
                             {
-                                AllConferencePartyConected = false;
                                 break;
                             }
                         }
@@ -2091,6 +2089,7 @@ namespace CIC
                     this.InitializeQueueWatcher();
                     this.UpdateUserStatus();
                     this.ShowActiveCallInfo();
+                    this.state_change(FormMainState.Predictive);
                 }
                 else
                 {
@@ -2771,6 +2770,10 @@ namespace CIC
             // TODO: implement all states
             switch (state)
                 {
+                    case FormMainState.Predictive:
+                        predictive_state();
+                        log.Info("State Changed: Predictive");
+                        break;
                     case FormMainState.Preview:
                         preview_state();
                         log.Info("State Changed: Preview");
@@ -2937,6 +2940,19 @@ namespace CIC
             state_info_label.Text = "Acquired information from workflow.";
         }
 
+        private void predictive_state()
+        {
+            // starts the next number in line
+            // timer1.Start();
+
+            reset_state();
+            break_button.Enabled = true;
+
+            prev_state = current_state;
+            current_state = FormMainState.Predictive;
+            state_info_label.Text = "Acquired information from workflow.";
+        }
+
         private void calling_state()
         {
             reset_state();
@@ -3055,15 +3071,13 @@ namespace CIC
                 
                 // make a call or pickup
                 placecall(sender, e);
-                
-                state_change(FormMainState.PreviewCall);
             }
         }
 
         public void MakePreviewCallComplete(object sender, AsyncCompletedEventArgs e)
         {
             //state_info_label.Text = "Connected to: " + this.ActiveDialerInteraction.ContactData["is_attr_numbertodial"];
-            state_change(FormMainState.Calling);
+            state_change(FormMainState.PreviewCall);
         }
 
         public void MakeCallCompleted(object sender,InteractionCompletedEventArgs e)
@@ -3153,7 +3167,6 @@ namespace CIC
         private void CampaignTransition(object sender, CampaignTransistionEventArgs e)
         {
             // NYI
-            int i = 0;
         }
 
         /*
@@ -3321,7 +3334,6 @@ namespace CIC
         {
             string scope = "CIC::MainForm::CrmScreenPop()::";
             log.Info(scope + "Starting.");
-            string FullyUrl = "";
             if (this.InvokeRequired)
             {
                 this.BeginInvoke(new MethodInvoker(CrmScreenPop));

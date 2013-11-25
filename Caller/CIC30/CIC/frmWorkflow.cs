@@ -13,7 +13,6 @@ namespace CIC
 {
     public partial class frmWorkflow : Form
     {
-        private string[] Workflows;
 
         private frmWorkflow()
         {
@@ -24,7 +23,7 @@ namespace CIC
 
         public static frmWorkflow getInstance(Session IC_Session)
         {
-            if (instance == null)
+            if (instance == null || instance.IsDisposed)
             {
                 instance = new frmWorkflow(IC_Session);
 
@@ -88,6 +87,7 @@ namespace CIC
 
         private void frmWorkflow_FormClosed(object sender, FormClosedEventArgs e)
         {
+
         }
     }
 }

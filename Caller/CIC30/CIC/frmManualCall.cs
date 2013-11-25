@@ -17,7 +17,7 @@ namespace CIC
 
         public static frmManualCall getInstance()
         {
-            if (instance == null)
+            if (instance == null || instance.IsDisposed)
             {
                 instance = new frmManualCall();
 
