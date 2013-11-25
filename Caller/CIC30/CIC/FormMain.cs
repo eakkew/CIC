@@ -3783,7 +3783,7 @@ namespace CIC
             string AlternatePreview_ATTR = Properties.Settings.Default.AlternatePreviewNumbers;
             string[] AlternatePreviewNoATTRCollection;
             string scope = "CIC::frmMain::GetDialerNumber()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
 
             if (mDialerData[Properties.Settings.Default.Preview_Number_ATTR].ToString().Trim() == String.Empty)
             {
@@ -3807,7 +3807,7 @@ namespace CIC
             {
                 DialerNumber = mDialerData[Properties.Settings.Default.Preview_Number_ATTR].ToString().Trim();
             }
-            //Tracing.TraceStatus(scope + "Completed.");
+            log.Info(scope + "Completed.");
             return DialerNumber;
         }
 
