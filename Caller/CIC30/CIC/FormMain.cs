@@ -2660,6 +2660,8 @@ namespace CIC
         {
             // TODO update this method
             string scope = "CIC::FormMain::update_conference_status()::";
+            log.Info(scope + "Started.");
+
             //this.Set_ConferenceToolStrip();
             if (this.InteractionList != null && this.InteractionList.Count <= 0)
             {
@@ -2676,7 +2678,7 @@ namespace CIC
                         this.ActiveDialerInteraction = null;
                     }
             }
-            //Tracing.TraceStatus(scope + "Completed.");
+            log.Info(scope + "Completed.");
         }
 
         private void SetActiveCallInfo()
