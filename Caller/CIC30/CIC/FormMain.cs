@@ -3929,7 +3929,7 @@ namespace CIC
             ININ.IceLib.People.UserStatusUpdate statusUpdate = null;
             try
             {
-                //Tracing.TraceStatus(scope + "Starting.");
+                log.Info(scope + "Starting.");
                 if (this.DoNotDisturbStatusMessageDetails != null)
                 {
                     if (this.mPeopleManager != null)
@@ -3940,12 +3940,11 @@ namespace CIC
                     }
                 }
 
-                //Tracing.TraceStatus(scope + "completed.");
+                log.Info(scope + "completed.");
             }
             catch (System.Exception ex)
             {
-                //Tracing.TraceStatus(scope + "Error info : " + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info : " + ex.Message);
             }
         }
 
