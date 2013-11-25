@@ -350,7 +350,7 @@ namespace CIC
         private void m_InteractionQueue_ConferenceInteractionAdded(object sender, ConferenceInteractionAttributesEventArgs e)
         {
             string scope = "CIC::MainForm::m_InteractionQueue_ConferenceInteractionAdded():: ";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             if (this.InvokeRequired)
             {
                 this.BeginInvoke(new EventHandler<ConferenceInteractionAttributesEventArgs>(
@@ -388,15 +388,14 @@ namespace CIC
                         default:
                             break;
                     }
-                    //Tracing.TraceStatus(scope + "Completed.");
+                    log.Info(scope + "Completed.");
                 }
                 catch (System.Exception ex)
                 {
-                    //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                    log.Error(scope + "Error info." + ex.Message);
                 }
             }
         }
-
 
         private void m_InteractionQueue_InteractionRemoved(object sender, InteractionEventArgs e)
         {
