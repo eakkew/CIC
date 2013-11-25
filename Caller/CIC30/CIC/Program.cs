@@ -375,7 +375,7 @@ namespace CIC
           }
           catch (System.Exception ex)
           {
-              //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, "CIC::Program::InitialSkin()::Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+              log.Error(Application.ProductName + "CIC::Program::InitialSkin()::Error info." + ex.Message + System.Diagnostics.EventLogEntryType.Error); //Window Event Log
           }
       }
 
