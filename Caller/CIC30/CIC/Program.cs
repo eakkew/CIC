@@ -291,7 +291,7 @@ namespace CIC
       private static void Initial_ApplicationPath()
       {
           string scope = "CIC::Program::Initisl_ApplicationPath()::";
-          Tracing.TraceStatus(scope + "Initializing status messages");
+          log.Info(scope + "Initializing status messages");
           string sAppPath = Environment.CurrentDirectory;
           if (System.IO.Directory.Exists(sAppPath) == true)
           {
@@ -300,16 +300,16 @@ namespace CIC
               CIC.Program.ApplicationImagePath = sAppPath + "\\Resources\\";
               if (System.IO.Directory.Exists(CIC.Program.ResourcePath) == true)
               {
-                  Tracing.TraceStatus(scope + "Initializing resource path completed.");
+                  log.Info(scope + "Initializing resource path completed.");
               }
               else
               {
-                  Tracing.TraceStatus(scope + "Initializing resource path fail.");
+                  log.Warn(scope + "Initializing resource path fail.");
               }
           }
           else
           {
-              Tracing.TraceStatus(scope + "Initializing resource path fail.");
+              log.Warn(scope + "Initializing resource path fail.");
           }
       }
 
