@@ -881,6 +881,15 @@ namespace CIC.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("dd/MM/yyyy")]
+        public string FormatDate {
+            get {
+                return ((string)(this["FormatDate"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("dd/MM/yyyy HH:mm")]
         public string FormatDateTime {
             get {
                 return ((string)(this["FormatDateTime"]));

@@ -2012,6 +2012,7 @@ namespace CIC
                                         attributeNamesToWatch.ToArray(), null, true, ChangeWatchedAttributesCompleted, null);
                                     this.ActiveDialerInteraction.CallComplete(
                                         new CallCompletionParameters(sReasoncode, sFinishcode, this.CallBackDateTime, this.ScheduleAgent, false));
+                                    this.date_callback_box.Text = this.CallBackDateTime.ToString(global::CIC.Properties.Settings.Default["FormatDateTime"].ToString());
                                 }
                                 else
                                 {
@@ -2453,6 +2454,10 @@ namespace CIC
                             {
                                 this.pickup();
                                 //this.PickupToolStripButton_Click(this, new EventArgs());
+                            }
+                            else 
+                            { 
+                                this.call_button.Enabled = true;
                             }
                         }
                         /* TODO: show call ID
