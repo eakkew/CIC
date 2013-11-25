@@ -3651,17 +3651,17 @@ namespace CIC
         public void MakeConsultCall(string transferTxtDestination)
         {
             string scope = "CIC::frmMain::MakeConsultCallToolStripButton_Click()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             ININ.IceLib.Interactions.CallInteractionParameters callParams = null;
             try
             {
                 if (IcWorkFlow.LoginResult)
                 {
                     //Log On to Dialer Server.  use same normal to call before using dialer object to blind/consult transfer.
-                    //Tracing.TraceStatus(scope + "Call button clicked. Log On to Dialer Server.");
+                    log.Info(scope + "Call button clicked. Log On to Dialer Server.");
                     if (transferTxtDestination != "")
                     {
-                        //Tracing.TraceStatus(scope + "Making consult call to " + transferTxtDestination);
+                        log.Info(scope + "Making consult call to " + transferTxtDestination);
                         callParams = new CallInteractionParameters(transferTxtDestination, CallMadeStage.Allocated);
                         if (NormalInterationManager != null)
                         {
@@ -3671,14 +3671,13 @@ namespace CIC
                     }
                 }
                 //this.EnabledTransferToolStripDisplayed();
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
                 // TODO: Activate this code
                 //this.ResetActiveCallInfo();
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info." + ex.Message);
             }
         }
 
