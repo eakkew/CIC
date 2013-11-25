@@ -3836,7 +3836,7 @@ namespace CIC
         private void BreakGranted(object sender, EventArgs e)
         {
             string scope = "CIC::MainForm::BreakGranted(): ";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             if (this.InvokeRequired)
             {
                 this.BeginInvoke(new EventHandler<EventArgs>(BreakGranted), new object[] { sender, e });
@@ -3858,12 +3858,11 @@ namespace CIC
                             break;
                     }
                     
-                    //Tracing.TraceStatus(scope + "Completed.");
+                    log.Info(scope + "Completed.");
                 }
                 catch (System.Exception ex)
                 {
-                    //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                    //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                    log.Error(scope + "Error info." + ex.Message);
                 }
             }
             //throw new NotImplementedException();
