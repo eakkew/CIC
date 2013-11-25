@@ -15,6 +15,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using log4net;
 
 namespace CIC
 {
@@ -44,6 +45,8 @@ namespace CIC
 
     public partial class FormMain : Form
     {
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private ScheduleCallbackForm frmScheduleCallbackForm { get; set; }
 
         private bool break_requested { get; set; }
@@ -110,7 +113,7 @@ namespace CIC
         private void InitializeSession()
         {
             string scope = "CIC::frmMain::InitialAllComponents()::";
-            //Tracing.TraceStatus(scope + "Starting");
+            log.Info(scope + " Starting");
             bool bResult = false;
             if (this.InvokeRequired)
             {
@@ -159,13 +162,13 @@ namespace CIC
                                 this.Initial_NormalInteraction();
                                 this.InitializeQueueWatcher();
                                 this.BeginInvoke(new MethodInvoker(connected_state));
-                                //Tracing.TraceStatus(scope + "Completed.");
+                                log.Info(scope + "Completed.");
                             }
                             else
                             {
                                 //No active connection. 
                                 state_change(FormMainState.Disconnected);
-                                //Tracing.TraceStatus(scope + "Cannot log on to station.please try again.");
+                                log.Warn(scope + "Cannot log on to station.please try again.");
                             }
                         }
                     }
@@ -173,8 +176,7 @@ namespace CIC
                 catch (System.Exception ex)
                 {
                     state_change(FormMainState.Disconnected);
-                    //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                    //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                    log.Error(ex.Message);
                 }
             }
         }
@@ -182,37 +184,36 @@ namespace CIC
         private void InitializeQueueWatcher()
         {
             string scope = "CIC::MainForm::InitializeQueueWatcher():: ";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             try
             {
-                //Tracing.TraceStatus(scope + "Creating instance of InteractionQueue");
+                log.Info(scope + "Creating instance of InteractionQueue");
                 if (this.NormalInterationManager != null)
                 {
                     this.m_InteractionQueue = new ININ.IceLib.Interactions.InteractionQueue(this.NormalInterationManager, new QueueId(QueueType.MyInteractions, this.IC_Session.UserId));
-                    //Tracing.TraceStatus(scope + "Attaching event handlers");
+                    log.Info(scope + "Attaching event handlers");
                     this.m_InteractionQueue.InteractionAdded += new EventHandler<InteractionAttributesEventArgs>(m_InteractionQueue_InteractionAdded);
                     this.m_InteractionQueue.InteractionChanged += new EventHandler<InteractionAttributesEventArgs>(m_InteractionQueue_InteractionChanged);
                     this.m_InteractionQueue.InteractionRemoved += new EventHandler<InteractionEventArgs>(m_InteractionQueue_InteractionRemoved);
                     this.m_InteractionQueue.ConferenceInteractionAdded += new EventHandler<ConferenceInteractionAttributesEventArgs>(m_InteractionQueue_ConferenceInteractionAdded);
                     this.m_InteractionQueue.ConferenceInteractionChanged += new EventHandler<ConferenceInteractionAttributesEventArgs>(m_InteractionQueue_ConferenceInteractionChanged);
                     this.m_InteractionQueue.ConferenceInteractionRemoved += new EventHandler<ConferenceInteractionEventArgs>(m_InteractionQueue_ConferenceInteractionRemoved);
-                    //Tracing.TraceStatus(scope + "Start watching for queue events");
+                    log.Info(scope + "Start watching for queue events");
                     this.Initialize_InteractionAttributes();
                     this.m_InteractionQueue.StartWatchingAsync(this.InteractionAttributes, null, null);
                 }
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info." + ex.Message);
             }
         }
 
         private void m_InteractionQueue_ConferenceInteractionRemoved(object sender, ConferenceInteractionEventArgs e)
         {
             string scope = "CIC::MainForm::m_InteractionQueue_ConferenceInteractionChanged():: ";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             if (this.InvokeRequired)
             {
                 this.BeginInvoke(new EventHandler<ConferenceInteractionEventArgs>(m_InteractionQueue_ConferenceInteractionRemoved), new object[] { sender, e });
@@ -246,12 +247,11 @@ namespace CIC
                     }
                     this.Set_ConferenceToolStrip();
                     this.ShowActiveCallInfo();
-                    //Tracing.TraceStatus(scope + "Completed.");
+                    log.Info(scope + "Completed.");
                 }
                 catch (System.Exception ex)
                 {
-                    //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                    //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                    log.Error(scope + "Error info." + ex.Message);
                 }
             }
         }
@@ -259,7 +259,7 @@ namespace CIC
         private void Set_ConferenceToolStrip()
         {
             string scope = "CIC::MainForm::Set_ConferenceToolStrip():: ";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             bool AllConferencePartyConected = true;
             try
             {
@@ -283,20 +283,20 @@ namespace CIC
                 {
                     this.state_change(FormMainState.ConferenceCall);
                 }
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
                 //this.CreateConferenceToolStripButton.Enabled = false;
                 //this.LeaveConferenceToolStripButton.Enabled = false;
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                log.Error(scope + "Error info." + ex.Message);
             }
         }
 
         private void m_InteractionQueue_ConferenceInteractionChanged(object sender, ConferenceInteractionAttributesEventArgs e)
         {
             string scope = "CIC::MainForm::m_InteractionQueue_ConferenceInteractionChanged():: ";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             if (this.InvokeRequired)
             {
                 this.BeginInvoke(new EventHandler<ConferenceInteractionAttributesEventArgs>(
@@ -337,12 +337,11 @@ namespace CIC
 
                     this.Set_ConferenceToolStrip();
                     this.ShowActiveCallInfo();
-                    //Tracing.TraceStatus(scope + "Completed.");
+                    log.Info(scope + "Completed.");
                 }
                 catch (System.Exception ex)
                 {
-                    //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                    //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                    log.Error(scope + "Error info." + ex.Message);
                     this.ShowActiveCallInfo();
                 }
             }
@@ -351,7 +350,7 @@ namespace CIC
         private void m_InteractionQueue_ConferenceInteractionAdded(object sender, ConferenceInteractionAttributesEventArgs e)
         {
             string scope = "CIC::MainForm::m_InteractionQueue_ConferenceInteractionAdded():: ";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             if (this.InvokeRequired)
             {
                 this.BeginInvoke(new EventHandler<ConferenceInteractionAttributesEventArgs>(
@@ -389,20 +388,19 @@ namespace CIC
                         default:
                             break;
                     }
-                    //Tracing.TraceStatus(scope + "Completed.");
+                    log.Info(scope + "Completed.");
                 }
                 catch (System.Exception ex)
                 {
-                    //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                    log.Error(scope + "Error info." + ex.Message);
                 }
             }
         }
 
-
         private void m_InteractionQueue_InteractionRemoved(object sender, InteractionEventArgs e)
         {
             string scope = "CIC::MainForm::m_InteractionQueue_InteractionRemoved():: ";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             try
             {
                 if (!e.Interaction.IsWatching())
@@ -475,12 +473,11 @@ namespace CIC
                         }
                         break;
                 }
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                log.Error(scope + "Error info." + ex.Message);
                 this.ResetActiveCallInfo();
                 this.CallerHost = "";
                 if (ActiveNormalInteraction != null)
@@ -503,7 +500,7 @@ namespace CIC
         private void ResetActiveCallInfo()
         {
             string scope = "CIC::frmMain::ResetActiveCallInfo()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             if (this.InvokeRequired)
             {
                 this.BeginInvoke(new MethodInvoker(ResetActiveCallInfo));
@@ -533,7 +530,7 @@ namespace CIC
                         this.transfer_button.Enabled = true;
                     }
                 }
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
         }
 
@@ -578,7 +575,7 @@ namespace CIC
         private void SetInfoBarColor()
         {
             string scope = "CIC::frmMain::SetInfoBarColor()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             if (IcWorkFlow.LoginResult)
             {
                 switch (this.StrConnectionState)
@@ -617,13 +614,13 @@ namespace CIC
                 }
                 this.EnabledDialerCallTools();
             }
-            //Tracing.TraceStatus(scope + "Completed.");
+            log.Info(scope + "Completed.");
         }
 
         private void EnabledDialerCallTools()
         {
             string scope = "CIC::frmMain::EnabledNormalCallTools()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             //Color OldColor = this.TelephonyToolStrip.BackColor;  //Save Original Trasparent Color
             if (break_requested)
             {
@@ -896,13 +893,13 @@ namespace CIC
                     //}
                     break;
             }
-            //Tracing.TraceStatus(scope + "Completed.");
+            log.Info(scope + "Completed.");
         }
 
         private void Stop_AlertingWav()
         {
             string scope = "CIC::MainForm::Stop_AlertingWav():: ";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             if (AlertSoundFileType != null && AlertSoundFileType.ToLower().Trim() == "mp3")
             {
                 if (this.cicMp3Player != null)
@@ -926,7 +923,7 @@ namespace CIC
                 catch (System.Exception ex)
                 {
                     this.IsPlayAlerting = false;
-                    //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                    log.Error(scope + "Error info." + ex.Message);
                     //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
                 }
             }
@@ -935,7 +932,7 @@ namespace CIC
         private void Start_AlertingWav()
         {
             string scope = "CIC::MainForm::Start_AlertingWav():: ";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             string sPathWavPath = "";
             bool AlertFlag = false;
             bool Play_Looping = false;
@@ -999,15 +996,14 @@ namespace CIC
                         }
                         else
                         {
-                            //Tracing.TraceStatus(scope + "Error info. : WAV File not found.");
+                            log.Error(scope + "Error info. : WAV File not found.");
                         }
                     }
                 }
                 catch (System.Exception ex)
                 {
                     this.IsPlayAlerting = false;
-                    //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                    //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                    log.Error(scope + "Error info." + ex.Message);
                 }
             }
         }
@@ -1015,7 +1011,7 @@ namespace CIC
         private void m_InteractionQueue_InteractionChanged(object sender, InteractionAttributesEventArgs e)
         {
             string scope = "CIC::MainForm::m_InteractionQueue_InteractionChanged():: ";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             try
             {
                 if (!e.Interaction.IsWatching())
@@ -1077,12 +1073,11 @@ namespace CIC
                         break;
                 }
 
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info." + ex.Message);
                 if (ActiveNormalInteraction != null)
                 {
                     this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
@@ -1100,7 +1095,7 @@ namespace CIC
         private void RemoveNormalInteractionFromList(Interaction Interaction_Object)
         {
             string scope = "CIC::frmMain::RemoveNormalInteractionFromList(Interaction_Object)::";      //Over load II
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             int retIndex = -1;
             int i = 0;
             try
@@ -1182,19 +1177,18 @@ namespace CIC
                     }
                     this.IsMuted = false;
                 }
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info." + ex.Message);
             }
         }
 
         private Interaction GetAvailableInteractionFromList()
         {
             string scope = "CIC::frmMain::GetAvailableInteractionFromList()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             ININ.IceLib.Interactions.Interaction retInteraction = null;
             if (this.InteractionList != null)
             {
@@ -1213,14 +1207,14 @@ namespace CIC
                     }
                 }
             }
-            //Tracing.TraceStatus(scope + "Completed.");
+            log.Info(scope + "Completed.");
             return retInteraction;
         }
 
         private void m_InteractionQueue_InteractionAdded(object sender, InteractionAttributesEventArgs e)
         {
             string scope = "CIC::MainForm::m_InteractionQueue_InteractionAdded():: ";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             try
             {
                 if (!e.Interaction.IsWatching())
@@ -1287,19 +1281,18 @@ namespace CIC
                     default:
                         break;
                 }
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info." + ex.Message);
             }
         }
 
         private void NormalInteraction_AttributesChanged(object sender, AttributesEventArgs e)
         {
             string scope = "CIC::MainForm::NormalInteraction_AttributesChanged():: ";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             try
             {
                 if (ActiveNormalInteraction != null)
@@ -1320,7 +1313,7 @@ namespace CIC
                         }
                     }
                 }
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch
             {
@@ -1333,7 +1326,7 @@ namespace CIC
         {
             int chk_idx = -1;
             string scope = "CIC::MainForm::Add_InteractionListObject():: ";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             try
             {
                 if (interaction != null && this.InteractionList != null)
@@ -1357,19 +1350,18 @@ namespace CIC
                         this.InteractionList.Add(interaction);
                     }
                 }
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info." + ex.Message);
             }
         }
 
         private void Initialize_InteractionAttributes()
         {
             string scope = "CIC::MainForm::Initial_InteractionAttributes():: ";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             this.InteractionAttributes = new string[] 
             {
                 InteractionAttributeName.AccountCodeId,
@@ -1414,16 +1406,16 @@ namespace CIC
                 InteractionAttributeName.WorkgroupQueueName,
                 InteractionAttributeName.WrapUpCodeId
             };
-            //Tracing.TraceStatus(scope + "Completed.");
+            log.Info(scope + "Completed.");
         }
 
         private void Initial_NormalInteraction()
         {
             string scope = "CIC::MainForm::Initial_NormalInteraction()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             try
             {
-                //Tracing.TraceStatus(scope + "Getting an instance of Normal InteractionsManager.");
+                log.Info(scope + "Getting an instance of Normal InteractionsManager.");
                 this.NormalInterationManager = InteractionsManager.GetInstance(global::CIC.Program.m_Session);
                 if (this.InteractionList == null)
                 {
@@ -1433,7 +1425,7 @@ namespace CIC
                 {
                     this.InteractionList.Clear();
                 }
-                //Tracing.TraceStatus(scope + "Getting an instance of PeopleManager[Normal Interactions].");
+                log.Info(scope + "Getting an instance of PeopleManager[Normal Interactions].");
                 this.mPeopleManager = PeopleManager.GetInstance(this.IC_Session);
                 //this.WebBrowserStatusToolStripStatusLabel.Text = "";
                 //if (this.sCollectUserSelect != null)
@@ -1447,27 +1439,26 @@ namespace CIC
                 //        this.IVRMenu.Enabled = false;
                 //    }
                 //}
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info." + ex.Message);
             }
         }
 
         private void SessionConnectCompleted(object sender, AsyncCompletedEventArgs e)
         {
             string scope = "CIC::frmMain::SessionConnectCompleted()::";
-            //Tracing.TraceStatus(scope + "Starting");
+            log.Info(scope + "Starting");
             this.MustChangePassword();
-            //Tracing.TraceStatus(scope + "Completed.");
+            log.Info(scope + "Completed.");
         }
 
         private void MustChangePassword()
         {
             string scope = "CIC::MainForm::MustChangePassword()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             if (this.InvokeRequired)
             {
                 this.BeginInvoke(new MethodInvoker(MustChangePassword));
@@ -1485,7 +1476,7 @@ namespace CIC
                     }
                 }
             }
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Complete.");
         }
 
         private void ShowChangePasswordDialog()
@@ -1496,6 +1487,9 @@ namespace CIC
 
         private void mSession_Changed(object sender, ConnectionStateChangedEventArgs e)
         {
+            string scope = "CIC::MainForm::mSession_Changed()::";
+            log.Info(scope + "Starting.");
+
             // TODO: clean up this function
             Application.DoEvents();
             switch (e.State)
@@ -1514,7 +1508,8 @@ namespace CIC
                     
                     this.InitializeDialerSession();
                     //this.SetActiveSession(Program.m_Session);
-                    ////Tracing.TraceStatus(scope + "Completed.");
+                    log.Info(scope + "Completed.");
+
                     this.Initial_NormalInteraction();
                     //this.InitializeQueueWatcher();
                     this.BeginInvoke(new MethodInvoker(connected_state));
@@ -1564,13 +1559,13 @@ namespace CIC
         private void DisposeQueueWatcher()
         {
             string scope = "CIC::MainForm::Dispose_QueueWatcher():: ";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             try
             {
-                //Tracing.TraceStatus(scope + "Creating instance of InteractionQueue");
+                log.Info(scope + "Creating instance of InteractionQueue");
                 if (this.m_InteractionQueue != null)
                 {
-                    //Tracing.TraceStatus(scope + "Attaching event handlers");
+                    log.Info(scope + "Attaching event handlers");
                     this.m_InteractionQueue.InteractionAdded -= new EventHandler<InteractionAttributesEventArgs>(this.m_InteractionQueue_InteractionAdded);
                     this.m_InteractionQueue.InteractionChanged -= new EventHandler<InteractionAttributesEventArgs>(m_InteractionQueue_InteractionChanged);
                     this.m_InteractionQueue.InteractionRemoved -= new EventHandler<InteractionEventArgs>(m_InteractionQueue_InteractionRemoved);
@@ -1580,12 +1575,11 @@ namespace CIC
                     this.m_InteractionQueue.StopWatchingAsync(null, null);
                     this.m_InteractionQueue = null;
                 }
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info." + ex.Message);
             }
         }
 
@@ -1593,15 +1587,15 @@ namespace CIC
         {
             bool bResult = false;
             string scope = "CIC::frmMain::SetActiveSession()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             if (session == null)
             {
-                //Tracing.TraceStatus(scope + "Null reference session.");
+                log.Warn(scope + "Null reference session.");
                 throw new ArgumentNullException("Null reference session.");
             }
             else
             {
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
                 bResult = true;
                 this.IC_Session = session;
             }
@@ -1614,6 +1608,7 @@ namespace CIC
                 previewCallTimer.Enabled = true;
             previewCallTimer.Stop();
             timer = global::CIC.Properties.Settings.Default.CountdownTime;
+            log.Info("Timer is reset");
         }
         
         private void restart_timer()
@@ -1738,13 +1733,14 @@ namespace CIC
             {
                 string output = String.Format("Something really bad happened: {0}", ex.Message);
                 MessageBox.Show(output, "CIC Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                log.ErrorFormat("Something really bad happened: {0}", ex.Message);
             }
         }
 
         private Interaction GetNormalInteractionFromList()
         {
             string scope = "CIC::frmMain::GetNormalInteractionFromList()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             ININ.IceLib.Interactions.Interaction retInteraction = null;
             if (this.InteractionList != null)
             {
@@ -1757,7 +1753,7 @@ namespace CIC
                     }
                 }
             }
-            //Tracing.TraceStatus(scope + "Completed.");
+            log.Info(scope + "Completed.");
             return retInteraction;
         }
 
@@ -1846,6 +1842,8 @@ namespace CIC
 
         private void break_button_Click(object sender, EventArgs e)
         {
+            string scope = "CIC::frmMain::break_button_Click()::";
+            log.Info(scope + "Starting.");
             try
             {
                 if (!IcWorkFlow.LoginResult && this.ActiveDialerInteraction == null)
@@ -1865,17 +1863,18 @@ namespace CIC
                         break_requested_state();
                     }
                 }
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.ErrorFormat(scope + "Error info." + ex.Message);
             }
         }
 
         private void endbreak_button_Click(object sender, EventArgs e)
         {
+            string scope = "CIC::frmMain::endbreak_button_Click()::";
+            log.Info(scope + "Starting.");
             try
             {
                 if (this.ActiveDialerInteraction == null)
@@ -1890,20 +1889,20 @@ namespace CIC
                             break_requested = false;
                             break_granted = false;
                             this.state_info_label.Text = "Break ended. Waiting for a new call from workflow.";
+                            log.Info(scope + "Complete.");
                     }
                 }
             }
             catch (System.Exception ex)
             {
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.ErrorFormat(scope + "Error info." + ex.Message);
             }
         }
 
         private void logout_workflow_button_Click(object sender, EventArgs e)
         {
             string scope = "CIC::MainForm::LogoutToolStripMenuItem_Click(): ";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             try
             {
                 if (IcWorkFlow.LoginResult)
@@ -1941,12 +1940,11 @@ namespace CIC
                         this.Close();
                 }
                 
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.ErrorFormat(scope + "Error info." + ex.Message);
             }
         }
 
@@ -1978,7 +1976,7 @@ namespace CIC
             }
             else
             {
-                //Tracing.TraceStatus(scope + "Starting.[Disposition]");
+                log.Info(scope + "Starting.[Disposition]");
                 try
                 {
                     if (IcWorkFlow.LoginResult)
@@ -2059,13 +2057,14 @@ namespace CIC
                         state_change(FormMainState.Break);
                     }
                     else
+                    {
                         state_change(FormMainState.Preview);
-                    //Tracing.TraceStatus(scope + "Completed.[Disposition]");
+                    }
+                    log.Info(scope + "Completed.[Disposition]");
                 }
                 catch (ININ.IceLib.IceLibException ex)
                 {
-                    //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                    //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                    log.Error(scope + "Error info." + ex.Message);
                 }
             }
         }
@@ -2073,10 +2072,10 @@ namespace CIC
         public void workflow_invoke(object sender, EventArgs e)
         {
             string scope = "CIC::MainForm::WorkflowToolStripMenuItem_Click()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             try
             {
-                //Tracing.TraceStatus(scope + "Logging into workflow. UserId=" + this.IC_Session.UserId + ", StationId=" + this.IC_Session.GetStationInfo().Id);
+                log.Info(scope + "Logging into workflow. UserId=" + this.IC_Session.UserId + ", StationId=" + this.IC_Session.GetStationInfo().Id);
                 IcWorkFlow = new CIC.ICWorkFlow(CIC.Program.DialingManager);
                 this.DialerSession = IcWorkFlow.LogIn(((String)sender));
                 //IcWorkFlow.LoginResult = IcWorkFlow.LoginResult;
@@ -2084,7 +2083,7 @@ namespace CIC
                 {
                     this.InitializeDialerSession();
                     this.SetActiveSession(Program.m_Session);
-                    //Tracing.TraceStatus(scope + "Completed.");
+                    log.Info(scope + "Completed.");
                     this.Initial_NormalInteraction();
                     this.InitializeQueueWatcher();
                     this.UpdateUserStatus();
@@ -2092,21 +2091,20 @@ namespace CIC
                 }
                 else
                 {
-                    //Tracing.TraceStatus(scope + "WorkFlow [" + ((ToolStripMenuItem)sender).Text + "] logon Fail.Please try again.");
+                    log.Warn(scope + "WorkFlow [" + ((ToolStripMenuItem)sender).Text + "] logon Fail. Please try again.");
                 }
             }
             catch (System.Exception ex)
             {
                 this.state_change(FormMainState.Disconnected);
-                //Tracing.TraceStatus(scope + "Error info.Logon to Workflow[" + ((ToolStripMenuItem)sender).Text + "] : " + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info.Logon to Workflow[" + ((ToolStripMenuItem)sender).Text + "] : " + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info.Logon to Workflow[" + ((ToolStripMenuItem)sender).Text + "] : " + ex.Message);
             }  
         }
 
         public void conference_invoke(string transferTxtDestination)
         {
             string scope = "CIC::frmMain::CreateConferenceToolStripButton_Click()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             int idx = 0;
             ININ.IceLib.Interactions.Interaction[] TmpInteraction;
             try
@@ -2158,20 +2156,19 @@ namespace CIC
                         }
                     }
                 }
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
                 // TODO: change state
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info." + ex.Message);
             }
         }
 
         private void MakeNewConferenceCompleted(object sender, MakeNewConferenceCompletedEventArgs e)
         {
             string scope = "CIC::frmMain::MakeNewConferenceCompleted()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             try
             {
                 //Conference variable
@@ -2182,19 +2179,18 @@ namespace CIC
                 ActiveConsultInteraction = null;
                 state_info_label.Text = "Conferencing";
                 state_change(FormMainState.ConferenceCall);
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info." + ex.Message);
             }
         }
 
         public void transfer_invoke(string transferTxtDestination)
         {
             string scope = "CIC::frmMain::TransferNowToolStripButton_Click()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             this.BlindTransferFlag = false;
             try
             {
@@ -2207,7 +2203,6 @@ namespace CIC
                             //Tracing.TraceNote(scope + "Performing consult transfer");
                             ActiveDialerInteraction.ConsultTransferAsync(ActiveConsultInteraction.InteractionId, TransferCompleted, null);
                             this.RemoveNormalInteractionFromList(ActiveConsultInteraction);
-
 
                             // complete workflow
                             string sFinishcode = global::CIC.Properties.Settings.Default.ReasonCode_Transfereded;
@@ -2226,7 +2221,7 @@ namespace CIC
                     {
                         if (ActiveConsultInteraction != null)
                         {
-                            //Tracing.TraceNote(scope + "Performing consult transfer");
+                            log.Info(scope + "Performing consult transfer");
                             if (ActiveConsultInteraction.InteractionId != ActiveNormalInteraction.InteractionId &&
                                 ActiveNormalInteraction.InteractionId != ActiveDialerInteraction.InteractionId)
                             {
@@ -2263,7 +2258,7 @@ namespace CIC
                         }
                         else
                         {
-                            //Tracing.TraceNote(scope + "Performing blind transfer");
+                            log.Info(scope + "Performing blind transfer");
                             if (transferTxtDestination != "")
                             {
                                 ActiveNormalInteraction.BlindTransfer(transferTxtDestination);
@@ -2273,13 +2268,12 @@ namespace CIC
                     }
                 }
                 this.ResetActiveCallInfo();
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
                 this.ResetActiveCallInfo();
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info." + ex.Message);
             }
         }
 
@@ -2304,7 +2298,7 @@ namespace CIC
             this.AllStatusMessageListOfUser = null;
             UserStatusUpdate statusUpdate = null;
             string scope = "CIC::frmMain::InitializeStatusMessageDetails()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             try
             {
                 switch (IcWorkFlow.LoginResult)
@@ -2340,12 +2334,12 @@ namespace CIC
                                     //DoNotDisturbStatusMessageDetails = status;
                                 }
                                 iIndex++;
-                                //Tracing.TraceNote(scope + "Id=" + status.Id + ", MessageText=" + status.MessageText);
+                                log.Info(scope + "Id=" + status.Id + ", MessageText=" + status.MessageText);
                             }
                         }
                         break;
                     default:    //Not Log On to Workflow
-                        //Tracing.TraceNote(scope + "Creating instance of StatusMessageList");
+                        log.Info(scope + "Creating instance of StatusMessageList");
                         if (this.mPeopleManager != null)
                         {
                             string[] nusers = { this.IC_Session.UserId };   //Make value to array 
@@ -2378,7 +2372,7 @@ namespace CIC
                                     }
                                     iIndex++;
                                 }
-                               // Tracing.TraceNote(scope + "Id=" + status.Id + ", MessageText=" + status.MessageText);
+                               log.Info(scope + "Id=" + status.Id + ", MessageText=" + status.MessageText);
                             }
                         }
                         break;
@@ -2419,8 +2413,7 @@ namespace CIC
             }
             catch (System.Exception ex)
             {
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info." + ex.Message);
             }
         }
 
@@ -2432,7 +2425,7 @@ namespace CIC
         private void ShowActiveCallInfo()
         {
             string scope = "CIC::frmMain::ShowActiveCallInfo()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             if (this.InvokeRequired)
             {
                 this.BeginInvoke(new MethodInvoker(ShowActiveCallInfo));
@@ -2584,6 +2577,7 @@ namespace CIC
                 this.SetInfoBarColor();
                 update_conference_status();
             }
+            log.Info(scope + "Completed.");
         }
 
         private void update_info_on_dashboard()
@@ -2633,7 +2627,7 @@ namespace CIC
             catch (Exception ex)
             {
                 this.last_amount_payment_box.Text = lastReceiveAmount;
-                // tracing - log that the data cannot be parse to currency format
+                log.Error("the data in last_amount_payment_box cannot be parse to currency format");
             }
 
             try
@@ -2643,7 +2637,7 @@ namespace CIC
             catch (Exception ex)
             {
                 this.initial_amount_box.Text = initialAmount;
-                // tracing - log that the data cannot be parse to currency format
+                log.Error("the data in initial_amount_box cannot be parse to currency format");
             }
 
             try
@@ -2653,7 +2647,7 @@ namespace CIC
             catch (Exception ex)
             {
                 this.monthly_payment_box.Text = monthlyPayment;
-                // tracing - log that the data cannot be parse to currency format
+                log.Error("the data in monthly_payment_box cannot be parse to currency format");
             }
 
             try
@@ -2663,7 +2657,7 @@ namespace CIC
             catch (Exception ex)
             {
                 this.base_debt_box.Text = baseDebt;
-                // tracing - log that the data cannot be parse to currency format
+                log.Error("the data in base_debt_box cannot be parse to currency format");
             }
         }
 
@@ -2671,6 +2665,8 @@ namespace CIC
         {
             // TODO update this method
             string scope = "CIC::FormMain::update_conference_status()::";
+            log.Info(scope + "Started.");
+
             //this.Set_ConferenceToolStrip();
             if (this.InteractionList != null && this.InteractionList.Count <= 0)
             {
@@ -2687,13 +2683,13 @@ namespace CIC
                         this.ActiveDialerInteraction = null;
                     }
             }
-            //Tracing.TraceStatus(scope + "Completed.");
+            log.Info(scope + "Completed.");
         }
 
         private void SetActiveCallInfo()
         {
             string scope = "CIC::frmMain::SetActiveCallInfo()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             try
             {
                 if (this.InteractionList != null)
@@ -2709,19 +2705,18 @@ namespace CIC
                     }
                     
                 }
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info." + ex.Message);
             }
         }
 
         private void InitializeDialerSession()
         {
             string scope = "CIC::MainForm::RegisterHandlers()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             try
             {
                 this.DialerSession.PreviewCallAdded += new EventHandler<ININ.IceLib.Dialer.PreviewCallAddedEventArgs>(PreviewCallAdded);
@@ -2731,17 +2726,18 @@ namespace CIC
                 this.DialerSession.LogoutGranted += new EventHandler(LogoutGranted);
                 Program.mDialingManager.WorkflowStopped += new EventHandler<WorkflowStoppedEventArgs>(WorkflowStopped);
                 Program.mDialingManager.WorkflowStarted += new EventHandler<WorkflowStartedEventArgs>(WorkflowStarted);
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info." + ex.Message);
             }
         }
 
         private void DisposeDialerSession()
         {
+            string scope = "CIC::MainForm::DisposeDialerSession()::";
+            log.Info(scope + "Starting.");
             try
             {
                 this.DialerSession.PreviewCallAdded -= new EventHandler<ININ.IceLib.Dialer.PreviewCallAddedEventArgs>(PreviewCallAdded);
@@ -2751,12 +2747,11 @@ namespace CIC
                 this.DialerSession.LogoutGranted -= new EventHandler(LogoutGranted);
                 Program.mDialingManager.WorkflowStopped -= new EventHandler<WorkflowStoppedEventArgs>(WorkflowStopped);
                 Program.mDialingManager.WorkflowStarted -= new EventHandler<WorkflowStartedEventArgs>(WorkflowStarted);
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info." + ex.Message);
             }
         }
 
@@ -2773,21 +2768,27 @@ namespace CIC
                 {
                     case FormMainState.Preview:
                         preview_state();
+                        log.Info("State Changed: Preview");
                         break;
                     case FormMainState.Connected:
                         connected_state();
+                        log.Info("State Changed: Connected");
                         break;
                     case FormMainState.Calling:
                         calling_state();
+                        log.Info("State Changed: Calling");
                         break;
                     case FormMainState.PreviewCall :
                         preview_call_state();
+                        log.Info("State Changed: Preview Call");
                         break;
                     case FormMainState.ConferenceCall:
                         preview_call_state();
+                        log.Info("State Changed: Conference Call");
                         break;
                     case FormMainState.ManualCall:
                         preview_call_state();
+                        log.Info("State Changed: Manual Call");
                         break;
                     case FormMainState.Hold:
                         switch (current_state)
@@ -2799,6 +2800,7 @@ namespace CIC
                                 hold_button.Text = "Unhold";
                                 state_info_label.Text = "Hold call from: " + callingNumber;
                                 hold_state();
+                                log.Info("State Changed: Hold");
                                 break;
                             // case Mute state -> change to hold state.
                             case FormMainState.Mute:
@@ -2806,12 +2808,14 @@ namespace CIC
                                 mute_button.Text = "Mute";
                                 state_info_label.Text = "Hold call from: " + callingNumber;
                                 hold_state();
+                                log.Info("State Changed: Hold");
                                 break;
                             // case Hold state -> change to calling state
                             case FormMainState.Hold:
                                 hold_button.Text = "Hold";
                                 state_info_label.Text = "Continue call from: " + callingNumber;
                                 state_change(FormMainState.PreviewCall);
+                                log.Info("State Changed: Unhold -> Preview Call");
                                 break;
                         }
                         break;
@@ -2825,6 +2829,7 @@ namespace CIC
                                 mute_button.Text = "Unmute";
                                 state_info_label.Text = "Mute call from: " + callingNumber;
                                 mute_state();
+                                log.Info("State Changed: Mute");
                                 break;
                             // case Mute state -> change to hold state.
                             case FormMainState.Hold:
@@ -2832,27 +2837,37 @@ namespace CIC
                                 hold_button.Text = "Hold";
                                 state_info_label.Text = "Mute call from: " + callingNumber;
                                 mute_state();
+                                log.Info("State Changed: Mute");
                                 break;
-                            // case Hold state -> change to calling state
+                            // case Mute state -> change to calling state
                             case FormMainState.Mute:
                                 mute_button.Text = "Mute";
                                 state_info_label.Text = "Continue call from: " + callingNumber;
                                 state = FormMainState.PreviewCall;
                                 state_change(FormMainState.PreviewCall);
+                                log.Info("State Changed: Unmute -> Preview Call");
                                 break;
                         }
                         break;
                     case FormMainState.Disconnected:
                         disconnect_state();
+                        log.Info("State Changed: Disconnected");
                         break;
                     case FormMainState.Break:
                         if (break_requested)
+                        {
                             break_state();
+                            log.Info("State Changed: Break");
+                        }
                         else
+                        {
                             preview_state();
+                            log.Info("State Changed: Unbreak -> Preview");
+                        }
                         break;
                     case FormMainState.Loggedout:
                         logged_out_state();
+                        log.Info("State Changed: Logged Out");
                         break;
                 }
         }
@@ -3063,13 +3078,13 @@ namespace CIC
             if (e.Error != null)
             {
                 MessageBox.Show(e.Error.StackTrace, e.Error.Message);
+                log.Warn(e.Error.StackTrace + " :: " + e.Error.Message);
                 return;
             }
         }
 
         private void placecall_or_pickup()
         {
-            bool mySwitch = true;
             if (!IcWorkFlow.LoginResult)
             {
                 if (IsNormalInteractionAvailableForPickup())
@@ -3114,21 +3129,21 @@ namespace CIC
         private void WorkflowStarted(object sender, WorkflowStartedEventArgs e)
         {
             string scope = "CIC::MainForm::WorkflowStarted()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
 
             disable_logout();
-            //Tracing.TraceStatus(scope + "Completed.");
+            log.Info(scope + "Completed.");
         }
 
         private void WorkflowStopped(object sender, WorkflowStoppedEventArgs e)
         {
             string scope = "CIC::MainForm::WorkflowStopped()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             //this.TransferPanelToolStripButton.Enabled = true;
             //this.RequestBreakToolStripButton.Visible = false;
             enable_transfer();
             this.disable_break_request();
-            //Tracing.TraceStatus(scope + "Completed.");
+            log.Info(scope + "Completed.");
         }
 
         private void CampaignTransition(object sender, CampaignTransistionEventArgs e)
@@ -3205,7 +3220,7 @@ namespace CIC
         private void DataPop(object sender, DataPopEventArgs e)
         {
             string scope = "CIC::MainForm::DataPop()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             try
             {
                 if (!e.Interaction.IsWatching())
@@ -3241,12 +3256,11 @@ namespace CIC
                         //this.state_change(FormMainState.Preview);
                         break;
                 }
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
-                //Tracing.TraceStatus(scope + "Error info : " + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info : " + ex.Message);
             }
         }
 
@@ -3254,7 +3268,7 @@ namespace CIC
         private void PreviewCallAdded(object sender, PreviewCallAddedEventArgs e)
         {
             string scope = "CIC::MainForm::PreviewCallAdded()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             try
             {
                 if (!e.Interaction.IsWatching())
@@ -3291,19 +3305,18 @@ namespace CIC
                         this.BeginInvoke(new MethodInvoker(preview_state));
                         break;
                 }
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
-                //Tracing.TraceStatus(scope + "Error info : " + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info : " + ex.Message);
             }
         }
 
         private void CrmScreenPop()
         {
             string scope = "CIC::MainForm::CrmScreenPop()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             string FullyUrl = "";
             if (this.InvokeRequired)
             {
@@ -3332,12 +3345,11 @@ namespace CIC
                     baseURI += string.Format("col_call_id={0}", callID);
 
                     Process.Start(baseURI);
-                    //Tracing.TraceStatus(scope + "Completed.");
+                    log.Info(scope + "Completed.");
                 }
                 catch (System.Exception ex)
                 {
-                    //Tracing.TraceStatus(scope + "Error info : " + ex.Message);
-                    //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                    log.Error(scope + "Error info : " + ex.Message);
                     //this.MainWebBrowser.Url = new System.Uri(global::CIC.Properties.Settings.Default.StartupUrl, System.UriKind.Absolute);
                 }
             }
@@ -3365,7 +3377,7 @@ namespace CIC
         private void Initialize_ContactData()
         {
             string scope = "CIC::MainForm::InitialContactData()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             int i = 0;
             System.Data.DataTable dt = new DataTable("ATTR_TABLE");
             dt.Columns.Add("id");
@@ -3390,13 +3402,13 @@ namespace CIC
                 Ds.DataSetName = "IC_ATTR";
                 Ds.WriteXml(Program.ApplicationPath + "\\cic_attr.xml", XmlWriteMode.WriteSchema);
             }
-            //Tracing.TraceStatus(scope + "Completed.");
+            log.Info(scope + "Completed.");
         }
 
         private void Initialize_CallBack()
         {
             string scope = "CIC::MainForm::Initial_CallBack()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             try
             {
                     if (IcWorkFlow.LoginResult && this.ActiveDialerInteraction != null)
@@ -3421,12 +3433,11 @@ namespace CIC
                         this.ActiveDialerInteraction.StartWatchingAsync(callbackAttributeNames.ToArray(), CallBackInteration_StartWatchingCompleted, null);
                     }
                 
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
-                //Tracing.TraceStatus(scope + "Error info : " + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info : " + ex.Message);
             }
         }
 
@@ -3466,7 +3477,7 @@ namespace CIC
                                 DoNotDisturbStatusMessageDetails = status;
                             }
                             iIndex++;
-                            //Tracing.TraceNote(scope + "Id=" + status.Id + ", MessageText=" + status.MessageText);
+                            log.Info(scope + "Id=" + status.Id + ", MessageText=" + status.MessageText);
                         }
                     }
                }
@@ -3495,7 +3506,7 @@ namespace CIC
                             }
                             iIndex++;
                         }
-                        // Tracing.TraceNote(scope + "Id=" + status.Id + ", MessageText=" + status.MessageText);
+                        log.Info(scope + "Id=" + status.Id + ", MessageText=" + status.MessageText);
                     }
                 }
                 
@@ -3529,19 +3540,17 @@ namespace CIC
             }
             catch (System.Exception ex)
             {
-                // Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info." + ex.Message);
             }
         }
-        
 
         private void CallBackInteration_StartWatchingCompleted(object sender, AsyncCompletedEventArgs e)
         {
             string scope = "CIC::MainForm::CallBackInteration_StartWatchingCompleted()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             if (e.Error != null)
             {
-                //Tracing.TraceStatus(scope + "Error info : " + e.Error.Message);
+                log.Error(scope + "Error info : " + e.Error.Message);
             }
             else
             {
@@ -3569,12 +3578,11 @@ namespace CIC
                         //wrapupCodesLabel.Visible = false;
                         //wrapupCodesComboBox.Visible = false;
                     }
-                    //Tracing.TraceStatus(scope + "Completed.");
+                    log.Info(scope + "Completed.");
                 }
                 catch (System.Exception ex)
                 {
-                    //Tracing.TraceStatus(scope + "Error info : " + ex.Message);
-                    //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                    log.Error(scope + "Error info : " + ex.Message);
                 }
             }
         }
@@ -3638,7 +3646,8 @@ namespace CIC
 
         public void MakeManualCall(string number)
         {
-            //Tracing.TraceStatus(scope + "CIC::FormMain::MakeManualCall(string)::");
+            string scope = "CIC::MainForm::MakeManualCall()::";
+            log.Info(scope + "CIC::FormMain::MakeManualCall(string)::");
             callingNumber = number;
             this.state_info_label.Text = "Next Calling Number: " + callingNumber;
             CallInteractionParameters callParams =
@@ -3651,17 +3660,17 @@ namespace CIC
         public void MakeConsultCall(string transferTxtDestination)
         {
             string scope = "CIC::frmMain::MakeConsultCallToolStripButton_Click()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             ININ.IceLib.Interactions.CallInteractionParameters callParams = null;
             try
             {
                 if (IcWorkFlow.LoginResult)
                 {
                     //Log On to Dialer Server.  use same normal to call before using dialer object to blind/consult transfer.
-                    //Tracing.TraceStatus(scope + "Call button clicked. Log On to Dialer Server.");
+                    log.Info(scope + "Call button clicked. Log On to Dialer Server.");
                     if (transferTxtDestination != "")
                     {
-                        //Tracing.TraceStatus(scope + "Making consult call to " + transferTxtDestination);
+                        log.Info(scope + "Making consult call to " + transferTxtDestination);
                         callParams = new CallInteractionParameters(transferTxtDestination, CallMadeStage.Allocated);
                         if (NormalInterationManager != null)
                         {
@@ -3671,21 +3680,20 @@ namespace CIC
                     }
                 }
                 //this.EnabledTransferToolStripDisplayed();
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
                 // TODO: Activate this code
                 //this.ResetActiveCallInfo();
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info." + ex.Message);
             }
         }
 
         public void DisconnectConsultCall()
         {
             string scope = "CIC::frmMain::CancelTransferToolStripButton_Click()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             try
             {
                 if (IcWorkFlow.LoginResult)
@@ -3762,14 +3770,13 @@ namespace CIC
                     }
                 }
                 this.ShowActiveCallInfo();
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
                 // TODO: activate this code
                 //this.EnabledTransferToolStripDisplayed();
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info." + ex.Message);
             }
         }
 
@@ -3785,7 +3792,7 @@ namespace CIC
             string AlternatePreview_ATTR = Properties.Settings.Default.AlternatePreviewNumbers;
             string[] AlternatePreviewNoATTRCollection;
             string scope = "CIC::frmMain::GetDialerNumber()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
 
             if (mDialerData[Properties.Settings.Default.Preview_Number_ATTR].ToString().Trim() == String.Empty)
             {
@@ -3809,14 +3816,14 @@ namespace CIC
             {
                 DialerNumber = mDialerData[Properties.Settings.Default.Preview_Number_ATTR].ToString().Trim();
             }
-            //Tracing.TraceStatus(scope + "Completed.");
+            log.Info(scope + "Completed.");
             return DialerNumber;
         }
 
         private void DialerInteraction_AttributesChanged(object sender, AttributesEventArgs e)
         {
             string scope = "CIC::MainForm::DialerInteraction_AttributesChanged():: ";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             try
             {
                 if (this.ActiveDialerInteraction != null)
@@ -3827,7 +3834,7 @@ namespace CIC
                 {
                     this.StrConnectionState = InteractionState.None;
                 }
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch
             {
@@ -3838,7 +3845,7 @@ namespace CIC
         private void BreakGranted(object sender, EventArgs e)
         {
             string scope = "CIC::MainForm::BreakGranted(): ";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             if (this.InvokeRequired)
             {
                 this.BeginInvoke(new EventHandler<EventArgs>(BreakGranted), new object[] { sender, e });
@@ -3860,21 +3867,19 @@ namespace CIC
                             break;
                     }
                     
-                    //Tracing.TraceStatus(scope + "Completed.");
+                    log.Info(scope + "Completed.");
                 }
                 catch (System.Exception ex)
                 {
-                    //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                    //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                    log.Error(scope + "Error info." + ex.Message);
                 }
             }
-            //throw new NotImplementedException();
         }
 
         private void LogoutGranted(object sender, EventArgs e)
         {
             string scope = "CIC::MainForm::LogoutGranted(): ";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             if (this.InvokeRequired)
             {
                 this.BeginInvoke(new EventHandler<EventArgs>(LogoutGranted), new object[] { sender, e });
@@ -3918,12 +3923,11 @@ namespace CIC
                     // TODO: add more clean up state
                     if (ExitFlag)
                         this.Close();
-                    //Tracing.TraceStatus(scope + "Completed.");
+                    log.Info(scope + "Completed.");
                 }
                 catch (System.Exception ex)
                 {
-                    //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                    //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                    log.Error(scope + "Error info." + ex.Message);
                 }
             }
         }
@@ -3934,7 +3938,7 @@ namespace CIC
             ININ.IceLib.People.UserStatusUpdate statusUpdate = null;
             try
             {
-                //Tracing.TraceStatus(scope + "Starting.");
+                log.Info(scope + "Starting.");
                 if (this.DoNotDisturbStatusMessageDetails != null)
                 {
                     if (this.mPeopleManager != null)
@@ -3945,19 +3949,19 @@ namespace CIC
                     }
                 }
 
-                //Tracing.TraceStatus(scope + "completed.");
+                log.Info(scope + "completed.");
             }
             catch (System.Exception ex)
             {
-                //Tracing.TraceStatus(scope + "Error info : " + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info : " + ex.Message);
             }
         }
 
+        // Src: PlaceCallToolStripButton_Click()
         private void placecall(object sender, EventArgs e)
         {
-            // Src: PlaceCallToolStripButton_Click()
-            // string scope = "CIC::MainForm::PlaceCallToolStripButton_Click(): ";
+            string scope = "CIC::MainForm::placecall(): ";
+
             if (this.InvokeRequired)
             {
                 this.BeginInvoke(new EventHandler<EventArgs>(placecall), new object[] { sender, e});
@@ -3966,7 +3970,7 @@ namespace CIC
             {
                 try
                 {
-                    // Tracing.TraceStatus(scope + "Starting.[Place Call]");
+                    log.Info(scope + "Starting.[Place Call]");
                     if (this.ActiveDialerInteraction != null)
                     {
                         Dictionary<string, string> data = this.ActiveDialerInteraction.ContactData;
@@ -4016,27 +4020,26 @@ namespace CIC
                             
                         }
                     }
-                    // Tracing.TraceStatus(scope + "Completed.[Place Call]");
+                    log.Info(scope + "Completed.[Place Call]");
                 }
                 catch (System.Exception ex)
                 {
-                    // Tracing.TraceStatus(scope + "Error info : " + ex.Message);
-                    // System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                    log.Error(scope + "Error info : " + ex.Message);
                 }
             }
         }
-        
+
+        // Src: PickupToolStripButton_Click()
         private void pickup()
         {
-            // Src: PickupToolStripButton_Click()
-            // string scope = "CIC::frmMain::PickupToolStripButton_Click()::";
-            // Tracing.TraceStatus(scope + "Starting.");
+            string scope = "CIC::frmMain::pickup()::";
+            log.Info(scope + "Starting.");
             try
             {
                 switch (IcWorkFlow.LoginResult)
                 {
                     case true:   //Log On to Dialer Server.
-                        //Tracing.TraceStatus(scope + "Pickup button clicked.Log on to Dialer Server.");
+                        log.Info(scope + "Pickup button clicked. Log on to Dialer Server.");
                         if (this.ActiveDialerInteraction != null)
                         {
                             this.ActiveDialerInteraction.Pickup();
@@ -4060,7 +4063,7 @@ namespace CIC
                         }
                         break;
                     default:     // Not Log On to Dialer Server.
-                        //Tracing.TraceStatus(scope + "Pickup button clicked[Basic station].");
+                        log.Info(scope + "Pickup button clicked[Basic station].");
                         if (ActiveNormalInteraction != null)
                         {
                             switch (ActiveNormalInteraction.InteractionType)
@@ -4080,12 +4083,11 @@ namespace CIC
                         }
                         break;
                 }
-                // Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
-                // Tracing.TraceStatus("Error info." + ex.Message);
-                // System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error("Error info." + ex.Message);
             }
         }
 
@@ -4154,21 +4156,20 @@ namespace CIC
 
         private void DisposeSession()
         {
-            string scope = "CIC::MainForm::Dispose_QueueWatcher():: ";
-            //Tracing.TraceStatus(scope + "Starting.");
+            string scope = "CIC::MainForm::DisposeSession():: ";
+            log.Info(scope + "Starting.");
             try
             {
-                //Tracing.TraceStatus(scope + "Creating instance of InteractionQueue");
+                log.Info(scope + "Creating instance of InteractionQueue");
                 if (global::CIC.Program.m_Session != null)
                 {
                     global::CIC.Program.m_Session.ConnectionStateChanged -= new EventHandler<ConnectionStateChangedEventArgs>(mSession_Changed);
                 }
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info." + ex.Message);
             }
         }
 
