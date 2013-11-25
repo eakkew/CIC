@@ -1507,7 +1507,7 @@ namespace CIC
                     //this.BeginInvoke(new MethodInvoker(login_workflow)); 
                     
                     this.InitializeDialerSession();
-                    //this.SetActiveSession(Program.m_Session);
+                    this.SetActiveSession(Program.m_Session);
                     log.Info(scope + "Completed.");
 
                     this.Initial_NormalInteraction();
