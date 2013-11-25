@@ -1292,7 +1292,7 @@ namespace CIC
         private void NormalInteraction_AttributesChanged(object sender, AttributesEventArgs e)
         {
             string scope = "CIC::MainForm::NormalInteraction_AttributesChanged():: ";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             try
             {
                 if (ActiveNormalInteraction != null)
@@ -1313,7 +1313,7 @@ namespace CIC
                         }
                     }
                 }
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch
             {
