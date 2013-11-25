@@ -213,7 +213,7 @@ namespace CIC
         private void m_InteractionQueue_ConferenceInteractionRemoved(object sender, ConferenceInteractionEventArgs e)
         {
             string scope = "CIC::MainForm::m_InteractionQueue_ConferenceInteractionChanged():: ";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             if (this.InvokeRequired)
             {
                 this.BeginInvoke(new EventHandler<ConferenceInteractionEventArgs>(m_InteractionQueue_ConferenceInteractionRemoved), new object[] { sender, e });
@@ -247,12 +247,11 @@ namespace CIC
                     }
                     this.Set_ConferenceToolStrip();
                     this.ShowActiveCallInfo();
-                    //Tracing.TraceStatus(scope + "Completed.");
+                    log.Info(scope + "Completed.");
                 }
                 catch (System.Exception ex)
                 {
-                    //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                    //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                    log.Error(scope + "Error info." + ex.Message);
                 }
             }
         }
