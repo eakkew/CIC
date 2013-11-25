@@ -1095,7 +1095,7 @@ namespace CIC
         private void RemoveNormalInteractionFromList(Interaction Interaction_Object)
         {
             string scope = "CIC::frmMain::RemoveNormalInteractionFromList(Interaction_Object)::";      //Over load II
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             int retIndex = -1;
             int i = 0;
             try
@@ -1177,12 +1177,11 @@ namespace CIC
                     }
                     this.IsMuted = false;
                 }
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info." + ex.Message);
             }
         }
 
