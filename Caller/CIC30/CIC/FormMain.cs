@@ -2731,6 +2731,8 @@ namespace CIC
 
         private void DisposeDialerSession()
         {
+            string scope = "CIC::MainForm::DisposeDialerSession()::";
+            log.Info(scope + "Starting.");
             try
             {
                 this.DialerSession.PreviewCallAdded -= new EventHandler<ININ.IceLib.Dialer.PreviewCallAddedEventArgs>(PreviewCallAdded);
@@ -2740,12 +2742,11 @@ namespace CIC
                 this.DialerSession.LogoutGranted -= new EventHandler(LogoutGranted);
                 Program.mDialingManager.WorkflowStopped -= new EventHandler<WorkflowStoppedEventArgs>(WorkflowStopped);
                 Program.mDialingManager.WorkflowStarted -= new EventHandler<WorkflowStartedEventArgs>(WorkflowStarted);
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info." + ex.Message);
             }
         }
 
