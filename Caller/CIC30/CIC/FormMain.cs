@@ -3814,7 +3814,7 @@ namespace CIC
         private void DialerInteraction_AttributesChanged(object sender, AttributesEventArgs e)
         {
             string scope = "CIC::MainForm::DialerInteraction_AttributesChanged():: ";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             try
             {
                 if (this.ActiveDialerInteraction != null)
@@ -3825,7 +3825,7 @@ namespace CIC
                 {
                     this.StrConnectionState = InteractionState.None;
                 }
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch
             {
