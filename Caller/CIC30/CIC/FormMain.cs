@@ -1188,7 +1188,7 @@ namespace CIC
         private Interaction GetAvailableInteractionFromList()
         {
             string scope = "CIC::frmMain::GetAvailableInteractionFromList()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             ININ.IceLib.Interactions.Interaction retInteraction = null;
             if (this.InteractionList != null)
             {
@@ -1207,7 +1207,7 @@ namespace CIC
                     }
                 }
             }
-            //Tracing.TraceStatus(scope + "Completed.");
+            log.Info(scope + "Completed.");
             return retInteraction;
         }
 
