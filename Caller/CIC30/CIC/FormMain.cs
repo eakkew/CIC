@@ -3215,7 +3215,7 @@ namespace CIC
         private void DataPop(object sender, DataPopEventArgs e)
         {
             string scope = "CIC::MainForm::DataPop()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             try
             {
                 if (!e.Interaction.IsWatching())
@@ -3249,12 +3249,11 @@ namespace CIC
                         //this.state_change(FormMainState.Preview);
                         break;
                 }
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
-                //Tracing.TraceStatus(scope + "Error info : " + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info : " + ex.Message);
             }
         }
 
