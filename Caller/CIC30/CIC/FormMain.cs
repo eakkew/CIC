@@ -259,7 +259,7 @@ namespace CIC
         private void Set_ConferenceToolStrip()
         {
             string scope = "CIC::MainForm::Set_ConferenceToolStrip():: ";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             bool AllConferencePartyConected = true;
             try
             {
@@ -283,13 +283,13 @@ namespace CIC
                 {
                     this.state_change(FormMainState.ConferenceCall);
                 }
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
                 //this.CreateConferenceToolStripButton.Enabled = false;
                 //this.LeaveConferenceToolStripButton.Enabled = false;
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                log.Error(scope + "Error info." + ex.Message);
             }
         }
 
