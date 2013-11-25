@@ -3307,7 +3307,7 @@ namespace CIC
         private void CrmScreenPop()
         {
             string scope = "CIC::MainForm::CrmScreenPop()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             string FullyUrl = "";
             if (this.InvokeRequired)
             {
@@ -3336,12 +3336,11 @@ namespace CIC
                     baseURI += string.Format("col_call_id={0}", callID);
 
                     Process.Start("baseURI");
-                    //Tracing.TraceStatus(scope + "Completed.");
+                    log.Info(scope + "Completed.");
                 }
                 catch (System.Exception ex)
                 {
-                    //Tracing.TraceStatus(scope + "Error info : " + ex.Message);
-                    //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                    log.Error(scope + "Error info : " + ex.Message);
                     //this.MainWebBrowser.Url = new System.Uri(global::CIC.Properties.Settings.Default.StartupUrl, System.UriKind.Absolute);
                 }
             }
