@@ -500,7 +500,7 @@ namespace CIC
         private void ResetActiveCallInfo()
         {
             string scope = "CIC::frmMain::ResetActiveCallInfo()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             if (this.InvokeRequired)
             {
                 this.BeginInvoke(new MethodInvoker(ResetActiveCallInfo));
@@ -530,7 +530,7 @@ namespace CIC
                         this.transfer_button.Enabled = true;
                     }
                 }
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
         }
 
