@@ -3261,7 +3261,7 @@ namespace CIC
         private void PreviewCallAdded(object sender, PreviewCallAddedEventArgs e)
         {
             string scope = "CIC::MainForm::PreviewCallAdded()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             try
             {
                 if (!e.Interaction.IsWatching())
@@ -3296,12 +3296,11 @@ namespace CIC
                         this.BeginInvoke(new MethodInvoker(preview_state));
                         break;
                 }
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
-                //Tracing.TraceStatus(scope + "Error info : " + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info : " + ex.Message);
             }
         }
 
