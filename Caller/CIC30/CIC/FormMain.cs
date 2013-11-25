@@ -3637,7 +3637,8 @@ namespace CIC
 
         public void MakeManualCall(string number)
         {
-            //Tracing.TraceStatus(scope + "CIC::FormMain::MakeManualCall(string)::");
+            string scope = "CIC::MainForm::MakeManualCall()::";
+            log.Info(scope + "CIC::FormMain::MakeManualCall(string)::");
             callingNumber = number;
             this.state_info_label.Text = "Next Calling Number: " + callingNumber;
             CallInteractionParameters callParams =
