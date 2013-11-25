@@ -3950,8 +3950,8 @@ namespace CIC
 
         private void placecall(object sender, EventArgs e)
         {
-            // Src: PlaceCallToolStripButton_Click()
-            // string scope = "CIC::MainForm::PlaceCallToolStripButton_Click(): ";
+            string scope = "CIC::MainForm::placecall(): ";
+
             if (this.InvokeRequired)
             {
                 this.BeginInvoke(new EventHandler<EventArgs>(placecall), new object[] { sender, e});
@@ -3960,7 +3960,7 @@ namespace CIC
             {
                 try
                 {
-                    // Tracing.TraceStatus(scope + "Starting.[Place Call]");
+                    log.Info(scope + "Starting.[Place Call]");
                     if (this.ActiveDialerInteraction != null)
                     {
                         Dictionary<string, string> data = this.ActiveDialerInteraction.ContactData;
@@ -4010,12 +4010,11 @@ namespace CIC
                             
                         }
                     }
-                    // Tracing.TraceStatus(scope + "Completed.[Place Call]");
+                    log.Info(scope + "Completed.[Place Call]");
                 }
                 catch (System.Exception ex)
                 {
-                    // Tracing.TraceStatus(scope + "Error info : " + ex.Message);
-                    // System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                    log.Error(scope + "Error info : " + ex.Message);
                 }
             }
         }
