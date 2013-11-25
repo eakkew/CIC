@@ -4019,18 +4019,18 @@ namespace CIC
                 }
             }
         }
-        
+
+        // Src: PickupToolStripButton_Click()
         private void pickup()
         {
-            // Src: PickupToolStripButton_Click()
-            // string scope = "CIC::frmMain::PickupToolStripButton_Click()::";
-            // Tracing.TraceStatus(scope + "Starting.");
+            string scope = "CIC::frmMain::pickup()::";
+            log.Info(scope + "Starting.");
             try
             {
                 switch (IcWorkFlow.LoginResult)
                 {
                     case true:   //Log On to Dialer Server.
-                        //Tracing.TraceStatus(scope + "Pickup button clicked.Log on to Dialer Server.");
+                        log.Info(scope + "Pickup button clicked. Log on to Dialer Server.");
                         if (this.ActiveDialerInteraction != null)
                         {
                             this.ActiveDialerInteraction.Pickup();
@@ -4054,7 +4054,7 @@ namespace CIC
                         }
                         break;
                     default:     // Not Log On to Dialer Server.
-                        //Tracing.TraceStatus(scope + "Pickup button clicked[Basic station].");
+                        log.Info(scope + "Pickup button clicked[Basic station].");
                         if (ActiveNormalInteraction != null)
                         {
                             switch (ActiveNormalInteraction.InteractionType)
@@ -4074,12 +4074,11 @@ namespace CIC
                         }
                         break;
                 }
-                // Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
-                // Tracing.TraceStatus("Error info." + ex.Message);
-                // System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error("Error info." + ex.Message);
             }
         }
 
