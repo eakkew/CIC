@@ -2622,7 +2622,7 @@ namespace CIC
             catch (Exception ex)
             {
                 this.last_amount_payment_box.Text = lastReceiveAmount;
-                log.Error("the data cannot be parse to currency format");
+                log.Error("the data in last_amount_payment_box cannot be parse to currency format");
             }
 
             try
@@ -2632,7 +2632,7 @@ namespace CIC
             catch (Exception ex)
             {
                 this.initial_amount_box.Text = initialAmount;
-                // tracing - log that the data cannot be parse to currency format
+                log.Error("the data in initial_amount_box cannot be parse to currency format");
             }
 
             try
@@ -2642,7 +2642,7 @@ namespace CIC
             catch (Exception ex)
             {
                 this.monthly_payment_box.Text = monthlyPayment;
-                // tracing - log that the data cannot be parse to currency format
+                log.Error("the data in monthly_payment_box cannot be parse to currency format");
             }
 
             try
@@ -2652,7 +2652,7 @@ namespace CIC
             catch (Exception ex)
             {
                 this.base_debt_box.Text = baseDebt;
-                // tracing - log that the data cannot be parse to currency format
+                log.Error("the data in base_debt_box cannot be parse to currency format");
             }
         }
 
