@@ -113,7 +113,7 @@ namespace CIC
         private void InitializeSession()
         {
             string scope = "CIC::frmMain::InitialAllComponents()::";
-            //Tracing.TraceStatus(scope + "Starting");
+            log.Info(scope + " Starting");
             bool bResult = false;
             if (this.InvokeRequired)
             {
@@ -176,8 +176,7 @@ namespace CIC
                 catch (System.Exception ex)
                 {
                     state_change(FormMainState.Disconnected);
-                    //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                    //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                    log.Error(ex.Message);
                 }
             }
         }
