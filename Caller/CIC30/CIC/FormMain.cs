@@ -3468,7 +3468,7 @@ namespace CIC
                                 DoNotDisturbStatusMessageDetails = status;
                             }
                             iIndex++;
-                            //Tracing.TraceNote(scope + "Id=" + status.Id + ", MessageText=" + status.MessageText);
+                            log.Info(scope + "Id=" + status.Id + ", MessageText=" + status.MessageText);
                         }
                     }
                }
@@ -3497,7 +3497,7 @@ namespace CIC
                             }
                             iIndex++;
                         }
-                        // Tracing.TraceNote(scope + "Id=" + status.Id + ", MessageText=" + status.MessageText);
+                        log.Info(scope + "Id=" + status.Id + ", MessageText=" + status.MessageText);
                     }
                 }
                 
@@ -3531,8 +3531,7 @@ namespace CIC
             }
             catch (System.Exception ex)
             {
-                // Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info." + ex.Message);
             }
         }
         
