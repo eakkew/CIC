@@ -2070,10 +2070,10 @@ namespace CIC
         public void workflow_invoke(object sender, EventArgs e)
         {
             string scope = "CIC::MainForm::WorkflowToolStripMenuItem_Click()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             try
             {
-                //Tracing.TraceStatus(scope + "Logging into workflow. UserId=" + this.IC_Session.UserId + ", StationId=" + this.IC_Session.GetStationInfo().Id);
+                log.Info(scope + "Logging into workflow. UserId=" + this.IC_Session.UserId + ", StationId=" + this.IC_Session.GetStationInfo().Id);
                 IcWorkFlow = new CIC.ICWorkFlow(CIC.Program.DialingManager);
                 this.DialerSession = IcWorkFlow.LogIn(((String)sender));
                 //IcWorkFlow.LoginResult = IcWorkFlow.LoginResult;
@@ -2081,7 +2081,7 @@ namespace CIC
                 {
                     this.InitializeDialerSession();
                     this.SetActiveSession(Program.m_Session);
-                    //Tracing.TraceStatus(scope + "Completed.");
+                    log.Info(scope + "Completed.");
                     this.Initial_NormalInteraction();
                     this.InitializeQueueWatcher();
                     this.UpdateUserStatus();
@@ -2089,14 +2089,13 @@ namespace CIC
                 }
                 else
                 {
-                    //Tracing.TraceStatus(scope + "WorkFlow [" + ((ToolStripMenuItem)sender).Text + "] logon Fail.Please try again.");
+                    log.Warn(scope + "WorkFlow [" + ((ToolStripMenuItem)sender).Text + "] logon Fail. Please try again.");
                 }
             }
             catch (System.Exception ex)
             {
                 this.state_change(FormMainState.Disconnected);
-                //Tracing.TraceStatus(scope + "Error info.Logon to Workflow[" + ((ToolStripMenuItem)sender).Text + "] : " + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info.Logon to Workflow[" + ((ToolStripMenuItem)sender).Text + "] : " + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info.Logon to Workflow[" + ((ToolStripMenuItem)sender).Text + "] : " + ex.Message);
             }  
         }
 
