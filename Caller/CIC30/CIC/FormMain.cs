@@ -3368,7 +3368,7 @@ namespace CIC
         private void Initialize_ContactData()
         {
             string scope = "CIC::MainForm::InitialContactData()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             int i = 0;
             System.Data.DataTable dt = new DataTable("ATTR_TABLE");
             dt.Columns.Add("id");
@@ -3393,7 +3393,7 @@ namespace CIC
                 Ds.DataSetName = "IC_ATTR";
                 Ds.WriteXml(Program.ApplicationPath + "\\cic_attr.xml", XmlWriteMode.WriteSchema);
             }
-            //Tracing.TraceStatus(scope + "Completed.");
+            log.Info(scope + "Completed.");
         }
 
         private void Initialize_CallBack()
