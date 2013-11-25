@@ -2423,7 +2423,7 @@ namespace CIC
         private void ShowActiveCallInfo()
         {
             string scope = "CIC::frmMain::ShowActiveCallInfo()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             if (this.InvokeRequired)
             {
                 this.BeginInvoke(new MethodInvoker(ShowActiveCallInfo));
@@ -2571,6 +2571,7 @@ namespace CIC
                 this.SetInfoBarColor();
                 update_conference_status();
             }
+            log.Info(scope + "Completed.");
         }
 
         private void update_info_on_dashboard()
