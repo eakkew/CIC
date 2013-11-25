@@ -1458,7 +1458,7 @@ namespace CIC
         private void MustChangePassword()
         {
             string scope = "CIC::MainForm::MustChangePassword()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             if (this.InvokeRequired)
             {
                 this.BeginInvoke(new MethodInvoker(MustChangePassword));
@@ -1476,7 +1476,7 @@ namespace CIC
                     }
                 }
             }
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Complete.");
         }
 
         private void ShowChangePasswordDialog()
