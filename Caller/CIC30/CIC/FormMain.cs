@@ -3534,15 +3534,14 @@ namespace CIC
                 log.Error(scope + "Error info." + ex.Message);
             }
         }
-        
 
         private void CallBackInteration_StartWatchingCompleted(object sender, AsyncCompletedEventArgs e)
         {
             string scope = "CIC::MainForm::CallBackInteration_StartWatchingCompleted()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             if (e.Error != null)
             {
-                //Tracing.TraceStatus(scope + "Error info : " + e.Error.Message);
+                log.Error(scope + "Error info : " + e.Error.Message);
             }
             else
             {
@@ -3570,12 +3569,11 @@ namespace CIC
                         //wrapupCodesLabel.Visible = false;
                         //wrapupCodesComboBox.Visible = false;
                     }
-                    //Tracing.TraceStatus(scope + "Completed.");
+                    log.Info(scope + "Completed.");
                 }
                 catch (System.Exception ex)
                 {
-                    //Tracing.TraceStatus(scope + "Error info : " + ex.Message);
-                    //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                    log.Error(scope + "Error info : " + ex.Message);
                 }
             }
         }
