@@ -2102,7 +2102,7 @@ namespace CIC
         public void conference_invoke(string transferTxtDestination)
         {
             string scope = "CIC::frmMain::CreateConferenceToolStripButton_Click()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             int idx = 0;
             ININ.IceLib.Interactions.Interaction[] TmpInteraction;
             try
@@ -2154,13 +2154,12 @@ namespace CIC
                         }
                     }
                 }
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
                 // TODO: change state
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info." + ex.Message);
             }
         }
 
