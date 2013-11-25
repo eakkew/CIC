@@ -26,7 +26,7 @@ namespace CIC
         /*
          * TODO change from public to private
          */
-        public frmTransfer()
+        private frmTransfer()
         {
             InitializeComponent();
             transfer_button.Enabled = false;
