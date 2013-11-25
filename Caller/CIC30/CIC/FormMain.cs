@@ -4147,21 +4147,20 @@ namespace CIC
 
         private void DisposeSession()
         {
-            string scope = "CIC::MainForm::Dispose_QueueWatcher():: ";
-            //Tracing.TraceStatus(scope + "Starting.");
+            string scope = "CIC::MainForm::DisposeSession():: ";
+            log.Info(scope + "Starting.");
             try
             {
-                //Tracing.TraceStatus(scope + "Creating instance of InteractionQueue");
+                log.Info(scope + "Creating instance of InteractionQueue");
                 if (global::CIC.Program.m_Session != null)
                 {
                     global::CIC.Program.m_Session.ConnectionStateChanged -= new EventHandler<ConnectionStateChangedEventArgs>(mSession_Changed);
                 }
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info." + ex.Message);
             }
         }
 
