@@ -899,7 +899,7 @@ namespace CIC
         private void Stop_AlertingWav()
         {
             string scope = "CIC::MainForm::Stop_AlertingWav():: ";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             if (AlertSoundFileType != null && AlertSoundFileType.ToLower().Trim() == "mp3")
             {
                 if (this.cicMp3Player != null)
@@ -923,7 +923,7 @@ namespace CIC
                 catch (System.Exception ex)
                 {
                     this.IsPlayAlerting = false;
-                    //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                    log.Error(scope + "Error info." + ex.Message);
                     //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
                 }
             }
