@@ -932,7 +932,7 @@ namespace CIC
         private void Start_AlertingWav()
         {
             string scope = "CIC::MainForm::Start_AlertingWav():: ";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             string sPathWavPath = "";
             bool AlertFlag = false;
             bool Play_Looping = false;
@@ -996,15 +996,14 @@ namespace CIC
                         }
                         else
                         {
-                            //Tracing.TraceStatus(scope + "Error info. : WAV File not found.");
+                            log.Error(scope + "Error info. : WAV File not found.");
                         }
                     }
                 }
                 catch (System.Exception ex)
                 {
                     this.IsPlayAlerting = false;
-                    //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                    //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                    log.Error(scope + "Error info." + ex.Message);
                 }
             }
         }
