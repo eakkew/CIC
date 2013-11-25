@@ -262,7 +262,7 @@ namespace CIC
           if (e.Error != null)
           {
               global::CIC.Program.SessionLogInResult = CIC.Utils.LoginResult.Cancelled;
-              //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, "CIC::Program::SessionConnectCompleted [Single sign on]::Error info." + e.Error, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+              log.Fatal(Application.ProductName + "CIC::Program::SessionConnectCompleted [Single sign on]::Error info." + e.Error + System.Diagnostics.EventLogEntryType.Error); //Window Event Log
               System.Windows.Forms.MessageBox.Show("CIC::Program::SessionConnectCompleted [Single sign on]::Error info." + e.Error, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
               Application.Exit();
           }
