@@ -1975,7 +1975,7 @@ namespace CIC
             }
             else
             {
-                //Tracing.TraceStatus(scope + "Starting.[Disposition]");
+                log.Info(scope + "Starting.[Disposition]");
                 try
                 {
                     if (IcWorkFlow.LoginResult)
@@ -2055,13 +2055,14 @@ namespace CIC
                         state_change(FormMainState.Break);
                     }
                     else
+                    {
                         state_change(FormMainState.Preview);
-                    //Tracing.TraceStatus(scope + "Completed.[Disposition]");
+                    }
+                    log.Info(scope + "Completed.[Disposition]");
                 }
                 catch (ININ.IceLib.IceLibException ex)
                 {
-                    //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                    //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                    log.Error(scope + "Error info." + ex.Message);
                 }
             }
         }
