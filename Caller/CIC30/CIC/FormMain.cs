@@ -1558,13 +1558,13 @@ namespace CIC
         private void DisposeQueueWatcher()
         {
             string scope = "CIC::MainForm::Dispose_QueueWatcher():: ";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             try
             {
-                //Tracing.TraceStatus(scope + "Creating instance of InteractionQueue");
+                log.Info(scope + "Creating instance of InteractionQueue");
                 if (this.m_InteractionQueue != null)
                 {
-                    //Tracing.TraceStatus(scope + "Attaching event handlers");
+                    log.Info(scope + "Attaching event handlers");
                     this.m_InteractionQueue.InteractionAdded -= new EventHandler<InteractionAttributesEventArgs>(this.m_InteractionQueue_InteractionAdded);
                     this.m_InteractionQueue.InteractionChanged -= new EventHandler<InteractionAttributesEventArgs>(m_InteractionQueue_InteractionChanged);
                     this.m_InteractionQueue.InteractionRemoved -= new EventHandler<InteractionEventArgs>(m_InteractionQueue_InteractionRemoved);
@@ -1574,12 +1574,11 @@ namespace CIC
                     this.m_InteractionQueue.StopWatchingAsync(null, null);
                     this.m_InteractionQueue = null;
                 }
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info." + ex.Message);
             }
         }
 
