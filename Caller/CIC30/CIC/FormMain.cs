@@ -545,7 +545,7 @@ namespace CIC
             this.name3_box1.Text = "";
             this.name4_box1.Text = "";
             this.name5_box1.Text = "";
-            this.name6_box2.Text = "";
+            this.name6_box1.Text = "";
             this.name1_box2.Text = "";
             this.name2_box2.Text = "";
             this.name3_box2.Text = "";
@@ -3358,17 +3358,21 @@ namespace CIC
         private string getRefCallID(Dictionary<string, string> data)
         {
             string refCallID = "";
-            if (data.ContainsKey("is_attr_Ref_PhoneNo1") && data["is_attr_Ref_PhoneNo1"] == callingNumber)
+            string number = data.ContainsKey("is_attr_numbertodial") ? data["is_attr_numbertodial"] : "";
+            if (number == "")
+                return refCallID;
+
+            if (data.ContainsKey("is_attr_Ref_PhoneNo1") && data["is_attr_Ref_PhoneNo1"] == number)
                 refCallID = data["is_attr_Ref_PhoneNo1"];
-            if (data.ContainsKey("is_attr_Ref_PhoneNo2") && data["is_attr_Ref_PhoneNo2"] == callingNumber)
+            if (data.ContainsKey("is_attr_Ref_PhoneNo2") && data["is_attr_Ref_PhoneNo2"] == number)
                 refCallID = data["is_attr_Ref_PhoneNo2"];
-            if (data.ContainsKey("is_attr_Ref_PhoneNo3") && data["is_attr_Ref_PhoneNo3"] == callingNumber)
+            if (data.ContainsKey("is_attr_Ref_PhoneNo3") && data["is_attr_Ref_PhoneNo3"] == number)
                 refCallID = data["is_attr_Ref_PhoneNo3"];
-            if (data.ContainsKey("is_attr_Ref_PhoneNo4") && data["is_attr_Ref_PhoneNo4"] == callingNumber)
+            if (data.ContainsKey("is_attr_Ref_PhoneNo4") && data["is_attr_Ref_PhoneNo4"] == number)
                 refCallID = data["is_attr_Ref_PhoneNo4"];
-            if (data.ContainsKey("is_attr_Ref_PhoneNo5") && data["is_attr_Ref_PhoneNo5"] == callingNumber)
+            if (data.ContainsKey("is_attr_Ref_PhoneNo5") && data["is_attr_Ref_PhoneNo5"] == number)
                 refCallID = data["is_attr_Ref_PhoneNo5"];
-            if (data.ContainsKey("is_attr_Ref_PhoneNo6") && data["is_attr_Ref_PhoneNo6"] == callingNumber)
+            if (data.ContainsKey("is_attr_Ref_PhoneNo6") && data["is_attr_Ref_PhoneNo6"] == number)
                 refCallID = data["is_attr_Ref_PhoneNo6"];
 
             return refCallID;
