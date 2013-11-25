@@ -3124,10 +3124,10 @@ namespace CIC
         private void WorkflowStarted(object sender, WorkflowStartedEventArgs e)
         {
             string scope = "CIC::MainForm::WorkflowStarted()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
 
             disable_logout();
-            //Tracing.TraceStatus(scope + "Completed.");
+            log.Info(scope + "Completed.");
         }
 
         private void WorkflowStopped(object sender, WorkflowStoppedEventArgs e)
