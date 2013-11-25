@@ -1607,6 +1607,7 @@ namespace CIC
                 previewCallTimer.Enabled = true;
             previewCallTimer.Stop();
             timer = global::CIC.Properties.Settings.Default.CountdownTime;
+            log.Info("Timer is reset");
         }
         
         private void restart_timer()
