@@ -1011,7 +1011,7 @@ namespace CIC
         private void m_InteractionQueue_InteractionChanged(object sender, InteractionAttributesEventArgs e)
         {
             string scope = "CIC::MainForm::m_InteractionQueue_InteractionChanged():: ";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             try
             {
                 if (!e.Interaction.IsWatching())
@@ -1073,12 +1073,11 @@ namespace CIC
                         break;
                 }
 
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info." + ex.Message);
                 if (ActiveNormalInteraction != null)
                 {
                     this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
