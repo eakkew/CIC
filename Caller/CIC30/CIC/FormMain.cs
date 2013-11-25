@@ -162,13 +162,13 @@ namespace CIC
                                 this.Initial_NormalInteraction();
                                 this.InitializeQueueWatcher();
                                 this.BeginInvoke(new MethodInvoker(connected_state));
-                                //Tracing.TraceStatus(scope + "Completed.");
+                                log.Info(scope + "Completed.");
                             }
                             else
                             {
                                 //No active connection. 
                                 state_change(FormMainState.Disconnected);
-                                //Tracing.TraceStatus(scope + "Cannot log on to station.please try again.");
+                                log.Warn(scope + "Cannot log on to station.please try again.");
                             }
                         }
                     }
