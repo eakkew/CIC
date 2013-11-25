@@ -3684,7 +3684,7 @@ namespace CIC
         public void DisconnectConsultCall()
         {
             string scope = "CIC::frmMain::CancelTransferToolStripButton_Click()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             try
             {
                 if (IcWorkFlow.LoginResult)
@@ -3761,14 +3761,13 @@ namespace CIC
                     }
                 }
                 this.ShowActiveCallInfo();
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
                 // TODO: activate this code
                 //this.EnabledTransferToolStripDisplayed();
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info." + ex.Message);
             }
         }
 
