@@ -13,7 +13,19 @@ namespace CIC
     {
         private DataSet DsReasonCode;
 
-        public frmDisposition()
+        private static frmDisposition instance = null;
+
+        public static frmDisposition getInstance()
+        {
+            if (instance == null)
+            {
+                instance = new frmDisposition();
+
+            }
+            return instance;
+        }
+
+        private frmDisposition()
         {
             InitializeComponent();
             // load up finish code

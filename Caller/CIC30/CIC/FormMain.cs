@@ -1507,10 +1507,11 @@ namespace CIC
                     //this.BeginInvoke(new MethodInvoker(login_workflow)); 
                     
                     this.InitializeDialerSession();
-                    this.SetActiveSession(Program.m_Session);
+                    //this.SetActiveSession(Program.m_Session);
                     log.Info(scope + "Completed.");
+
                     this.Initial_NormalInteraction();
-                    this.InitializeQueueWatcher();
+                    //this.InitializeQueueWatcher();
                     this.BeginInvoke(new MethodInvoker(connected_state));
                     this.state_info_label.Text = "Connected to the server.";
                     break;
@@ -1630,7 +1631,7 @@ namespace CIC
         {
             if (this.IsActiveConnection)
             {
-                frmWorkflow workflow = new CIC.frmWorkflow(global::CIC.Program.m_Session);
+                frmWorkflow workflow = frmWorkflow.getInstance(global::CIC.Program.m_Session); //new CIC.frmWorkflow(global::CIC.Program.m_Session);
                 workflow.Show();
             }
             else
@@ -1658,25 +1659,23 @@ namespace CIC
             //this.ShowActiveCallInfo();
             this.reset_info_on_dashboard();
             state_info_label.Text = "Disconnected.";
-            this.state_change(FormMainState.Preview);
         }
 
         private void tryDisconnect()
         {
             try
             {
-                if (ActiveDialerInteraction != null &&
-                    !ActiveDialerInteraction.IsDisconnected &&
-                    (this.current_state == FormMainState.PreviewCall || this.current_state == FormMainState.ConferenceCall))
-                {
-                    frmDisposition disposition = new frmDisposition();
-                    disposition.ShowDialog();
-                }
                 if (IcWorkFlow != null &&
                     IcWorkFlow.LoginResult &&
                     this.IC_Session != null &&
                     this.IC_Session.ConnectionState == ININ.IceLib.Connection.ConnectionState.Up)
                 {
+                    if (this.current_state == FormMainState.PreviewCall || this.current_state == FormMainState.ConferenceCall)
+                    {
+                        frmDisposition disposition = frmDisposition.getInstance(); //new frmDisposition();
+                        disposition.ShowDialog();
+                    }
+
                     if (ActiveDialerInteraction != null)
                     {
                         if (!ActiveDialerInteraction.IsDisconnected)
@@ -1691,6 +1690,7 @@ namespace CIC
                             this.RemoveNormalInteractionFromList(ActiveConsultInteraction);
                             ActiveConsultInteraction.Disconnect();
                         }
+                        this.state_change(FormMainState.Preview);
                     }
                 }
                 else
@@ -1725,6 +1725,7 @@ namespace CIC
                         ActiveConferenceInteraction = null;
                         ActiveConsultInteraction = null;
                     }
+                    this.state_change(FormMainState.Connected);
                 }
 
             }
@@ -1815,7 +1816,7 @@ namespace CIC
 
         private void transfer_button_Click(object sender, EventArgs e)
         {
-            frmTransfer transfer = new frmTransfer();
+            frmTransfer transfer = frmTransfer.getInstance();
             transfer.ShowDialog();
         }
 
@@ -1829,7 +1830,7 @@ namespace CIC
         {
             if (IcWorkFlow == null || !IcWorkFlow.LoginResult)
             {
-                frmManualCall manualCall = new frmManualCall(NormalInterationManager);
+                frmManualCall manualCall = frmManualCall.getInstance();
                 manualCall.ShowDialog();
                 state_change(FormMainState.ManualCall);
             }
@@ -2605,7 +2606,6 @@ namespace CIC
             update_currency_on_dashboard(data);
 
             this.state_info_label.Text = "Next Calling Number: " + callingNumber;
-            this.CrmScreenPop();
         }
 
         private void update_currency_on_dashboard(Dictionary<string, string> data)
@@ -3234,6 +3234,7 @@ namespace CIC
                         this.Initialize_CallBack();
                         this.Initialize_ContactData();
                         this.ShowActiveCallInfo();
+                        this.CrmScreenPop();
 
                         // restart timer and reset call index
                         this.BeginInvoke(new MethodInvoker(restart_timer));
@@ -3242,6 +3243,7 @@ namespace CIC
                     case InteractionType.Call:
                         this.Initialize_ContactData();
                         this.ShowActiveCallInfo();
+                        this.CrmScreenPop();
 
                         // restart timer and reset call index
                         this.BeginInvoke(new MethodInvoker(restart_timer));
@@ -3280,6 +3282,7 @@ namespace CIC
                         this.Initialize_CallBack();
                         this.Initialize_ContactData();
                         this.ShowActiveCallInfo();
+                        this.CrmScreenPop();
 
                         // restart timer and reset call index
                         this.BeginInvoke(new MethodInvoker(restart_timer));
@@ -3289,6 +3292,7 @@ namespace CIC
                     case InteractionType.Call:
                         this.Initialize_ContactData();
                         this.ShowActiveCallInfo();
+                        this.CrmScreenPop();
 
                         // restart timer and reset call index
                         this.BeginInvoke(new MethodInvoker(restart_timer));
@@ -3335,7 +3339,7 @@ namespace CIC
                     baseURI += string.Format("col_ phone_id={0}&", refCallID);
                     baseURI += string.Format("col_call_id={0}", callID);
 
-                    Process.Start("baseURI");
+                    Process.Start(baseURI);
                     log.Info(scope + "Completed.");
                 }
                 catch (System.Exception ex)

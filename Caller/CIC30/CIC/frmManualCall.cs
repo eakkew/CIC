@@ -13,17 +13,20 @@ namespace CIC
 {
     public partial class frmManualCall : Form
     {
-        private Session IC_Session;
-        private InteractionsManager NormalInterationManager;
-        public frmManualCall()
+        private static frmManualCall instance = null;
+
+        public static frmManualCall getInstance()
         {
-            InitializeComponent();
+            if (instance == null)
+            {
+                instance = new frmManualCall();
+
+            }
+            return instance;
         }
 
-        public frmManualCall(InteractionsManager manager)
+        private frmManualCall()
         {
-            this.IC_Session = Program.m_Session;
-            this.NormalInterationManager = manager;
             InitializeComponent();
         }
 

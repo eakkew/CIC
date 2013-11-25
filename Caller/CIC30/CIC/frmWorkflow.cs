@@ -32,7 +32,7 @@ namespace CIC
             return instance;
         }
 
-        public frmWorkflow(Session IC_Session)
+        private frmWorkflow(Session IC_Session)
         {
             string scope = "CIC::MainForm::LoginToolStripMenuItem_DropDownOpening()::";
             Tracing.TraceStatus(scope + "Starting.");
