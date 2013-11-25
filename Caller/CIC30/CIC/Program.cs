@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using ININ.IceLib;
 using ININ.IceLib.Connection;
 using ININ.IceLib.Dialer;
+using log4net;
 
 namespace CIC
 {
@@ -19,6 +20,8 @@ namespace CIC
   {
 
 #region Global Variable Definition 
+      private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
       private static string wildcardKey = "/i3reset";
       private static bool _Initialized = false;
       private static bool _EstablishPersistentConnection = false;
@@ -147,18 +150,17 @@ namespace CIC
                   string eDescription = "CIC::Program::Main()::" + e.Message;
                   global::CIC.Properties.Settings.Default.Reset();
                   global::CIC.Properties.Settings.Default.Reload();
-                  //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, "CIC::Program::Main()::Error info." + e.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
-                  Tracing.TraceNote(eDescription);
+                  log.Fatal(eDescription);
               }
               global::CIC.Properties.Settings.Default.Save();
-              Tracing.TraceNote("CIC::Program::Main()::Application end.");
+              log.Info("CIC::Program::Main()::Application end.");
           }
           else
           {
               //Reset All Registry
               global::CIC.Properties.Settings.Default.Reset();
               global::CIC.Properties.Settings.Default.Reload();
-              //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, AppError, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+              log.Fatal(Application.ProductName + AppError + System.Diagnostics.EventLogEntryType.Error);
               MessageBox.Show(AppError,"Application Error!", MessageBoxButtons.OK, MessageBoxIcon.Information);
           }
           Application.Exit();
@@ -173,14 +175,14 @@ namespace CIC
               if (rKey.ProcessKeyAuthorize() != true)
               {
                   System.Windows.Forms.MessageBox.Show("Please check your key file.", "Error Information!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                  //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, "KeyFile :: Error info.Please check your key file.", System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                  log.Fatal(Application.ProductName + " KeyFile :: Error info.Please check your key file." + System.Diagnostics.EventLogEntryType.Error);
                   Application.Exit();
               }
           }
           catch (System.Exception ex)
           {
               System.Windows.Forms.MessageBox.Show("Please check your key file.", "Error Information!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-              //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, "KeyFile :: Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+              log.Fatal(Application.ProductName + " KeyFile :: Error info." + ex.Message + System.Diagnostics.EventLogEntryType.Error);
               Application.Exit();
           }
           global::CIC.Program.mLoginParam.WindowsAuthentication = true;  // Aways true on this mode
@@ -260,7 +262,7 @@ namespace CIC
           if (e.Error != null)
           {
               global::CIC.Program.SessionLogInResult = CIC.Utils.LoginResult.Cancelled;
-              //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, "CIC::Program::SessionConnectCompleted [Single sign on]::Error info." + e.Error, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+              log.Fatal(Application.ProductName + "CIC::Program::SessionConnectCompleted [Single sign on]::Error info." + e.Error + System.Diagnostics.EventLogEntryType.Error); //Window Event Log
               System.Windows.Forms.MessageBox.Show("CIC::Program::SessionConnectCompleted [Single sign on]::Error info." + e.Error, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
               Application.Exit();
           }
@@ -289,7 +291,7 @@ namespace CIC
       private static void Initial_ApplicationPath()
       {
           string scope = "CIC::Program::Initisl_ApplicationPath()::";
-          Tracing.TraceStatus(scope + "Initializing status messages");
+          log.Info(scope + "Initializing status messages");
           string sAppPath = Environment.CurrentDirectory;
           if (System.IO.Directory.Exists(sAppPath) == true)
           {
@@ -298,16 +300,16 @@ namespace CIC
               CIC.Program.ApplicationImagePath = sAppPath + "\\Resources\\";
               if (System.IO.Directory.Exists(CIC.Program.ResourcePath) == true)
               {
-                  Tracing.TraceStatus(scope + "Initializing resource path completed.");
+                  log.Info(scope + "Initializing resource path completed.");
               }
               else
               {
-                  Tracing.TraceStatus(scope + "Initializing resource path fail.");
+                  log.Warn(scope + "Initializing resource path fail.");
               }
           }
           else
           {
-              Tracing.TraceStatus(scope + "Initializing resource path fail.");
+              log.Warn(scope + "Initializing resource path fail.");
           }
       }
 
@@ -373,7 +375,7 @@ namespace CIC
           }
           catch (System.Exception ex)
           {
-              //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, "CIC::Program::InitialSkin()::Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+              log.Error(Application.ProductName + "CIC::Program::InitialSkin()::Error info." + ex.Message + System.Diagnostics.EventLogEntryType.Error); //Window Event Log
           }
       }
 
