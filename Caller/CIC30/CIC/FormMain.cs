@@ -1513,10 +1513,10 @@ namespace CIC
                     //this.BeginInvoke(new MethodInvoker(login_workflow)); 
                     
                     this.InitializeDialerSession();
-                    this.SetActiveSession(Program.m_Session);
-                    //Tracing.TraceStatus(scope + "Completed.");
+                    //this.SetActiveSession(Program.m_Session);
+                    ////Tracing.TraceStatus(scope + "Completed.");
                     this.Initial_NormalInteraction();
-                    this.InitializeQueueWatcher();
+                    //this.InitializeQueueWatcher();
                     this.BeginInvoke(new MethodInvoker(connected_state));
                     this.state_info_label.Text = "Connected to the server.";
                     break;
@@ -1664,25 +1664,23 @@ namespace CIC
             //this.ShowActiveCallInfo();
             this.reset_info_on_dashboard();
             state_info_label.Text = "Disconnected.";
-            this.state_change(FormMainState.Preview);
         }
 
         private void tryDisconnect()
         {
             try
             {
-                if (ActiveDialerInteraction != null &&
-                    !ActiveDialerInteraction.IsDisconnected &&
-                    (this.current_state == FormMainState.PreviewCall || this.current_state == FormMainState.ConferenceCall))
-                {
-                    frmDisposition disposition = frmDisposition.getInstance(); //new frmDisposition();
-                    disposition.ShowDialog();
-                }
                 if (IcWorkFlow != null &&
                     IcWorkFlow.LoginResult &&
                     this.IC_Session != null &&
                     this.IC_Session.ConnectionState == ININ.IceLib.Connection.ConnectionState.Up)
                 {
+                    if (this.current_state == FormMainState.PreviewCall || this.current_state == FormMainState.ConferenceCall)
+                    {
+                        frmDisposition disposition = frmDisposition.getInstance(); //new frmDisposition();
+                        disposition.ShowDialog();
+                    }
+
                     if (ActiveDialerInteraction != null)
                     {
                         if (!ActiveDialerInteraction.IsDisconnected)
@@ -1697,6 +1695,7 @@ namespace CIC
                             this.RemoveNormalInteractionFromList(ActiveConsultInteraction);
                             ActiveConsultInteraction.Disconnect();
                         }
+                        this.state_change(FormMainState.Preview);
                     }
                 }
                 else
@@ -1731,6 +1730,7 @@ namespace CIC
                         ActiveConferenceInteraction = null;
                         ActiveConsultInteraction = null;
                     }
+                    this.state_change(FormMainState.Connected);
                 }
 
             }
