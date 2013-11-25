@@ -400,7 +400,7 @@ namespace CIC
         private void m_InteractionQueue_InteractionRemoved(object sender, InteractionEventArgs e)
         {
             string scope = "CIC::MainForm::m_InteractionQueue_InteractionRemoved():: ";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             try
             {
                 if (!e.Interaction.IsWatching())
@@ -473,12 +473,11 @@ namespace CIC
                         }
                         break;
                 }
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                log.Error(scope + "Error info." + ex.Message);
                 this.ResetActiveCallInfo();
                 this.CallerHost = "";
                 if (ActiveNormalInteraction != null)
