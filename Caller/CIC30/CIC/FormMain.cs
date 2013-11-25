@@ -3399,7 +3399,7 @@ namespace CIC
         private void Initialize_CallBack()
         {
             string scope = "CIC::MainForm::Initial_CallBack()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             try
             {
                     if (IcWorkFlow.LoginResult && this.ActiveDialerInteraction != null)
@@ -3424,12 +3424,11 @@ namespace CIC
                         this.ActiveDialerInteraction.StartWatchingAsync(callbackAttributeNames.ToArray(), CallBackInteration_StartWatchingCompleted, null);
                     }
                 
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
-                //Tracing.TraceStatus(scope + "Error info : " + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info : " + ex.Message);
             }
         }
 
