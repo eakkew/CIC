@@ -15,6 +15,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using log4net;
 
 namespace CIC
 {
@@ -44,6 +45,8 @@ namespace CIC
 
     public partial class FormMain : Form
     {
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private ScheduleCallbackForm frmScheduleCallbackForm { get; set; }
 
         private bool break_requested { get; set; }
