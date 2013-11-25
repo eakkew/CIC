@@ -175,14 +175,14 @@ namespace CIC
               if (rKey.ProcessKeyAuthorize() != true)
               {
                   System.Windows.Forms.MessageBox.Show("Please check your key file.", "Error Information!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                  //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, "KeyFile :: Error info.Please check your key file.", System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                  log.Fatal(Application.ProductName + " KeyFile :: Error info.Please check your key file." + System.Diagnostics.EventLogEntryType.Error);
                   Application.Exit();
               }
           }
           catch (System.Exception ex)
           {
               System.Windows.Forms.MessageBox.Show("Please check your key file.", "Error Information!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-              //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, "KeyFile :: Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+              log.Fatal(Application.ProductName + " KeyFile :: Error info." + ex.Message + System.Diagnostics.EventLogEntryType.Error);
               Application.Exit();
           }
           global::CIC.Program.mLoginParam.WindowsAuthentication = true;  // Aways true on this mode
