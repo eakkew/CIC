@@ -1841,6 +1841,8 @@ namespace CIC
 
         private void break_button_Click(object sender, EventArgs e)
         {
+            string scope = "CIC::frmMain::break_button_Click()::";
+            log.Info(scope + "Starting.");
             try
             {
                 if (!IcWorkFlow.LoginResult && this.ActiveDialerInteraction == null)
@@ -1860,12 +1862,11 @@ namespace CIC
                         break_requested_state();
                     }
                 }
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.ErrorFormat(scope + "Error info." + ex.Message);
             }
         }
 
