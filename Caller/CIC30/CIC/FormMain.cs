@@ -1614,7 +1614,7 @@ namespace CIC
         private void restart_timer()
         {
             reset_timer();
-            //timer1.Start();
+            previewCallTimer.Start();
         }
 
         public void login_workflow()
