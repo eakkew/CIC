@@ -27,7 +27,7 @@ namespace CIC
 
     public enum FormMainState
     {
-        Connected,              // connect to workflow
+        Connected,              // connect to session
         Preview,                // got information from workflow, timer starts
         Predictive,             // got information from workflow, waiting to pickup call
         Calling,                // Call started
@@ -38,7 +38,7 @@ namespace CIC
         Mute,                   // mute current call
         Break,                  // pause current workflow not to put new set of information after disposition
         Loggedout,              // log out from workflow
-        Disconnected,           // disconnect from workflow
+        Disconnected,           // disconnect from session
         None,                   // nothing at all or error state
     };
     //private bool IsLoggedIntoDialer = false;
@@ -1759,17 +1759,6 @@ namespace CIC
         {
             if (IcWorkFlow.LoginResult)
             {
-                if (ActiveNormalInteraction != null)
-                {
-                    if (ActiveNormalInteraction.IsMuted)
-                    {
-                        ActiveNormalInteraction.Mute(false);
-                    }
-                    ActiveNormalInteraction.Hold(!ActiveNormalInteraction.IsHeld);
-                    state_change(FormMainState.Hold);
-                    return;
-                }
-
                 if (this.ActiveDialerInteraction != null)
                 {
                     if (!this.ActiveDialerInteraction.IsDisconnected)
@@ -1783,11 +1772,36 @@ namespace CIC
                     }
                 }
             }
+            else
+            {
+                if (ActiveNormalInteraction != null)
+                {
+                    if (ActiveNormalInteraction.IsMuted)
+                    {
+                        ActiveNormalInteraction.Mute(false);
+                    }
+                    ActiveNormalInteraction.Hold(!ActiveNormalInteraction.IsHeld);
+                    state_change(FormMainState.Hold);
+                    return;
+                }
+            }
         }
 
         private void mute_button_Click(object sender, EventArgs e)
         {
             if (IcWorkFlow.LoginResult)
+            {
+                if (this.ActiveDialerInteraction != null)
+                {
+                    if (this.ActiveDialerInteraction.IsHeld)
+                    {
+                        this.ActiveDialerInteraction.Hold(false);
+                    }
+                    this.ActiveDialerInteraction.MuteAsync(!this.ActiveDialerInteraction.IsMuted, MuteCompleted, null);
+                    state_change(FormMainState.Mute);
+                }
+            }
+            else
             {
                 if (ActiveNormalInteraction != null)
                 {
@@ -1800,15 +1814,6 @@ namespace CIC
                     return;
                 }
 
-                if (this.ActiveDialerInteraction != null)
-                {
-                    if (this.ActiveDialerInteraction.IsHeld)
-                    {
-                        this.ActiveDialerInteraction.Hold(false);
-                    }
-                    this.ActiveDialerInteraction.MuteAsync(!this.ActiveDialerInteraction.IsMuted, MuteCompleted, null);
-                    state_change(FormMainState.Mute);
-                }
             }
         }
 
@@ -2214,7 +2219,9 @@ namespace CIC
                             statusUpdate.UpdateRequest();
                         }
                     }
-                    
+                }
+                else
+                {
                     if (ActiveNormalInteraction != null && this.current_state == FormMainState.ManualCall)
                     {
                         if (ActiveConsultInteraction != null)
@@ -2239,8 +2246,8 @@ namespace CIC
                                             CurrentInteraction.InteractionId != ActiveConsultInteraction.InteractionId &&
                                             CurrentInteraction.InteractionId != ActiveDialerInteraction.InteractionId)
                                         {
-                                                ActiveNormalInteraction = CurrentInteraction;  //Find Consult Call
-                                                break;
+                                            ActiveNormalInteraction = CurrentInteraction;  //Find Consult Call
+                                            break;
                                         }
                                     }
 
@@ -2910,7 +2917,6 @@ namespace CIC
             reset_state();
             workflow_button.Enabled = true;
             manual_call_button.Enabled = true;
-            logout_workflow_button.Enabled = true;
             exit_button.Enabled = true;
 
             prev_state = current_state;
@@ -3666,21 +3672,19 @@ namespace CIC
             ININ.IceLib.Interactions.CallInteractionParameters callParams = null;
             try
             {
-                if (IcWorkFlow.LoginResult)
+                //Log On to Dialer Server.  use same normal to call before using dialer object to blind/consult transfer.
+                log.Info(scope + "Call button clicked. Log On to Dialer Server.");
+                if (transferTxtDestination != "")
                 {
-                    //Log On to Dialer Server.  use same normal to call before using dialer object to blind/consult transfer.
-                    log.Info(scope + "Call button clicked. Log On to Dialer Server.");
-                    if (transferTxtDestination != "")
+                    log.Info(scope + "Making consult call to " + transferTxtDestination);
+                    callParams = new CallInteractionParameters(transferTxtDestination, CallMadeStage.Allocated);
+                    if (NormalInterationManager != null)
                     {
-                        log.Info(scope + "Making consult call to " + transferTxtDestination);
-                        callParams = new CallInteractionParameters(transferTxtDestination, CallMadeStage.Allocated);
-                        if (NormalInterationManager != null)
-                        {
-                            callingNumber = transferTxtDestination;
-                            NormalInterationManager.ConsultMakeCallAsync(callParams, MakeConsultCompleted, null);
-                        }
+                        callingNumber = transferTxtDestination;
+                        NormalInterationManager.ConsultMakeCallAsync(callParams, MakeConsultCompleted, null);
                     }
                 }
+                
                 //this.EnabledTransferToolStripDisplayed();
                 log.Info(scope + "Completed.");
             }
