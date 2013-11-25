@@ -2622,7 +2622,7 @@ namespace CIC
             catch (Exception ex)
             {
                 this.last_amount_payment_box.Text = lastReceiveAmount;
-                // tracing - log that the data cannot be parse to currency format
+                log.Error("the data cannot be parse to currency format");
             }
 
             try
