@@ -1901,7 +1901,7 @@ namespace CIC
         private void logout_workflow_button_Click(object sender, EventArgs e)
         {
             string scope = "CIC::MainForm::LogoutToolStripMenuItem_Click(): ";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             try
             {
                 if (IcWorkFlow.LoginResult)
@@ -1939,12 +1939,11 @@ namespace CIC
                         this.Close();
                 }
                 
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.ErrorFormat(scope + "Error info." + ex.Message);
             }
         }
 
