@@ -3073,6 +3073,7 @@ namespace CIC
             if (e.Error != null)
             {
                 MessageBox.Show(e.Error.StackTrace, e.Error.Message);
+                log.Warn(e.Error.StackTrace + " :: " + e.Error.Message);
                 return;
             }
         }
