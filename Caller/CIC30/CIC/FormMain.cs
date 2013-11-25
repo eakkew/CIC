@@ -1412,10 +1412,10 @@ namespace CIC
         private void Initial_NormalInteraction()
         {
             string scope = "CIC::MainForm::Initial_NormalInteraction()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             try
             {
-                //Tracing.TraceStatus(scope + "Getting an instance of Normal InteractionsManager.");
+                log.Info(scope + "Getting an instance of Normal InteractionsManager.");
                 this.NormalInterationManager = InteractionsManager.GetInstance(global::CIC.Program.m_Session);
                 if (this.InteractionList == null)
                 {
@@ -1425,7 +1425,7 @@ namespace CIC
                 {
                     this.InteractionList.Clear();
                 }
-                //Tracing.TraceStatus(scope + "Getting an instance of PeopleManager[Normal Interactions].");
+                log.Info(scope + "Getting an instance of PeopleManager[Normal Interactions].");
                 this.mPeopleManager = PeopleManager.GetInstance(this.IC_Session);
                 //this.WebBrowserStatusToolStripStatusLabel.Text = "";
                 //if (this.sCollectUserSelect != null)
@@ -1439,12 +1439,11 @@ namespace CIC
                 //        this.IVRMenu.Enabled = false;
                 //    }
                 //}
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info." + ex.Message);
             }
         }
 
