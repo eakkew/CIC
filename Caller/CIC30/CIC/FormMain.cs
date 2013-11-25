@@ -1450,9 +1450,9 @@ namespace CIC
         private void SessionConnectCompleted(object sender, AsyncCompletedEventArgs e)
         {
             string scope = "CIC::frmMain::SessionConnectCompleted()::";
-            //Tracing.TraceStatus(scope + "Starting");
+            log.Info(scope + "Starting");
             this.MustChangePassword();
-            //Tracing.TraceStatus(scope + "Completed.");
+            log.Info(scope + "Completed.");
         }
 
         private void MustChangePassword()
