@@ -1586,15 +1586,15 @@ namespace CIC
         {
             bool bResult = false;
             string scope = "CIC::frmMain::SetActiveSession()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             if (session == null)
             {
-                //Tracing.TraceStatus(scope + "Null reference session.");
+                log.Warn(scope + "Null reference session.");
                 throw new ArgumentNullException("Null reference session.");
             }
             else
             {
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
                 bResult = true;
                 this.IC_Session = session;
             }
