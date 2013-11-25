@@ -2504,7 +2504,7 @@ namespace CIC
                                         this.ShowActiveCallInfo();
                         
                                         // restart timer and reset call index
-                                        this.BeginInvoke(new MethodInvoker(restart_timer));
+                                        //this.BeginInvoke(new MethodInvoker(restart_timer));
                                     }
                                     else
                                     {
@@ -3242,8 +3242,8 @@ namespace CIC
                         this.CrmScreenPop();
 
                         // restart timer and reset call index
-                        this.BeginInvoke(new MethodInvoker(restart_timer));
                         this.BeginInvoke(new MethodInvoker(preview_call_state));
+                        //this.BeginInvoke(new MethodInvoker(restart_timer));
                         break;
                     case InteractionType.Call:
                         this.Initialize_ContactData();
@@ -3251,8 +3251,8 @@ namespace CIC
                         this.CrmScreenPop();
 
                         // restart timer and reset call index
-                        this.BeginInvoke(new MethodInvoker(restart_timer));
                         this.BeginInvoke(new MethodInvoker(preview_call_state));
+                        //this.BeginInvoke(new MethodInvoker(restart_timer));
                         //this.state_change(FormMainState.Preview);
                         break;
                 }
@@ -3290,8 +3290,8 @@ namespace CIC
                         this.CrmScreenPop();
 
                         // restart timer and reset call index
-                        this.BeginInvoke(new MethodInvoker(restart_timer));
                         this.BeginInvoke(new MethodInvoker(preview_state));
+                        this.BeginInvoke(new MethodInvoker(restart_timer));
                         
                         break;
                     case InteractionType.Call:
@@ -3300,9 +3300,9 @@ namespace CIC
                         this.CrmScreenPop();
 
                         // restart timer and reset call index
-                        this.BeginInvoke(new MethodInvoker(restart_timer));
                         // TODO: need to check whether it is predictive or preview
                         this.BeginInvoke(new MethodInvoker(preview_state));
+                        this.BeginInvoke(new MethodInvoker(restart_timer));
                         break;
                 }
                 log.Info(scope + "Completed.");
