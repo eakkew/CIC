@@ -1361,7 +1361,7 @@ namespace CIC
         private void Initialize_InteractionAttributes()
         {
             string scope = "CIC::MainForm::Initial_InteractionAttributes():: ";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             this.InteractionAttributes = new string[] 
             {
                 InteractionAttributeName.AccountCodeId,
@@ -1406,7 +1406,7 @@ namespace CIC
                 InteractionAttributeName.WorkgroupQueueName,
                 InteractionAttributeName.WrapUpCodeId
             };
-            //Tracing.TraceStatus(scope + "Completed.");
+            log.Info(scope + "Completed.");
         }
 
         private void Initial_NormalInteraction()
