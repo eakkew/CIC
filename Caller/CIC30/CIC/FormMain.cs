@@ -2763,21 +2763,27 @@ namespace CIC
                 {
                     case FormMainState.Preview:
                         preview_state();
+                        log.Info("State Changed: Preview");
                         break;
                     case FormMainState.Connected:
                         connected_state();
+                        log.Info("State Changed: Connected");
                         break;
                     case FormMainState.Calling:
                         calling_state();
+                        log.Info("State Changed: Calling");
                         break;
                     case FormMainState.PreviewCall :
                         preview_call_state();
+                        log.Info("State Changed: Preview Call");
                         break;
                     case FormMainState.ConferenceCall:
                         preview_call_state();
+                        log.Info("State Changed: Conference Call");
                         break;
                     case FormMainState.ManualCall:
                         preview_call_state();
+                        log.Info("State Changed: Manual Call");
                         break;
                     case FormMainState.Hold:
                         switch (current_state)
@@ -2789,6 +2795,7 @@ namespace CIC
                                 hold_button.Text = "Unhold";
                                 state_info_label.Text = "Hold call from: " + callingNumber;
                                 hold_state();
+                                log.Info("State Changed: Hold");
                                 break;
                             // case Mute state -> change to hold state.
                             case FormMainState.Mute:
@@ -2796,12 +2803,14 @@ namespace CIC
                                 mute_button.Text = "Mute";
                                 state_info_label.Text = "Hold call from: " + callingNumber;
                                 hold_state();
+                                log.Info("State Changed: Hold");
                                 break;
                             // case Hold state -> change to calling state
                             case FormMainState.Hold:
                                 hold_button.Text = "Hold";
                                 state_info_label.Text = "Continue call from: " + callingNumber;
                                 state_change(FormMainState.PreviewCall);
+                                log.Info("State Changed: Unhold -> Preview Call");
                                 break;
                         }
                         break;
@@ -2815,6 +2824,7 @@ namespace CIC
                                 mute_button.Text = "Unmute";
                                 state_info_label.Text = "Mute call from: " + callingNumber;
                                 mute_state();
+                                log.Info("State Changed: Mute");
                                 break;
                             // case Mute state -> change to hold state.
                             case FormMainState.Hold:
@@ -2822,27 +2832,37 @@ namespace CIC
                                 hold_button.Text = "Hold";
                                 state_info_label.Text = "Mute call from: " + callingNumber;
                                 mute_state();
+                                log.Info("State Changed: Mute");
                                 break;
-                            // case Hold state -> change to calling state
+                            // case Mute state -> change to calling state
                             case FormMainState.Mute:
                                 mute_button.Text = "Mute";
                                 state_info_label.Text = "Continue call from: " + callingNumber;
                                 state = FormMainState.PreviewCall;
                                 state_change(FormMainState.PreviewCall);
+                                log.Info("State Changed: Unmute -> Preview Call");
                                 break;
                         }
                         break;
                     case FormMainState.Disconnected:
                         disconnect_state();
+                        log.Info("State Changed: Disconnected");
                         break;
                     case FormMainState.Break:
                         if (break_requested)
+                        {
                             break_state();
+                            log.Info("State Changed: Break");
+                        }
                         else
+                        {
                             preview_state();
+                            log.Info("State Changed: Unbreak -> Preview");
+                        }
                         break;
                     case FormMainState.Loggedout:
                         logged_out_state();
+                        log.Info("State Changed: Logged Out");
                         break;
                 }
         }
