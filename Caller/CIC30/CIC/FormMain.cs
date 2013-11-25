@@ -1739,7 +1739,7 @@ namespace CIC
         private Interaction GetNormalInteractionFromList()
         {
             string scope = "CIC::frmMain::GetNormalInteractionFromList()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             ININ.IceLib.Interactions.Interaction retInteraction = null;
             if (this.InteractionList != null)
             {
@@ -1752,7 +1752,7 @@ namespace CIC
                     }
                 }
             }
-            //Tracing.TraceStatus(scope + "Completed.");
+            log.Info(scope + "Completed.");
             return retInteraction;
         }
 
