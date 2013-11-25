@@ -1732,6 +1732,7 @@ namespace CIC
             {
                 string output = String.Format("Something really bad happened: {0}", ex.Message);
                 MessageBox.Show(output, "CIC Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                log.ErrorFormat("Something really bad happened: {0}", ex.Message);
             }
         }
 
