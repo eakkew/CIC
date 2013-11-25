@@ -2166,7 +2166,7 @@ namespace CIC
         private void MakeNewConferenceCompleted(object sender, MakeNewConferenceCompletedEventArgs e)
         {
             string scope = "CIC::frmMain::MakeNewConferenceCompleted()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             try
             {
                 //Conference variable
@@ -2177,19 +2177,18 @@ namespace CIC
                 ActiveConsultInteraction = null;
                 state_info_label.Text = "Conferencing";
                 state_change(FormMainState.ConferenceCall);
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info." + ex.Message);
             }
         }
 
         public void transfer_invoke(string transferTxtDestination)
         {
             string scope = "CIC::frmMain::TransferNowToolStripButton_Click()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             this.BlindTransferFlag = false;
             try
             {
@@ -2202,7 +2201,6 @@ namespace CIC
                             //Tracing.TraceNote(scope + "Performing consult transfer");
                             ActiveDialerInteraction.ConsultTransferAsync(ActiveConsultInteraction.InteractionId, TransferCompleted, null);
                             this.RemoveNormalInteractionFromList(ActiveConsultInteraction);
-
 
                             // complete workflow
                             string sFinishcode = global::CIC.Properties.Settings.Default.ReasonCode_Transfereded;
@@ -2221,7 +2219,7 @@ namespace CIC
                     {
                         if (ActiveConsultInteraction != null)
                         {
-                            //Tracing.TraceNote(scope + "Performing consult transfer");
+                            log.Info(scope + "Performing consult transfer");
                             if (ActiveConsultInteraction.InteractionId != ActiveNormalInteraction.InteractionId &&
                                 ActiveNormalInteraction.InteractionId != ActiveDialerInteraction.InteractionId)
                             {
@@ -2258,7 +2256,7 @@ namespace CIC
                         }
                         else
                         {
-                            //Tracing.TraceNote(scope + "Performing blind transfer");
+                            log.Info(scope + "Performing blind transfer");
                             if (transferTxtDestination != "")
                             {
                                 ActiveNormalInteraction.BlindTransfer(transferTxtDestination);
@@ -2268,13 +2266,12 @@ namespace CIC
                     }
                 }
                 this.ResetActiveCallInfo();
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
                 this.ResetActiveCallInfo();
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info." + ex.Message);
             }
         }
 
