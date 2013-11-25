@@ -184,30 +184,29 @@ namespace CIC
         private void InitializeQueueWatcher()
         {
             string scope = "CIC::MainForm::InitializeQueueWatcher():: ";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             try
             {
-                //Tracing.TraceStatus(scope + "Creating instance of InteractionQueue");
+                log.Info(scope + "Creating instance of InteractionQueue");
                 if (this.NormalInterationManager != null)
                 {
                     this.m_InteractionQueue = new ININ.IceLib.Interactions.InteractionQueue(this.NormalInterationManager, new QueueId(QueueType.MyInteractions, this.IC_Session.UserId));
-                    //Tracing.TraceStatus(scope + "Attaching event handlers");
+                    log.Info(scope + "Attaching event handlers");
                     this.m_InteractionQueue.InteractionAdded += new EventHandler<InteractionAttributesEventArgs>(m_InteractionQueue_InteractionAdded);
                     this.m_InteractionQueue.InteractionChanged += new EventHandler<InteractionAttributesEventArgs>(m_InteractionQueue_InteractionChanged);
                     this.m_InteractionQueue.InteractionRemoved += new EventHandler<InteractionEventArgs>(m_InteractionQueue_InteractionRemoved);
                     this.m_InteractionQueue.ConferenceInteractionAdded += new EventHandler<ConferenceInteractionAttributesEventArgs>(m_InteractionQueue_ConferenceInteractionAdded);
                     this.m_InteractionQueue.ConferenceInteractionChanged += new EventHandler<ConferenceInteractionAttributesEventArgs>(m_InteractionQueue_ConferenceInteractionChanged);
                     this.m_InteractionQueue.ConferenceInteractionRemoved += new EventHandler<ConferenceInteractionEventArgs>(m_InteractionQueue_ConferenceInteractionRemoved);
-                    //Tracing.TraceStatus(scope + "Start watching for queue events");
+                    log.Info(scope + "Start watching for queue events");
                     this.Initialize_InteractionAttributes();
                     this.m_InteractionQueue.StartWatchingAsync(this.InteractionAttributes, null, null);
                 }
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info." + ex.Message);
             }
         }
 
