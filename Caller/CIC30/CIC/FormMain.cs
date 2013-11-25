@@ -3133,12 +3133,12 @@ namespace CIC
         private void WorkflowStopped(object sender, WorkflowStoppedEventArgs e)
         {
             string scope = "CIC::MainForm::WorkflowStopped()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             //this.TransferPanelToolStripButton.Enabled = true;
             //this.RequestBreakToolStripButton.Visible = false;
             enable_transfer();
             this.disable_break_request();
-            //Tracing.TraceStatus(scope + "Completed.");
+            log.Info(scope + "Completed.");
         }
 
         private void CampaignTransition(object sender, CampaignTransistionEventArgs e)
