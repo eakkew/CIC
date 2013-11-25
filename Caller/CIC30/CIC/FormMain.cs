@@ -2296,7 +2296,7 @@ namespace CIC
             this.AllStatusMessageListOfUser = null;
             UserStatusUpdate statusUpdate = null;
             string scope = "CIC::frmMain::InitializeStatusMessageDetails()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            log.Info(scope + "Starting.");
             try
             {
                 switch (IcWorkFlow.LoginResult)
@@ -2332,12 +2332,12 @@ namespace CIC
                                     //DoNotDisturbStatusMessageDetails = status;
                                 }
                                 iIndex++;
-                                //Tracing.TraceNote(scope + "Id=" + status.Id + ", MessageText=" + status.MessageText);
+                                log.Info(scope + "Id=" + status.Id + ", MessageText=" + status.MessageText);
                             }
                         }
                         break;
                     default:    //Not Log On to Workflow
-                        //Tracing.TraceNote(scope + "Creating instance of StatusMessageList");
+                        log.Info(scope + "Creating instance of StatusMessageList");
                         if (this.mPeopleManager != null)
                         {
                             string[] nusers = { this.IC_Session.UserId };   //Make value to array 
@@ -2370,7 +2370,7 @@ namespace CIC
                                     }
                                     iIndex++;
                                 }
-                               // Tracing.TraceNote(scope + "Id=" + status.Id + ", MessageText=" + status.MessageText);
+                               log.Info(scope + "Id=" + status.Id + ", MessageText=" + status.MessageText);
                             }
                         }
                         break;
@@ -2411,8 +2411,7 @@ namespace CIC
             }
             catch (System.Exception ex)
             {
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info." + ex.Message);
             }
         }
 
