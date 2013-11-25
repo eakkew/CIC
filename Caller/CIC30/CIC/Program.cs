@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using ININ.IceLib;
 using ININ.IceLib.Connection;
 using ININ.IceLib.Dialer;
+using log4net;
 
 namespace CIC
 {
@@ -19,6 +20,8 @@ namespace CIC
   {
 
 #region Global Variable Definition 
+      private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
       private static string wildcardKey = "/i3reset";
       private static bool _Initialized = false;
       private static bool _EstablishPersistentConnection = false;
@@ -147,18 +150,17 @@ namespace CIC
                   string eDescription = "CIC::Program::Main()::" + e.Message;
                   global::CIC.Properties.Settings.Default.Reset();
                   global::CIC.Properties.Settings.Default.Reload();
-                  //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, "CIC::Program::Main()::Error info." + e.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
-                  Tracing.TraceNote(eDescription);
+                  log.Fatal(eDescription);
               }
               global::CIC.Properties.Settings.Default.Save();
-              Tracing.TraceNote("CIC::Program::Main()::Application end.");
+              log.Info("CIC::Program::Main()::Application end.");
           }
           else
           {
               //Reset All Registry
               global::CIC.Properties.Settings.Default.Reset();
               global::CIC.Properties.Settings.Default.Reload();
-              //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, AppError, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+              log.Fatal(Application.ProductName + AppError + System.Diagnostics.EventLogEntryType.Error);
               MessageBox.Show(AppError,"Application Error!", MessageBoxButtons.OK, MessageBoxIcon.Information);
           }
           Application.Exit();
