@@ -3080,7 +3080,6 @@ namespace CIC
 
         private void placecall_or_pickup()
         {
-            bool mySwitch = true;
             if (!IcWorkFlow.LoginResult)
             {
                 if (IsNormalInteractionAvailableForPickup())
