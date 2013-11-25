@@ -1487,6 +1487,9 @@ namespace CIC
 
         private void mSession_Changed(object sender, ConnectionStateChangedEventArgs e)
         {
+            string scope = "CIC::MainForm::mSession_Changed()::";
+            log.Info(scope + "Starting.");
+
             // TODO: clean up this function
             Application.DoEvents();
             switch (e.State)
@@ -1505,7 +1508,7 @@ namespace CIC
                     
                     this.InitializeDialerSession();
                     this.SetActiveSession(Program.m_Session);
-                    //Tracing.TraceStatus(scope + "Completed.");
+                    log.Info(scope + "Completed.");
                     this.Initial_NormalInteraction();
                     this.InitializeQueueWatcher();
                     this.BeginInvoke(new MethodInvoker(connected_state));
