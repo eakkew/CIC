@@ -246,7 +246,6 @@ namespace CIC
                             break;
                     }
                     this.Set_ConferenceToolStrip();
-                    this.ShowActiveCallInfo();
                     log.Info(scope + "Completed.");
                 }
                 catch (System.Exception ex)
@@ -334,13 +333,11 @@ namespace CIC
                     }
 
                     this.Set_ConferenceToolStrip();
-                    this.ShowActiveCallInfo();
                     log.Info(scope + "Completed.");
                 }
                 catch (System.Exception ex)
                 {
                     log.Error(scope + "Error info." + ex.Message);
-                    this.ShowActiveCallInfo();
                 }
             }
         }
@@ -380,7 +377,6 @@ namespace CIC
                                     this.NormalInterationManager, e.Interaction.InteractionType,
                                     e.ConferenceItem.ConferenceId);
                                 ActiveNormalInteraction = e.Interaction;
-                                this.ShowActiveCallInfo();
                             }
                             break;
                         default:
@@ -1051,7 +1047,10 @@ namespace CIC
                         {
                             this.ResetActiveCallInfo();
                         }
-                        this.ShowActiveCallInfo();
+                        else
+                        {
+                            this.ShowActiveCallInfo();
+                        }
                         break;
                     default:
                         ActiveNormalInteraction = e.Interaction;
@@ -1067,7 +1066,6 @@ namespace CIC
                         {
                             this.StrConnectionState = InteractionState.None;
                         }
-                        this.ShowActiveCallInfo();
                         break;
                 }
 
@@ -1085,7 +1083,6 @@ namespace CIC
                         this.BlindTransferFlag = false;
                         this.StrConnectionState = InteractionState.None;
                     }
-                    this.ShowActiveCallInfo();
                 }
             }
         }
@@ -1231,7 +1228,6 @@ namespace CIC
                             new EmailInteraction(this.NormalInterationManager, e.Interaction.InteractionId);
                         //this.SetActiveEmailQueue();
                         ActiveNormalInteraction = e.Interaction;
-                        this.ShowActiveCallInfo();
                         break;
                     case InteractionType.Chat:
                         //
@@ -1241,7 +1237,6 @@ namespace CIC
                             new CallbackInteraction(this.NormalInterationManager, e.Interaction.InteractionId);
                         ActiveNormalInteraction = e.Interaction;
                         this.StrConnectionState = ActiveNormalInteraction.State;
-                        this.ShowActiveCallInfo();
                         break;
                     case InteractionType.Call:
                         if (!e.Interaction.IsDisconnected)
@@ -1262,7 +1257,6 @@ namespace CIC
                                     this.CallerHost = session_Setting.MachineName.ToString();
                                 }
                             }
-                            this.ShowActiveCallInfo();
                             if (!this.IsManualDialing)
                             {
 
@@ -1729,6 +1723,7 @@ namespace CIC
             }
             catch (Exception ex)
             {
+                this.state_change(FormMainState.Connected);
                 log.ErrorFormat("Something really bad happened: {0}", ex.Message);
             }
         }
@@ -2088,7 +2083,6 @@ namespace CIC
                     this.Initial_NormalInteraction();
                     this.InitializeQueueWatcher();
                     this.UpdateUserStatus();
-                    this.ShowActiveCallInfo();
                     this.state_change(FormMainState.Predictive);
                 }
                 else
@@ -2284,7 +2278,7 @@ namespace CIC
         private void TransferCompleted(object sender, AsyncCompletedEventArgs e)
         {
             this.BlindTransferFlag = true;
-            this.ShowActiveCallInfo();
+            this.reset_info_on_dashboard();
             this.BlindTransferFlag = false;
             this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
             state_change(FormMainState.Connected);
@@ -3088,6 +3082,7 @@ namespace CIC
             }
             // TODO: should update message to conntected to: ####
             //state_info_label.Text = "Connected to: " + ActiveNormalInteraction.
+            StrConnectionState = ActiveNormalInteraction.State;
             state_change(FormMainState.ManualCall);
         }
 
@@ -3787,7 +3782,6 @@ namespace CIC
 
                     }
                 }
-                this.ShowActiveCallInfo();
                 log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
