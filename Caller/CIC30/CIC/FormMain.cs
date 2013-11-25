@@ -1872,6 +1872,8 @@ namespace CIC
 
         private void endbreak_button_Click(object sender, EventArgs e)
         {
+            string scope = "CIC::frmMain::endbreak_button_Click()::";
+            log.Info(scope + "Starting.");
             try
             {
                 if (this.ActiveDialerInteraction == null)
@@ -1886,13 +1888,13 @@ namespace CIC
                             break_requested = false;
                             break_granted = false;
                             this.state_info_label.Text = "Break ended. Waiting for a new call from workflow.";
+                            log.Info(scope + "Complete.");
                     }
                 }
             }
             catch (System.Exception ex)
             {
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.ErrorFormat(scope + "Error info." + ex.Message);
             }
         }
 
