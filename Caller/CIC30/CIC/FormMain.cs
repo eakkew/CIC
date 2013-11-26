@@ -125,6 +125,7 @@ namespace CIC
                 {
                     if (global::CIC.Program.m_Session == null)
                     {
+                        log.Info(scope + "Creating instance of Session");
                         global::CIC.Program.m_Session = new Session();
                         global::CIC.Program.IcStation = new ICStation(global::CIC.Program.m_Session);
                         global::CIC.Program.m_Session.SetAutoReconnectInterval(this.AutoReconnect);   //Time in seccond to Reconnected.
@@ -136,6 +137,7 @@ namespace CIC
                             global::CIC.Program.mLoginParam.PhoneNumber, global::CIC.Program.mLoginParam.Persistent,
                             this.SessionConnectCompleted, null
                         );
+                        log.Info(scope + "Complete creating instance of Session");
                     }
 
                     ININ.IceLib.Connection.Session session = global::CIC.Program.m_Session;
@@ -1419,18 +1421,6 @@ namespace CIC
                 }
                 log.Info(scope + "Getting an instance of PeopleManager[Normal Interactions].");
                 this.mPeopleManager = PeopleManager.GetInstance(this.IC_Session);
-                //this.WebBrowserStatusToolStripStatusLabel.Text = "";
-                //if (this.sCollectUserSelect != null)
-                //{
-                //    if (this.sCollectUserSelect.Trim() != "")
-                //    {
-                //        this.IVRMenu.Enabled = true;
-                //    }
-                //    else
-                //    {
-                //        this.IVRMenu.Enabled = false;
-                //    }
-                //}
                 log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
@@ -1496,16 +1486,20 @@ namespace CIC
                         this.IsActiveConnection = true;       //Set to ActiveConnection.
                         //this.SetStatusBarStripMsg();
                     }
-                    //this.BeginInvoke(new MethodInvoker(login_workflow)); 
-                    
-                    this.InitializeDialerSession();
-                    this.SetActiveSession(Program.m_Session);
-                    log.Info(scope + "Completed.");
+                    try
+                    {
+                        this.SetActiveSession(Program.m_Session);
+                    }
+                    catch (Exception ex)
+                    {
+                        log.Error(scope + "Error info." + ex.Message);
+                    }
 
                     this.Initial_NormalInteraction();
-                    //this.InitializeQueueWatcher();
+                    this.InitializeQueueWatcher();
                     this.BeginInvoke(new MethodInvoker(connected_state));
                     this.state_info_label.Text = "Connected to the server.";
+                    log.Info(scope + "Completed.");
                     break;
                 case ININ.IceLib.Connection.ConnectionState.Down:
                     if (this.IsActiveConnection)
@@ -2220,8 +2214,7 @@ namespace CIC
                         if (ActiveConsultInteraction != null)
                         {
                             log.Info(scope + "Performing consult transfer");
-                            if (ActiveConsultInteraction.InteractionId != ActiveNormalInteraction.InteractionId &&
-                                ActiveNormalInteraction.InteractionId != ActiveDialerInteraction.InteractionId)
+                            if (ActiveConsultInteraction.InteractionId != ActiveNormalInteraction.InteractionId)
                             {
                                 ActiveNormalInteraction.ConsultTransferAsync(ActiveConsultInteraction.InteractionId, TransferCompleted, null);
                                 this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
@@ -2246,7 +2239,7 @@ namespace CIC
 
                                     if (ActiveNormalInteraction != null)
                                     {
-                                        ActiveNormalInteraction.ConsultTransferAsync(ActiveConsultInteraction.InteractionId, TransferCompleted, null);
+                                        ActiveConsultInteraction.ConsultTransferAsync(ActiveNormalInteraction.InteractionId, TransferCompleted, null);
                                         this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
                                         this.RemoveNormalInteractionFromList(ActiveConsultInteraction);
                                         this.BlindTransferFlag = true;
@@ -2465,14 +2458,9 @@ namespace CIC
                             this.toolStripCampaignIDLabel.Text = mDialerData[Properties.Settings.Default.Preview_Campaign_ATTR];
                         }
                         catch (Exception ex)
-                        { }
-                        //this.CallIdToolStripStatusLabel.Text = this.ActiveDialerInteraction.CallIdKey.ToString().Trim();
-                        //this.DirectiontoolStripStatus.Text = this.ActiveDialerInteraction.Direction.ToString();
-                        //this.CallTypeToolStripStatusLabel.Text = "Campaign Call";
-                        //this.CampaignIdToolStripStatusLabel.Text = this.mDialerData[Properties.Settings.Default.Preview_Campaign_ATTR];
-                        //this.QueueNameToolStripStatusLabel.Text = this.mDialerData[Properties.Settings.Default.Preview_QueueName_ATTR];
-                        //this.NumberToolStripStatusLabel.Text = this.GetDialerNumber();
-                        //this.CallStateToolStripStatusLabel.Text = this.ActiveDialerInteraction.StateDescription.ToString();
+                        {
+                            log.Warn(scope + "Error info. " + ex.Message);
+                        }
                     }
                 } 
                 else
@@ -2480,14 +2468,22 @@ namespace CIC
                     if (ActiveNormalInteraction == null)
                     {
                         // TODO: disable direction|calltype|campaignID|queuename|number|callstate|callID
-                        //this.ActiveConferenceInteraction = null;
+                        this.toolStripCallIDLabel.Text = "N/A";
+                        this.toolStripDirectionLabel.Text = "N/A";
+                        this.toolStripCallTypeLabel.Text = "N/A";
+                        this.toolStripCampaignIDLabel.Text = "N/A";
+                        ActiveConferenceInteraction = null;
                     }
                     else
                     {
                         if (this.BlindTransferFlag)
                         {
                             // TODO: disable direction|calltype|campaignID|queuename|number|callstate|callID
-                            //this.ActiveConferenceInteraction = null;
+                            this.toolStripCallIDLabel.Text = "N/A";
+                            this.toolStripDirectionLabel.Text = "N/A";
+                            this.toolStripCallTypeLabel.Text = "N/A";
+                            this.toolStripCampaignIDLabel.Text = "N/A";
+                            ActiveConferenceInteraction = null;
                         }
                         else
                         {
@@ -2500,9 +2496,6 @@ namespace CIC
                                     {
                                         this.SetActiveCallInfo();
                                         this.ShowActiveCallInfo();
-                        
-                                        // restart timer and reset call index
-                                        //this.BeginInvoke(new MethodInvoker(restart_timer));
                                     }
                                     else
                                     {
@@ -2521,12 +2514,9 @@ namespace CIC
                                             this.toolStripCampaignIDLabel.Text = "Non-campaign Call";
                                         }
                                         catch (Exception ex)
-                                        { }
-                                        //this.DirectiontoolStripStatus.Text = ActiveNormalInteraction.Direction.ToString();
-                                        //this.CallTypeToolStripStatusLabel.Text = ActiveNormalInteraction.InteractionType.ToString();
-                                        //this.CampaignIdToolStripStatusLabel.Text = "Non-campaign Call";
-                                        //this.QueueNameToolStripStatusLabel.Text = ActiveNormalInteraction.WorkgroupQueueName.ToString();
-                                        //this.NumberToolStripStatusLabel.Text = ActiveNormalInteraction.RemoteDisplay.ToString();
+                                        {
+                                            log.Warn(scope + "Error info. " + ex.Message);
+                                        }
                                     }
                                     //this.CallIdToolStripStatusLabel.Text = this.ActiveNormalInteraction.CallIdKey.ToString().Trim();
                                     break;
@@ -2535,7 +2525,6 @@ namespace CIC
                                         this.toolStripStatus.Text = "Muted";
                                     else
                                         this.toolStripStatus.Text = ActiveNormalInteraction.State.ToString();
-                                    // TODO: set info as below
                                     this.toolStripCallIDLabel.Text = "N/A";
                                     this.toolStripDirectionLabel.Text = ActiveNormalInteraction.Direction.ToString();
                                     this.toolStripCallTypeLabel.Text = ActiveNormalInteraction.InteractionType.ToString();
@@ -2544,15 +2533,11 @@ namespace CIC
                                         this.toolStripCampaignIDLabel.Text = "Non-campaign Call";
                                     }
                                     catch (Exception ex)
-                                    { }
-                                    //this.DirectiontoolStripStatus.Text = ActiveNormalInteraction.Direction.ToString();
-                                    //this.CallTypeToolStripStatusLabel.Text = ActiveNormalInteraction.InteractionType.ToString();
-                                    //this.CampaignIdToolStripStatusLabel.Text = "Non-campaign Call";
-                                    //this.QueueNameToolStripStatusLabel.Text = ActiveNormalInteraction.WorkgroupQueueName.ToString();
-                                    //this.NumberToolStripStatusLabel.Text = ActiveNormalInteraction.RemoteDisplay.ToString();
+                                    {
+                                        log.Warn(scope + "Error info. " + ex.Message);
+                                    }
                                     break;
                                 default:
-                                    // TODO: set info as below
                                     this.toolStripCallIDLabel.Text = "N/A";
                                     this.toolStripDirectionLabel.Text = ActiveNormalInteraction.Direction.ToString();
                                     this.toolStripCallTypeLabel.Text = ActiveNormalInteraction.InteractionType.ToString();
@@ -2561,11 +2546,9 @@ namespace CIC
                                         this.toolStripCampaignIDLabel.Text = "Non-campaign Call";
                                     }
                                     catch (Exception ex)
-                                    { }
-                                    //this.DirectiontoolStripStatus.Text = ActiveNormalInteraction.Direction.ToString();
-                                    //this.CallTypeToolStripStatusLabel.Text = ActiveNormalInteraction.InteractionType.ToString();
-                                    //this.CampaignIdToolStripStatusLabel.Text = "Non-campaign Call";
-                                    //this.QueueNameToolStripStatusLabel.Text = ActiveNormalInteraction.WorkgroupQueueName.ToString();
+                                    {
+                                        log.Warn(scope + "Error info. " + ex.Message);
+                                    }
                                     this.toolStripStatus.Text = ActiveNormalInteraction.State.ToString();
                                     break;
                             }
@@ -2580,6 +2563,8 @@ namespace CIC
 
         private void update_info_on_dashboard()
         {
+            string scope = "CIC::frmMain::update_info_on_dashboard()::";
+            log.Info(scope + "Starting.");
             Dictionary<string, string> data = this.ActiveDialerInteraction.ContactData;
             this.contractNo_box.Text = data.ContainsKey("is_attr_ContractNumber") ? data["is_attr_ContractNumber"] : "";
             this.license_plate_box.Text = data.ContainsKey("is_attr_CarLicenseNumber") ? data["is_attr_CarLicenseNumber"] : "";
@@ -2609,10 +2594,13 @@ namespace CIC
             update_currency_on_dashboard(data);
 
             this.state_info_label.Text = "Next Calling Number: " + callingNumber;
+            log.Info(scope + "Completed.");
         }
 
         private void update_currency_on_dashboard(Dictionary<string, string> data)
         {
+            string scope = "CIC::frmMain::update_currency_on_dashboard()::";
+            log.Info(scope + "Starting.");
             // deal with currency data
             string lastReceiveAmount = data.ContainsKey("is_attr_LastReceiveAmountPayment") ? data["is_attr_LastReceiveAmountPayment"] : "";
             string initialAmount = data.ContainsKey("is_attr_InitialAmount") ? data["is_attr_InitialAmount"] : "";
@@ -2625,7 +2613,7 @@ namespace CIC
             catch (Exception ex)
             {
                 this.last_amount_payment_box.Text = lastReceiveAmount;
-                log.Error("the data in last_amount_payment_box cannot be parse to currency format");
+                log.Error("the data in last_amount_payment_box cannot be parse to currency format: " + ex.Message);
             }
 
             try
@@ -2635,7 +2623,7 @@ namespace CIC
             catch (Exception ex)
             {
                 this.initial_amount_box.Text = initialAmount;
-                log.Error("the data in initial_amount_box cannot be parse to currency format");
+                log.Error("the data in initial_amount_box cannot be parse to currency format: " + ex.Message);
             }
 
             try
@@ -2645,7 +2633,7 @@ namespace CIC
             catch (Exception ex)
             {
                 this.monthly_payment_box.Text = monthlyPayment;
-                log.Error("the data in monthly_payment_box cannot be parse to currency format");
+                log.Error("the data in monthly_payment_box cannot be parse to currency format: " + ex.Message);
             }
 
             try
@@ -2655,8 +2643,9 @@ namespace CIC
             catch (Exception ex)
             {
                 this.base_debt_box.Text = baseDebt;
-                log.Error("the data in base_debt_box cannot be parse to currency format");
+                log.Error("the data in base_debt_box cannot be parse to currency format: " + ex.Message);
             }
+            log.Info(scope + "Completed.");
         }
 
         private void update_conference_status()
@@ -2673,7 +2662,14 @@ namespace CIC
                     ActiveConferenceInteraction = null;
                     if (ActiveNormalInteraction != null)
                     {
-                        ActiveNormalInteraction.Disconnect();
+                        try
+                        {
+                            ActiveNormalInteraction.Disconnect();
+                        }
+                        catch (Exception ex)
+                        {
+                            log.Error(scope + "Error info." + ex.Message);
+                        }
                         ActiveNormalInteraction = null;
                     }
                     if (!IcWorkFlow.LoginResult)
@@ -2755,12 +2751,17 @@ namespace CIC
 
         private void exit_button_Click(object sender, EventArgs e)
         {
+            string scope = "CIC::MainForm::exit_button_Click()::";
+            log.Info(scope + "Starting.");
             this.ExitFlag = true;
+            log.Info(scope + "Completing.");
             this.Close();
         }
 
         private void state_change(FormMainState state)
         {
+            string scope = "CIC::MainForm::state_change()::";
+            log.Info(scope + "Starting.");
             // TODO: implement all states
             switch (state)
                 {
@@ -2872,6 +2873,7 @@ namespace CIC
                         log.Info("State Changed: Logged Out");
                         break;
                 }
+            log.Info(scope + "Completed");
         }
         
         private void reset_state()
@@ -3253,19 +3255,14 @@ namespace CIC
                         this.ShowActiveCallInfo();
                         this.CrmScreenPop();
 
-                        // restart timer and reset call index
                         this.BeginInvoke(new MethodInvoker(preview_call_state));
-                        //this.BeginInvoke(new MethodInvoker(restart_timer));
                         break;
                     case InteractionType.Call:
                         this.Initialize_ContactData();
                         this.ShowActiveCallInfo();
                         this.CrmScreenPop();
 
-                        // restart timer and reset call index
                         this.BeginInvoke(new MethodInvoker(preview_call_state));
-                        //this.BeginInvoke(new MethodInvoker(restart_timer));
-                        //this.state_change(FormMainState.Preview);
                         break;
                 }
                 log.Info(scope + "Completed.");
@@ -3662,14 +3659,22 @@ namespace CIC
         public void MakeManualCall(string number)
         {
             string scope = "CIC::MainForm::MakeManualCall()::";
-            log.Info(scope + "CIC::FormMain::MakeManualCall(string)::");
-            callingNumber = number;
-            this.state_info_label.Text = "Next Calling Number: " + callingNumber;
-            CallInteractionParameters callParams =
-                new CallInteractionParameters(number, CallMadeStage.Allocated);
-            SessionSettings sessionSetting = Program.m_Session.GetSessionSettings();
-            callParams.AdditionalAttributes.Add("CallerHost", sessionSetting.MachineName.ToString());
-            this.NormalInterationManager.MakeCallAsync(callParams, MakeCallCompleted, null);
+            log.Info(scope + "starting");
+            try
+            {
+                callingNumber = number;
+                this.state_info_label.Text = "Next Calling Number: " + callingNumber;
+                CallInteractionParameters callParams =
+                    new CallInteractionParameters(number, CallMadeStage.Allocated);
+                SessionSettings sessionSetting = Program.m_Session.GetSessionSettings();
+                callParams.AdditionalAttributes.Add("CallerHost", sessionSetting.MachineName.ToString());
+                    this.NormalInterationManager.MakeCallAsync(callParams, MakeCallCompleted, null);
+            }
+            catch (Exception ex)
+            {
+                log.Warn(scope + " error(reason: " + ex + ")");
+            }
+            log.Info(scope + "complete");
         }
 
         public void MakeConsultCall(string transferTxtDestination)
