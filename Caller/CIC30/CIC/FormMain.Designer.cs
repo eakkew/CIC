@@ -1028,7 +1028,7 @@
             // toolStripDatetime
             // 
             this.toolStripDatetime.Name = "toolStripDatetime";
-            this.toolStripDatetime.Size = new System.Drawing.Size(54, 17);
+            this.toolStripDatetime.Size = new System.Drawing.Size(49, 17);
             this.toolStripDatetime.Text = "datetime";
             // 
             // toolStripStatusLabel
@@ -1040,55 +1040,55 @@
             // toolStripStatus
             // 
             this.toolStripStatus.Name = "toolStripStatus";
-            this.toolStripStatus.Size = new System.Drawing.Size(68, 17);
+            this.toolStripStatus.Size = new System.Drawing.Size(63, 17);
             this.toolStripStatus.Text = "statusname";
             // 
             // toolStripCallID
             // 
             this.toolStripCallID.Name = "toolStripCallID";
-            this.toolStripCallID.Size = new System.Drawing.Size(47, 17);
+            this.toolStripCallID.Size = new System.Drawing.Size(45, 17);
             this.toolStripCallID.Text = "Call ID: ";
             // 
             // toolStripCallIDLabel
             // 
             this.toolStripCallIDLabel.Name = "toolStripCallIDLabel";
-            this.toolStripCallIDLabel.Size = new System.Drawing.Size(29, 17);
+            this.toolStripCallIDLabel.Size = new System.Drawing.Size(25, 17);
             this.toolStripCallIDLabel.Text = "N/A";
             // 
             // toolStripDirection
             // 
             this.toolStripDirection.Name = "toolStripDirection";
-            this.toolStripDirection.Size = new System.Drawing.Size(61, 17);
+            this.toolStripDirection.Size = new System.Drawing.Size(56, 17);
             this.toolStripDirection.Text = "Direction: ";
             // 
             // toolStripDirectionLabel
             // 
             this.toolStripDirectionLabel.Name = "toolStripDirectionLabel";
-            this.toolStripDirectionLabel.Size = new System.Drawing.Size(29, 17);
+            this.toolStripDirectionLabel.Size = new System.Drawing.Size(25, 17);
             this.toolStripDirectionLabel.Text = "N/A";
             // 
             // toolStripCallType
             // 
             this.toolStripCallType.Name = "toolStripCallType";
-            this.toolStripCallType.Size = new System.Drawing.Size(62, 17);
+            this.toolStripCallType.Size = new System.Drawing.Size(58, 17);
             this.toolStripCallType.Text = "Call Type: ";
             // 
             // toolStripCallTypeLabel
             // 
             this.toolStripCallTypeLabel.Name = "toolStripCallTypeLabel";
-            this.toolStripCallTypeLabel.Size = new System.Drawing.Size(29, 17);
+            this.toolStripCallTypeLabel.Size = new System.Drawing.Size(25, 17);
             this.toolStripCallTypeLabel.Text = "N/A";
             // 
             // toolStripCampaignID
             // 
             this.toolStripCampaignID.Name = "toolStripCampaignID";
-            this.toolStripCampaignID.Size = new System.Drawing.Size(82, 17);
+            this.toolStripCampaignID.Size = new System.Drawing.Size(75, 17);
             this.toolStripCampaignID.Text = "Campaign ID: ";
             // 
             // toolStripCampaignIDLabel
             // 
             this.toolStripCampaignIDLabel.Name = "toolStripCampaignIDLabel";
-            this.toolStripCampaignIDLabel.Size = new System.Drawing.Size(29, 17);
+            this.toolStripCampaignIDLabel.Size = new System.Drawing.Size(25, 17);
             this.toolStripCampaignIDLabel.Text = "N/A";
             // 
             // previewCallTimer
@@ -1242,7 +1242,7 @@
             this.Controls.Add(this.panel1);
             this.Name = "FormMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "CIC";
+            this.Text = "Outbound Telephony Dialer Client";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormMain_FormClosed);
             this.Load += new System.EventHandler(this.FormMain_Load);
             this.flowLayoutPanel1.ResumeLayout(false);

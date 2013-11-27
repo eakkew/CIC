@@ -34,7 +34,7 @@ namespace CIC
         LoginButton.Enabled = false;
         LogInPreviewStatus.Visible = false;
         lblLogInStatusMsg.Visible = false;
-        this.Text = Properties.Settings.Default.ApplicationTitle;
+        //this.Text = Properties.Settings.Default.ApplicationTitle;
 
         //log.Debug("this is the first log message");
     }
