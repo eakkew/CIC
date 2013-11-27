@@ -2006,8 +2006,17 @@ namespace CIC
                                 {
                                     if (this.AvailableStatusMessageDetails != null)
                                     {
-                                        statusUpdate.StatusMessageDetails = this.AvailableStatusMessageDetails;
-                                        statusUpdate.UpdateRequest();
+                                        log.Info(scope + "Starting Update User Status.");
+                                        try
+                                        {
+                                            statusUpdate.StatusMessageDetails = this.AvailableStatusMessageDetails;
+                                            statusUpdate.UpdateRequest();
+                                            log.Info(scope + "Completed Update User Status.");
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            log.Error(scope + "Could not update User Status. Error info." + ex.Message);
+                                        }
                                     }
                                 }
 
@@ -2322,7 +2331,7 @@ namespace CIC
 
                                     if (status.MessageText.ToLower().Trim() == "do not disturb")
                                     {
-                                        //DoNotDisturbStatusMessageDetails = status;
+                                        DoNotDisturbStatusMessageDetails = status;
                                     }
                                     iIndex++;
                                     log.Info(scope + "Id=" + status.Id + ", MessageText=" + status.MessageText);
@@ -2359,7 +2368,7 @@ namespace CIC
                                         }
                                         if (status.MessageText.ToLower().Trim() == "do not disturb")
                                         {
-                                            //DoNotDisturbStatusMessageDetails = status;
+                                            DoNotDisturbStatusMessageDetails = status;
                                         }
                                         iIndex++;
                                     }
