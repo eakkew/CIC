@@ -566,6 +566,7 @@ namespace CIC
             this.toolStripDirectionLabel.Text = "N/A";
             this.toolStripCallTypeLabel.Text = "N/A";
             this.toolStripCampaignIDLabel.Text = "N/A";
+            this.toolStripWorkflowLabel.Text = "N/A";
         }
 
         private void SetInfoBarColor()
@@ -2063,6 +2064,7 @@ namespace CIC
                 log.Info(scope + "Logging into workflow. UserId=" + this.IC_Session.UserId + ", StationId=" + this.IC_Session.GetStationInfo().Id);
                 IcWorkFlow = new CIC.ICWorkFlow(CIC.Program.DialingManager);
                 this.DialerSession = IcWorkFlow.LogIn(((String)sender));
+                this.toolStripWorkflowLabel.Text = (string)sender;
                 //IcWorkFlow.LoginResult = IcWorkFlow.LoginResult;
                 if (IcWorkFlow.LoginResult)
                 {
