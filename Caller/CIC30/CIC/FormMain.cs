@@ -3183,7 +3183,7 @@ namespace CIC
             }
             catch (Exception ex)
             {
-
+                log.Warn("date/time cannot be parsed: get(" + datetime + ") expected in " + oldFormat + "format: "+ex.Message);
             }
             return "";
         }
@@ -4144,7 +4144,7 @@ namespace CIC
                 }
                 catch (Exception ex)
                 {
-
+                    log.Error("DialerSession cannot RequestLogout: " + ex.Message);
                 }
             }
         }
@@ -4163,7 +4163,7 @@ namespace CIC
                         }
                         catch (Exception ex)
                         {
-
+                            log.Error("CurrentInteraction cannot disconnect!: " + ex.Message);
                         }
                     }
                 }

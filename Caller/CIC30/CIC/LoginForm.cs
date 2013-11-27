@@ -16,12 +16,13 @@ namespace CIC
 
 #region  Variable Declaration
 
+    private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
     private CIC.Utils.LoginResult mResult;
     private ININ.IceLib.Connection.Session mSession;
     private int SoftPhoneRegistryIndex = 0;
     private string StrSoftPhoneKey = "software\\Interactive Intelligence\\SIP Soft Phone";
     private string SoftPhoneStationNameKey = "Station";
-    //private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 #endregion
 
@@ -34,9 +35,6 @@ namespace CIC
         LoginButton.Enabled = false;
         LogInPreviewStatus.Visible = false;
         lblLogInStatusMsg.Visible = false;
-        //this.Text = Properties.Settings.Default.ApplicationTitle;
-
-        //log.Debug("this is the first log message");
     }
 
     private string GetSIPSoftPhoneStationID
@@ -528,7 +526,7 @@ namespace CIC
             this.lblLogInStatusMsg.Text = "Please check your key file.";
             System.Windows.Forms.MessageBox.Show("Please check your key file.", "CIC-Agent error info.", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
             this.mResult = CIC.Utils.LoginResult.Cancelled;
-            //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, "KeyFile :: Error info."+ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+            log.Error("KeyFile :: Error info."+ex.Message); //Window Event Log
             Application.Exit();
         }
       }

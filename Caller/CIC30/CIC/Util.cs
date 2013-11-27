@@ -4,11 +4,14 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using log4net;
 
 namespace CIC
 {
     class Util
     {
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public static string GetFilenameFromFilePath(string FilePath)
         {
             string sResult = "";
@@ -76,7 +79,7 @@ namespace CIC
             catch (System.Exception ex)
             {
                 sRet = Properties.Settings.Default.StartupUrl.ToString();
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                log.Error(scope + "Error info." + ex.Message);
             }
             return sRet;
         }
