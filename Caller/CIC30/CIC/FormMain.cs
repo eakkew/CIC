@@ -1027,10 +1027,6 @@ namespace CIC
                         //
                         break;
                     case InteractionType.Call:
-                        if (ActiveNormalInteraction.IsDisconnected && e.Interaction.IsConnected)
-                        {
-                            state_info_label.Text = "Connected to: " + callingNumber;
-                        }
                         ActiveNormalInteraction = e.Interaction;
                         this.StrConnectionState = ActiveNormalInteraction.State;
                         if (ActiveNormalInteraction != null)
@@ -2269,12 +2265,15 @@ namespace CIC
 
         private void TransferCompleted(object sender, AsyncCompletedEventArgs e)
         {
+            string scope = "CIC::frmMain::TransferCompleted()::";
+            log.Info(scope + "Starting.");
             this.BlindTransferFlag = true;
             this.reset_info_on_dashboard();
             this.BlindTransferFlag = false;
             this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
             state_change(FormMainState.Connected);
             state_info_label.Text = "Transfer complete.";
+            log.Info(scope + "Completed");
         }
 
         private void UpdateUserStatus()
@@ -3254,13 +3253,17 @@ namespace CIC
                         this.ShowActiveCallInfo();
                         this.CrmScreenPop();
 
+                        state_info_label.Text = "Connected to: " + callingNumber;
+                        
                         this.BeginInvoke(new MethodInvoker(preview_call_state));
                         break;
                     case InteractionType.Call:
                         this.Initialize_ContactData();
                         this.ShowActiveCallInfo();
                         this.CrmScreenPop();
-
+                    
+                        state_info_label.Text = "Connected to: " + callingNumber;
+                    
                         this.BeginInvoke(new MethodInvoker(preview_call_state));
                         break;
                 }
@@ -3295,7 +3298,6 @@ namespace CIC
                         this.Initialize_CallBack();
                         this.Initialize_ContactData();
                         this.ShowActiveCallInfo();
-                        this.CrmScreenPop();
 
                         // restart timer and reset call index
                         this.BeginInvoke(new MethodInvoker(preview_state));
@@ -3305,7 +3307,6 @@ namespace CIC
                     case InteractionType.Call:
                         this.Initialize_ContactData();
                         this.ShowActiveCallInfo();
-                        this.CrmScreenPop();
 
                         // restart timer and reset call index
                         // TODO: need to check whether it is predictive or preview
