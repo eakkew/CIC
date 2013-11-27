@@ -4164,7 +4164,7 @@ namespace CIC
                         }
                         catch (Exception ex)
                         {
-
+                            log.Error("CurrentInteraction cannot disconnect!: " + ex.Message);
                         }
                     }
                 }
