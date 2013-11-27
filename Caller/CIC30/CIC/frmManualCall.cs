@@ -8,11 +8,14 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using log4net;
 
 namespace CIC
 {
     public partial class frmManualCall : Form
     {
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private static frmManualCall instance = null;
 
         public static frmManualCall getInstance()
@@ -39,8 +42,8 @@ namespace CIC
         private void call_button_Click(object sender, EventArgs e)
         {
             // call back to main form to make a call and close this form
-            string scope = "CIC::frmMain::CallToolStripButton_ButtonClick()::";
-            //Tracing.TraceStatus(scope + "Starting.");
+            string scope = "CIC::frmManualCall::call_button_click()::";
+            log.Info(scope + "Starting.");
             try
             {
                 //this.CallToolStripSplitButton.Enabled = false;
@@ -49,17 +52,17 @@ namespace CIC
                     Program.MainDashboard.MakeManualCall(phone_box.Text);
                 }
                 
-                //Tracing.TraceStatus(scope + "Completed.");
+                log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
             {
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                log.Error(scope + "Error info." + ex.Message);
             }
 
             this.phone_box.Text = "";
             this.Close();
         }
+
         /*
          * TODO : Change function name to validate textbox
          */
