@@ -32,6 +32,7 @@ namespace CIC
 
         private void cancel_button_Click(object sender, EventArgs e)
         {
+            this.phone_box.Text = "";
             this.Close();
         }
 
@@ -56,6 +57,7 @@ namespace CIC
                 //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
             }
 
+            this.phone_box.Text = "";
             this.Close();
         }
         /*

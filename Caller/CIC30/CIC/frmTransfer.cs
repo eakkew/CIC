@@ -52,13 +52,23 @@ namespace CIC
             // TODO: unhold current line
             // TODO: make sure the calling was disconnected
             Program.MainDashboard.DisconnectConsultCall();
+            call_button.Enabled = true;
+            transfer_button.Enabled = false;
+            ext_number_box.Enabled = true;
+            ext_number_box.Text = "";
+            cancel_button.Enabled = true;
             this.Close();
         }
 
         private void transfer_button_Click(object sender, EventArgs e)
         {
             // transfer the current connection to another
-            Program.MainDashboard.transfer_invoke(ext_number_box.Text);     
+            Program.MainDashboard.transfer_invoke(ext_number_box.Text);
+            call_button.Enabled = true;
+            transfer_button.Enabled = false;
+            ext_number_box.Enabled = true;
+            ext_number_box.Text = "";
+            cancel_button.Enabled = true;
             this.Close();
         }
 
