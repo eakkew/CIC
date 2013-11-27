@@ -3355,6 +3355,7 @@ namespace CIC
                     baseURI += string.Format("col_call_id={0}", callID);
 
                     Process.Start(baseURI);
+                    log.Info("process.start : " + baseURI);
                     log.Info(scope + "Completed.");
                 }
                 catch (System.Exception ex)
