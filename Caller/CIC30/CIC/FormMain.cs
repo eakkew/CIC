@@ -3180,7 +3180,7 @@ namespace CIC
             }
             catch (Exception ex)
             {
-                
+                log.Error("date/time cannot be parsed: get(" + datetime + ") expected in " + oldFormat + "format");
             }
             return "";
         }
