@@ -182,7 +182,7 @@ namespace CIC
           catch (System.Exception ex)
           {
               System.Windows.Forms.MessageBox.Show("Please check your key file.", "Error Information!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-              log.Fatal(Application.ProductName + " KeyFile :: Error info." + ex.Message + System.Diagnostics.EventLogEntryType.Error + +":: " + ex.StackTrace);
+              log.Fatal(Application.ProductName + " KeyFile :: Error info." + ex.Message + System.Diagnostics.EventLogEntryType.Error + ":: " + ex.StackTrace);
               Application.Exit();
           }
           global::CIC.Program.mLoginParam.WindowsAuthentication = true;  // Aways true on this mode
