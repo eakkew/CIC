@@ -1713,7 +1713,6 @@ namespace CIC
                     }
                     this.state_change(FormMainState.Connected);
                 }
-
             }
             catch (Exception ex)
             {
