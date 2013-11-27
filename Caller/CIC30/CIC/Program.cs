@@ -148,7 +148,7 @@ namespace CIC
                   string eDescription = "CIC::Program::Main()::" + e.Message;
                   global::CIC.Properties.Settings.Default.Reset();
                   global::CIC.Properties.Settings.Default.Reload();
-                  log.Fatal(eDescription);
+                  log.Fatal(eDescription + ":: " + e.StackTrace);
               }
               global::CIC.Properties.Settings.Default.Save();
               log.Info("CIC::Program::Main()::Application end.");
@@ -158,7 +158,7 @@ namespace CIC
               //Reset All Registry
               global::CIC.Properties.Settings.Default.Reset();
               global::CIC.Properties.Settings.Default.Reload();
-              log.Fatal(Application.ProductName + AppError + System.Diagnostics.EventLogEntryType.Error);
+              log.Fatal(System.Diagnostics.EventLogEntryType.Error);
               MessageBox.Show(AppError,"Application Error!", MessageBoxButtons.OK, MessageBoxIcon.Information);
           }
           Application.Exit();
@@ -180,7 +180,7 @@ namespace CIC
           catch (System.Exception ex)
           {
               System.Windows.Forms.MessageBox.Show("Please check your key file.", "Error Information!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-              log.Fatal(Application.ProductName + " KeyFile :: Error info." + ex.Message + System.Diagnostics.EventLogEntryType.Error);
+              log.Fatal(Application.ProductName + " KeyFile :: Error info." + ex.Message + System.Diagnostics.EventLogEntryType.Error + ":: " + ex.StackTrace);
               Application.Exit();
           }
           global::CIC.Program.mLoginParam.WindowsAuthentication = true;  // Aways true on this mode

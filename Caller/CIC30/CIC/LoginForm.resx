@@ -507,6 +507,9 @@
   <data name="CancelLoginButton.Text" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="CancelLoginButton.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>BottomCenter</value>
+  </data>
   <data name="&gt;&gt;CancelLoginButton.Name" xml:space="preserve">
     <value>CancelLoginButton</value>
   </data>
@@ -533,6 +536,9 @@
   </data>
   <data name="LoginButton.Text" xml:space="preserve">
     <value>Login</value>
+  </data>
+  <data name="LoginButton.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>BottomCenter</value>
   </data>
   <data name="&gt;&gt;LoginButton.Name" xml:space="preserve">
     <value>LoginButton</value>
