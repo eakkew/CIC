@@ -573,7 +573,7 @@ namespace CIC
         {
             string scope = "CIC::frmMain::SetInfoBarColor()::";
             log.Info(scope + "Starting.");
-            if (IcWorkFlow.LoginResult)
+            if (IcWorkFlow != null && IcWorkFlow.LoginResult)
             {
                 switch (this.StrConnectionState)
                 {
@@ -2003,7 +2003,7 @@ namespace CIC
                                     this.ActiveDialerInteraction.CallComplete(callCompletionParameters);
                                 }
 
-                                if (this.break_granted)
+                                if (!this.break_granted)
                                 {
                                     if (this.AvailableStatusMessageDetails != null)
                                     {
@@ -2176,7 +2176,7 @@ namespace CIC
 
         public void transfer_invoke(string transferTxtDestination)
         {
-            string scope = "CIC::frmMain::TransferNowToolStripButton_Click()::";
+            string scope = "CIC::frmMain::transfer_invoke()::";
             log.Info(scope + "Starting.");
             this.BlindTransferFlag = false;
             try
@@ -2423,7 +2423,7 @@ namespace CIC
             }
             else
             {
-                if (IcWorkFlow.LoginResult)
+                if (IcWorkFlow != null && IcWorkFlow.LoginResult)
                 {
                     if (this.ActiveDialerInteraction == null)
                     {
@@ -2487,6 +2487,8 @@ namespace CIC
                         }
                         else
                         {
+                            if (ActiveNormalInteraction == null)
+                                return;
                             switch (ActiveNormalInteraction.State)
                             {
                                 case InteractionState.None:
@@ -2672,7 +2674,7 @@ namespace CIC
                         }
                         ActiveNormalInteraction = null;
                     }
-                    if (!IcWorkFlow.LoginResult)
+                    if (IcWorkFlow != null && !IcWorkFlow.LoginResult)
                     {
                         this.ActiveDialerInteraction = null;
                     }
@@ -2969,6 +2971,7 @@ namespace CIC
             conference_button.Enabled = true;
             break_button.Enabled = true;
 
+            state_info_label.Text = "Connected to: " + callingNumber;
             prev_state = current_state;
             current_state = FormMainState.PreviewCall;
         }
@@ -3255,7 +3258,6 @@ namespace CIC
                         this.ShowActiveCallInfo();
                         this.CrmScreenPop();
 
-                        state_info_label.Text = "Connected to: " + callingNumber;
                         
                         this.BeginInvoke(new MethodInvoker(preview_call_state));
                         break;
@@ -3263,8 +3265,6 @@ namespace CIC
                         this.Initialize_ContactData();
                         this.ShowActiveCallInfo();
                         this.CrmScreenPop();
-                    
-                        state_info_label.Text = "Connected to: " + callingNumber;
                     
                         this.BeginInvoke(new MethodInvoker(preview_call_state));
                         break;
@@ -3355,6 +3355,7 @@ namespace CIC
                     baseURI += string.Format("col_call_id={0}", callID);
 
                     Process.Start(baseURI);
+                    log.Info("process.start : " + baseURI);
                     log.Info(scope + "Completed.");
                 }
                 catch (System.Exception ex)
@@ -3372,18 +3373,18 @@ namespace CIC
             if (number == "")
                 return refCallID;
 
-            if (data.ContainsKey("is_attr_Ref_PhoneNo1") && data["is_attr_Ref_PhoneNo1"] == number)
-                refCallID = data["is_attr_Ref_PhoneNo1"];
-            if (data.ContainsKey("is_attr_Ref_PhoneNo2") && data["is_attr_Ref_PhoneNo2"] == number)
-                refCallID = data["is_attr_Ref_PhoneNo2"];
-            if (data.ContainsKey("is_attr_Ref_PhoneNo3") && data["is_attr_Ref_PhoneNo3"] == number)
-                refCallID = data["is_attr_Ref_PhoneNo3"];
-            if (data.ContainsKey("is_attr_Ref_PhoneNo4") && data["is_attr_Ref_PhoneNo4"] == number)
-                refCallID = data["is_attr_Ref_PhoneNo4"];
-            if (data.ContainsKey("is_attr_Ref_PhoneNo5") && data["is_attr_Ref_PhoneNo5"] == number)
-                refCallID = data["is_attr_Ref_PhoneNo5"];
-            if (data.ContainsKey("is_attr_Ref_PhoneNo6") && data["is_attr_Ref_PhoneNo6"] == number)
-                refCallID = data["is_attr_Ref_PhoneNo6"];
+            if (data.ContainsKey("is_attr_PhoneNo1") && data["is_attr_PhoneNo1"] == number)
+                refCallID = data.ContainsKey("is_attr_Ref_PhoneNo1") ? data["is_attr_Ref_PhoneNo1"] : "";
+            if (data.ContainsKey("is_attr_PhoneNo2") && data["is_attr_PhoneNo2"] == number)
+                refCallID = data.ContainsKey("is_attr_Ref_PhoneNo2") ? data["is_attr_Ref_PhoneNo2"] : "";
+            if (data.ContainsKey("is_attr_PhoneNo3") && data["is_attr_PhoneNo3"] == number)
+                refCallID = data.ContainsKey("is_attr_Ref_PhoneNo3") ? data["is_attr_Ref_PhoneNo3"] : "";
+            if (data.ContainsKey("is_attr_PhoneNo4") && data["is_attr_PhoneNo4"] == number)
+                refCallID = data.ContainsKey("is_attr_Ref_PhoneNo4") ? data["is_attr_Ref_PhoneNo4"] : "";
+            if (data.ContainsKey("is_attr_PhoneNo5") && data["is_attr_PhoneNo5"] == number)
+                refCallID = data.ContainsKey("is_attr_Ref_PhoneNo5") ? data["is_attr_Ref_PhoneNo5"] : "";
+            if (data.ContainsKey("is_attr_PhoneNo6") && data["is_attr_PhoneNo6"] == number)
+                refCallID = data.ContainsKey("is_attr_Ref_PhoneNo6") ? data["is_attr_Ref_PhoneNo6"] : "";
 
             return refCallID;
         }
@@ -3670,7 +3671,7 @@ namespace CIC
                     new CallInteractionParameters(number, CallMadeStage.Allocated);
                 SessionSettings sessionSetting = Program.m_Session.GetSessionSettings();
                 callParams.AdditionalAttributes.Add("CallerHost", sessionSetting.MachineName.ToString());
-                    this.NormalInterationManager.MakeCallAsync(callParams, MakeCallCompleted, null);
+                this.NormalInterationManager.MakeCallAsync(callParams, MakeCallCompleted, null);
             }
             catch (Exception ex)
             {
@@ -3940,8 +3941,6 @@ namespace CIC
                             break;
                     }
                     // TODO: add more clean up state
-                    if (ExitFlag)
-                        this.Close();
                     log.Info(scope + "Completed.");
                 }
                 catch (System.Exception ex)
