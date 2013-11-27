@@ -66,10 +66,14 @@ namespace CIC
             if (!Util.form_validation_telephone_number(ext_number_box.Text))
             {
                 ext_number_box.ForeColor = Color.Red;
+
+                this.call_button.Enabled = false;
             }
             else
             {
                 ext_number_box.ForeColor = Color.Black;
+
+                this.call_button.Enabled = true;
             }
         }
 
