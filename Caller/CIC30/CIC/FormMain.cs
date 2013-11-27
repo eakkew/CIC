@@ -4145,7 +4145,7 @@ namespace CIC
                 }
                 catch (Exception ex)
                 {
-
+                    log.Error("DialerSession cannot RequestLogout: " + ex.Message);
                 }
             }
         }
