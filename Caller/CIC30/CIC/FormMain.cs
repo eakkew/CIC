@@ -1706,7 +1706,7 @@ namespace CIC
                         ActiveConsultInteraction = null;
                     }
 
-                    if (this.InteractionList.Count <= 0)
+                    if (this.InteractionList != null && this.InteractionList.Count <= 0)
                     {
                         ActiveConferenceInteraction = null;
                         ActiveConsultInteraction = null;
