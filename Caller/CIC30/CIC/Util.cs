@@ -9,6 +9,8 @@ namespace CIC
 {
     class Util
     {
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public static string GetFilenameFromFilePath(string FilePath)
         {
             string sResult = "";
