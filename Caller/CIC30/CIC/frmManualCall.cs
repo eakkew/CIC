@@ -76,11 +76,16 @@ namespace CIC
         {
             if (!Util.form_validation_telephone_number(phone_box.Text))
             {
+                // invalid phone number
                 phone_box.ForeColor = Color.Red;
+
+                this.call_button.Enabled = false;
             }
             else
             {
                 phone_box.ForeColor = Color.Black;
+
+                this.call_button.Enabled = true;
             }
         }
     }
