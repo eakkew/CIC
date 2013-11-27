@@ -79,7 +79,7 @@ namespace CIC
             catch (System.Exception ex)
             {
                 sRet = Properties.Settings.Default.StartupUrl.ToString();
-                //Tracing.TraceStatus(scope + "Error info." + ex.Message);
+                log.Error(scope + "Error info." + ex.Message);
             }
             return sRet;
         }
