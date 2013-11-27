@@ -935,7 +935,7 @@ namespace CIC
             bool Play_Looping = false;
             int RingCount = 0;
             int PlayCount = 0;
-            if (IcWorkFlow.LoginResult)
+            if (IcWorkFlow != null && IcWorkFlow.LoginResult)
             {
                     sPathWavPath = CIC.Program.ResourcePath + global::CIC.Properties.Settings.Default.DialerAlertSound;
                     AlertFlag = global::CIC.Properties.Settings.Default.DialerAlerting;
@@ -1740,7 +1740,7 @@ namespace CIC
 
         private void hold_button_Click(object sender, EventArgs e)
         {
-            if (IcWorkFlow.LoginResult)
+            if (IcWorkFlow != null && IcWorkFlow.LoginResult)
             {
                 if (this.ActiveDialerInteraction != null)
                 {
@@ -1772,7 +1772,7 @@ namespace CIC
 
         private void mute_button_Click(object sender, EventArgs e)
         {
-            if (IcWorkFlow.LoginResult)
+            if (IcWorkFlow != null && IcWorkFlow.LoginResult)
             {
                 if (this.ActiveDialerInteraction != null)
                 {
@@ -1818,7 +1818,6 @@ namespace CIC
             {
                 frmManualCall manualCall = frmManualCall.getInstance();
                 manualCall.ShowDialog();
-                state_change(FormMainState.ManualCall);
             }
             else
             {
@@ -2096,7 +2095,7 @@ namespace CIC
             ININ.IceLib.Interactions.Interaction[] TmpInteraction;
             try
             {
-                if (IcWorkFlow.LoginResult)
+                if (IcWorkFlow != null && IcWorkFlow.LoginResult)
                 {
                     if (this.ActiveDialerInteraction != null &&
                         ActiveNormalInteraction != null && 
@@ -2181,7 +2180,7 @@ namespace CIC
             this.BlindTransferFlag = false;
             try
             {
-                if (IcWorkFlow.LoginResult)
+                if (IcWorkFlow != null && IcWorkFlow.LoginResult)
                 {
                     if (this.ActiveDialerInteraction != null && this.current_state == FormMainState.PreviewCall)
                     {
@@ -2206,7 +2205,7 @@ namespace CIC
                 }
                 else
                 {
-                    if (ActiveNormalInteraction != null && this.current_state == FormMainState.ManualCall)
+                    if (ActiveNormalInteraction != null && this.current_state == FormMainState.PreviewCall)
                     {
                         if (ActiveConsultInteraction != null)
                         {
@@ -2226,8 +2225,7 @@ namespace CIC
                                     foreach (ININ.IceLib.Interactions.Interaction CurrentInteraction in this.InteractionList)
                                     {
                                         if (CurrentInteraction.InteractionType == InteractionType.Call &&
-                                            CurrentInteraction.InteractionId != ActiveConsultInteraction.InteractionId &&
-                                            CurrentInteraction.InteractionId != ActiveDialerInteraction.InteractionId)
+                                            CurrentInteraction.InteractionId != ActiveConsultInteraction.InteractionId)
                                         {
                                             ActiveNormalInteraction = CurrentInteraction;  //Find Consult Call
                                             break;
@@ -2292,59 +2290,22 @@ namespace CIC
             log.Info(scope + "Starting.");
             try
             {
-                switch (IcWorkFlow.LoginResult)
+                if (IcWorkFlow != null)
                 {
-                    case true: //Log On to Workflow
-                        if (this.mPeopleManager != null)
-                        {
-                            this.AllStatusMessageList = new StatusMessageList(this.mPeopleManager);
-                            this.AllStatusMessageListOfUser = new UserStatusList(this.mPeopleManager);
-                            this.AllStatusMessageListOfUser.WatchedObjectsChanged += new EventHandler<WatchedObjectsEventArgs<UserStatusProperty>>(AllStatusMessageListOfUser_WatchedObjectsChanged);
-                            string[] dusers = { Program.DialingManager.Session.UserId };   //Make value to array 
-                            this.AllStatusMessageListOfUser.StartWatching(dusers);
-                            this.CurrentUserStatus = this.AllStatusMessageListOfUser.GetUserStatus(Program.DialingManager.Session.UserId);
-                            sIconPath = CIC.Program.ResourcePath;
-                            this.AllStatusMessageList.StartWatching();
-                            foreach (StatusMessageDetails status in this.AllStatusMessageList.GetList())
+                    switch (IcWorkFlow.LoginResult)
+                    {
+                        case true: //Log On to Workflow
+                            if (this.mPeopleManager != null)
                             {
-                                sIconName = Util.GetFilenameFromFilePath(status.IconFileName.ToString());
-                                sIconPath += sIconName;
-                                if (System.IO.File.Exists(sIconPath))
-                                {
-                                    Status_icon = new System.Drawing.Icon(sIconPath);
-                                }
-
-                                if (status.MessageText.ToLower().Trim() == "available")
-                                {
-                                    AvailableStatusMessageDetails = status;
-                                    AvailableIndex = iIndex;
-                                }
-
-                                if (status.MessageText.ToLower().Trim() == "do not disturb")
-                                {
-                                    //DoNotDisturbStatusMessageDetails = status;
-                                }
-                                iIndex++;
-                                log.Info(scope + "Id=" + status.Id + ", MessageText=" + status.MessageText);
-                            }
-                        }
-                        break;
-                    default:    //Not Log On to Workflow
-                        log.Info(scope + "Creating instance of StatusMessageList");
-                        if (this.mPeopleManager != null)
-                        {
-                            string[] nusers = { this.IC_Session.UserId };   //Make value to array 
-                            this.AllStatusMessageList = new StatusMessageList(this.mPeopleManager);
-                            this.AllStatusMessageListOfUser = new UserStatusList(this.mPeopleManager);
-                            this.AllStatusMessageListOfUser.WatchedObjectsChanged += 
-                                new EventHandler<WatchedObjectsEventArgs<UserStatusProperty>>(AllStatusMessageListOfUser_WatchedObjectsChanged);
-                            this.AllStatusMessageListOfUser.StartWatching(nusers);
-                            this.CurrentUserStatus = this.AllStatusMessageListOfUser.GetUserStatus(this.IC_Session.UserId);
-                            sIconPath = CIC.Program.ResourcePath;
-                            this.AllStatusMessageList.StartWatching();
-                            foreach (StatusMessageDetails status in this.AllStatusMessageList.GetList())
-                            {
-                                if (status.IsSelectableStatus)
+                                this.AllStatusMessageList = new StatusMessageList(this.mPeopleManager);
+                                this.AllStatusMessageListOfUser = new UserStatusList(this.mPeopleManager);
+                                this.AllStatusMessageListOfUser.WatchedObjectsChanged += new EventHandler<WatchedObjectsEventArgs<UserStatusProperty>>(AllStatusMessageListOfUser_WatchedObjectsChanged);
+                                string[] dusers = { Program.DialingManager.Session.UserId };   //Make value to array 
+                                this.AllStatusMessageListOfUser.StartWatching(dusers);
+                                this.CurrentUserStatus = this.AllStatusMessageListOfUser.GetUserStatus(Program.DialingManager.Session.UserId);
+                                sIconPath = CIC.Program.ResourcePath;
+                                this.AllStatusMessageList.StartWatching();
+                                foreach (StatusMessageDetails status in this.AllStatusMessageList.GetList())
                                 {
                                     sIconName = Util.GetFilenameFromFilePath(status.IconFileName.ToString());
                                     sIconPath += sIconName;
@@ -2352,22 +2313,63 @@ namespace CIC
                                     {
                                         Status_icon = new System.Drawing.Icon(sIconPath);
                                     }
+
                                     if (status.MessageText.ToLower().Trim() == "available")
                                     {
                                         AvailableStatusMessageDetails = status;
                                         AvailableIndex = iIndex;
                                     }
+
                                     if (status.MessageText.ToLower().Trim() == "do not disturb")
                                     {
                                         //DoNotDisturbStatusMessageDetails = status;
                                     }
                                     iIndex++;
+                                    log.Info(scope + "Id=" + status.Id + ", MessageText=" + status.MessageText);
                                 }
-                               log.Info(scope + "Id=" + status.Id + ", MessageText=" + status.MessageText);
                             }
-                        }
-                        break;
+                            break;
+                        default:    //Not Log On to Workflow
+                            log.Info(scope + "Creating instance of StatusMessageList");
+                            if (this.mPeopleManager != null)
+                            {
+                                string[] nusers = { this.IC_Session.UserId };   //Make value to array 
+                                this.AllStatusMessageList = new StatusMessageList(this.mPeopleManager);
+                                this.AllStatusMessageListOfUser = new UserStatusList(this.mPeopleManager);
+                                this.AllStatusMessageListOfUser.WatchedObjectsChanged +=
+                                    new EventHandler<WatchedObjectsEventArgs<UserStatusProperty>>(AllStatusMessageListOfUser_WatchedObjectsChanged);
+                                this.AllStatusMessageListOfUser.StartWatching(nusers);
+                                this.CurrentUserStatus = this.AllStatusMessageListOfUser.GetUserStatus(this.IC_Session.UserId);
+                                sIconPath = CIC.Program.ResourcePath;
+                                this.AllStatusMessageList.StartWatching();
+                                foreach (StatusMessageDetails status in this.AllStatusMessageList.GetList())
+                                {
+                                    if (status.IsSelectableStatus)
+                                    {
+                                        sIconName = Util.GetFilenameFromFilePath(status.IconFileName.ToString());
+                                        sIconPath += sIconName;
+                                        if (System.IO.File.Exists(sIconPath))
+                                        {
+                                            Status_icon = new System.Drawing.Icon(sIconPath);
+                                        }
+                                        if (status.MessageText.ToLower().Trim() == "available")
+                                        {
+                                            AvailableStatusMessageDetails = status;
+                                            AvailableIndex = iIndex;
+                                        }
+                                        if (status.MessageText.ToLower().Trim() == "do not disturb")
+                                        {
+                                            //DoNotDisturbStatusMessageDetails = status;
+                                        }
+                                        iIndex++;
+                                    }
+                                    log.Info(scope + "Id=" + status.Id + ", MessageText=" + status.MessageText);
+                                }
+                            }
+                            break;
+                    }
                 }
+
                 //Set Current User Status Display 
                 if (this.mPeopleManager != null)
                 {
@@ -3672,6 +3674,7 @@ namespace CIC
                 SessionSettings sessionSetting = Program.m_Session.GetSessionSettings();
                 callParams.AdditionalAttributes.Add("CallerHost", sessionSetting.MachineName.ToString());
                 this.NormalInterationManager.MakeCallAsync(callParams, MakeCallCompleted, null);
+                state_change(FormMainState.ManualCall);
             }
             catch (Exception ex)
             {
@@ -3717,7 +3720,7 @@ namespace CIC
             log.Info(scope + "Starting.");
             try
             {
-                if (IcWorkFlow.LoginResult)
+                if (IcWorkFlow != null && IcWorkFlow.LoginResult)
                 {
                     if (ActiveDialerInteraction != null && ActiveNormalInteraction != null)
                     {

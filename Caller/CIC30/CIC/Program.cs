@@ -115,9 +115,7 @@ namespace CIC
                       mICStation = new CIC.frmICStation(m_Session);
                       LogInFormClosed = false;
                       Application.Run(mICStation);
-                      // TODO: undo bypass the server login
-                      global::CIC.Program.SessionLogInResult = Utils.LoginResult.Success;
-                      //global::CIC.Program.SessionLogInResult = mICStation.LogInResult;
+                      global::CIC.Program.SessionLogInResult = mICStation.LogInResult;
                   }
                   else
                   {

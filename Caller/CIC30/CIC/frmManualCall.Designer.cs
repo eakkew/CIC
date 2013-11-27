@@ -46,7 +46,7 @@
             // phone_box
             // 
             this.phone_box.Location = new System.Drawing.Point(87, 26);
-            this.phone_box.MaxLength = 10;
+            this.phone_box.MaxLength = 11;
             this.phone_box.Name = "phone_box";
             this.phone_box.Size = new System.Drawing.Size(100, 20);
             this.phone_box.TabIndex = 1;

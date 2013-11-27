@@ -77,6 +77,7 @@
             // ext_number_box
             // 
             this.ext_number_box.Location = new System.Drawing.Point(112, 18);
+            this.ext_number_box.MaxLength = 11;
             this.ext_number_box.Name = "ext_number_box";
             this.ext_number_box.Size = new System.Drawing.Size(100, 20);
             this.ext_number_box.TabIndex = 4;
