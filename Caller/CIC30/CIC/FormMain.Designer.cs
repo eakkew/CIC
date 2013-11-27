@@ -145,6 +145,8 @@
             this.logout_button_label = new System.Windows.Forms.Label();
             this.exit_button_label = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.toolStripWorkflow = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripWorkflowLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
@@ -1011,6 +1013,8 @@
             this.toolStripDatetime,
             this.toolStripStatusLabel,
             this.toolStripStatus,
+            this.toolStripWorkflow,
+            this.toolStripWorkflowLabel,
             this.toolStripCallID,
             this.toolStripCallIDLabel,
             this.toolStripDirection,
@@ -1228,6 +1232,18 @@
             this.panel1.Size = new System.Drawing.Size(1245, 20);
             this.panel1.TabIndex = 9;
             // 
+            // toolStripWorkflow
+            // 
+            this.toolStripWorkflow.Name = "toolStripWorkflow";
+            this.toolStripWorkflow.Size = new System.Drawing.Size(64, 17);
+            this.toolStripWorkflow.Text = "Workflow: ";
+            // 
+            // toolStripWorkflowLabel
+            // 
+            this.toolStripWorkflowLabel.Name = "toolStripWorkflowLabel";
+            this.toolStripWorkflowLabel.Size = new System.Drawing.Size(29, 17);
+            this.toolStripWorkflowLabel.Text = "N/A";
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1421,6 +1437,8 @@
         private System.Windows.Forms.Label logout_button_label;
         private System.Windows.Forms.Label exit_button_label;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripWorkflow;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripWorkflowLabel;
 
     }
 }
