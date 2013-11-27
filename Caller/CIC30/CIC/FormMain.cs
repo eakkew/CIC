@@ -1818,7 +1818,6 @@ namespace CIC
             {
                 frmManualCall manualCall = frmManualCall.getInstance();
                 manualCall.ShowDialog();
-                state_change(FormMainState.ManualCall);
             }
             else
             {
@@ -2206,7 +2205,7 @@ namespace CIC
                 }
                 else
                 {
-                    if (ActiveNormalInteraction != null && this.current_state == FormMainState.ManualCall)
+                    if (ActiveNormalInteraction != null && this.current_state == FormMainState.PreviewCall)
                     {
                         if (ActiveConsultInteraction != null)
                         {
@@ -2226,8 +2225,7 @@ namespace CIC
                                     foreach (ININ.IceLib.Interactions.Interaction CurrentInteraction in this.InteractionList)
                                     {
                                         if (CurrentInteraction.InteractionType == InteractionType.Call &&
-                                            CurrentInteraction.InteractionId != ActiveConsultInteraction.InteractionId &&
-                                            CurrentInteraction.InteractionId != ActiveDialerInteraction.InteractionId)
+                                            CurrentInteraction.InteractionId != ActiveConsultInteraction.InteractionId)
                                         {
                                             ActiveNormalInteraction = CurrentInteraction;  //Find Consult Call
                                             break;
@@ -3676,6 +3674,7 @@ namespace CIC
                 SessionSettings sessionSetting = Program.m_Session.GetSessionSettings();
                 callParams.AdditionalAttributes.Add("CallerHost", sessionSetting.MachineName.ToString());
                 this.NormalInterationManager.MakeCallAsync(callParams, MakeCallCompleted, null);
+                state_change(FormMainState.ManualCall);
             }
             catch (Exception ex)
             {
