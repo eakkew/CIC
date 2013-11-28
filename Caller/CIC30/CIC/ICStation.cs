@@ -129,6 +129,7 @@ namespace CIC
                 throw new InvalidOperationException("Unrecognized station type selected in combobox");
             }
             string eDescription = "CIC::frmICStation::frmICStation()::Connecting to session manager. host=" + host.ToString() + ", auth=" + auth.ToString() + ", station=" + station.ToString();
+            // TODO: add log event here
             Tracing.TraceStatus(eDescription);
             session_setting.MachineName = this.GetActiveLocalAddress(host.HostEndpoint.Host.ToString());
             if (this.ConnectionTimes <= 0)

@@ -284,5 +284,11 @@
     <Setting Name="FormatDateTime" Type="System.String" Scope="Application">
       <Value Profile="(Default)">dd/MM/yyyy HH:mm</Value>
     </Setting>
+    <Setting Name="BadLoginMsg" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">ชื่อหรือรหัสผ่านไม่ถูกต้อง กรุณาตรวจสอบแล้วลองอีกครั้ง</Value>
+    </Setting>
+    <Setting Name="TooManyBadLoginMsg" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">User ID หรือ Password ผิดเกิน 3 ครั้ง กรุณาติดต่อ Admin ระบบ</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
