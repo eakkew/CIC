@@ -140,7 +140,7 @@ namespace CIC
                   {
                       m_Session.Disconnect();
                   }
-                  Tracing.TraceNote("CIC::Program::Main()::Disconnecting from Session Manager.");
+                  log.Info("CIC::Program::Main()::Disconnecting from Session Manager.");
               }
               catch (System.Exception e)
               {
@@ -275,12 +275,13 @@ namespace CIC
            bool ChkININLib = false;
            try
             {
-                Tracing.TraceNote("CIC::Program::Main()::Application started.");
+                log.Info("CIC::Program::Main()::Application started.");
                 ChkININLib = true;
             }
            catch(System.Exception e)
             {
                 AppError = "ICE Info : " + e.Message+". Please Check ICE-Lib installation.";
+                log.Fatal(AppError + " :: " + e.StackTrace);
                 ChkININLib = false;
             }
             return ChkININLib;
