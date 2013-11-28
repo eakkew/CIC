@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ININ.IceLib.Connection;
+using ININ.IceLib.Dialer;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -14,21 +16,25 @@ namespace CIC
         private DataSet DsReasonCode;
 
         private static frmDisposition instance = null;
+        private string dialerNumber;
+        private Session IC_Session;
 
-        public static frmDisposition getInstance()
+        public static frmDisposition getInstance(Session session, string number)
         {
             if (instance == null || instance.IsDisposed)
             {
-                instance = new frmDisposition();
+                instance = new frmDisposition(session, number);
 
             }
             return instance;
         }
 
-        private frmDisposition()
+        private frmDisposition(Session session, string number)
         {
             InitializeComponent();
             // load up finish code
+            this.dialerNumber = number;
+            this.IC_Session = session;
             this.DsReasonCode = new System.Data.DataSet();
             string DsFile = Program.ApplicationPath + "\\ic_reason_code.xml";
             if (System.IO.File.Exists(DsFile) == true)
@@ -54,7 +60,30 @@ namespace CIC
         private void save_button_Click(object sender, EventArgs e)
         {
             // save data and callback to main form to save stuff
-            Program.MainDashboard.disposition_invoke(this.finishcode_combobox.Text , e);
+            ReasonCode sReasoncode = Util.GetReasonCode(this.finishcode_combobox.Text);
+            CallCompletionParameters param ;
+            if (sReasoncode == ReasonCode.Scheduled)
+            {
+                frmSchedule schedule = frmSchedule.getInstance(dialerNumber);
+                schedule.ShowDialog();
+                if (schedule.validateTime())
+                {
+                    param = new CallCompletionParameters(
+                        sReasoncode, this.finishcode_combobox.Text, 
+                        schedule.getScheduledTime(), this.IC_Session.UserId, false
+                    );
+                }
+                else
+                {
+                    return;
+                }
+            }
+            else
+            {
+                param = new ININ.IceLib.Dialer.CallCompletionParameters(
+                    sReasoncode, sReasoncode.ToString());
+            }
+            Program.MainDashboard.disposition_invoke(param, e);
             this.Close();
         }
 

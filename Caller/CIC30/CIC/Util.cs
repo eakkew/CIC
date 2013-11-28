@@ -5,10 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using log4net;
+using ININ.IceLib.Dialer;
 
 namespace CIC
 {
-    class Util
+    public static class Util
     {
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -90,6 +91,52 @@ namespace CIC
             Regex r = new Regex(@"^[\d]+\d$"); // extension      -
             Match m = r.Match(number);
             return m.Success;
+        }
+
+        public static ReasonCode GetReasonCode(string sFinishcode)
+        {
+            ININ.IceLib.Dialer.ReasonCode sRet = 0;
+            switch (sFinishcode.ToLower().Trim())
+            {
+                case "busy":
+                    sRet = ReasonCode.Busy;
+                    break;
+                case "deleted":
+                    sRet = ReasonCode.Deleted;
+                    break;
+                case "failure":
+                    sRet = ReasonCode.Failure;
+                    break;
+                case "fax":
+                    sRet = ReasonCode.Fax;
+                    break;
+                case "machine":
+                    sRet = ReasonCode.Machine;
+                    break;
+                case "noanswer":
+                    sRet = ReasonCode.NoAnswer;
+                    break;
+                case "remotehangup":
+                    sRet = ReasonCode.RemoteHangup;
+                    break;
+                case "scheduled":
+                    sRet = ReasonCode.Scheduled;
+                    break;
+                case "sit":
+                    sRet = ReasonCode.SIT;
+                    break;
+                case "wrongparty":
+                    sRet = ReasonCode.WrongParty;
+                    break;
+                case "success":
+                    sRet = ReasonCode.Success;
+                    break;
+                default:
+                    sRet = ReasonCode.Success;
+                    break;
+            }
+
+            return sRet;
         }
     }
 }

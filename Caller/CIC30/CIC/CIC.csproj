@@ -204,6 +204,12 @@
     <Compile Include="frmManualCall.Designer.cs">
       <DependentUpon>frmManualCall.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmSchedule.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmSchedule.Designer.cs">
+      <DependentUpon>frmSchedule.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmTransfer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -271,6 +277,9 @@
     <EmbeddedResource Include="frmManualCall.resx">
       <DependentUpon>frmManualCall.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="frmSchedule.resx">
+      <DependentUpon>frmSchedule.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmTransfer.resx">
       <DependentUpon>frmTransfer.cs</DependentUpon>
     </EmbeddedResource>
@@ -308,6 +317,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Reasoncode.cs" />
     <Compile Include="ScheduleCallbackForm.cs">
       <SubType>Form</SubType>
     </Compile>
