@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using ININ.IceLib;
 using ININ.IceLib.Connection;
+using log4net;
 
 namespace CIC
 {
@@ -11,6 +12,7 @@ namespace CIC
     {
 
 #region  Variable Declaration
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private bool IsFirstLogIn = false;
         private ININ.IceLib.Connection.Session mSession;
@@ -129,8 +131,7 @@ namespace CIC
                 throw new InvalidOperationException("Unrecognized station type selected in combobox");
             }
             string eDescription = "CIC::frmICStation::frmICStation()::Connecting to session manager. host=" + host.ToString() + ", auth=" + auth.ToString() + ", station=" + station.ToString();
-            // TODO: add log event here
-            Tracing.TraceStatus(eDescription);
+            log.Info(eDescription);
             session_setting.MachineName = this.GetActiveLocalAddress(host.HostEndpoint.Host.ToString());
             if (this.ConnectionTimes <= 0)
             {
