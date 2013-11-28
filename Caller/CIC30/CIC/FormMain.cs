@@ -1854,7 +1854,7 @@ namespace CIC
             }
             catch (System.Exception ex)
             {
-                log.ErrorFormat(scope + "Error info." + ex.Message);
+                log.Error(scope + "Error info." + ex.Message);
             }
         }
 
@@ -1872,11 +1872,21 @@ namespace CIC
                 {
                     if (this.current_state == FormMainState.Break)
                     {
-                            this.ActiveDialerInteraction.DialerSession.EndBreak();
-                            break_requested = false;
-                            break_granted = false;
-                            this.state_info_label.Text = "Break ended. Waiting for a new call from workflow.";
-                            log.Info(scope + "Complete.");
+                        this.ActiveDialerInteraction.DialerSession.EndBreak();
+                        try
+                        {
+                            ININ.IceLib.People.UserStatusUpdate statusUpdate = new UserStatusUpdate(this.mPeopleManager);
+                            statusUpdate.StatusMessageDetails = this.AvailableStatusMessageDetails;
+                            statusUpdate.UpdateRequest();
+                        }
+                        catch (Exception ex)
+                        {
+                            log.Error(scope + "Error info." + ex.Message)
+                        }
+                        break_requested = false;
+                        break_granted = false;
+                        this.state_info_label.Text = "Break ended. Waiting for a new call from workflow.";
+                        log.Info(scope + "Complete.");
                     }
                 }
             }
