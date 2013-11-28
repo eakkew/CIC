@@ -1881,7 +1881,7 @@ namespace CIC
                         }
                         catch (Exception ex)
                         {
-                            log.Error(scope + "Error info." + ex.Message)
+                            log.Error(scope + "Error info." + ex.Message);
                         }
                         break_requested = false;
                         break_granted = false;
@@ -3306,7 +3306,8 @@ namespace CIC
                     baseURI += string.Format("extraqs=col_contract_no={0}&", productID);
                     baseURI += string.Format("col_ phone_id={0}&", refCallID);
                     baseURI += string.Format("col_call_id={0}", callID);
-
+                    baseURI = baseURI.Replace("=", "%3d").Replace("{", "%7b").Replace("}", "%7d").Replace("&", "%26");
+                
                     Process.Start(baseURI);
                     log.Info("process.start : " + baseURI);
                     log.Info(scope + "Completed.");
