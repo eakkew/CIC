@@ -24,6 +24,8 @@ namespace CIC
     private string StrSoftPhoneKey = "software\\Interactive Intelligence\\SIP Soft Phone";
     private string SoftPhoneStationNameKey = "Station";
 
+    private int wrongLoginAttempt = 0; // use to check how many consecutively login with wrong pair of username and password
+
 #endregion
 
 #region Properties And Method
@@ -322,7 +324,7 @@ namespace CIC
 
     public frmICStation(ININ.IceLib.Connection.Session session)
     {
-        Tracing.TraceStatus("CIC::frmICStation::frmICStation()::Show Station Login form.");
+        log.Info("CIC::frmICStation::frmICStation()::Show Station Login form.");
         if (session == null)
         {
             throw new ArgumentNullException("CIC::frmICStation::frmICStation()::Null reference session");
@@ -390,7 +392,7 @@ namespace CIC
       if (e.Error != null)
       {
         eDescription = "CIC::frmICStation::frmICStation()::Failed to connect to session manager. Error=" + e.Error.ToString();
-        Tracing.TraceStatus(eDescription);
+        log.Info(eDescription);
         Cursor.Current = Cursors.Default;
         this.mResult = CIC.Utils.LoginResult.Cancelled;
         this.WindowsAuthenticationCheckBox.Enabled = true;
@@ -400,10 +402,20 @@ namespace CIC
         this.UpdateStationInfoControls();
         this.LoginButton.Enabled = true;
         this.LoginButton.Focus();
-        this.lblLogInStatusMsg.Text = e.Error.Message.Trim();
+        if (++wrongLoginAttempt < 3)
+        {
+            //this.lblLogInStatusMsg.Text = e.Error.Message.Trim();
+            this.lblLogInStatusMsg.Text = global::CIC.Properties.Settings.Default.BadLoginMsg;
+        }
+        else
+        {
+            this.lblLogInStatusMsg.Text = global::CIC.Properties.Settings.Default.TooManyBadLoginMsg;
+        }
       }
       else
       {
+          wrongLoginAttempt = 0; // reset wrong attmpt
+
         this.lblLogInStatusMsg.Text = "Log In Completed!.";
         eDescription = "CIC::frmICStation::frmICStation()::Connected to session manager successfully";
         global::CIC.Properties.Settings.Default.UserId = this.UserIdTextBox.Text;
@@ -496,8 +508,9 @@ namespace CIC
                     rKey.GenKeyAuthorize();
                 }
             }
-            catch 
+            catch (Exception exp)
             {
+                log.Fatal(exp.Message + " :: " + exp.StackTrace);
                 //Not thrown All Error Message.
             }
         }

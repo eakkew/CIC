@@ -895,5 +895,23 @@ namespace CIC.Properties {
                 return ((string)(this["FormatDateTime"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("ชื่อหรือรหัสผ่านไม่ถูกต้อง กรุณาตรวจสอบแล้วลองอีกครั้ง")]
+        public string BadLoginMsg {
+            get {
+                return ((string)(this["BadLoginMsg"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("User ID หรือ Password ผิดเกิน 3 ครั้ง กรุณาติดต่อ Admin ระบบ")]
+        public string TooManyBadLoginMsg {
+            get {
+                return ((string)(this["TooManyBadLoginMsg"]));
+            }
+        }
     }
 }
