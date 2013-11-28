@@ -1030,6 +1030,7 @@ namespace CIC
                     case InteractionType.Call:
                         ActiveNormalInteraction = e.Interaction;
                         this.StrConnectionState = ActiveNormalInteraction.State;
+                        toolStripStatus.Text = this.StrConnectionState.ToString();
                         if (ActiveNormalInteraction != null)
                         {
                             if (ActiveNormalInteraction.IsDisconnected)
@@ -1655,7 +1656,8 @@ namespace CIC
                 {
                     if (this.current_state == FormMainState.PreviewCall || this.current_state == FormMainState.ConferenceCall)
                     {
-                        frmDisposition disposition = frmDisposition.getInstance(); //new frmDisposition();
+                        frmDisposition disposition = frmDisposition.getInstance(
+                            this.IC_Session, this.GetDialerNumber()); //new frmDisposition();
                         disposition.ShowDialog();
                     }
 
@@ -1954,7 +1956,6 @@ namespace CIC
         public void disposition_invoke(object sender, EventArgs e)
         {
             string scope = "CIC::MainForm::DispositionToolStripButton_Click(): ";
-            string sFinishcode = (String)sender;
             if (this.InvokeRequired)
             {
                 this.BeginInvoke(new EventHandler<EventArgs>(disposition_invoke), new object[] { sender, e });
@@ -1972,36 +1973,13 @@ namespace CIC
                             if (this.ActiveDialerInteraction.DialingMode == DialingMode.Preview ||
                                 this.ActiveDialerInteraction.DialingMode == DialingMode.Regular)
                             {
-                                ININ.IceLib.Dialer.ReasonCode sReasoncode = this.GetReasonCode(sFinishcode);
-                                ININ.IceLib.Dialer.CallCompletionParameters callCompletionParameters = 
-                                    new ININ.IceLib.Dialer.CallCompletionParameters(sReasoncode, sFinishcode);
                                 if (this.ActiveDialerInteraction.IsDisconnected == false)
                                 {
                                     this.ActiveDialerInteraction.Disconnect();
                                 }
-
-                                if (sReasoncode == ReasonCode.Scheduled)
-                                {
-                                    List<string> attributeNamesToWatch = this.SetAttributeList();
-                                    if (!this.ActiveDialerInteraction.IsWatching())
-                                    {
-                                        this.ActiveDialerInteraction.StartWatching(attributeNamesToWatch.ToArray());
-                                    }
-                                    if (this.frmScheduleCallbackForm.ScheduleCallbackResult == false)
-                                    {
-                                        return;
-                                    }
-                                    this.ActiveDialerInteraction.ChangeWatchedAttributesAsync(
-                                        attributeNamesToWatch.ToArray(), null, true, ChangeWatchedAttributesCompleted, null);
-                                    this.ActiveDialerInteraction.CallComplete(
-                                        new CallCompletionParameters(sReasoncode, sFinishcode, this.CallBackDateTime, this.ScheduleAgent, false));
-                                    this.date_callback_box.Text = this.CallBackDateTime.ToString(global::CIC.Properties.Settings.Default["FormatDateTime"].ToString());
-                                }
-                                else
-                                {
-                                    this.ActiveDialerInteraction.CallComplete(callCompletionParameters);
-                                }
-
+                                
+                                this.ActiveDialerInteraction.CallComplete((CallCompletionParameters)sender);
+                                
                                 if (!this.break_granted)
                                 {
                                     if (this.AvailableStatusMessageDetails != null)
@@ -3199,52 +3177,6 @@ namespace CIC
             return "";
         }
 
-        private ReasonCode GetReasonCode(string sFinishcode)
-        {
-            ININ.IceLib.Dialer.ReasonCode sRet = 0;
-            switch (sFinishcode.ToLower().Trim())
-            {
-                case "busy":
-                    sRet = ReasonCode.Busy;
-                    break;
-                case "deleted":
-                    sRet = ReasonCode.Deleted;
-                    break;
-                case "failure":
-                    sRet = ReasonCode.Failure;
-                    break;
-                case "fax":
-                    sRet = ReasonCode.Fax;
-                    break;
-                case "machine":
-                    sRet = ReasonCode.Machine;
-                    break;
-                case "noanswer":
-                    sRet = ReasonCode.NoAnswer;
-                    break;
-                case "remotehangup":
-                    sRet = ReasonCode.RemoteHangup;
-                    break;
-                case "scheduled":
-                    sRet = ReasonCode.Scheduled;
-                    break;
-                case "sit":
-                    sRet = ReasonCode.SIT;
-                    break;
-                case "wrongparty":
-                    sRet = ReasonCode.WrongParty;
-                    break;
-                case "success":
-                    sRet = ReasonCode.Success;
-                    break;
-                default:
-                    sRet = ReasonCode.Success;
-                    break;
-            }
-            
-            return sRet;
-        }
-
         private void DataPop(object sender, DataPopEventArgs e)
         {
             string scope = "CIC::MainForm::DataPop()::";
@@ -3633,41 +3565,6 @@ namespace CIC
             {
                 // NYI
             }
-        }
-
-        private List<string> SetAttributeList()
-        {
-            string DialerNumber = this.GetDialerNumber();
-            if (DialerNumber.Trim() != "")
-            {
-                this.frmScheduleCallbackForm = new CIC.ScheduleCallbackForm(DialerNumber);
-            }
-            else
-            {
-                this.frmScheduleCallbackForm = new CIC.ScheduleCallbackForm(this.ActiveDialerInteraction.RemoteId);
-            }
-            this.frmScheduleCallbackForm.ShowDialog();
-            this.CallBackDateTime = this.frmScheduleCallbackForm.CallbackDateTime;
-            this.CallBackPhone = this.frmScheduleCallbackForm.ScheduledNumber;
-            switch (this.frmScheduleCallbackForm.CallbackType)
-            {
-                case CIC.Utils.CallbackType.CampaignWide:
-                    this.ScheduleAgent = "";
-                    break;
-                case CIC.Utils.CallbackType.OwnAgent:
-                    this.ScheduleAgent = this.IC_Session.UserId;
-                    break;
-                default:
-                    this.ScheduleAgent = "";
-                    break;
-            }
-            List<string> callbackAttributeNames = new List<string>();
-            callbackAttributeNames.Add(CallbackInteractionAttributeName.RemoteName);
-            callbackAttributeNames.Add(CallbackInteractionAttributeName.RemoteId);
-            callbackAttributeNames.Add(this.CallBackPhone);
-            callbackAttributeNames.Add(CallbackInteractionAttributeName.CallbackMessage);
-            callbackAttributeNames.Add(CallbackInteractionAttributeName.CallbackCompletion);
-            return callbackAttributeNames;
         }
 
         public void MakeManualCall(string number)
