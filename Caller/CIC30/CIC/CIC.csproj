@@ -317,7 +317,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Reasoncode.cs" />
     <Compile Include="ScheduleCallbackForm.cs">
       <SubType>Form</SubType>
     </Compile>

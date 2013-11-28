@@ -34,7 +34,6 @@ namespace CIC
             InitializeComponent();
             initializeComboboxInfo();
             phone_box.Text = dialNumber;
-            error_label.Text = "";
             isCanceled = false;
         }
 
