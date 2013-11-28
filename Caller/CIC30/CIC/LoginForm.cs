@@ -324,7 +324,7 @@ namespace CIC
 
     public frmICStation(ININ.IceLib.Connection.Session session)
     {
-        Tracing.TraceStatus("CIC::frmICStation::frmICStation()::Show Station Login form.");
+        log.Info("CIC::frmICStation::frmICStation()::Show Station Login form.");
         if (session == null)
         {
             throw new ArgumentNullException("CIC::frmICStation::frmICStation()::Null reference session");
