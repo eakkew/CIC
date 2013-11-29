@@ -1664,7 +1664,8 @@ namespace CIC
                     this.IC_Session != null &&
                     this.IC_Session.ConnectionState == ININ.IceLib.Connection.ConnectionState.Up)
                 {
-                    if (this.current_state == FormMainState.PreviewCall || this.current_state == FormMainState.ConferenceCall)
+                    if (this.current_state == FormMainState.PreviewCall ||
+                        this.current_state == FormMainState.ConferenceCall)
                     {
                         frmDisposition disposition = frmDisposition.getInstance(
                             this.IC_Session, this.GetDialerNumber()); //new frmDisposition();
@@ -4019,6 +4020,7 @@ namespace CIC
                                     break;
                             }
                         }
+                        state_change(FormMainState.PreviewCall);
                         break;
                     default:     // Not Log On to Dialer Server.
                         log.Info(scope + "Pickup button clicked[Basic station].");
@@ -4041,6 +4043,7 @@ namespace CIC
                                     break;
                             }
                         }
+                        state_change(FormMainState.ManualCall);
                         break;
                 }
                 log.Info(scope + "Completed.");

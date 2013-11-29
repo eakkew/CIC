@@ -1201,15 +1201,15 @@
             this.panel2.Controls.Add(this.toolStripCallType);
             this.panel2.Controls.Add(this.toolStripCampaignID);
             this.panel2.Controls.Add(this.toolStripWorkflow);
-            this.panel2.Location = new System.Drawing.Point(3, 274);
+            this.panel2.Location = new System.Drawing.Point(3, 332);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(406, 138);
+            this.panel2.Size = new System.Drawing.Size(406, 80);
             this.panel2.TabIndex = 2;
             // 
             // toolStripWorkflow
             // 
             this.toolStripWorkflow.AutoSize = true;
-            this.toolStripWorkflow.Location = new System.Drawing.Point(8, 10);
+            this.toolStripWorkflow.Location = new System.Drawing.Point(3, 4);
             this.toolStripWorkflow.Name = "toolStripWorkflow";
             this.toolStripWorkflow.Size = new System.Drawing.Size(58, 13);
             this.toolStripWorkflow.TabIndex = 0;
@@ -1218,7 +1218,7 @@
             // toolStripCampaignID
             // 
             this.toolStripCampaignID.AutoSize = true;
-            this.toolStripCampaignID.Location = new System.Drawing.Point(8, 30);
+            this.toolStripCampaignID.Location = new System.Drawing.Point(3, 24);
             this.toolStripCampaignID.Name = "toolStripCampaignID";
             this.toolStripCampaignID.Size = new System.Drawing.Size(60, 13);
             this.toolStripCampaignID.TabIndex = 1;
@@ -1227,7 +1227,7 @@
             // toolStripCallType
             // 
             this.toolStripCallType.AutoSize = true;
-            this.toolStripCallType.Location = new System.Drawing.Point(8, 51);
+            this.toolStripCallType.Location = new System.Drawing.Point(3, 45);
             this.toolStripCallType.Name = "toolStripCallType";
             this.toolStripCallType.Size = new System.Drawing.Size(57, 13);
             this.toolStripCallType.TabIndex = 2;
@@ -1236,7 +1236,7 @@
             // toolStripCallID
             // 
             this.toolStripCallID.AutoSize = true;
-            this.toolStripCallID.Location = new System.Drawing.Point(8, 69);
+            this.toolStripCallID.Location = new System.Drawing.Point(3, 63);
             this.toolStripCallID.Name = "toolStripCallID";
             this.toolStripCallID.Size = new System.Drawing.Size(44, 13);
             this.toolStripCallID.TabIndex = 3;
@@ -1245,7 +1245,7 @@
             // toolStripWorkflowLabel
             // 
             this.toolStripWorkflowLabel.AutoSize = true;
-            this.toolStripWorkflowLabel.Location = new System.Drawing.Point(73, 10);
+            this.toolStripWorkflowLabel.Location = new System.Drawing.Point(68, 4);
             this.toolStripWorkflowLabel.Name = "toolStripWorkflowLabel";
             this.toolStripWorkflowLabel.Size = new System.Drawing.Size(27, 13);
             this.toolStripWorkflowLabel.TabIndex = 4;
@@ -1254,7 +1254,7 @@
             // toolStripCallIDLabel
             // 
             this.toolStripCallIDLabel.AutoSize = true;
-            this.toolStripCallIDLabel.Location = new System.Drawing.Point(73, 69);
+            this.toolStripCallIDLabel.Location = new System.Drawing.Point(68, 63);
             this.toolStripCallIDLabel.Name = "toolStripCallIDLabel";
             this.toolStripCallIDLabel.Size = new System.Drawing.Size(27, 13);
             this.toolStripCallIDLabel.TabIndex = 5;
@@ -1263,7 +1263,7 @@
             // toolStripCallTypeLabel
             // 
             this.toolStripCallTypeLabel.AutoSize = true;
-            this.toolStripCallTypeLabel.Location = new System.Drawing.Point(73, 51);
+            this.toolStripCallTypeLabel.Location = new System.Drawing.Point(68, 45);
             this.toolStripCallTypeLabel.Name = "toolStripCallTypeLabel";
             this.toolStripCallTypeLabel.Size = new System.Drawing.Size(27, 13);
             this.toolStripCallTypeLabel.TabIndex = 6;
@@ -1272,7 +1272,7 @@
             // toolStripCampaignIDLabel
             // 
             this.toolStripCampaignIDLabel.AutoSize = true;
-            this.toolStripCampaignIDLabel.Location = new System.Drawing.Point(73, 30);
+            this.toolStripCampaignIDLabel.Location = new System.Drawing.Point(68, 24);
             this.toolStripCampaignIDLabel.Name = "toolStripCampaignIDLabel";
             this.toolStripCampaignIDLabel.Size = new System.Drawing.Size(27, 13);
             this.toolStripCampaignIDLabel.TabIndex = 7;
