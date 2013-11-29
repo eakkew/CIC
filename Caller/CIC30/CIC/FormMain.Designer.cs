@@ -116,7 +116,6 @@
             this.contractID_panel = new System.Windows.Forms.Panel();
             this.contractNo_box = new System.Windows.Forms.TextBox();
             this.contractID_label = new System.Windows.Forms.Label();
-            this.panel2 = new System.Windows.Forms.Panel();
             this.toolStripCampaignIDLabel = new System.Windows.Forms.Label();
             this.toolStripCallTypeLabel = new System.Windows.Forms.Label();
             this.toolStripCallIDLabel = new System.Windows.Forms.Label();
@@ -148,7 +147,7 @@
             this.logout_button_label = new System.Windows.Forms.Label();
             this.exit_button_label = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
@@ -1279,14 +1278,92 @@
             this.panel1.Size = new System.Drawing.Size(1245, 20);
             this.panel1.TabIndex = 9;
             // 
-            // label1
+            // panel2
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(0, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 13);
-            this.label1.TabIndex = 10;
-            this.label1.Text = "label1";
+            this.panel2.Controls.Add(this.toolStripCampaignIDLabel);
+            this.panel2.Controls.Add(this.toolStripCallTypeLabel);
+            this.panel2.Controls.Add(this.toolStripCallIDLabel);
+            this.panel2.Controls.Add(this.toolStripWorkflowLabel);
+            this.panel2.Controls.Add(this.toolStripCallID);
+            this.panel2.Controls.Add(this.toolStripCallType);
+            this.panel2.Controls.Add(this.toolStripCampaignID);
+            this.panel2.Controls.Add(this.toolStripWorkflow);
+            this.panel2.Location = new System.Drawing.Point(3, 332);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(406, 80);
+            this.panel2.TabIndex = 2;
+            // 
+            // toolStripWorkflow
+            // 
+            this.toolStripWorkflow.AutoSize = true;
+            this.toolStripWorkflow.Location = new System.Drawing.Point(3, 4);
+            this.toolStripWorkflow.Name = "toolStripWorkflow";
+            this.toolStripWorkflow.Size = new System.Drawing.Size(58, 13);
+            this.toolStripWorkflow.TabIndex = 0;
+            this.toolStripWorkflow.Text = "Workflow: ";
+            // 
+            // toolStripCampaignID
+            // 
+            this.toolStripCampaignID.AutoSize = true;
+            this.toolStripCampaignID.Location = new System.Drawing.Point(3, 24);
+            this.toolStripCampaignID.Name = "toolStripCampaignID";
+            this.toolStripCampaignID.Size = new System.Drawing.Size(60, 13);
+            this.toolStripCampaignID.TabIndex = 1;
+            this.toolStripCampaignID.Text = "Campaign: ";
+            // 
+            // toolStripCallType
+            // 
+            this.toolStripCallType.AutoSize = true;
+            this.toolStripCallType.Location = new System.Drawing.Point(3, 45);
+            this.toolStripCallType.Name = "toolStripCallType";
+            this.toolStripCallType.Size = new System.Drawing.Size(57, 13);
+            this.toolStripCallType.TabIndex = 2;
+            this.toolStripCallType.Text = "Call Type: ";
+            // 
+            // toolStripCallID
+            // 
+            this.toolStripCallID.AutoSize = true;
+            this.toolStripCallID.Location = new System.Drawing.Point(3, 63);
+            this.toolStripCallID.Name = "toolStripCallID";
+            this.toolStripCallID.Size = new System.Drawing.Size(44, 13);
+            this.toolStripCallID.TabIndex = 3;
+            this.toolStripCallID.Text = "Call ID: ";
+            // 
+            // toolStripWorkflowLabel
+            // 
+            this.toolStripWorkflowLabel.AutoSize = true;
+            this.toolStripWorkflowLabel.Location = new System.Drawing.Point(68, 4);
+            this.toolStripWorkflowLabel.Name = "toolStripWorkflowLabel";
+            this.toolStripWorkflowLabel.Size = new System.Drawing.Size(27, 13);
+            this.toolStripWorkflowLabel.TabIndex = 4;
+            this.toolStripWorkflowLabel.Text = "N/A";
+            // 
+            // toolStripCallIDLabel
+            // 
+            this.toolStripCallIDLabel.AutoSize = true;
+            this.toolStripCallIDLabel.Location = new System.Drawing.Point(68, 63);
+            this.toolStripCallIDLabel.Name = "toolStripCallIDLabel";
+            this.toolStripCallIDLabel.Size = new System.Drawing.Size(27, 13);
+            this.toolStripCallIDLabel.TabIndex = 5;
+            this.toolStripCallIDLabel.Text = "N/A";
+            // 
+            // toolStripCallTypeLabel
+            // 
+            this.toolStripCallTypeLabel.AutoSize = true;
+            this.toolStripCallTypeLabel.Location = new System.Drawing.Point(68, 45);
+            this.toolStripCallTypeLabel.Name = "toolStripCallTypeLabel";
+            this.toolStripCallTypeLabel.Size = new System.Drawing.Size(27, 13);
+            this.toolStripCallTypeLabel.TabIndex = 6;
+            this.toolStripCallTypeLabel.Text = "N/A";
+            // 
+            // toolStripCampaignIDLabel
+            // 
+            this.toolStripCampaignIDLabel.AutoSize = true;
+            this.toolStripCampaignIDLabel.Location = new System.Drawing.Point(68, 24);
+            this.toolStripCampaignIDLabel.Name = "toolStripCampaignIDLabel";
+            this.toolStripCampaignIDLabel.Size = new System.Drawing.Size(27, 13);
+            this.toolStripCampaignIDLabel.TabIndex = 7;
+            this.toolStripCampaignIDLabel.Text = "N/A";
             // 
             // FormMain
             // 
@@ -1294,7 +1371,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1274, 584);
             this.ControlBox = false;
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.flowLayoutPanel4);
@@ -1302,6 +1378,7 @@
             this.Controls.Add(this.flowLayoutPanel2);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.panel1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormMain";
@@ -1489,7 +1566,6 @@
         private System.Windows.Forms.Label toolStripCallType;
         private System.Windows.Forms.Label toolStripCampaignID;
         private System.Windows.Forms.Label toolStripWorkflow;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label toolStripCampaignIDLabel;
 
     }

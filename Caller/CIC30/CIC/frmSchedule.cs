@@ -75,8 +75,9 @@ namespace CIC
             DateTime today = DateTime.Now;
             int hour = (hour_combobox.Text != "") ? int.Parse(hour_combobox.Text) : 0;
             int minute = (minute_combobox.Text != "") ? int.Parse(minute_combobox.Text) : 0;
-            scheduled = new DateTime(today.Year, today.Month, today.Day,
-                hour, minute, 0);
+            scheduled = DateTime.Now;
+            scheduled = scheduled.AddHours(hour);
+            scheduled = scheduled.AddMinutes(minute);
 
             if (validateTime())
             {
@@ -95,8 +96,9 @@ namespace CIC
             DateTime today = DateTime.Now;
             int hour = (hour_combobox.Text != "") ? int.Parse(hour_combobox.Text) : 0;
             int minute = (minute_combobox.Text != "") ? int.Parse(minute_combobox.Text) : 0;
-            scheduled = new DateTime(today.Year, today.Month, today.Day,
-                hour, minute, 0);
+            scheduled = DateTime.Now;
+            scheduled = scheduled.AddHours(hour);
+            scheduled = scheduled.AddMinutes(minute);
 
             if (validateTime())
             {

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmTransfer));
             this.call_button = new System.Windows.Forms.Button();
             this.transfer_button = new System.Windows.Forms.Button();
             this.cancel_button = new System.Windows.Forms.Button();
@@ -94,6 +95,7 @@
             this.Controls.Add(this.cancel_button);
             this.Controls.Add(this.transfer_button);
             this.Controls.Add(this.call_button);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "frmTransfer";
