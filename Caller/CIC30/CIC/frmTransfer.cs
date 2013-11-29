@@ -30,9 +30,8 @@ namespace CIC
         {
             InitializeComponent();
             transfer_button.Enabled = false;
+            call_button.Enabled = false;
         }
-
-        
 
         private void call_button_Click(object sender, EventArgs e)
         {

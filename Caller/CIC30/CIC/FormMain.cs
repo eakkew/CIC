@@ -1030,12 +1030,12 @@ namespace CIC
                         break;
                     case InteractionType.Call:
                         ActiveNormalInteraction = e.Interaction;
-                        if (IcWorkFlow != null && IcWorkFlow.LoginResult &&
-                            this.StrConnectionState == InteractionState.Proceeding &&
+                        if (this.StrConnectionState == InteractionState.Proceeding &&
                             ActiveNormalInteraction.State == InteractionState.Connected)
                         {
                             this.BeginInvoke(new MethodInvoker(update_calling_info));
-                            this.BeginInvoke(new MethodInvoker(CrmScreenPop));
+                            if (IcWorkFlow != null && IcWorkFlow.LoginResult)
+                                this.BeginInvoke(new MethodInvoker(CrmScreenPop));
                         }
                         this.StrConnectionState = ActiveNormalInteraction.State;
                         toolStripStatus.Text = this.StrConnectionState.ToString();
@@ -3735,33 +3735,40 @@ namespace CIC
 
         private string GetDialerNumber()
         {
-            string DialerNumber = "";
-            string AlternatePreview_ATTR = Properties.Settings.Default.AlternatePreviewNumbers;
-            string[] AlternatePreviewNoATTRCollection;
             string scope = "CIC::frmMain::GetDialerNumber()::";
+            string DialerNumber = "";
             log.Info(scope + "Starting.");
-
-            if (mDialerData[Properties.Settings.Default.Preview_Number_ATTR].ToString().Trim() == String.Empty)
+            try
             {
-                if (AlternatePreview_ATTR != String.Empty)
+                string AlternatePreview_ATTR = Properties.Settings.Default.AlternatePreviewNumbers;
+                string[] AlternatePreviewNoATTRCollection;
+
+                if (mDialerData[Properties.Settings.Default.Preview_Number_ATTR].ToString().Trim() == String.Empty)
                 {
-                    AlternatePreviewNoATTRCollection = AlternatePreview_ATTR.Split(';');
-                    foreach (string PreviewNoATTR in AlternatePreviewNoATTRCollection)
+                    if (AlternatePreview_ATTR != String.Empty)
                     {
-                        if (PreviewNoATTR.Trim() != String.Empty)
+                        AlternatePreviewNoATTRCollection = AlternatePreview_ATTR.Split(';');
+                        foreach (string PreviewNoATTR in AlternatePreviewNoATTRCollection)
                         {
-                            if (mDialerData[PreviewNoATTR.Trim()].Trim() != String.Empty)
+                            if (PreviewNoATTR.Trim() != String.Empty)
                             {
-                                DialerNumber = mDialerData[PreviewNoATTR.Trim()];
-                                break;
+                                if (mDialerData[PreviewNoATTR.Trim()].Trim() != String.Empty)
+                                {
+                                    DialerNumber = mDialerData[PreviewNoATTR.Trim()];
+                                    break;
+                                }
                             }
                         }
                     }
                 }
+                else
+                {
+                    DialerNumber = mDialerData[Properties.Settings.Default.Preview_Number_ATTR].ToString().Trim();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                DialerNumber = mDialerData[Properties.Settings.Default.Preview_Number_ATTR].ToString().Trim();
+                log.Error(scope + "Error info." + ex.Message);
             }
             log.Info(scope + "Completed.");
             return DialerNumber;

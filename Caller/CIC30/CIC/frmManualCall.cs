@@ -31,6 +31,7 @@ namespace CIC
         private frmManualCall()
         {
             InitializeComponent();
+            call_button.Enabled = false;
         }
 
         private void cancel_button_Click(object sender, EventArgs e)
