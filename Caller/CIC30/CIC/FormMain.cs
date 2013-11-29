@@ -3303,20 +3303,20 @@ namespace CIC
                 try
                 {
                     // http://[MS-CRM Server name]/CRM/main.aspx?
-                    // etn=col_collection_history&pagetype=entityrecord&extraqs=col_contract_no={Parameter1}&col_ phone_id={Parameter2}&col_call_id={Parameter3}
+                    // etn=col_collection_history&pagetype=entityrecord&extraqs=col_contract_no={Parameter1}&col_phone_id={Parameter2}&col_call_id={Parameter3}
                     // Parameter1 = ProductRefID (ฟิลด์ที่ 1 ใน spec) is_attr_ProductRefID
                     // Parameter2 = Ref_PhoneNo1 - Ref_PhoneNo6  (ฟิลด์ที่ 32-37 ใน spec อยู่ที่ขณะนั้นโทรติดที่ 
                     // PhoneNoอะไร) is_attr_Ref_PhoneNo1
                     // Parameter3 = Call_id (Id ของการโทรออก) is_attr_callid
                     Dictionary<string, string> data = ActiveDialerInteraction.ContactData;
-                    string productID = data.ContainsKey("is_attr_ContractNumber") ? data["is_attr_ContractNumber"] : "";
+                    string productID = data.ContainsKey("is_attr_ProductRefID") ? data["is_attr_ProductRefID"] : "";
                     string refCallID = getRefCallID(data);
                     string callID = data.ContainsKey("is_attr_callid") ? data["is_attr_callid"] : "";
 
                     string baseURI = "http://" + global::CIC.Properties.Settings.Default["MSCRMServerName"];
                     baseURI += "etn=col_collection_history&";
                     baseURI += "pagetype=entityrecord&extraqs=col_contract_no";
-                    baseURI += string.Format("=%7b{0}%7d&col_ phone_id=%7b{1}%7d&col_call_id={2}"
+                    baseURI += string.Format("=%7b{0}%7d&col_phone_id=%7b{1}%7d&col_call_id={2}"
                         , productID, refCallID, callID).Replace("=", "%3d").Replace("{", "%7b").Replace("}", "%7d").Replace("&", "%26");
                 
                     Process.Start(baseURI);
