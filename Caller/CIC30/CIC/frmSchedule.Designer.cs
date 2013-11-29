@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSchedule));
             this.phone_box = new System.Windows.Forms.TextBox();
             this.hour_combobox = new System.Windows.Forms.ComboBox();
             this.minute_combobox = new System.Windows.Forms.ComboBox();
@@ -114,6 +115,7 @@
             this.Controls.Add(this.minute_combobox);
             this.Controls.Add(this.hour_combobox);
             this.Controls.Add(this.phone_box);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "frmSchedule";

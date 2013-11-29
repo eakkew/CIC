@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmConference));
             this.ext_number_box = new System.Windows.Forms.TextBox();
             this.ext_number_panel = new System.Windows.Forms.Label();
             this.cancel_button = new System.Windows.Forms.Button();
@@ -94,6 +95,7 @@
             this.Controls.Add(this.cancel_button);
             this.Controls.Add(this.conference_button);
             this.Controls.Add(this.call_button);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "frmConference";

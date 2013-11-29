@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmWorkflow));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.workflow_combobox = new System.Windows.Forms.ComboBox();
             this.workflow_label = new System.Windows.Forms.Label();
@@ -93,6 +94,7 @@
             this.Controls.Add(this.cancel_button);
             this.Controls.Add(this.login_button);
             this.Controls.Add(this.groupBox1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "frmWorkflow";

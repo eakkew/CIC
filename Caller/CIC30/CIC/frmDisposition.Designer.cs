@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmDisposition));
             this.save_button = new System.Windows.Forms.Button();
             this.finishcode_label = new System.Windows.Forms.Label();
             this.finishcode_combobox = new System.Windows.Forms.ComboBox();
@@ -69,6 +70,7 @@
             this.Controls.Add(this.finishcode_combobox);
             this.Controls.Add(this.finishcode_label);
             this.Controls.Add(this.save_button);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "frmDisposition";

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmManualCall));
             this.manual_call_label = new System.Windows.Forms.Label();
             this.phone_box = new System.Windows.Forms.TextBox();
             this.call_button = new System.Windows.Forms.Button();
@@ -81,6 +82,7 @@
             this.Controls.Add(this.call_button);
             this.Controls.Add(this.phone_box);
             this.Controls.Add(this.manual_call_label);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "frmManualCall";
