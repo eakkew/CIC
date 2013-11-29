@@ -116,6 +116,15 @@
             this.contractID_panel = new System.Windows.Forms.Panel();
             this.contractNo_box = new System.Windows.Forms.TextBox();
             this.contractID_label = new System.Windows.Forms.Label();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.toolStripCampaignIDLabel = new System.Windows.Forms.Label();
+            this.toolStripCallTypeLabel = new System.Windows.Forms.Label();
+            this.toolStripCallIDLabel = new System.Windows.Forms.Label();
+            this.toolStripWorkflowLabel = new System.Windows.Forms.Label();
+            this.toolStripCallID = new System.Windows.Forms.Label();
+            this.toolStripCallType = new System.Windows.Forms.Label();
+            this.toolStripCampaignID = new System.Windows.Forms.Label();
+            this.toolStripWorkflow = new System.Windows.Forms.Label();
             this.state_info_label = new System.Windows.Forms.Label();
             this.timer_info = new System.Windows.Forms.Label();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
@@ -139,16 +148,7 @@
             this.logout_button_label = new System.Windows.Forms.Label();
             this.exit_button_label = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.toolStripWorkflow = new System.Windows.Forms.Label();
-            this.toolStripCampaignID = new System.Windows.Forms.Label();
-            this.toolStripCallType = new System.Windows.Forms.Label();
-            this.toolStripCallID = new System.Windows.Forms.Label();
-            this.toolStripWorkflowLabel = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.toolStripCallIDLabel = new System.Windows.Forms.Label();
-            this.toolStripCallTypeLabel = new System.Windows.Forms.Label();
-            this.toolStripCampaignIDLabel = new System.Windows.Forms.Label();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
@@ -177,9 +177,9 @@
             this.product_name_panel.SuspendLayout();
             this.license_plate_panel.SuspendLayout();
             this.contractID_panel.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // flowLayoutPanel1
@@ -994,6 +994,93 @@
             this.contractID_label.TabIndex = 0;
             this.contractID_label.Text = "เลขที่สัญญา:";
             // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.toolStripCampaignIDLabel);
+            this.panel2.Controls.Add(this.toolStripCallTypeLabel);
+            this.panel2.Controls.Add(this.toolStripCallIDLabel);
+            this.panel2.Controls.Add(this.toolStripWorkflowLabel);
+            this.panel2.Controls.Add(this.toolStripCallID);
+            this.panel2.Controls.Add(this.toolStripCallType);
+            this.panel2.Controls.Add(this.toolStripCampaignID);
+            this.panel2.Controls.Add(this.toolStripWorkflow);
+            this.panel2.Location = new System.Drawing.Point(3, 274);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(406, 138);
+            this.panel2.TabIndex = 2;
+            // 
+            // toolStripCampaignIDLabel
+            // 
+            this.toolStripCampaignIDLabel.AutoSize = true;
+            this.toolStripCampaignIDLabel.Location = new System.Drawing.Point(73, 30);
+            this.toolStripCampaignIDLabel.Name = "toolStripCampaignIDLabel";
+            this.toolStripCampaignIDLabel.Size = new System.Drawing.Size(27, 13);
+            this.toolStripCampaignIDLabel.TabIndex = 7;
+            this.toolStripCampaignIDLabel.Text = "N/A";
+            // 
+            // toolStripCallTypeLabel
+            // 
+            this.toolStripCallTypeLabel.AutoSize = true;
+            this.toolStripCallTypeLabel.Location = new System.Drawing.Point(73, 51);
+            this.toolStripCallTypeLabel.Name = "toolStripCallTypeLabel";
+            this.toolStripCallTypeLabel.Size = new System.Drawing.Size(27, 13);
+            this.toolStripCallTypeLabel.TabIndex = 6;
+            this.toolStripCallTypeLabel.Text = "N/A";
+            // 
+            // toolStripCallIDLabel
+            // 
+            this.toolStripCallIDLabel.AutoSize = true;
+            this.toolStripCallIDLabel.Location = new System.Drawing.Point(73, 69);
+            this.toolStripCallIDLabel.Name = "toolStripCallIDLabel";
+            this.toolStripCallIDLabel.Size = new System.Drawing.Size(27, 13);
+            this.toolStripCallIDLabel.TabIndex = 5;
+            this.toolStripCallIDLabel.Text = "N/A";
+            // 
+            // toolStripWorkflowLabel
+            // 
+            this.toolStripWorkflowLabel.AutoSize = true;
+            this.toolStripWorkflowLabel.Location = new System.Drawing.Point(73, 10);
+            this.toolStripWorkflowLabel.Name = "toolStripWorkflowLabel";
+            this.toolStripWorkflowLabel.Size = new System.Drawing.Size(27, 13);
+            this.toolStripWorkflowLabel.TabIndex = 4;
+            this.toolStripWorkflowLabel.Text = "N/A";
+            // 
+            // toolStripCallID
+            // 
+            this.toolStripCallID.AutoSize = true;
+            this.toolStripCallID.Location = new System.Drawing.Point(8, 69);
+            this.toolStripCallID.Name = "toolStripCallID";
+            this.toolStripCallID.Size = new System.Drawing.Size(44, 13);
+            this.toolStripCallID.TabIndex = 3;
+            this.toolStripCallID.Text = "Call ID: ";
+            // 
+            // toolStripCallType
+            // 
+            this.toolStripCallType.AutoSize = true;
+            this.toolStripCallType.Location = new System.Drawing.Point(8, 51);
+            this.toolStripCallType.Name = "toolStripCallType";
+            this.toolStripCallType.Size = new System.Drawing.Size(57, 13);
+            this.toolStripCallType.TabIndex = 2;
+            this.toolStripCallType.Text = "Call Type: ";
+            // 
+            // toolStripCampaignID
+            // 
+            this.toolStripCampaignID.AutoSize = true;
+            this.toolStripCampaignID.Location = new System.Drawing.Point(8, 30);
+            this.toolStripCampaignID.Name = "toolStripCampaignID";
+            this.toolStripCampaignID.Size = new System.Drawing.Size(60, 13);
+            this.toolStripCampaignID.TabIndex = 1;
+            this.toolStripCampaignID.Text = "Campaign: ";
+            // 
+            // toolStripWorkflow
+            // 
+            this.toolStripWorkflow.AutoSize = true;
+            this.toolStripWorkflow.Location = new System.Drawing.Point(8, 10);
+            this.toolStripWorkflow.Name = "toolStripWorkflow";
+            this.toolStripWorkflow.Size = new System.Drawing.Size(58, 13);
+            this.toolStripWorkflow.TabIndex = 0;
+            this.toolStripWorkflow.Text = "Workflow: ";
+            // 
             // state_info_label
             // 
             this.state_info_label.AutoSize = true;
@@ -1028,7 +1115,7 @@
             // toolStripDatetime
             // 
             this.toolStripDatetime.Name = "toolStripDatetime";
-            this.toolStripDatetime.Size = new System.Drawing.Size(54, 17);
+            this.toolStripDatetime.Size = new System.Drawing.Size(49, 17);
             this.toolStripDatetime.Text = "datetime";
             // 
             // toolStripStatusLabel
@@ -1040,19 +1127,19 @@
             // toolStripStatus
             // 
             this.toolStripStatus.Name = "toolStripStatus";
-            this.toolStripStatus.Size = new System.Drawing.Size(68, 17);
+            this.toolStripStatus.Size = new System.Drawing.Size(63, 17);
             this.toolStripStatus.Text = "statusname";
             // 
             // toolStripDirection
             // 
             this.toolStripDirection.Name = "toolStripDirection";
-            this.toolStripDirection.Size = new System.Drawing.Size(61, 17);
+            this.toolStripDirection.Size = new System.Drawing.Size(56, 17);
             this.toolStripDirection.Text = "Direction: ";
             // 
             // toolStripDirectionLabel
             // 
             this.toolStripDirectionLabel.Name = "toolStripDirectionLabel";
-            this.toolStripDirectionLabel.Size = new System.Drawing.Size(29, 17);
+            this.toolStripDirectionLabel.Size = new System.Drawing.Size(25, 17);
             this.toolStripDirectionLabel.Text = "N/A";
             // 
             // previewCallTimer
@@ -1103,7 +1190,7 @@
             // mute_button_label
             // 
             this.mute_button_label.AutoSize = true;
-            this.mute_button_label.Location = new System.Drawing.Point(446, 4);
+            this.mute_button_label.Location = new System.Drawing.Point(449, 4);
             this.mute_button_label.Name = "mute_button_label";
             this.mute_button_label.Size = new System.Drawing.Size(31, 13);
             this.mute_button_label.TabIndex = 4;
@@ -1112,16 +1199,16 @@
             // transfer_button_label
             // 
             this.transfer_button_label.AutoSize = true;
-            this.transfer_button_label.Location = new System.Drawing.Point(539, 4);
+            this.transfer_button_label.Location = new System.Drawing.Point(553, 4);
             this.transfer_button_label.Name = "transfer_button_label";
-            this.transfer_button_label.Size = new System.Drawing.Size(70, 13);
+            this.transfer_button_label.Size = new System.Drawing.Size(46, 13);
             this.transfer_button_label.TabIndex = 5;
-            this.transfer_button_label.Text = "Transference";
+            this.transfer_button_label.Text = "Transfer";
             // 
             // conference_button_label
             // 
             this.conference_button_label.AutoSize = true;
-            this.conference_button_label.Location = new System.Drawing.Point(646, 4);
+            this.conference_button_label.Location = new System.Drawing.Point(648, 4);
             this.conference_button_label.Name = "conference_button_label";
             this.conference_button_label.Size = new System.Drawing.Size(62, 13);
             this.conference_button_label.TabIndex = 6;
@@ -1192,66 +1279,6 @@
             this.panel1.Size = new System.Drawing.Size(1245, 20);
             this.panel1.TabIndex = 9;
             // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.toolStripCampaignIDLabel);
-            this.panel2.Controls.Add(this.toolStripCallTypeLabel);
-            this.panel2.Controls.Add(this.toolStripCallIDLabel);
-            this.panel2.Controls.Add(this.toolStripWorkflowLabel);
-            this.panel2.Controls.Add(this.toolStripCallID);
-            this.panel2.Controls.Add(this.toolStripCallType);
-            this.panel2.Controls.Add(this.toolStripCampaignID);
-            this.panel2.Controls.Add(this.toolStripWorkflow);
-            this.panel2.Location = new System.Drawing.Point(3, 274);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(406, 138);
-            this.panel2.TabIndex = 2;
-            // 
-            // toolStripWorkflow
-            // 
-            this.toolStripWorkflow.AutoSize = true;
-            this.toolStripWorkflow.Location = new System.Drawing.Point(8, 10);
-            this.toolStripWorkflow.Name = "toolStripWorkflow";
-            this.toolStripWorkflow.Size = new System.Drawing.Size(58, 13);
-            this.toolStripWorkflow.TabIndex = 0;
-            this.toolStripWorkflow.Text = "Workflow: ";
-            // 
-            // toolStripCampaignID
-            // 
-            this.toolStripCampaignID.AutoSize = true;
-            this.toolStripCampaignID.Location = new System.Drawing.Point(8, 30);
-            this.toolStripCampaignID.Name = "toolStripCampaignID";
-            this.toolStripCampaignID.Size = new System.Drawing.Size(60, 13);
-            this.toolStripCampaignID.TabIndex = 1;
-            this.toolStripCampaignID.Text = "Campaign: ";
-            // 
-            // toolStripCallType
-            // 
-            this.toolStripCallType.AutoSize = true;
-            this.toolStripCallType.Location = new System.Drawing.Point(8, 51);
-            this.toolStripCallType.Name = "toolStripCallType";
-            this.toolStripCallType.Size = new System.Drawing.Size(57, 13);
-            this.toolStripCallType.TabIndex = 2;
-            this.toolStripCallType.Text = "Call Type: ";
-            // 
-            // toolStripCallID
-            // 
-            this.toolStripCallID.AutoSize = true;
-            this.toolStripCallID.Location = new System.Drawing.Point(8, 69);
-            this.toolStripCallID.Name = "toolStripCallID";
-            this.toolStripCallID.Size = new System.Drawing.Size(44, 13);
-            this.toolStripCallID.TabIndex = 3;
-            this.toolStripCallID.Text = "Call ID: ";
-            // 
-            // toolStripWorkflowLabel
-            // 
-            this.toolStripWorkflowLabel.AutoSize = true;
-            this.toolStripWorkflowLabel.Location = new System.Drawing.Point(73, 10);
-            this.toolStripWorkflowLabel.Name = "toolStripWorkflowLabel";
-            this.toolStripWorkflowLabel.Size = new System.Drawing.Size(27, 13);
-            this.toolStripWorkflowLabel.TabIndex = 4;
-            this.toolStripWorkflowLabel.Text = "N/A";
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -1260,33 +1287,6 @@
             this.label1.Size = new System.Drawing.Size(35, 13);
             this.label1.TabIndex = 10;
             this.label1.Text = "label1";
-            // 
-            // toolStripCallIDLabel
-            // 
-            this.toolStripCallIDLabel.AutoSize = true;
-            this.toolStripCallIDLabel.Location = new System.Drawing.Point(73, 69);
-            this.toolStripCallIDLabel.Name = "toolStripCallIDLabel";
-            this.toolStripCallIDLabel.Size = new System.Drawing.Size(27, 13);
-            this.toolStripCallIDLabel.TabIndex = 5;
-            this.toolStripCallIDLabel.Text = "N/A";
-            // 
-            // toolStripCallTypeLabel
-            // 
-            this.toolStripCallTypeLabel.AutoSize = true;
-            this.toolStripCallTypeLabel.Location = new System.Drawing.Point(73, 51);
-            this.toolStripCallTypeLabel.Name = "toolStripCallTypeLabel";
-            this.toolStripCallTypeLabel.Size = new System.Drawing.Size(27, 13);
-            this.toolStripCallTypeLabel.TabIndex = 6;
-            this.toolStripCallTypeLabel.Text = "N/A";
-            // 
-            // toolStripCampaignIDLabel
-            // 
-            this.toolStripCampaignIDLabel.AutoSize = true;
-            this.toolStripCampaignIDLabel.Location = new System.Drawing.Point(73, 30);
-            this.toolStripCampaignIDLabel.Name = "toolStripCampaignIDLabel";
-            this.toolStripCampaignIDLabel.Size = new System.Drawing.Size(27, 13);
-            this.toolStripCampaignIDLabel.TabIndex = 7;
-            this.toolStripCampaignIDLabel.Text = "N/A";
             // 
             // FormMain
             // 
@@ -1359,12 +1359,12 @@
             this.license_plate_panel.PerformLayout();
             this.contractID_panel.ResumeLayout(false);
             this.contractID_panel.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
