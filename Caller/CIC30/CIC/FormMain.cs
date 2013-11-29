@@ -3303,8 +3303,8 @@ namespace CIC
                     string baseURI = "http://" + global::CIC.Properties.Settings.Default["MSCRMServerName"];
                     baseURI += "etn=col_collection_history&";
                     baseURI += "pagetype=entityrecord&";
-                    baseURI += string.Format("extraqs=col_contract_no={0}&", productID);
-                    baseURI += string.Format("col_ phone_id={0}&", refCallID);
+                    baseURI += string.Format("extraqs=col_contract_no=%7b{0}%7d&", productID);
+                    baseURI += string.Format("col_ phone_id=%7b{0}%7d&", refCallID);
                     baseURI += string.Format("col_call_id={0}", callID);
                     baseURI = baseURI.Replace("=", "%3d").Replace("{", "%7b").Replace("}", "%7d").Replace("&", "%26");
                 

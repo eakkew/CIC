@@ -39,7 +39,7 @@
             // 
             // phone_box
             // 
-            this.phone_box.Location = new System.Drawing.Point(109, 3);
+            this.phone_box.Location = new System.Drawing.Point(155, 30);
             this.phone_box.MaxLength = 11;
             this.phone_box.Name = "phone_box";
             this.phone_box.Size = new System.Drawing.Size(86, 20);
@@ -48,7 +48,7 @@
             // hour_combobox
             // 
             this.hour_combobox.FormattingEnabled = true;
-            this.hour_combobox.Location = new System.Drawing.Point(109, 30);
+            this.hour_combobox.Location = new System.Drawing.Point(155, 57);
             this.hour_combobox.Name = "hour_combobox";
             this.hour_combobox.Size = new System.Drawing.Size(40, 21);
             this.hour_combobox.TabIndex = 2;
@@ -57,7 +57,7 @@
             // minute_combobox
             // 
             this.minute_combobox.FormattingEnabled = true;
-            this.minute_combobox.Location = new System.Drawing.Point(155, 30);
+            this.minute_combobox.Location = new System.Drawing.Point(201, 57);
             this.minute_combobox.Name = "minute_combobox";
             this.minute_combobox.Size = new System.Drawing.Size(40, 21);
             this.minute_combobox.TabIndex = 3;
@@ -66,7 +66,7 @@
             // phone_label
             // 
             this.phone_label.AutoSize = true;
-            this.phone_label.Location = new System.Drawing.Point(41, 6);
+            this.phone_label.Location = new System.Drawing.Point(87, 33);
             this.phone_label.Name = "phone_label";
             this.phone_label.Size = new System.Drawing.Size(62, 13);
             this.phone_label.TabIndex = 4;
@@ -75,7 +75,7 @@
             // time_label
             // 
             this.time_label.AutoSize = true;
-            this.time_label.Location = new System.Drawing.Point(25, 33);
+            this.time_label.Location = new System.Drawing.Point(71, 60);
             this.time_label.Name = "time_label";
             this.time_label.Size = new System.Drawing.Size(78, 13);
             this.time_label.TabIndex = 5;
@@ -83,7 +83,7 @@
             // 
             // save_button
             // 
-            this.save_button.Location = new System.Drawing.Point(44, 57);
+            this.save_button.Location = new System.Drawing.Point(90, 84);
             this.save_button.Name = "save_button";
             this.save_button.Size = new System.Drawing.Size(75, 23);
             this.save_button.TabIndex = 6;
@@ -93,7 +93,7 @@
             // 
             // cancel_button
             // 
-            this.cancel_button.Location = new System.Drawing.Point(125, 57);
+            this.cancel_button.Location = new System.Drawing.Point(171, 84);
             this.cancel_button.Name = "cancel_button";
             this.cancel_button.Size = new System.Drawing.Size(75, 23);
             this.cancel_button.TabIndex = 7;
@@ -105,7 +105,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(237, 97);
+            this.ClientSize = new System.Drawing.Size(332, 146);
+            this.ControlBox = false;
             this.Controls.Add(this.cancel_button);
             this.Controls.Add(this.save_button);
             this.Controls.Add(this.time_label);
@@ -113,6 +114,8 @@
             this.Controls.Add(this.minute_combobox);
             this.Controls.Add(this.hour_combobox);
             this.Controls.Add(this.phone_box);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "frmSchedule";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Schedule Callback";
