@@ -1034,7 +1034,8 @@ namespace CIC
                             ActiveNormalInteraction.State == InteractionState.Connected)
                         {
                             this.BeginInvoke(new MethodInvoker(update_calling_info));
-                            if (IcWorkFlow != null && IcWorkFlow.LoginResult)
+                            if (IcWorkFlow != null && IcWorkFlow.LoginResult &&
+                                callingNumber == this.GetDialerNumber())
                                 this.BeginInvoke(new MethodInvoker(CrmScreenPop));
                         }
                         this.StrConnectionState = ActiveNormalInteraction.State;
@@ -2609,7 +2610,7 @@ namespace CIC
 
         private void update_calling_info()
         {
-            this.state_info_label.Text = "Connected to: " + this.GetDialerNumber();
+            this.state_info_label.Text = "Connected to: " + callingNumber;
         }
 
         private void update_currency_on_dashboard(Dictionary<string, string> data)
@@ -4038,7 +4039,7 @@ namespace CIC
                         }
                         break;
                 }
-                this.state_info_label.Text = "Connected to: " + this.GetDialerNumber();
+                this.state_info_label.Text = "Connected to: " + callingNumber;
                 log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
