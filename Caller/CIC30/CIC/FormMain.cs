@@ -1029,6 +1029,13 @@ namespace CIC
                         break;
                     case InteractionType.Call:
                         ActiveNormalInteraction = e.Interaction;
+                        if (IcWorkFlow != null && IcWorkFlow.LoginResult &&
+                            this.StrConnectionState == InteractionState.Proceeding &&
+                            ActiveNormalInteraction.State == InteractionState.Connected)
+                        {
+                            this.BeginInvoke(new MethodInvoker(update_calling_info));
+                            this.BeginInvoke(new MethodInvoker(CrmScreenPop));
+                        }
                         this.StrConnectionState = ActiveNormalInteraction.State;
                         toolStripStatus.Text = this.StrConnectionState.ToString();
                         if (ActiveNormalInteraction != null)
@@ -1885,6 +1892,7 @@ namespace CIC
                         }
                         break_requested = false;
                         break_granted = false;
+                        this.endbreak_button.Enabled = false;
                         this.state_info_label.Text = "Break ended. Waiting for a new call from workflow.";
                         log.Info(scope + "Complete.");
                     }
@@ -1919,7 +1927,6 @@ namespace CIC
                                 this.break_granted = true;
                                 this.break_button_Click(sender, e);               //wait for breakgrant
                                 this.ActiveDialerInteraction.DialerSession.RequestLogoutAsync(LogoutGranted, null);
-                                
                             }
                             else
                             {
@@ -2598,6 +2605,11 @@ namespace CIC
             log.Info(scope + "Completed.");
         }
 
+        private void update_calling_info()
+        {
+            this.state_info_label.Text = "Connected to: " + this.GetDialerNumber();
+        }
+
         private void update_currency_on_dashboard(Dictionary<string, string> data)
         {
             string scope = "CIC::frmMain::update_currency_on_dashboard()::";
@@ -2930,7 +2942,7 @@ namespace CIC
 
             reset_state();
             call_button.Enabled = true;
-            break_button.Enabled = true;
+            break_button.Enabled = !break_requested;
 
             prev_state = current_state;
             current_state = FormMainState.Preview;
@@ -2943,7 +2955,7 @@ namespace CIC
             // timer1.Start();
 
             reset_state();
-            break_button.Enabled = true;
+            break_button.Enabled = !break_requested;
 
             prev_state = current_state;
             current_state = FormMainState.Predictive;
@@ -2968,9 +2980,9 @@ namespace CIC
             mute_button.Enabled = true;
             transfer_button.Enabled = true;
             conference_button.Enabled = true;
-            break_button.Enabled = true;
+            break_button.Enabled = !break_requested;
 
-            state_info_label.Text = "Connected to: " + callingNumber;
+            //state_info_label.Text = "Connected to: " + callingNumber;
             prev_state = current_state;
             current_state = FormMainState.PreviewCall;
         }
@@ -3030,7 +3042,7 @@ namespace CIC
         
         private void break_requested_state()
         {
-            break_button.Enabled = break_requested;
+            break_button.Enabled = !break_requested;
         }
 
         private void logged_out_state()
@@ -3042,6 +3054,7 @@ namespace CIC
 
             prev_state = current_state;
             current_state = FormMainState.Loggedout;
+            state_info_label.Text = "Logged out";
         }
 
         private void disable_break_request()
@@ -3209,17 +3222,16 @@ namespace CIC
                         this.Initialize_CallBack();
                         this.Initialize_ContactData();
                         this.ShowActiveCallInfo();
-                        this.CrmScreenPop();
-
+                        //this.CrmScreenPop();
                         
-                        this.BeginInvoke(new MethodInvoker(preview_call_state));
+                        //this.BeginInvoke(new MethodInvoker(preview_call_state));
                         break;
                     case InteractionType.Call:
                         this.Initialize_ContactData();
                         this.ShowActiveCallInfo();
-                        this.CrmScreenPop();
+                        //this.CrmScreenPop();
                     
-                        this.BeginInvoke(new MethodInvoker(preview_call_state));
+                        //this.BeginInvoke(new MethodInvoker(preview_call_state));
                         break;
                 }
                 log.Info(scope + "Completed.");
@@ -3302,11 +3314,9 @@ namespace CIC
 
                     string baseURI = "http://" + global::CIC.Properties.Settings.Default["MSCRMServerName"];
                     baseURI += "etn=col_collection_history&";
-                    baseURI += "pagetype=entityrecord&";
-                    baseURI += string.Format("extraqs=col_contract_no=%7b{0}%7d&", productID);
-                    baseURI += string.Format("col_ phone_id=%7b{0}%7d&", refCallID);
-                    baseURI += string.Format("col_call_id={0}", callID);
-                    baseURI = baseURI.Replace("=", "%3d").Replace("{", "%7b").Replace("}", "%7d").Replace("&", "%26");
+                    baseURI += "pagetype=entityrecord&extraqs=col_contract_no";
+                    baseURI += string.Format("=%7b{0}%7d&col_ phone_id=%7b{1}%7d&col_call_id={2}"
+                        , productID, refCallID, callID).Replace("=", "%3d").Replace("{", "%7b").Replace("}", "%7d").Replace("&", "%26");
                 
                     Process.Start(baseURI);
                     log.Info("process.start : " + baseURI);
@@ -3646,16 +3656,14 @@ namespace CIC
                             if (ActiveConsultInteraction != null)
                             {
                                 ActiveConsultInteraction.Disconnect();
-                                // TODO: activate this code
-                                //this.RemoveNormalInteractionFromList(ActiveConsultInteraction);
+                                this.RemoveNormalInteractionFromList(ActiveConsultInteraction);
                                 ActiveConsultInteraction = null;
                             }
                             else
                             {
                                 ActiveConsultInteraction = ActiveNormalInteraction;
                                 ActiveConsultInteraction.Disconnect();
-                                // TODO: activate this code
-                                //this.RemoveNormalInteractionFromList(this.ActiveConsultInteraction);
+                                this.RemoveNormalInteractionFromList(ActiveConsultInteraction);
                                 ActiveConsultInteraction = null;
                             }
                             if (InteractionList != null)
@@ -3682,16 +3690,14 @@ namespace CIC
                             if (ActiveConsultInteraction != null)
                             {
                                 ActiveConsultInteraction.Disconnect();
-                                // TODO: activate this code
-                                //this.RemoveNormalInteractionFromList(this.ActiveConsultInteraction);
+                                this.RemoveNormalInteractionFromList(ActiveConsultInteraction);
                                 ActiveConsultInteraction = null;
                             }
                             else
                             {
                                 ActiveConsultInteraction = ActiveNormalInteraction;
                                 ActiveConsultInteraction.Disconnect();
-                                // TODO: activate this code
-                                //this.RemoveNormalInteractionFromList(this.ActiveConsultInteraction);
+                                this.RemoveNormalInteractionFromList(ActiveConsultInteraction);
                                 ActiveConsultInteraction = null;
                             }
                             if (InteractionList != null)
@@ -3845,6 +3851,7 @@ namespace CIC
                             System.Windows.Forms.MessageBox.Show(
                                 global::CIC.Properties.Settings.Default.CompletedWorkflowMsg,
                                 "System Info.", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            reset_info_on_dashboard();
                             break;
                         default:
                             if (ActiveNormalInteraction != null)
@@ -3981,6 +3988,7 @@ namespace CIC
                         if (this.ActiveDialerInteraction != null)
                         {
                             this.ActiveDialerInteraction.Pickup();
+                            this.CrmScreenPop();
                         }
                         if (ActiveNormalInteraction != null)
                         {
@@ -4021,6 +4029,7 @@ namespace CIC
                         }
                         break;
                 }
+                this.state_info_label.Text = "Connected to: " + this.GetDialerNumber();
                 log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)

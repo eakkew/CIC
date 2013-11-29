@@ -122,6 +122,8 @@
             this.toolStripDatetime = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripWorkflow = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripWorkflowLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripCallID = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripCallIDLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripDirection = new System.Windows.Forms.ToolStripStatusLabel();
@@ -145,8 +147,6 @@
             this.logout_button_label = new System.Windows.Forms.Label();
             this.exit_button_label = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.toolStripWorkflow = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripWorkflowLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
@@ -1032,7 +1032,7 @@
             // toolStripDatetime
             // 
             this.toolStripDatetime.Name = "toolStripDatetime";
-            this.toolStripDatetime.Size = new System.Drawing.Size(49, 17);
+            this.toolStripDatetime.Size = new System.Drawing.Size(54, 17);
             this.toolStripDatetime.Text = "datetime";
             // 
             // toolStripStatusLabel
@@ -1044,55 +1044,67 @@
             // toolStripStatus
             // 
             this.toolStripStatus.Name = "toolStripStatus";
-            this.toolStripStatus.Size = new System.Drawing.Size(63, 17);
+            this.toolStripStatus.Size = new System.Drawing.Size(68, 17);
             this.toolStripStatus.Text = "statusname";
+            // 
+            // toolStripWorkflow
+            // 
+            this.toolStripWorkflow.Name = "toolStripWorkflow";
+            this.toolStripWorkflow.Size = new System.Drawing.Size(64, 17);
+            this.toolStripWorkflow.Text = "Workflow: ";
+            // 
+            // toolStripWorkflowLabel
+            // 
+            this.toolStripWorkflowLabel.Name = "toolStripWorkflowLabel";
+            this.toolStripWorkflowLabel.Size = new System.Drawing.Size(29, 17);
+            this.toolStripWorkflowLabel.Text = "N/A";
             // 
             // toolStripCallID
             // 
             this.toolStripCallID.Name = "toolStripCallID";
-            this.toolStripCallID.Size = new System.Drawing.Size(45, 17);
+            this.toolStripCallID.Size = new System.Drawing.Size(47, 17);
             this.toolStripCallID.Text = "Call ID: ";
             // 
             // toolStripCallIDLabel
             // 
             this.toolStripCallIDLabel.Name = "toolStripCallIDLabel";
-            this.toolStripCallIDLabel.Size = new System.Drawing.Size(25, 17);
+            this.toolStripCallIDLabel.Size = new System.Drawing.Size(29, 17);
             this.toolStripCallIDLabel.Text = "N/A";
             // 
             // toolStripDirection
             // 
             this.toolStripDirection.Name = "toolStripDirection";
-            this.toolStripDirection.Size = new System.Drawing.Size(56, 17);
+            this.toolStripDirection.Size = new System.Drawing.Size(61, 17);
             this.toolStripDirection.Text = "Direction: ";
             // 
             // toolStripDirectionLabel
             // 
             this.toolStripDirectionLabel.Name = "toolStripDirectionLabel";
-            this.toolStripDirectionLabel.Size = new System.Drawing.Size(25, 17);
+            this.toolStripDirectionLabel.Size = new System.Drawing.Size(29, 17);
             this.toolStripDirectionLabel.Text = "N/A";
             // 
             // toolStripCallType
             // 
             this.toolStripCallType.Name = "toolStripCallType";
-            this.toolStripCallType.Size = new System.Drawing.Size(58, 17);
+            this.toolStripCallType.Size = new System.Drawing.Size(62, 17);
             this.toolStripCallType.Text = "Call Type: ";
             // 
             // toolStripCallTypeLabel
             // 
             this.toolStripCallTypeLabel.Name = "toolStripCallTypeLabel";
-            this.toolStripCallTypeLabel.Size = new System.Drawing.Size(25, 17);
+            this.toolStripCallTypeLabel.Size = new System.Drawing.Size(29, 17);
             this.toolStripCallTypeLabel.Text = "N/A";
             // 
             // toolStripCampaignID
             // 
             this.toolStripCampaignID.Name = "toolStripCampaignID";
-            this.toolStripCampaignID.Size = new System.Drawing.Size(75, 17);
-            this.toolStripCampaignID.Text = "Campaign ID: ";
+            this.toolStripCampaignID.Size = new System.Drawing.Size(68, 17);
+            this.toolStripCampaignID.Text = "Campaign: ";
             // 
             // toolStripCampaignIDLabel
             // 
             this.toolStripCampaignIDLabel.Name = "toolStripCampaignIDLabel";
-            this.toolStripCampaignIDLabel.Size = new System.Drawing.Size(25, 17);
+            this.toolStripCampaignIDLabel.Size = new System.Drawing.Size(29, 17);
             this.toolStripCampaignIDLabel.Text = "N/A";
             // 
             // previewCallTimer
@@ -1232,23 +1244,12 @@
             this.panel1.Size = new System.Drawing.Size(1245, 20);
             this.panel1.TabIndex = 9;
             // 
-            // toolStripWorkflow
-            // 
-            this.toolStripWorkflow.Name = "toolStripWorkflow";
-            this.toolStripWorkflow.Size = new System.Drawing.Size(64, 17);
-            this.toolStripWorkflow.Text = "Workflow: ";
-            // 
-            // toolStripWorkflowLabel
-            // 
-            this.toolStripWorkflowLabel.Name = "toolStripWorkflowLabel";
-            this.toolStripWorkflowLabel.Size = new System.Drawing.Size(29, 17);
-            this.toolStripWorkflowLabel.Text = "N/A";
-            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1274, 584);
+            this.ControlBox = false;
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.flowLayoutPanel4);
@@ -1256,6 +1257,8 @@
             this.Controls.Add(this.flowLayoutPanel2);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.panel1);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "FormMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Outbound Telephony Dialer Client";

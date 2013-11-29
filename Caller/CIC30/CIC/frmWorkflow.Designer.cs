@@ -89,6 +89,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(328, 126);
+            this.ControlBox = false;
             this.Controls.Add(this.cancel_button);
             this.Controls.Add(this.login_button);
             this.Controls.Add(this.groupBox1);
@@ -96,7 +97,7 @@
             this.MinimizeBox = false;
             this.Name = "frmWorkflow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Select Workflow";
+            this.Text = "Logon to Workflow";
             this.TopMost = true;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmWorkflow_FormClosed);
             this.groupBox1.ResumeLayout(false);

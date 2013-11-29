@@ -90,7 +90,7 @@ namespace CIC
             // TODO: make config file for regex to validate 4digit number, # and 4 digit number, and 10 or 11 digit
             Regex r = new Regex(@"^[\d]+\d$"); // extension      -
             Match m = r.Match(number);
-            return m.Success;
+            return m.Success && number != "";
         }
 
         public static ReasonCode GetReasonCode(string sFinishcode)

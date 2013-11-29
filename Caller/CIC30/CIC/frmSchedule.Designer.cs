@@ -118,7 +118,7 @@
             this.MinimizeBox = false;
             this.Name = "frmSchedule";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Schedule Callback";
+            this.Text = "Schedule Call Back";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmSchedule_FormClosed);
             this.ResumeLayout(false);
             this.PerformLayout();
