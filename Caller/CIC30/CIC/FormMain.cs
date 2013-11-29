@@ -1857,6 +1857,7 @@ namespace CIC
                         break_requested = true;
                         break_requested_state();
                     }
+                    break_button.Enabled = false;
                 }
                 log.Info(scope + "Completed.");
             }
