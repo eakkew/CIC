@@ -3296,7 +3296,7 @@ namespace CIC
                     // PhoneNoอะไร) is_attr_Ref_PhoneNo1
                     // Parameter3 = Call_id (Id ของการโทรออก) is_attr_callid
                     Dictionary<string, string> data = ActiveDialerInteraction.ContactData;
-                    string productID = data.ContainsKey("is_attr_numbertodial") ? data["is_attr_numbertodial"] : "";
+                    string productID = data.ContainsKey("is_attr_ContractNumber") ? data["is_attr_ContractNumber"] : "";
                     string refCallID = getRefCallID(data);
                     string callID = data.ContainsKey("is_attr_callid") ? data["is_attr_callid"] : "";
 
