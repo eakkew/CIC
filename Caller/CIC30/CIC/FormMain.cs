@@ -2436,63 +2436,12 @@ namespace CIC
             }
             else
             {
-                if (IcWorkFlow != null && IcWorkFlow.LoginResult)
+                try
                 {
-                    if (this.ActiveDialerInteraction == null)
+                    if (IcWorkFlow != null && IcWorkFlow.LoginResult)
                     {
-                        // TODO: disable direction|calltype|campaignID|queuename|number|callstate|callID
-                        //this.ActiveConferenceInteraction = null;
-                    }
-                    else
-                    {
-                        if (this.ActiveDialerInteraction.DialingMode == DialingMode.Regular)
+                        if (this.ActiveDialerInteraction == null)
                         {
-                            if (global::CIC.Properties.Settings.Default.AutoAnswer)
-                            {
-                                this.pickup();
-                                //this.PickupToolStripButton_Click(this, new EventArgs());
-                            }
-                            else 
-                            { 
-                                this.call_button.Enabled = true;
-                            }
-                        }
-                        /* TODO: show call ID
-                         *       set call type to campaign call
-                         *       set call state
-                         *       set dialer number
-                         */
-                        update_info_on_dashboard();
-                        this.toolStripCallIDLabel.Text = ActiveDialerInteraction.ContactData.ContainsKey("is_attr_callid") ? 
-                            ActiveDialerInteraction.ContactData["is_attr_callid"] : "";
-                        this.toolStripDirectionLabel.Text = ActiveDialerInteraction.Direction.ToString();
-                        this.toolStripCallTypeLabel.Text = "Campaign Call(" + ActiveDialerInteraction.DialingMode.ToString() +")";
-                        try
-                        {
-                            this.toolStripCampaignIDLabel.Text = mDialerData[Properties.Settings.Default.Preview_Campaign_ATTR];
-                        }
-                        catch (Exception ex)
-                        {
-                            log.Warn(scope + "Error info. " + ex.Message);
-                        }
-                    }
-                } 
-                else
-                {
-                    if (ActiveNormalInteraction == null)
-                    {
-                        // TODO: disable direction|calltype|campaignID|queuename|number|callstate|callID
-                        this.toolStripCallIDLabel.Text = "N/A";
-                        this.toolStripDirectionLabel.Text = "N/A";
-                        this.toolStripCallTypeLabel.Text = "N/A";
-                        this.toolStripCampaignIDLabel.Text = "N/A";
-                        ActiveConferenceInteraction = null;
-                    }
-                    else
-                    {
-                        if (this.BlindTransferFlag)
-                        {
-                            // TODO: disable direction|calltype|campaignID|queuename|number|callstate|callID
                             this.toolStripCallIDLabel.Text = "N/A";
                             this.toolStripDirectionLabel.Text = "N/A";
                             this.toolStripCallTypeLabel.Text = "N/A";
@@ -2501,27 +2450,92 @@ namespace CIC
                         }
                         else
                         {
-                            if (ActiveNormalInteraction == null)
-                                return;
-                            switch (ActiveNormalInteraction.State)
+                            if (this.ActiveDialerInteraction.DialingMode == DialingMode.Regular)
                             {
-                                case InteractionState.None:
-                                    break;
-                                case InteractionState.Held:
-                                    if (this.SwapPartyFlag)
-                                    {
-                                        this.SetActiveCallInfo();
-                                        this.ShowActiveCallInfo();
-                                    }
-                                    else
-                                    {
-                                        // TODO: set info as below
+                                if (global::CIC.Properties.Settings.Default.AutoAnswer)
+                                {
+                                    this.pickup();
+                                }
+                                else
+                                {
+                                    this.call_button.Enabled = true;
+                                }
+                            }
+                            update_info_on_dashboard();
+                            this.toolStripCallIDLabel.Text = ActiveDialerInteraction.ContactData.ContainsKey("is_attr_callid") ?
+                                ActiveDialerInteraction.ContactData["is_attr_callid"] : "";
+                            this.toolStripDirectionLabel.Text = ActiveDialerInteraction.Direction.ToString();
+                            this.toolStripCallTypeLabel.Text = "Campaign Call(" + ActiveDialerInteraction.DialingMode.ToString() + ")";
+                            try
+                            {
+                                this.toolStripCampaignIDLabel.Text = mDialerData[Properties.Settings.Default.Preview_Campaign_ATTR];
+                            }
+                            catch (Exception ex)
+                            {
+                                log.Warn(scope + "Error info. " + ex.Message);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (ActiveNormalInteraction == null)
+                        {
+                            this.toolStripCallIDLabel.Text = "N/A";
+                            this.toolStripDirectionLabel.Text = "N/A";
+                            this.toolStripCallTypeLabel.Text = "N/A";
+                            this.toolStripCampaignIDLabel.Text = "N/A";
+                            ActiveConferenceInteraction = null;
+                        }
+                        else
+                        {
+                            if (this.BlindTransferFlag)
+                            {
+                                this.toolStripCallIDLabel.Text = "N/A";
+                                this.toolStripDirectionLabel.Text = "N/A";
+                                this.toolStripCallTypeLabel.Text = "N/A";
+                                this.toolStripCampaignIDLabel.Text = "N/A";
+                                ActiveConferenceInteraction = null;
+                            }
+                            else
+                            {
+                                if (ActiveNormalInteraction == null)
+                                    return;
+                                switch (ActiveNormalInteraction.State)
+                                {
+                                    case InteractionState.None:
+                                        break;
+                                    case InteractionState.Held:
+                                        if (this.SwapPartyFlag)
+                                        {
+                                            this.SetActiveCallInfo();
+                                            this.ShowActiveCallInfo();
+                                        }
+                                        else
+                                        {
+                                            if (ActiveNormalInteraction.IsMuted)
+                                                this.toolStripStatus.Text = "Muted";
+                                            else
+                                                this.toolStripStatus.Text = ActiveNormalInteraction.State.ToString();
+
+
+                                            this.toolStripCallIDLabel.Text = "N/A";
+                                            this.toolStripDirectionLabel.Text = ActiveNormalInteraction.Direction.ToString();
+                                            this.toolStripCallTypeLabel.Text = ActiveNormalInteraction.InteractionType.ToString();
+                                            try
+                                            {
+                                                this.toolStripCampaignIDLabel.Text = "Non-campaign Call";
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                log.Warn(scope + "Error info. " + ex.Message);
+                                            }
+                                        }
+                                        break;
+                                    case InteractionState.Connected:
                                         if (ActiveNormalInteraction.IsMuted)
                                             this.toolStripStatus.Text = "Muted";
                                         else
                                             this.toolStripStatus.Text = ActiveNormalInteraction.State.ToString();
-
-
                                         this.toolStripCallIDLabel.Text = "N/A";
                                         this.toolStripDirectionLabel.Text = ActiveNormalInteraction.Direction.ToString();
                                         this.toolStripCallTypeLabel.Text = ActiveNormalInteraction.InteractionType.ToString();
@@ -2533,43 +2547,30 @@ namespace CIC
                                         {
                                             log.Warn(scope + "Error info. " + ex.Message);
                                         }
-                                    }
-                                    //this.CallIdToolStripStatusLabel.Text = this.ActiveNormalInteraction.CallIdKey.ToString().Trim();
-                                    break;
-                                case InteractionState.Connected:
-                                    if (ActiveNormalInteraction.IsMuted)
-                                        this.toolStripStatus.Text = "Muted";
-                                    else
-                                        this.toolStripStatus.Text = ActiveNormalInteraction.State.ToString();
-                                    this.toolStripCallIDLabel.Text = "N/A";
-                                    this.toolStripDirectionLabel.Text = ActiveNormalInteraction.Direction.ToString();
-                                    this.toolStripCallTypeLabel.Text = ActiveNormalInteraction.InteractionType.ToString();
-                                    try
-                                    {
-                                        this.toolStripCampaignIDLabel.Text = "Non-campaign Call";
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        log.Warn(scope + "Error info. " + ex.Message);
-                                    }
-                                    break;
-                                default:
-                                    this.toolStripCallIDLabel.Text = "N/A";
-                                    this.toolStripDirectionLabel.Text = ActiveNormalInteraction.Direction.ToString();
-                                    this.toolStripCallTypeLabel.Text = ActiveNormalInteraction.InteractionType.ToString();
-                                    try
-                                    {
-                                        this.toolStripCampaignIDLabel.Text = "Non-campaign Call";
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        log.Warn(scope + "Error info. " + ex.Message);
-                                    }
-                                    this.toolStripStatus.Text = ActiveNormalInteraction.State.ToString();
-                                    break;
+                                        break;
+                                    default:
+                                        this.toolStripCallIDLabel.Text = "N/A";
+                                        this.toolStripDirectionLabel.Text = ActiveNormalInteraction.Direction.ToString();
+                                        this.toolStripCallTypeLabel.Text = ActiveNormalInteraction.InteractionType.ToString();
+                                        try
+                                        {
+                                            this.toolStripCampaignIDLabel.Text = "Non-campaign Call";
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            log.Warn(scope + "Error info. " + ex.Message);
+                                        }
+                                        if (ActiveNormalInteraction != null)
+                                            this.toolStripStatus.Text = ActiveNormalInteraction.State.ToString();
+                                        break;
+                                }
                             }
                         }
-                     }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    log.Error(scope + "Error info." + ex.Message);
                 }
                 this.SetInfoBarColor();
                 update_conference_status();
@@ -2609,7 +2610,6 @@ namespace CIC
 
             update_currency_on_dashboard(data);
 
-            //this.state_info_label.Text = "Next Calling Number: " + callingNumber;
             log.Info(scope + "Completed.");
         }
 
@@ -2671,11 +2671,9 @@ namespace CIC
 
         private void update_conference_status()
         {
-            // TODO update this method
             string scope = "CIC::FormMain::update_conference_status()::";
             log.Info(scope + "Started.");
 
-            //this.Set_ConferenceToolStrip();
             if (this.InteractionList != null && this.InteractionList.Count <= 0)
             {
                     ActiveConsultInteraction = null;
@@ -2950,7 +2948,7 @@ namespace CIC
 
             reset_state();
             call_button.Enabled = true;
-            break_button.Enabled = !break_requested;
+            break_button.Enabled = !break_requested && IcWorkFlow != null && IcWorkFlow.LoginResult;
 
             prev_state = current_state;
             current_state = FormMainState.Preview;
@@ -2963,7 +2961,7 @@ namespace CIC
             // timer1.Start();
 
             reset_state();
-            break_button.Enabled = !break_requested;
+            break_button.Enabled = !break_requested && IcWorkFlow != null && IcWorkFlow.LoginResult;
 
             prev_state = current_state;
             current_state = FormMainState.Predictive;
@@ -2988,7 +2986,7 @@ namespace CIC
             mute_button.Enabled = true;
             transfer_button.Enabled = true;
             conference_button.Enabled = true;
-            break_button.Enabled = !break_requested;
+            break_button.Enabled = !break_requested && IcWorkFlow != null && IcWorkFlow.LoginResult;
 
             //state_info_label.Text = "Connected to: " + callingNumber;
             prev_state = current_state;
@@ -3001,7 +2999,7 @@ namespace CIC
             disconnect_button.Enabled = true;
             hold_button.Enabled = true;
             mute_button.Enabled = true;
-            break_button.Enabled = !break_requested;
+            break_button.Enabled = !break_requested && IcWorkFlow != null && IcWorkFlow.LoginResult;
 
             if (current_state != FormMainState.Mute)
             {
@@ -3050,7 +3048,7 @@ namespace CIC
         
         private void break_requested_state()
         {
-            break_button.Enabled = !break_requested;
+            break_button.Enabled = !break_requested && IcWorkFlow != null && IcWorkFlow.LoginResult;
         }
 
         private void logged_out_state()
