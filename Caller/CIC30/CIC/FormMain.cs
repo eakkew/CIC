@@ -105,6 +105,7 @@ namespace CIC
         public FormMain()
         {
             ExitFlag = false;
+            isConsulting = false;
             InitializeComponent(); 
             state_change(FormMainState.Disconnected);
             InitializeSession();
@@ -1035,7 +1036,7 @@ namespace CIC
                         {
                             this.BeginInvoke(new MethodInvoker(update_calling_info));
                             if (IcWorkFlow != null && IcWorkFlow.LoginResult &&
-                                callingNumber == this.GetDialerNumber())
+                                !isConsulting)
                                 this.BeginInvoke(new MethodInvoker(CrmScreenPop));
                         }
                         this.StrConnectionState = ActiveNormalInteraction.State;
@@ -1723,6 +1724,7 @@ namespace CIC
                     }
                     this.state_change(FormMainState.Connected);
                 }
+                isConsulting = false;
             }
             catch (Exception ex)
             {
@@ -2461,7 +2463,8 @@ namespace CIC
                          *       set dialer number
                          */
                         update_info_on_dashboard();
-                        this.toolStripCallIDLabel.Text = ActiveDialerInteraction.CallIdKey.ToString().Trim();
+                        this.toolStripCallIDLabel.Text = ActiveDialerInteraction.ContactData.ContainsKey("is_attr_callid") ? 
+                            ActiveDialerInteraction.ContactData["is_attr_callid"] : "";
                         this.toolStripDirectionLabel.Text = ActiveDialerInteraction.Direction.ToString();
                         this.toolStripCallTypeLabel.Text = "Campaign Call(" + ActiveDialerInteraction.DialingMode.ToString() +")";
                         try
@@ -3227,16 +3230,11 @@ namespace CIC
                         this.Initialize_CallBack();
                         this.Initialize_ContactData();
                         this.ShowActiveCallInfo();
-                        //this.CrmScreenPop();
-                        
-                        //this.BeginInvoke(new MethodInvoker(preview_call_state));
                         break;
                     case InteractionType.Call:
                         this.Initialize_ContactData();
                         this.ShowActiveCallInfo();
-                        //this.CrmScreenPop();
-                    
-                        //this.BeginInvoke(new MethodInvoker(preview_call_state));
+
                         break;
                 }
                 log.Info(scope + "Completed.");
@@ -3632,6 +3630,7 @@ namespace CIC
                     {
                         callingNumber = transferTxtDestination;
                         NormalInterationManager.ConsultMakeCallAsync(callParams, MakeConsultCompleted, null);
+                        this.isConsulting = true;
                     }
                 }
                 
@@ -3721,6 +3720,7 @@ namespace CIC
 
                     }
                 }
+                this.isConsulting = false;
                 log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
@@ -4284,5 +4284,7 @@ namespace CIC
                 exit_button.BackgroundImage = CIC.Properties.Resources.disable_Icon_Exit;
             }
         }
+
+        public bool isConsulting { get; set; }
     }
 }
