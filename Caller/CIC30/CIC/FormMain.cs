@@ -562,6 +562,7 @@ namespace CIC
             this.date_callback_box.Text = "";
             this.callingNumber = "";
 
+            timer_info.Text = "Time until call: N/A";
             this.toolStripCallIDLabel.Text = "N/A";
             this.toolStripDirectionLabel.Text = "N/A";
             this.toolStripCallTypeLabel.Text = "N/A";
