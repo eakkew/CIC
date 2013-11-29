@@ -398,38 +398,66 @@ namespace CIC
         {
             string scope = "CIC::MainForm::m_InteractionQueue_InteractionRemoved():: ";
             log.Info(scope + "Starting.");
-            try
+            if (this.InvokeRequired)
             {
-                if (!e.Interaction.IsWatching())
+                this.BeginInvoke(new EventHandler<InteractionEventArgs>(m_InteractionQueue_InteractionRemoved), new object[] { sender, e });
+            }
+            else
+            {
+                try
                 {
-                    e.Interaction.AttributesChanged += new EventHandler<AttributesEventArgs>(NormalInteraction_AttributesChanged);
-                    e.Interaction.StartWatching(this.InteractionAttributes);
-                }
-                switch (e.Interaction.InteractionType)
-                {
-                    case InteractionType.Email:
-                        ActiveNormalInteraction = e.Interaction;
-                        if (ActiveNormalInteraction != null)
-                        {
-                            if (ActiveNormalInteraction.IsDisconnected)
+                    if (!e.Interaction.IsWatching())
+                    {
+                        e.Interaction.AttributesChanged += new EventHandler<AttributesEventArgs>(NormalInteraction_AttributesChanged);
+                        e.Interaction.StartWatching(this.InteractionAttributes);
+                    }
+                    switch (e.Interaction.InteractionType)
+                    {
+                        case InteractionType.Email:
+                            ActiveNormalInteraction = e.Interaction;
+                            if (ActiveNormalInteraction != null)
                             {
-                                this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
-                                this.CallerHost = "";
-                                ActiveNormalInteraction = this.GetAvailableInteractionFromList();
-                                if (ActiveNormalInteraction.State != InteractionState.None)  //chk EIC_STATE
+                                if (ActiveNormalInteraction.IsDisconnected)
                                 {
-                                    this.ShowActiveCallInfo();
+                                    this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
+                                    this.CallerHost = "";
+                                    ActiveNormalInteraction = this.GetAvailableInteractionFromList();
+                                    if (ActiveNormalInteraction.State != InteractionState.None)  //chk EIC_STATE
+                                    {
+                                        this.ShowActiveCallInfo();
+                                    }
                                 }
                             }
-                        }
-                        break;
-                    case InteractionType.Chat:
-                        //
-                        break;
-                    case InteractionType.Callback:
-                        ActiveNormalInteraction = e.Interaction;
-                        if (ActiveNormalInteraction != null)
-                        {
+                            break;
+                        case InteractionType.Chat:
+                            //
+                            break;
+                        case InteractionType.Callback:
+                            ActiveNormalInteraction = e.Interaction;
+                            if (ActiveNormalInteraction != null)
+                            {
+                                if (ActiveNormalInteraction.IsDisconnected)
+                                {
+                                    this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
+                                    this.CallerHost = "";
+                                    ActiveNormalInteraction = this.GetAvailableInteractionFromList();
+                                    if (ActiveNormalInteraction != null)
+                                    {
+                                        this.StrConnectionState = ActiveNormalInteraction.State;
+                                    }
+                                    else
+                                    {
+                                        this.StrConnectionState = InteractionState.None; //"None"
+                                    }
+                                    if (ActiveNormalInteraction.State != InteractionState.None)  //chk EIC_STATE
+                                    {
+                                        this.ShowActiveCallInfo();
+                                    }
+                                }
+                            }
+                            break;
+                        case InteractionType.Call:
+                            ActiveNormalInteraction = e.Interaction;
                             if (ActiveNormalInteraction.IsDisconnected)
                             {
                                 this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
@@ -443,54 +471,33 @@ namespace CIC
                                 {
                                     this.StrConnectionState = InteractionState.None; //"None"
                                 }
-                                if (ActiveNormalInteraction.State != InteractionState.None)  //chk EIC_STATE
-                                {
-                                    this.ShowActiveCallInfo();
-                                }
+                                this.ShowActiveCallInfo();
+
                             }
-                        }
-                        break;
-                    case InteractionType.Call:
-                        ActiveNormalInteraction = e.Interaction;
-                        if (ActiveNormalInteraction.IsDisconnected)
-                        {
-                            this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
-                            this.CallerHost = "";
-                            ActiveNormalInteraction = this.GetAvailableInteractionFromList();
-                            if (ActiveNormalInteraction != null)
-                            {
-                                this.StrConnectionState = ActiveNormalInteraction.State;
-                            }
-                            else
-                            {
-                                this.StrConnectionState = InteractionState.None; //"None"
-                            }
-                            this.ShowActiveCallInfo();
-                            
-                        }
-                        break;
+                            break;
+                    }
+                    log.Info(scope + "Completed.");
                 }
-                log.Info(scope + "Completed.");
-            }
-            catch (System.Exception ex)
-            {
-                log.Error(scope + "Error info." + ex.Message);
-                this.ResetActiveCallInfo();
-                this.CallerHost = "";
-                if (ActiveNormalInteraction != null)
+                catch (System.Exception ex)
                 {
-                    try
+                    log.Error(scope + "Error info." + ex.Message);
+                    this.ResetActiveCallInfo();
+                    this.CallerHost = "";
+                    if (ActiveNormalInteraction != null)
                     {
-                        ActiveNormalInteraction.Disconnect();
+                        try
+                        {
+                            ActiveNormalInteraction.Disconnect();
+                        }
+                        catch
+                        {
+                            //Emty catch block
+                        }
+                        this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
                     }
-                    catch
-                    {
-                        //Emty catch block
-                    }
-                    this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
+                    ActiveNormalInteraction = null;
+                    this.ShowActiveCallInfo();
                 }
-                ActiveNormalInteraction = null;
-                this.ShowActiveCallInfo();
             }
         }
 
@@ -594,8 +601,7 @@ namespace CIC
                     default:
                         this.Stop_AlertingWav();
                         break;
-                }
-                this.EnabledDialerCallTools();
+                };
             }
             else
             {
@@ -611,289 +617,10 @@ namespace CIC
                         this.Stop_AlertingWav();
                         break;
                 }
-                this.EnabledDialerCallTools();
             }
             log.Info(scope + "Completed.");
         }
 
-        private void EnabledDialerCallTools()
-        {
-            string scope = "CIC::frmMain::EnabledNormalCallTools()::";
-            log.Info(scope + "Starting.");
-            //Color OldColor = this.TelephonyToolStrip.BackColor;  //Save Original Trasparent Color
-            if (break_requested)
-            {
-                this.break_button.Enabled = false;
-            }
-            else
-            {
-                this.break_button.Enabled = true;
-            }
-            switch (this.StrConnectionState)
-            {
-                case InteractionState.System:
-                    //this.DispositionToolStripButton.Enabled = false;
-                    //this.CallActivityCodeToolStripComboBox.Enabled = false;
-                    //this.PlaceCallToolStripButton.Enabled = true;
-                    //this.SkipCallToolStripButton.Enabled = true;
-                    //this.CallToolStripSplitButton.Enabled = false;
-                    //this.PickupToolStripButton.Enabled = false;
-                    //this.MuteToolStripButton.Enabled = false;
-                    //this.MuteToolStripButton.Checked = this.IsMuted;
-                    //this.HoldToolStripButton.Checked = false;
-                    //this.HoldToolStripButton.Enabled = false;
-                    //this.DisconnectToolStripButton.Enabled = false;
-                    //this.DialpadToolStripDropDownButton.Enabled = false;
-                    break;
-                case InteractionState.Alerting:
-                    //this.DispositionToolStripButton.Enabled = true;
-                    //this.CallActivityCodeToolStripComboBox.Enabled = true;
-                    //this.PlaceCallToolStripButton.Enabled = false;
-                    //this.SkipCallToolStripButton.Enabled = false;
-                    //if (this.IsDialingEnabled == true)
-                    //{
-                    //    this.CallToolStripSplitButton.Enabled = true;
-                    //}
-                    //else
-                    //{
-                    //    this.CallToolStripSplitButton.Enabled = false;
-                    //}
-                    //this.PickupToolStripButton.Enabled = true;
-                    //this.MuteToolStripButton.Enabled = true;
-                    //this.HoldToolStripButton.Enabled = true;
-                    //this.MuteToolStripButton.Checked = this.IsMuted;
-                    //this.HoldToolStripButton.Checked = false;
-                    //this.SkipCallToolStripButton.Enabled = true;
-                    //this.DisconnectToolStripButton.Enabled = true;
-                    //this.DialpadToolStripDropDownButton.Enabled = true;
-                    //this.TelephonyToolStrip.BackColor = Color.Aqua;
-                    //this.TelephonyToolStrip.BackColor = OldColor;
-                    break;
-                case InteractionState.Messaging:
-                    //this.DispositionToolStripButton.Enabled = true;
-                    ////this.CallActivityCodeToolStripComboBox.SelectedIndex = -1;
-                    //this.CallActivityCodeToolStripComboBox.Enabled = true;
-                    //this.PlaceCallToolStripButton.Enabled = false;
-                    //this.SkipCallToolStripButton.Enabled = false;
-                    //if (this.IsDialingEnabled == true)
-                    //{
-                    //    this.CallToolStripSplitButton.Enabled = true;
-                    //}
-                    //else
-                    //{
-                    //    this.CallToolStripSplitButton.Enabled = false;
-                    //}
-                    //this.PickupToolStripButton.Enabled = true;
-                    //this.MuteToolStripButton.Enabled = true;
-                    //this.HoldToolStripButton.Enabled = true;
-                    //this.MuteToolStripButton.Checked = this.IsMuted;
-                    //this.HoldToolStripButton.Checked = false;
-                    //this.SkipCallToolStripButton.Enabled = true;
-                    //this.DisconnectToolStripButton.Enabled = true;
-                    //this.DialpadToolStripDropDownButton.Enabled = true;
-                    //this.TelephonyToolStrip.BackColor = Color.Aqua;
-                    //this.TelephonyToolStrip.BackColor = OldColor;
-                    break;
-                case InteractionState.Offering:
-                    //this.DispositionToolStripButton.Enabled = true;
-                    //this.CallActivityCodeToolStripComboBox.Enabled = true;
-                    //this.PlaceCallToolStripButton.Enabled = false;
-                    //this.SkipCallToolStripButton.Enabled = false;
-                    //if (this.IsDialingEnabled == true)
-                    //{
-                    //    this.CallToolStripSplitButton.Enabled = true;
-                    //}
-                    //else
-                    //{
-                    //    this.CallToolStripSplitButton.Enabled = false;
-                    //}
-                    //this.PickupToolStripButton.Enabled = true;
-                    //this.MuteToolStripButton.Enabled = true;
-                    //this.HoldToolStripButton.Enabled = true;
-                    //this.MuteToolStripButton.Checked = this.IsMuted;
-                    //this.HoldToolStripButton.Checked = false;
-                    //this.DisconnectToolStripButton.Enabled = true;
-                    //this.DialpadToolStripDropDownButton.Enabled = true;
-                    //this.TelephonyToolStrip.BackColor = Color.Aqua;
-                    //this.TelephonyToolStrip.BackColor = OldColor;
-                    break;
-                //case "dialing":
-                //    this.DispositionToolStripButton.Enabled = true;
-                //    this.CallActivityCodeToolStripComboBox.Enabled = true;
-                //    this.PlaceCallToolStripButton.Enabled = false;
-                //    this.SkipCallToolStripButton.Enabled = false;
-                //    this.CallToolStripSplitButton.Enabled = false;
-                //    this.PickupToolStripButton.Enabled = false;
-                //    this.MuteToolStripButton.Enabled = false;
-                //    this.HoldToolStripButton.Enabled = false;
-                //    this.MuteToolStripButton.Checked = this.IsMuted;
-                //    this.HoldToolStripButton.Checked = false;
-                //    this.DisconnectToolStripButton.Enabled = true;
-                //    this.DialpadToolStripDropDownButton.Enabled = false;
-                //    this.TelephonyToolStrip.BackColor = Color.Aqua;
-                //    this.TelephonyToolStrip.BackColor = OldColor;
-                //    break;
-                case InteractionState.Proceeding:
-                    //this.DispositionToolStripButton.Enabled = true;
-                    //this.CallActivityCodeToolStripComboBox.Enabled = true;
-                    //this.PlaceCallToolStripButton.Enabled = false;
-                    //this.SkipCallToolStripButton.Enabled = false;
-                    //this.CallToolStripSplitButton.Enabled = false;
-                    //this.PickupToolStripButton.Enabled = false;
-                    //this.MuteToolStripButton.Enabled = false;
-                    //this.HoldToolStripButton.Enabled = false;
-                    //this.MuteToolStripButton.Checked = this.IsMuted;
-                    //this.HoldToolStripButton.Checked = false;
-                    //this.DisconnectToolStripButton.Enabled = true;
-                    //this.DialpadToolStripDropDownButton.Enabled = false;
-                    //this.TelephonyToolStrip.BackColor = Color.Aqua;
-                    //this.TelephonyToolStrip.BackColor = OldColor;
-                    break;
-                case InteractionState.Held:
-                    //this.DispositionToolStripButton.Enabled = true;
-                    //this.CallActivityCodeToolStripComboBox.Enabled = true;
-                    //this.PlaceCallToolStripButton.Enabled = false;
-                    //this.SkipCallToolStripButton.Enabled = false;
-                    //if (this.IsDialingEnabled == true)
-                    //{
-                    //    this.CallToolStripSplitButton.Enabled = true;
-                    //}
-                    //else
-                    //{
-                    //    this.CallToolStripSplitButton.Enabled = false;
-                    //}
-                    //this.PickupToolStripButton.Enabled = true;
-                    //this.MuteToolStripButton.Enabled = true;
-                    //this.HoldToolStripButton.Enabled = true;
-                    //this.MuteToolStripButton.Checked = this.IsMuted;
-                    //this.HoldToolStripButton.Checked = true;
-                    //this.DisconnectToolStripButton.Enabled = true;
-                    //this.DialpadToolStripDropDownButton.Enabled = true;
-                    //this.TelephonyToolStrip.BackColor = Color.Aqua;
-                    //this.TelephonyToolStrip.BackColor = OldColor;
-                    break;
-                case InteractionState.Connected:
-                    //if (IsMuted)
-                    //{
-                    //    this.DispositionToolStripButton.Enabled = true;
-                    //    this.CallActivityCodeToolStripComboBox.Enabled = true;
-                    //    this.PlaceCallToolStripButton.Enabled = false;
-                    //    this.SkipCallToolStripButton.Enabled = false;
-                    //    if (this.IsDialingEnabled == true)
-                    //    {
-                    //        this.CallToolStripSplitButton.Enabled = true;
-                    //    }
-                    //    else
-                    //    {
-                    //        this.CallToolStripSplitButton.Enabled = false;
-                    //    }
-                    //    this.PickupToolStripButton.Enabled = true;
-                    //    this.MuteToolStripButton.Enabled = true;
-                    //    this.HoldToolStripButton.Enabled = true;
-                    //    this.MuteToolStripButton.Checked = this.IsMuted;
-                    //    this.HoldToolStripButton.Checked = false;
-                    //    this.DisconnectToolStripButton.Enabled = true;
-                    //    this.DialpadToolStripDropDownButton.Enabled = true;
-                    //    this.TelephonyToolStrip.BackColor = Color.Aqua;
-                    //    this.TelephonyToolStrip.BackColor = OldColor;
-                    //}
-                    //else
-                    //{
-                    //    this.DispositionToolStripButton.Enabled = true;
-                    //    this.CallActivityCodeToolStripComboBox.Enabled = true;
-                    //    this.PlaceCallToolStripButton.Enabled = false;
-                    //    this.SkipCallToolStripButton.Enabled = false;
-                    //    if (this.IsDialingEnabled == true)
-                    //    {
-                    //        this.CallToolStripSplitButton.Enabled = true;
-                    //    }
-                    //    else
-                    //    {
-                    //        this.CallToolStripSplitButton.Enabled = false;
-                    //    }
-                    //    this.PickupToolStripButton.Enabled = false;
-                    //    this.MuteToolStripButton.Enabled = true;
-                    //    this.HoldToolStripButton.Enabled = true;
-                    //    this.MuteToolStripButton.Checked = this.IsMuted;
-                    //    this.HoldToolStripButton.Checked = false;
-                    //    this.DisconnectToolStripButton.Enabled = true;
-                    //    this.DialpadToolStripDropDownButton.Enabled = true;
-                    //    this.TelephonyToolStrip.BackColor = Color.Aqua;
-                    //    this.TelephonyToolStrip.BackColor = OldColor;
-                    //}
-                    break;
-                case InteractionState.None:
-                    //this.DispositionToolStripButton.Enabled = false;
-                    //this.CallActivityCodeToolStripComboBox.Enabled = false;
-                    //this.PlaceCallToolStripButton.Enabled = false;
-                    //this.SkipCallToolStripButton.Enabled = false;
-                    //this.CallToolStripSplitButton.Enabled = false;
-                    //this.PickupToolStripButton.Enabled = false;
-                    //this.MuteToolStripButton.Enabled = false;
-                    //this.HoldToolStripButton.Enabled = false;
-                    //this.MuteToolStripButton.Checked = this.IsMuted;
-                    //this.HoldToolStripButton.Checked = false;
-                    //this.DisconnectToolStripButton.Enabled = false;
-                    //this.DialpadToolStripDropDownButton.Enabled = false;
-                    //this.TelephonyToolStrip.BackColor = Color.Aqua;
-                    //this.TelephonyToolStrip.BackColor = OldColor;
-                    break;
-                default:
-                    //if (this.CallStateToolStripStatusLabel.Text.ToLower().Trim().Substring(0, 3).Equals("acd"))
-                    //{
-                    //    this.DispositionToolStripButton.Enabled = true;
-                    //    this.CallActivityCodeToolStripComboBox.Enabled = true;
-                    //    this.PlaceCallToolStripButton.Enabled = false;
-                    //    this.SkipCallToolStripButton.Enabled = false;
-                    //    this.CallToolStripSplitButton.Enabled = false;
-                    //    this.PickupToolStripButton.Enabled = false;
-                    //    this.MuteToolStripButton.Enabled = false;
-                    //    this.HoldToolStripButton.Enabled = false;
-                    //    this.MuteToolStripButton.Checked = this.IsMuted;
-                    //    this.HoldToolStripButton.Checked = false;
-                    //    this.DisconnectToolStripButton.Enabled = true;
-                    //    this.DialpadToolStripDropDownButton.Enabled = false;
-                    //    this.TelephonyToolStrip.BackColor = Color.Aqua;
-                    //    this.TelephonyToolStrip.BackColor = OldColor;
-                    //}
-                    //else if (this.CallStateToolStripStatusLabel.Text.ToLower().Trim().Substring(0, 10).Equals("disconnect"))
-                    //{
-                    //    this.DispositionToolStripButton.Enabled = true;
-                    //    this.CallActivityCodeToolStripComboBox.Enabled = true;
-                    //    this.PlaceCallToolStripButton.Enabled = false;
-                    //    this.SkipCallToolStripButton.Enabled = false;
-                    //    this.CallToolStripSplitButton.Enabled = false;
-                    //    this.PickupToolStripButton.Enabled = false;
-                    //    this.MuteToolStripButton.Enabled = false;
-                    //    this.HoldToolStripButton.Enabled = false;
-                    //    this.MuteToolStripButton.Checked = this.IsMuted;
-                    //    this.HoldToolStripButton.Checked = false;
-                    //    this.DisconnectToolStripButton.Enabled = false;
-                    //    this.DialpadToolStripDropDownButton.Enabled = false;
-                    //    this.TelephonyToolStrip.BackColor = Color.Aqua;
-                    //    this.TelephonyToolStrip.BackColor = OldColor;
-                    //}
-                    //else
-                    //{
-                    //    this.DispositionToolStripButton.Enabled = false;
-                    //    this.CallActivityCodeToolStripComboBox.Enabled = false;
-                    //    this.PlaceCallToolStripButton.Enabled = false;
-                    //    this.SkipCallToolStripButton.Enabled = false;
-                    //    this.CallToolStripSplitButton.Enabled = false;
-                    //    this.PickupToolStripButton.Enabled = false;
-                    //    this.MuteToolStripButton.Enabled = false;
-                    //    this.HoldToolStripButton.Enabled = false;
-                    //    this.MuteToolStripButton.Checked = this.IsMuted;
-                    //    this.HoldToolStripButton.Checked = false;
-                    //    this.DisconnectToolStripButton.Enabled = false;
-                    //    this.DialpadToolStripDropDownButton.Enabled = false;
-                    //    this.TelephonyToolStrip.BackColor = Color.Aqua;
-                    //    this.TelephonyToolStrip.BackColor = OldColor;
-                    //}
-                    break;
-            }
-            log.Info(scope + "Completed.");
-        }
 
         private void Stop_AlertingWav()
         {
@@ -1011,87 +738,94 @@ namespace CIC
         {
             string scope = "CIC::MainForm::m_InteractionQueue_InteractionChanged():: ";
             log.Info(scope + "Starting.");
-            try
+            if (this.InvokeRequired)
             {
-                if (!e.Interaction.IsWatching())
+                this.BeginInvoke(new EventHandler<InteractionAttributesEventArgs>(m_InteractionQueue_InteractionChanged), new object[] { sender, e });
+            }
+            else
+            {
+                try
                 {
-                    e.Interaction.AttributesChanged += new EventHandler<AttributesEventArgs>(NormalInteraction_AttributesChanged);
-                    e.Interaction.StartWatching(this.InteractionAttributes);
-                }
-                switch (e.Interaction.InteractionType)
-                {
-                    case InteractionType.Email:
-                        //
-                        break;
-                    case InteractionType.Chat:
-                        //
-                        break;
-                    case InteractionType.Callback:
-                        //
-                        break;
-                    case InteractionType.Call:
-                        ActiveNormalInteraction = e.Interaction;
-                        if (this.StrConnectionState == InteractionState.Proceeding &&
-                            ActiveNormalInteraction.State == InteractionState.Connected)
-                        {
-                            this.BeginInvoke(new MethodInvoker(update_calling_info));
-                            if (IcWorkFlow != null && IcWorkFlow.LoginResult &&
-                                !isConsulting)
-                                this.BeginInvoke(new MethodInvoker(CrmScreenPop));
-                        }
-                        this.StrConnectionState = ActiveNormalInteraction.State;
-                        toolStripStatus.Text = this.StrConnectionState.ToString();
-                        if (ActiveNormalInteraction != null)
-                        {
-                            if (ActiveNormalInteraction.IsDisconnected)
+                    if (!e.Interaction.IsWatching())
+                    {
+                        e.Interaction.AttributesChanged += new EventHandler<AttributesEventArgs>(NormalInteraction_AttributesChanged);
+                        e.Interaction.StartWatching(this.InteractionAttributes);
+                    }
+                    switch (e.Interaction.InteractionType)
+                    {
+                        case InteractionType.Email:
+                            //
+                            break;
+                        case InteractionType.Chat:
+                            //
+                            break;
+                        case InteractionType.Callback:
+                            //
+                            break;
+                        case InteractionType.Call:
+                            ActiveNormalInteraction = e.Interaction;
+                            if (this.StrConnectionState == InteractionState.Proceeding &&
+                                ActiveNormalInteraction.State == InteractionState.Connected)
                             {
-                                this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
-                                ActiveNormalInteraction = this.GetAvailableInteractionFromList();
+                                this.BeginInvoke(new MethodInvoker(update_calling_info));
+                                if (IcWorkFlow != null && IcWorkFlow.LoginResult &&
+                                    !isConsulting)
+                                    this.BeginInvoke(new MethodInvoker(CrmScreenPop));
+                            }
+                            this.StrConnectionState = ActiveNormalInteraction.State;
+                            toolStripStatus.Text = this.StrConnectionState.ToString();
+                            if (ActiveNormalInteraction != null)
+                            {
+                                if (ActiveNormalInteraction.IsDisconnected)
+                                {
+                                    this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
+                                    ActiveNormalInteraction = this.GetAvailableInteractionFromList();
+                                }
+                                else
+                                {
+                                    // TODO: check if there's no blind transfer flag allow pickup
+                                }
+                            }
+                            if (this.BlindTransferFlag)
+                            {
+                                this.ResetActiveCallInfo();
                             }
                             else
                             {
-                                // TODO: check if there's no blind transfer flag allow pickup
+                                this.ShowActiveCallInfo();
                             }
-                        }
-                        if (this.BlindTransferFlag)
-                        {
-                            this.ResetActiveCallInfo();
-                        }
-                        else
-                        {
-                            this.ShowActiveCallInfo();
-                        }
-                        break;
-                    default:
-                        ActiveNormalInteraction = e.Interaction;
-                        if (ActiveNormalInteraction != null)
-                        {
-                            if (ActiveNormalInteraction.IsDisconnected)
+                            break;
+                        default:
+                            ActiveNormalInteraction = e.Interaction;
+                            if (ActiveNormalInteraction != null)
                             {
-                                this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
-                                ActiveNormalInteraction = this.GetAvailableInteractionFromList();
+                                if (ActiveNormalInteraction.IsDisconnected)
+                                {
+                                    this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
+                                    ActiveNormalInteraction = this.GetAvailableInteractionFromList();
+                                }
                             }
-                        }
+                            if (this.BlindTransferFlag)
+                            {
+                                this.StrConnectionState = InteractionState.None;
+                            }
+                            break;
+                    }
+
+                    log.Info(scope + "Completed.");
+                }
+                catch (System.Exception ex)
+                {
+                    log.Error(scope + "Error info." + ex.Message);
+                    if (ActiveNormalInteraction != null)
+                    {
+                        this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
+                        ActiveNormalInteraction = this.GetAvailableInteractionFromList();
                         if (this.BlindTransferFlag)
                         {
+                            this.BlindTransferFlag = false;
                             this.StrConnectionState = InteractionState.None;
                         }
-                        break;
-                }
-
-                log.Info(scope + "Completed.");
-            }
-            catch (System.Exception ex)
-            {
-                log.Error(scope + "Error info." + ex.Message);
-                if (ActiveNormalInteraction != null)
-                {
-                    this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
-                    ActiveNormalInteraction = this.GetAvailableInteractionFromList();
-                    if (this.BlindTransferFlag)
-                    {
-                        this.BlindTransferFlag = false;
-                        this.StrConnectionState = InteractionState.None;
                     }
                 }
             }
@@ -1220,74 +954,81 @@ namespace CIC
         {
             string scope = "CIC::MainForm::m_InteractionQueue_InteractionAdded():: ";
             log.Info(scope + "Starting.");
-            try
+            if (this.InvokeRequired)
             {
-                if (!e.Interaction.IsWatching())
+                this.BeginInvoke(new EventHandler<InteractionAttributesEventArgs>(m_InteractionQueue_InteractionAdded), new object[] { sender, e });
+            }
+            else
+            {
+                try
                 {
-                    e.Interaction.AttributesChanged += new EventHandler<AttributesEventArgs>(NormalInteraction_AttributesChanged);
-                    e.Interaction.StartWatching(this.InteractionAttributes);
-                }
-                if (this.IsMuted)
-                {
-                    e.Interaction.Mute(true);
-                }
-                switch (e.Interaction.InteractionType)
-                {
-                    case InteractionType.Email:
-                        ActiveNormalEmailInteraction = 
-                            new EmailInteraction(this.NormalInterationManager, e.Interaction.InteractionId);
-                        //this.SetActiveEmailQueue();
-                        ActiveNormalInteraction = e.Interaction;
-                        break;
-                    case InteractionType.Chat:
-                        //
-                        break;
-                    case InteractionType.Callback:
-                        this.ActiveCallbackInteraction = 
-                            new CallbackInteraction(this.NormalInterationManager, e.Interaction.InteractionId);
-                        ActiveNormalInteraction = e.Interaction;
-                        this.StrConnectionState = ActiveNormalInteraction.State;
-                        break;
-                    case InteractionType.Call:
-                        if (!e.Interaction.IsDisconnected)
-                        {
-                            this.Add_InteractionListObject(e.Interaction);
+                    if (!e.Interaction.IsWatching())
+                    {
+                        e.Interaction.AttributesChanged += new EventHandler<AttributesEventArgs>(NormalInteraction_AttributesChanged);
+                        e.Interaction.StartWatching(this.InteractionAttributes);
+                    }
+                    if (this.IsMuted)
+                    {
+                        e.Interaction.Mute(true);
+                    }
+                    switch (e.Interaction.InteractionType)
+                    {
+                        case InteractionType.Email:
+                            ActiveNormalEmailInteraction =
+                                new EmailInteraction(this.NormalInterationManager, e.Interaction.InteractionId);
+                            //this.SetActiveEmailQueue();
+                            ActiveNormalInteraction = e.Interaction;
+                            break;
+                        case InteractionType.Chat:
+                            //
+                            break;
+                        case InteractionType.Callback:
+                            this.ActiveCallbackInteraction =
+                                new CallbackInteraction(this.NormalInterationManager, e.Interaction.InteractionId);
                             ActiveNormalInteraction = e.Interaction;
                             this.StrConnectionState = ActiveNormalInteraction.State;
-                            if (ActiveNormalInteraction.GetStringAttribute("CallerHost") != null)
+                            break;
+                        case InteractionType.Call:
+                            if (!e.Interaction.IsDisconnected)
                             {
-                                if (ActiveNormalInteraction.GetStringAttribute("CallerHost").ToString().Trim() != "")
+                                this.Add_InteractionListObject(e.Interaction);
+                                ActiveNormalInteraction = e.Interaction;
+                                this.StrConnectionState = ActiveNormalInteraction.State;
+                                if (ActiveNormalInteraction.GetStringAttribute("CallerHost") != null)
                                 {
-                                    this.CallerHost = ActiveNormalInteraction.GetStringAttribute("CallerHost");
+                                    if (ActiveNormalInteraction.GetStringAttribute("CallerHost").ToString().Trim() != "")
+                                    {
+                                        this.CallerHost = ActiveNormalInteraction.GetStringAttribute("CallerHost");
+                                    }
+                                    else
+                                    {
+                                        ININ.IceLib.Connection.SessionSettings session_Setting =
+                                            ActiveNormalInteraction.InteractionsManager.Session.GetSessionSettings();
+                                        this.CallerHost = session_Setting.MachineName.ToString();
+                                    }
+                                }
+                                if (!this.IsManualDialing)
+                                {
+
                                 }
                                 else
                                 {
-                                    ININ.IceLib.Connection.SessionSettings session_Setting = 
-                                        ActiveNormalInteraction.InteractionsManager.Session.GetSessionSettings();
-                                    this.CallerHost = session_Setting.MachineName.ToString();
+                                    this.IsManualDialing = false;
                                 }
-                            }
-                            if (!this.IsManualDialing)
-                            {
-
                             }
                             else
                             {
-                                this.IsManualDialing = false;
                             }
-                        }
-                        else
-                        {
-                        }
-                        break;
-                    default:
-                        break;
+                            break;
+                        default:
+                            break;
+                    }
+                    log.Info(scope + "Completed.");
                 }
-                log.Info(scope + "Completed.");
-            }
-            catch (System.Exception ex)
-            {
-                log.Error(scope + "Error info." + ex.Message);
+                catch (System.Exception ex)
+                {
+                    log.Error(scope + "Error info." + ex.Message);
+                }
             }
         }
 
@@ -1846,7 +1587,7 @@ namespace CIC
             log.Info(scope + "Starting.");
             try
             {
-                if (!IcWorkFlow.LoginResult && this.ActiveDialerInteraction == null)
+                if (IcWorkFlow != null && !IcWorkFlow.LoginResult && this.ActiveDialerInteraction == null)
                 {
                     break_requested = false;
                 }
@@ -3318,8 +3059,9 @@ namespace CIC
                     baseURI += "pagetype=entityrecord&extraqs=col_contract_no";
                     baseURI += string.Format("=%7b{0}%7d&col_phone_id=%7b{1}%7d&col_call_id={2}"
                         , productID, refCallID, callID).Replace("=", "%3d").Replace("{", "%7b").Replace("}", "%7d").Replace("&", "%26");
-                
-                    Process.Start(baseURI);
+                    if (cachedURI != baseURI)
+                        Process.Start(baseURI);
+                    cachedURI = baseURI;
                     log.Info("process.start : " + baseURI);
                     log.Info(scope + "Completed.");
                 }
@@ -4284,5 +4026,7 @@ namespace CIC
         }
 
         public bool isConsulting { get; set; }
+
+        public string cachedURI { get; set; }
     }
 }
