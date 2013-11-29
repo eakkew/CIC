@@ -1602,6 +1602,7 @@ namespace CIC
             previewCallTimer.Stop();
             timer = global::CIC.Properties.Settings.Default.CountdownTime;
             log.Info("Timer is reset");
+            state_info_label.Text = "Next calling number: " + this.GetDialerNumber();
         }
         
         private void restart_timer()
@@ -2604,7 +2605,7 @@ namespace CIC
 
             update_currency_on_dashboard(data);
 
-            this.state_info_label.Text = "Next Calling Number: " + callingNumber;
+            //this.state_info_label.Text = "Next Calling Number: " + callingNumber;
             log.Info(scope + "Completed.");
         }
 
@@ -3999,6 +4000,7 @@ namespace CIC
                         {
                             this.ActiveDialerInteraction.Pickup();
                             this.CrmScreenPop();
+                            this.state_info_label.Text = "Connected to: " + this.GetDialerNumber();
                         }
                         if (ActiveNormalInteraction != null)
                         {
@@ -4027,11 +4029,13 @@ namespace CIC
                                 case InteractionType.Email:
                                     this.ViewEmailDetail(ActiveNormalInteraction);
                                     ActiveNormalInteraction.Pickup();
+                                    this.state_info_label.Text = "Connected to: " + callingNumber;
                                     break;
                                 case InteractionType.Chat:
                                     break;
                                 case InteractionType.Call:
                                     ActiveNormalInteraction.Pickup();
+                                    this.state_info_label.Text = "Connected to: " + callingNumber;
                                     break;
                                 default:
                                     break;
@@ -4039,7 +4043,6 @@ namespace CIC
                         }
                         break;
                 }
-                this.state_info_label.Text = "Connected to: " + callingNumber;
                 log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)

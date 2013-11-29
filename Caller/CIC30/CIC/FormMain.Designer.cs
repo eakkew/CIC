@@ -145,7 +145,6 @@
             this.toolStripCallType = new System.Windows.Forms.Label();
             this.toolStripCallID = new System.Windows.Forms.Label();
             this.toolStripWorkflowLabel = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
             this.toolStripCallIDLabel = new System.Windows.Forms.Label();
             this.toolStripCallTypeLabel = new System.Windows.Forms.Label();
             this.toolStripCampaignIDLabel = new System.Windows.Forms.Label();
@@ -1252,15 +1251,6 @@
             this.toolStripWorkflowLabel.TabIndex = 4;
             this.toolStripWorkflowLabel.Text = "N/A";
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(0, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 13);
-            this.label1.TabIndex = 10;
-            this.label1.Text = "label1";
-            // 
             // toolStripCallIDLabel
             // 
             this.toolStripCallIDLabel.AutoSize = true;
@@ -1294,7 +1284,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1274, 584);
             this.ControlBox = false;
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.flowLayoutPanel4);
@@ -1489,7 +1478,6 @@
         private System.Windows.Forms.Label toolStripCallType;
         private System.Windows.Forms.Label toolStripCampaignID;
         private System.Windows.Forms.Label toolStripWorkflow;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label toolStripCampaignIDLabel;
 
     }
