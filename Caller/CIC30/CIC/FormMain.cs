@@ -142,7 +142,9 @@ namespace CIC
                     }
 
                     ININ.IceLib.Connection.Session session = global::CIC.Program.m_Session;
+                    log.Info(scope + "Creating instance of Dialing Manager");
                     Program.Initialize_dialingManager(session);
+                    log.Info(scope + "Completed creating instance of Dialing Manager");
                 
                     if (session != null)
                     {
@@ -227,6 +229,7 @@ namespace CIC
                 {
                     if (!e.Interaction.IsWatching())
                     {
+                        log.Info(scope + "Register Event Attribute Change and Start watching attributes");
                         e.Interaction.AttributesChanged += new EventHandler<AttributesEventArgs>(DialerInteraction_AttributesChanged);
                         e.Interaction.StartWatching(this.InteractionAttributes);
                     }
@@ -308,6 +311,7 @@ namespace CIC
                 {
                     if (!e.Interaction.IsWatching())
                     {
+                        log.Info(scope + "Register Event Attribute Change and Start watching attributes");
                         e.Interaction.AttributesChanged += 
                             new EventHandler<AttributesEventArgs>(DialerInteraction_AttributesChanged);
                         e.Interaction.StartWatching(this.InteractionAttributes);
@@ -360,6 +364,7 @@ namespace CIC
                 {
                     if (!e.Interaction.IsWatching())
                     {
+                        log.Info(scope + "Register Event Attribute Change and start watching attrubute change");
                         e.Interaction.AttributesChanged += new EventHandler<AttributesEventArgs>(
                             DialerInteraction_AttributesChanged);
                         e.Interaction.StartWatching(this.InteractionAttributes);
@@ -376,6 +381,7 @@ namespace CIC
                         case InteractionType.Call:
                             if (!e.Interaction.IsDisconnected)
                             {
+                                log.Info(scope + "Create new conference interaction");
                                 ActiveConferenceInteraction = new InteractionConference(
                                     this.NormalInterationManager, e.Interaction.InteractionType,
                                     e.ConferenceItem.ConferenceId);
@@ -408,6 +414,7 @@ namespace CIC
                 {
                     if (!e.Interaction.IsWatching())
                     {
+                        log.Info(scope + "Register Event Attribute Change and start watching attributes");
                         e.Interaction.AttributesChanged += new EventHandler<AttributesEventArgs>(NormalInteraction_AttributesChanged);
                         e.Interaction.StartWatching(this.InteractionAttributes);
                     }
@@ -487,7 +494,9 @@ namespace CIC
                     {
                         try
                         {
+                            log.Warn(scope + "Disconnecting Active Normal Interaction");
                             ActiveNormalInteraction.Disconnect();
+                            log.Warn(scope + "Finish Disconnecting Active Normal Interaction");
                         }
                         catch
                         {
@@ -496,7 +505,7 @@ namespace CIC
                         this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
                     }
                     ActiveNormalInteraction = null;
-                    this.ShowActiveCallInfo();
+                    this.reset_info_on_dashboard();
                 }
             }
         }
@@ -682,8 +691,12 @@ namespace CIC
             this.AlertSoundFileType = sPathWavPath.Trim().Substring(sPathWavPath.Trim().Length - 3, 3);
             if (AlertSoundFileType.ToLower().Trim() == "mp3")
             {
+                log.Info(scope + "Starting CIC MP3 player creation");
                 this.cicMp3Player = new Locus.Control.MP3Player();
+                log.Info(scope + "Complete CIC MP3 player creation");
+                log.Info(scope + "Start CIC MP3 player play()");
                 this.cicMp3Player.Play(sPathWavPath, false);
+                log.Info(scope + "Complete CIC MP3 player play()");
             }
             else if (AlertFlag)
             {
@@ -748,6 +761,7 @@ namespace CIC
                 {
                     if (!e.Interaction.IsWatching())
                     {
+                        log.Info(scope + "Register Event Attribute Change and start watching attributes");
                         e.Interaction.AttributesChanged += new EventHandler<AttributesEventArgs>(NormalInteraction_AttributesChanged);
                         e.Interaction.StartWatching(this.InteractionAttributes);
                     }
@@ -964,6 +978,7 @@ namespace CIC
                 {
                     if (!e.Interaction.IsWatching())
                     {
+                        log.Info(scope + "Register Event Attribute Change and start watching attributes");
                         e.Interaction.AttributesChanged += new EventHandler<AttributesEventArgs>(NormalInteraction_AttributesChanged);
                         e.Interaction.StartWatching(this.InteractionAttributes);
                     }
@@ -974,8 +989,10 @@ namespace CIC
                     switch (e.Interaction.InteractionType)
                     {
                         case InteractionType.Email:
+                            log.Info(scope + "Starting Email Interaction Creation");
                             ActiveNormalEmailInteraction =
                                 new EmailInteraction(this.NormalInterationManager, e.Interaction.InteractionId);
+                            log.Info(scope + "Completed Email Interaction Creation");
                             //this.SetActiveEmailQueue();
                             ActiveNormalInteraction = e.Interaction;
                             break;
@@ -983,8 +1000,10 @@ namespace CIC
                             //
                             break;
                         case InteractionType.Callback:
+                            log.Info(scope + "Starting Callback Interaction Creation");
                             this.ActiveCallbackInteraction =
                                 new CallbackInteraction(this.NormalInterationManager, e.Interaction.InteractionId);
+                            log.Info(scope + "Completed Callback Interaction Creation");
                             ActiveNormalInteraction = e.Interaction;
                             this.StrConnectionState = ActiveNormalInteraction.State;
                             break;
@@ -1002,8 +1021,10 @@ namespace CIC
                                     }
                                     else
                                     {
+                                        log.Info(scope + "Starting GetSessionSettings()");
                                         ININ.IceLib.Connection.SessionSettings session_Setting =
                                             ActiveNormalInteraction.InteractionsManager.Session.GetSessionSettings();
+                                        log.Info(scope + "Completed GetSessionSettings()");
                                         this.CallerHost = session_Setting.MachineName.ToString();
                                     }
                                 }
@@ -1198,9 +1219,13 @@ namespace CIC
             {
                 if (global::CIC.Program.m_Session != null)
                 {
-                    ININ.IceLib.Connection.Extensions.Security SecurityObject = 
+                    log.Info(scope + "Starting Security Creation");
+                    ININ.IceLib.Connection.Extensions.Security SecurityObject =
                         new ININ.IceLib.Connection.Extensions.Security(global::CIC.Program.m_Session);
+                    log.Info(scope + "Completed Security Creation");
+                    log.Info(scope + "Starting Password Policy Creation");
                     ININ.IceLib.Connection.Extensions.PasswordPolicy passwordPolicyObject = SecurityObject.GetPasswordPolicy();
+                    log.Info(scope + "Completed Password Policy Creation");
                     if (passwordPolicyObject.MustChangePassword)
                     {
                         this.ShowChangePasswordDialog();
@@ -1267,6 +1292,7 @@ namespace CIC
 
                     if (!ExitFlag)
                     {
+                        log.Info(scope + "Starting Session Creation");
                         global::CIC.Program.m_Session = new Session();
                         global::CIC.Program.m_Session.ConnectionStateChanged +=
                             new EventHandler<ConnectionStateChangedEventArgs>(mSession_Changed);
@@ -1279,6 +1305,7 @@ namespace CIC
                         {
 
                         }
+                        log.Info(scope + "Completed Session Creation");
                     }
                     //this.SetStatusBarStripMsg();
                     break;
@@ -1293,7 +1320,7 @@ namespace CIC
 
         private void DisposeQueueWatcher()
         {
-            string scope = "CIC::MainForm::Dispose_QueueWatcher():: ";
+            string scope = "CIC::MainForm::Dispose_QueueWatcher()::";
             log.Info(scope + "Starting.");
             try
             {
@@ -1399,6 +1426,7 @@ namespace CIC
 
         private void tryDisconnect()
         {
+            string scope = "CIC::MainForm::tryDisconnect()::";
             try
             {
                 if (IcWorkFlow != null &&
@@ -1417,16 +1445,24 @@ namespace CIC
                     if (ActiveDialerInteraction != null)
                     {
                         if (!ActiveDialerInteraction.IsDisconnected)
+                        {
+                            log.Info(scope + "Starting Dialer Interaction Disconnect");
                             ActiveDialerInteraction.Disconnect();
+                            log.Info(scope + "Completed Dialer Interaction Disconnect");
+                        }
                         if (ActiveNormalInteraction != null && !ActiveNormalInteraction.IsDisconnected)
                         {
+                            log.Info(scope + "Starting Normal Interaction Disconnect");
                             this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
                             ActiveNormalInteraction.Disconnect();
+                            log.Info(scope + "Completed Normal Interaction Disconnect");
                         }
                         if (ActiveConsultInteraction != null && !ActiveConsultInteraction.IsDisconnected)
                         {
+                            log.Info(scope + "Starting Consult Interaction Disconnect");
                             this.RemoveNormalInteractionFromList(ActiveConsultInteraction);
                             ActiveConsultInteraction.Disconnect();
+                            log.Info(scope + "Completed Consult Interaction Disconnect");
                         }
                         this.state_change(FormMainState.Preview);
                     }
@@ -1435,13 +1471,17 @@ namespace CIC
                 { // Not Log On to Dialer Server.
                     if (this.ActiveDialerInteraction != null && !this.ActiveDialerInteraction.IsDisconnected)
                     {
+                        log.Info(scope + "Starting Dialer Interaction Disconnect");
                         this.ActiveDialerInteraction.Disconnect();
                         this.ActiveDialerInteraction = null;
+                        log.Info(scope + "Completed Dialer interaction Disconnect");
                     }
                     if (ActiveNormalInteraction != null && !ActiveNormalInteraction.IsDisconnected)
                     {
+                        log.Info(scope + "Statring Normal Interaction Disconnect");
                         this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
                         ActiveNormalInteraction.Disconnect();
+                        log.Info(scope + "Complete Normal Interaction Disconnect");
                         ActiveNormalInteraction = this.GetNormalInteractionFromList();
                     }
                     else
@@ -1449,13 +1489,17 @@ namespace CIC
                         ActiveNormalInteraction = this.GetNormalInteractionFromList();
                         if (ActiveNormalInteraction != null)
                         {
+                            log.Info(scope + "Starting Normal Interaction Disconnect");
                             ActiveNormalInteraction.Disconnect();
+                            log.Info(scope + "Completed Normal Interaction Disconnect");
                         }
                     }
                     if (ActiveConsultInteraction != null && !ActiveConsultInteraction.IsDisconnected)
                     {
+                        log.Info(scope + "Starting Consult Interaction Disconnect");
                         ActiveConsultInteraction.Disconnect();
                         ActiveConsultInteraction = null;
+                        log.Info(scope + "Completed Consult Interaction Disconnect");
                     }
 
                     if (this.InteractionList != null && this.InteractionList.Count <= 0)
@@ -1496,6 +1540,7 @@ namespace CIC
 
         private void hold_button_Click(object sender, EventArgs e)
         {
+            string scope = "CIC::frmMain::hold_button_Click()::";
             if (IcWorkFlow != null && IcWorkFlow.LoginResult)
             {
                 if (this.ActiveDialerInteraction != null)
@@ -1504,9 +1549,13 @@ namespace CIC
                     {
                         if (this.ActiveDialerInteraction.IsMuted)
                         {
+                            log.Info(scope + "Starting Dialer Interaction Unmute");
                             this.ActiveDialerInteraction.Mute(false);
+                            log.Info(scope + "Completed Dialer Interaction Unmute");
                         }
+                        log.Info(scope + "Starting Dialer Interaction Hold/Unhold");
                         this.ActiveDialerInteraction.Hold(!this.ActiveDialerInteraction.IsHeld);
+                        log.Info(scope + "Completed Dialer Interaction Hold/Unhold");
                         state_change(FormMainState.Hold);
                     }
                 }
@@ -1517,9 +1566,13 @@ namespace CIC
                 {
                     if (ActiveNormalInteraction.IsMuted)
                     {
+                        log.Info(scope + "Starting Normal Interaction Unmute");
                         ActiveNormalInteraction.Mute(false);
+                        log.Info(scope + "Completed Normal interaction Unmute");
                     }
+                    log.Info(scope + "Starting Normal Interaction Hold/Unhold");
                     ActiveNormalInteraction.Hold(!ActiveNormalInteraction.IsHeld);
+                    log.Info(scope + "Completed Normal Interaction Hold/Unhold");
                     state_change(FormMainState.Hold);
                     return;
                 }
@@ -1528,15 +1581,20 @@ namespace CIC
 
         private void mute_button_Click(object sender, EventArgs e)
         {
+            string scope = "CIC::frmMain::mute_button_Click()::";
             if (IcWorkFlow != null && IcWorkFlow.LoginResult)
             {
                 if (this.ActiveDialerInteraction != null)
                 {
                     if (this.ActiveDialerInteraction.IsHeld)
                     {
+                        log.Info(scope + "Starting Dialer Interaction Unhold");
                         this.ActiveDialerInteraction.Hold(false);
+                        log.Info(scope + "Complete Dialer Interaction Unhold");
                     }
+                    log.Info(scope + "Statring Dialer Interaction Mute/Unmute");
                     this.ActiveDialerInteraction.MuteAsync(!this.ActiveDialerInteraction.IsMuted, MuteCompleted, null);
+                    log.Info(scope + "Completed Dialer Interaction Mute/Unmute");
                     state_change(FormMainState.Mute);
                 }
             }
@@ -1546,9 +1604,13 @@ namespace CIC
                 {
                     if (ActiveNormalInteraction.IsHeld)
                     {
+                        log.Info(scope + "Starting Normal Interaction Unhold");
                         ActiveNormalInteraction.Hold(false);
+                        log.Info(scope + "Completed Normal Interaction Unhold");
                     }
+                    log.Info(scope + "Starting Normal Interaction Mute/Unmute");
                     ActiveNormalInteraction.MuteAsync(!ActiveNormalInteraction.IsMuted, MuteCompleted, null);
+                    log.Info(scope + "Starting Normal Interaction Mute/Unmute");
                     state_change(FormMainState.Mute);
                     return;
                 }
@@ -1599,7 +1661,9 @@ namespace CIC
                     }
                     else
                     {
+                        log.Info(scope + "Starting Dialer Interaction Request Break");
                         this.ActiveDialerInteraction.DialerSession.RequestBreak();
+                        log.Info(scope + "Completed Dialer Interaction Request Break");
                         break_requested = true;
                         break_requested_state();
                     }
@@ -1627,12 +1691,16 @@ namespace CIC
                 {
                     if (this.current_state == FormMainState.Break)
                     {
+                        log.Info(scope + "Starting Dialer Interaction EndBreak");
                         this.ActiveDialerInteraction.DialerSession.EndBreak();
+                        log.Info(scope + "Completed Dialer Interaction EndBreak");
                         try
                         {
+                            log.Info(scope + "Starting Update User Status");
                             ININ.IceLib.People.UserStatusUpdate statusUpdate = new UserStatusUpdate(this.mPeopleManager);
                             statusUpdate.StatusMessageDetails = this.AvailableStatusMessageDetails;
                             statusUpdate.UpdateRequest();
+                            log.Info(scope + "Complete Update User Status");
                         }
                         catch (Exception ex)
                         {
@@ -1674,7 +1742,9 @@ namespace CIC
                             {
                                 this.break_granted = true;
                                 this.break_button_Click(sender, e);               //wait for breakgrant
+                                log.Info(scope + "Starting Dialer Interaction Request Logout");
                                 this.ActiveDialerInteraction.DialerSession.RequestLogoutAsync(LogoutGranted, null);
+                                log.Info(scope + "Completed Dialer Interaction Request Logout");
                             }
                             else
                             {
@@ -1702,18 +1772,24 @@ namespace CIC
 
         private void disconnect_IC_session()
         {
+            string scope = "CIC::MainForm::disconnect_IC_session(): ";
             if (this.IC_Session != null)
             {
+                log.Info(scope + "Starting IC_Session Disconnect");
                 this.IC_Session.Disconnect();
                 this.IC_Session = null;
+                log.Info(scope + "Completed IC_Session Disconnect");
             }
         }
 
         private static void disconnect_normal_interaction()
         {
+            string scope = "CIC::MainForm::disconnect_normal_interaction(): ";
             if (ActiveNormalInteraction != null)
             {
+                log.Info(scope + "Starting Normal Interaction Disconnect");
                 ActiveNormalInteraction.Disconnect();
+                log.Info(scope + "Completed Normal Interaction Disconnect");
                 ActiveNormalInteraction = null;
             }
         }
@@ -1740,10 +1816,14 @@ namespace CIC
                             {
                                 if (this.ActiveDialerInteraction.IsDisconnected == false)
                                 {
+                                    log.Info(scope + "Starting Dialer Interaction Disconnect");
                                     this.ActiveDialerInteraction.Disconnect();
+                                    log.Info(scope + "Completed Dialer Interaction Disconnect");
                                 }
-                                
+
+                                log.Info(scope + "Starting Dialer Interaction CallComplete");
                                 this.ActiveDialerInteraction.CallComplete((CallCompletionParameters)sender);
+                                log.Info(scope + "Completed Dialer Interaction CallComplete");
                                 
                                 if (!this.break_granted)
                                 {
@@ -1867,7 +1947,9 @@ namespace CIC
                                     }
                                 }
                             }
+                            log.Info(scope + "Starting Normal Interaction Make New Conference");
                             this.NormalInterationManager.MakeNewConferenceAsync(TmpInteraction, MakeNewConferenceCompleted, null);
+                            log.Info(scope + "Complete Normal Interaction Make New Conference");
                         }
                     }
                 }
@@ -1890,7 +1972,9 @@ namespace CIC
                                     }
                                 }
                             }
+                            log.Info(scope + "Starting Normal Interaction Make New Conference");
                             this.NormalInterationManager.MakeNewConferenceAsync(TmpInteraction, MakeNewConferenceCompleted, null);
+                            log.Info(scope + "Complete Normal Interaction Make New Conference");
                         }
                     }
                 }
@@ -1939,19 +2023,25 @@ namespace CIC
                         if (ActiveConsultInteraction != null)
                         {
                             //Tracing.TraceNote(scope + "Performing consult transfer");
+                            log.Info(scope + "Starting Dialer Interaction Consult Transfer");
                             ActiveDialerInteraction.ConsultTransferAsync(ActiveConsultInteraction.InteractionId, TransferCompleted, null);
+                            log.Info(scope + "Completed Dialer Interaction Consult Transfer");
                             this.RemoveNormalInteractionFromList(ActiveConsultInteraction);
 
                             // complete workflow
                             string sFinishcode = global::CIC.Properties.Settings.Default.ReasonCode_Transfereded;
                             ININ.IceLib.Dialer.ReasonCode sReasoncode = ININ.IceLib.Dialer.ReasonCode.Transferred;
                             CallCompletionParameters callCompletionParameters = new CallCompletionParameters(sReasoncode, sFinishcode);
+                            log.Info(scope + "Starting Dialer Interaction CallComplete");
                             this.ActiveDialerInteraction.CallComplete(callCompletionParameters);
+                            log.Info(scope + "Completed Dialer Interaction CallComplete");
 
                             // update user status
+                            log.Info(scope + "Starting Update User Status");
                             ININ.IceLib.People.UserStatusUpdate statusUpdate = new UserStatusUpdate(this.mPeopleManager);
                             statusUpdate.StatusMessageDetails = this.AvailableStatusMessageDetails;
                             statusUpdate.UpdateRequest();
+                            log.Info(scope + "Complete Update User Status");
                         }
                     }
                 }
@@ -1964,10 +2054,12 @@ namespace CIC
                             log.Info(scope + "Performing consult transfer");
                             if (ActiveConsultInteraction.InteractionId != ActiveNormalInteraction.InteractionId)
                             {
+                                log.Info(scope + "Starting Normal Interaction Consult Transfer");
                                 ActiveNormalInteraction.ConsultTransferAsync(ActiveConsultInteraction.InteractionId, TransferCompleted, null);
                                 this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
                                 this.RemoveNormalInteractionFromList(ActiveConsultInteraction);
                                 this.BlindTransferFlag = true;
+                                log.Info(scope + "Completed Normal Interaction Consult Transfer");
                             }
                             else
                             {
@@ -1986,10 +2078,12 @@ namespace CIC
 
                                     if (ActiveNormalInteraction != null)
                                     {
+                                        log.Info(scope + "Starting Consult Interaction Consult Transfer");
                                         ActiveConsultInteraction.ConsultTransferAsync(ActiveNormalInteraction.InteractionId, TransferCompleted, null);
                                         this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
                                         this.RemoveNormalInteractionFromList(ActiveConsultInteraction);
                                         this.BlindTransferFlag = true;
+                                        log.Info(scope + "Completed Consult Interaction Consult Transfer");
                                     }
                                 }
                             }
@@ -1999,8 +2093,10 @@ namespace CIC
                             log.Info(scope + "Performing blind transfer");
                             if (transferTxtDestination != "")
                             {
+                                log.Info(scope + "Starting Normal Interaction Blind Transfer");
                                 ActiveNormalInteraction.BlindTransfer(transferTxtDestination);
                                 this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
+                                log.Info(scope + "Complete Normal Interaction Blind Transfer");
                             }
                         }
                     }
@@ -2049,8 +2145,10 @@ namespace CIC
                         case true: //Log On to Workflow
                             if (this.mPeopleManager != null)
                             {
+                                log.Info(scope + "Starting User Status Initialization");
                                 this.AllStatusMessageList = new StatusMessageList(this.mPeopleManager);
                                 this.AllStatusMessageListOfUser = new UserStatusList(this.mPeopleManager);
+                                log.Info(scope + "Completed User Status Initialization");
                                 this.AllStatusMessageListOfUser.WatchedObjectsChanged += new EventHandler<WatchedObjectsEventArgs<UserStatusProperty>>(AllStatusMessageListOfUser_WatchedObjectsChanged);
                                 string[] dusers = { Program.DialingManager.Session.UserId };   //Make value to array 
                                 this.AllStatusMessageListOfUser.StartWatching(dusers);
@@ -2086,8 +2184,10 @@ namespace CIC
                             if (this.mPeopleManager != null)
                             {
                                 string[] nusers = { this.IC_Session.UserId };   //Make value to array 
+                                log.Info(scope + "Starting User Status Initialization");
                                 this.AllStatusMessageList = new StatusMessageList(this.mPeopleManager);
                                 this.AllStatusMessageListOfUser = new UserStatusList(this.mPeopleManager);
+                                log.Info(scope + "Completed User Status Initialization");
                                 this.AllStatusMessageListOfUser.WatchedObjectsChanged +=
                                     new EventHandler<WatchedObjectsEventArgs<UserStatusProperty>>(AllStatusMessageListOfUser_WatchedObjectsChanged);
                                 this.AllStatusMessageListOfUser.StartWatching(nusers);
@@ -2130,22 +2230,28 @@ namespace CIC
                     {
                         if (global::CIC.Properties.Settings.Default.AutoResetUserStatus)
                         {
+                            log.Info(scope + "Starting Update User Status");
                             statusUpdate.StatusMessageDetails = this.AvailableStatusMessageDetails;
                             statusUpdate.UpdateRequest();
+                            log.Info(scope + "Completed Update User Status");
                         }
                         else
                         {
                             if (this.CurrentUserStatus.StatusMessageDetails.IsSelectableStatus)
                             {
+                                log.Info(scope + "Starting Update User Status");
                                 statusUpdate.StatusMessageDetails = this.CurrentUserStatus.StatusMessageDetails;
                                 statusUpdate.UpdateRequest();
+                                log.Info(scope + "Completed Update User Status");
                             }
                             else
                             {
                                 if (IcWorkFlow.LoginResult)
                                 {
+                                    log.Info(scope + "Starting Update User Status");
                                     statusUpdate.StatusMessageDetails = this.AvailableStatusMessageDetails;
                                     statusUpdate.UpdateRequest();
+                                    log.Info(scope + "Complete Update User Status");
                                 }
                                 else
                                 {
@@ -2424,7 +2530,9 @@ namespace CIC
                     {
                         try
                         {
+                            log.Info(scope + "Starting Normal Interaction Disconnect");
                             ActiveNormalInteraction.Disconnect();
+                            log.Info(scope + "Completed Normal Interaction Disconnect");
                         }
                         catch (Exception ex)
                         {
@@ -2955,6 +3063,7 @@ namespace CIC
             {
                 if (!e.Interaction.IsWatching())
                 {
+                    log.Info(scope + "Register Event Attribute Change and start watching attributes");
                     e.Interaction.AttributesChanged += new EventHandler<AttributesEventArgs>(DialerInteraction_AttributesChanged);
                     e.Interaction.StartWatching(this.InteractionAttributes);
                 }
@@ -2993,6 +3102,7 @@ namespace CIC
             {
                 if (!e.Interaction.IsWatching())
                 {
+                    log.Info(scope + "Register Event Attributes Change and start watching attributes");
                     e.Interaction.AttributesChanged += new EventHandler<AttributesEventArgs>(DialerInteraction_AttributesChanged);
                     e.Interaction.StartWatching(this.InteractionAttributes);
                 }
@@ -3060,8 +3170,10 @@ namespace CIC
                     baseURI += string.Format("=%7b{0}%7d&col_phone_id=%7b{1}%7d&col_call_id={2}"
                         , productID, refCallID, callID).Replace("=", "%3d").Replace("{", "%7b").Replace("}", "%7d").Replace("&", "%26");
                     if (cachedURI != baseURI)
+                    {
+                        cachedURI = baseURI;
                         Process.Start(baseURI);
-                    cachedURI = baseURI;
+                    }
                     log.Info("process.start : " + baseURI);
                     log.Info(scope + "Completed.");
                 }
@@ -3133,27 +3245,27 @@ namespace CIC
             log.Info(scope + "Starting.");
             try
             {
-                    if (IcWorkFlow.LoginResult && this.ActiveDialerInteraction != null)
-                    {
-                        this.ActiveDialerInteraction.AttributesChanged += new EventHandler<AttributesEventArgs>(CallBackInteraction_AttributesChanged);
-                        List<string> callbackAttributeNames = new List<string>();
-                        callbackAttributeNames.Add(CallbackInteractionAttributeName.RemoteName);
-                        callbackAttributeNames.Add(CallbackInteractionAttributeName.RemoteId);
-                        callbackAttributeNames.Add(CallbackInteractionAttributeName.CallbackPhone);
-                        callbackAttributeNames.Add(CallbackInteractionAttributeName.AccountCodeId);
-                        callbackAttributeNames.Add(CallbackInteractionAttributeName.WrapUpCodeId);
-                        callbackAttributeNames.Add(CallbackInteractionAttributeName.WorkgroupQueueDisplayName);
-                        callbackAttributeNames.Add(CallbackInteractionAttributeName.WorkgroupQueueName);
-                        callbackAttributeNames.Add(CallbackInteractionAttributeName.UserQueueNames);
-                        callbackAttributeNames.Add(CallbackInteractionAttributeName.StationQueueNames);
-                        callbackAttributeNames.Add(CallbackInteractionAttributeName.State);
-                        callbackAttributeNames.Add(CallbackInteractionAttributeName.StateDescription);
-                        callbackAttributeNames.Add(CallbackInteractionAttributeName.LineQueueName);
-                        callbackAttributeNames.Add(CallbackInteractionAttributeName.InteractionType);
-                        callbackAttributeNames.Add(CallbackInteractionAttributeName.CallbackMessage);
-                        callbackAttributeNames.Add(CallbackInteractionAttributeName.CallbackCompletion);
-                        this.ActiveDialerInteraction.StartWatchingAsync(callbackAttributeNames.ToArray(), CallBackInteration_StartWatchingCompleted, null);
-                    }
+                if (IcWorkFlow.LoginResult && this.ActiveDialerInteraction != null)
+                {
+                    this.ActiveDialerInteraction.AttributesChanged += new EventHandler<AttributesEventArgs>(CallBackInteraction_AttributesChanged);
+                    List<string> callbackAttributeNames = new List<string>();
+                    callbackAttributeNames.Add(CallbackInteractionAttributeName.RemoteName);
+                    callbackAttributeNames.Add(CallbackInteractionAttributeName.RemoteId);
+                    callbackAttributeNames.Add(CallbackInteractionAttributeName.CallbackPhone);
+                    callbackAttributeNames.Add(CallbackInteractionAttributeName.AccountCodeId);
+                    callbackAttributeNames.Add(CallbackInteractionAttributeName.WrapUpCodeId);
+                    callbackAttributeNames.Add(CallbackInteractionAttributeName.WorkgroupQueueDisplayName);
+                    callbackAttributeNames.Add(CallbackInteractionAttributeName.WorkgroupQueueName);
+                    callbackAttributeNames.Add(CallbackInteractionAttributeName.UserQueueNames);
+                    callbackAttributeNames.Add(CallbackInteractionAttributeName.StationQueueNames);
+                    callbackAttributeNames.Add(CallbackInteractionAttributeName.State);
+                    callbackAttributeNames.Add(CallbackInteractionAttributeName.StateDescription);
+                    callbackAttributeNames.Add(CallbackInteractionAttributeName.LineQueueName);
+                    callbackAttributeNames.Add(CallbackInteractionAttributeName.InteractionType);
+                    callbackAttributeNames.Add(CallbackInteractionAttributeName.CallbackMessage);
+                    callbackAttributeNames.Add(CallbackInteractionAttributeName.CallbackCompletion);
+                    this.ActiveDialerInteraction.StartWatchingAsync(callbackAttributeNames.ToArray(), CallBackInteration_StartWatchingCompleted, null);
+                }
                 
                 log.Info(scope + "Completed.");
             }
@@ -3241,20 +3353,26 @@ namespace CIC
                     {
                         if (global::CIC.Properties.Settings.Default.AutoResetUserStatus)
                         {
+                            log.Info(scope + "Starting Update User Status");
                             statusUpdate.StatusMessageDetails = this.AvailableStatusMessageDetails;
                             statusUpdate.UpdateRequest();
+                            log.Info(scope + "Completed Update User Status");
                         }
                         else
                         {
                             if (this.CurrentUserStatus.StatusMessageDetails.IsSelectableStatus)
                             {
+                                log.Info(scope + "Starting Update User Status");
                                 statusUpdate.StatusMessageDetails = this.CurrentUserStatus.StatusMessageDetails;
                                 statusUpdate.UpdateRequest();
+                                log.Info(scope + "Completed Update User Status");
                             }
                             else if (IcWorkFlow.LoginResult)
                             {
+                                log.Info(scope + "Starting Update User Status");
                                 statusUpdate.StatusMessageDetails = this.AvailableStatusMessageDetails;
                                 statusUpdate.UpdateRequest();
+                                log.Info(scope + "Completed Update User Status");
                             }
                         }
                     }
@@ -3293,7 +3411,9 @@ namespace CIC
                                                                    WorkgroupAttributes.Supervisors,
                                                                    WorkgroupAttributes.WrapUpClientTimeout
                                                                  };
+                        log.Info(scope + "Starting Active Workgroup Start Watching");
                         this.ActiveWorkgroupDetails.StartWatchingAsync(mWorkgroupDetailsAttributeNames, WorkgroupDetailsStartWatchingComplete, null);
+                        log.Info(scope + "Completed Active Workgroup Start Watching");
                     }
                     else
                     {
@@ -3343,7 +3463,9 @@ namespace CIC
                     new CallInteractionParameters(number, CallMadeStage.Allocated);
                 SessionSettings sessionSetting = Program.m_Session.GetSessionSettings();
                 callParams.AdditionalAttributes.Add("CallerHost", sessionSetting.MachineName.ToString());
+                log.Info(scope + "Start Normal Interaction Make Call");
                 this.NormalInterationManager.MakeCallAsync(callParams, MakeCallCompleted, null);
+                log.Info(scope + "Completed Normal Interaction Make Call");
                 state_change(FormMainState.ManualCall);
             }
             catch (Exception ex)
@@ -3369,7 +3491,9 @@ namespace CIC
                     if (NormalInterationManager != null)
                     {
                         callingNumber = transferTxtDestination;
+                        log.Info(scope + "Starting Normal Interaction Make Consult Call");
                         NormalInterationManager.ConsultMakeCallAsync(callParams, MakeConsultCompleted, null);
+                        log.Info(scope + "Completed Normal Interaction Make Consult Call");
                         this.isConsulting = true;
                     }
                 }
@@ -3399,15 +3523,19 @@ namespace CIC
                         {
                             if (ActiveConsultInteraction != null)
                             {
+                                log.Info(scope + "Starting Consult Interaction Disconnect");
                                 ActiveConsultInteraction.Disconnect();
                                 this.RemoveNormalInteractionFromList(ActiveConsultInteraction);
+                                log.Info(scope + "Completed Consult Interaction Disconnect");
                                 ActiveConsultInteraction = null;
                             }
                             else
                             {
                                 ActiveConsultInteraction = ActiveNormalInteraction;
+                                log.Info(scope + "Starting Consult Interaction Disconnect");
                                 ActiveConsultInteraction.Disconnect();
                                 this.RemoveNormalInteractionFromList(ActiveConsultInteraction);
+                                log.Info(scope + "Completed Consult Interaction Disconnect");
                                 ActiveConsultInteraction = null;
                             }
                             if (InteractionList != null)
@@ -3416,8 +3544,10 @@ namespace CIC
                                 {
                                     if (CurrentInteraction.IsHeld)
                                     {
+                                        log.Info(scope + "Starting Normal Interaction Pickup");
                                         ActiveNormalInteraction = CurrentInteraction;
                                         ActiveNormalInteraction.Pickup();
+                                        log.Info(scope + "Completed Normal Interaction Pickup");
                                         break;
                                     }
                                 }
@@ -3433,15 +3563,19 @@ namespace CIC
                         {
                             if (ActiveConsultInteraction != null)
                             {
+                                log.Info(scope + "Starting Consult Interaction Disconnect");
                                 ActiveConsultInteraction.Disconnect();
                                 this.RemoveNormalInteractionFromList(ActiveConsultInteraction);
+                                log.Info(scope + "Completed Consult Interaction Disconnect");
                                 ActiveConsultInteraction = null;
                             }
                             else
                             {
+                                log.Info(scope + "Starting Consult Interaction Disconnect");
                                 ActiveConsultInteraction = ActiveNormalInteraction;
                                 ActiveConsultInteraction.Disconnect();
                                 this.RemoveNormalInteractionFromList(ActiveConsultInteraction);
+                                log.Info(scope + "Completed Consult Interaction Disconnect");
                                 ActiveConsultInteraction = null;
                             }
                             if (InteractionList != null)
@@ -3450,8 +3584,10 @@ namespace CIC
                                 {
                                     if (CurrentInteraction.IsHeld)
                                     {
+                                        log.Info(scope + "Starting Normal Interaction Pickup");
                                         ActiveNormalInteraction = CurrentInteraction;
                                         ActiveNormalInteraction.Pickup();
+                                        log.Info(scope + "Completed Normal Interaction Pickup");
                                         break;
                                     }
                                 }
@@ -3556,7 +3692,6 @@ namespace CIC
                     {
                         case true:
                             state_change(FormMainState.Break);
-                            // TODO: add message that user is on break on dashboards
                             this.SetToDoNotDisturb_UserStatusMsg();
                             this.state_info_label.Text = "On Break.";
                             break;
@@ -3597,7 +3732,6 @@ namespace CIC
                             IcWorkFlow = null;
                             this.DialerSession = null;
                             
-                            //this.InitializeStatusMessageDetails();
                             this.SetToDoNotDisturb_UserStatusMsg();
                             state_change(FormMainState.Loggedout);
                             System.Windows.Forms.MessageBox.Show(
@@ -3608,13 +3742,17 @@ namespace CIC
                         default:
                             if (ActiveNormalInteraction != null)
                             {
+                                log.Info(scope + "Starting Normal Interaction Disconnect");
                                 ActiveNormalInteraction.Disconnect();
                                 ActiveNormalInteraction = null;
+                                log.Info(scope + "Completed Normal Interaction Disconnect");
                             }
                             if (this.IC_Session != null)
                             {
+                                log.Info(scope + "Starting IC_Session Disconnect");
                                 this.IC_Session.Disconnect();
                                 this.IC_Session = null;
+                                log.Info(scope + "Completed IC_Session Disconnect");
                             }
                             state_change(FormMainState.Loggedout);
                             break;
@@ -3640,9 +3778,11 @@ namespace CIC
                 {
                     if (this.mPeopleManager != null)
                     {
+                        log.Info(scope + "Starting Update User Status");
                         statusUpdate = new UserStatusUpdate(this.mPeopleManager);
                         statusUpdate.StatusMessageDetails = this.DoNotDisturbStatusMessageDetails;
                         statusUpdate.UpdateRequest();
+                        log.Info(scope + "Completed Update User Status");
                     }
                 }
 
@@ -3709,7 +3849,9 @@ namespace CIC
 
                             this.callingNumber = data["is_attr_numbertodial"];
                             state_info_label.Text = "calling: " + this.callingNumber;
+                            log.Info(scope + "Starting Dialer Interaction Place Preview Call");
                             this.ActiveDialerInteraction.PlacePreviewCallAsync(MakePreviewCallComplete, null);
+                            log.Info(scope + "Completed Dialer Interaction Place Preview Call");
                             this.toolStripStatus.Text = (this.ActiveDialerInteraction != null) ?
                                 this.ActiveDialerInteraction.State.ToString() + ":" +
                                 this.ActiveDialerInteraction.StateDescription.ToString() : "N/A";
@@ -3739,7 +3881,9 @@ namespace CIC
                         log.Info(scope + "Pickup button clicked. Log on to Dialer Server.");
                         if (this.ActiveDialerInteraction != null)
                         {
+                            log.Info(scope + "Starting Dialer Interaction Pickup");
                             this.ActiveDialerInteraction.Pickup();
+                            log.Info(scope + "Completed Dialer Interaction Pickup");
                             this.CrmScreenPop();
                             this.state_info_label.Text = "Connected to: " + this.GetDialerNumber();
                         }
@@ -3749,12 +3893,16 @@ namespace CIC
                             {
                                 case InteractionType.Email:
                                     //Show Mail form
+                                    log.Info(scope + "Starting Normal Interaction Pickup");
                                     ActiveNormalInteraction.Pickup();
+                                    log.Info(scope + "Completed Normal Interaction Pickup");
                                     break;
                                 case InteractionType.Chat:
                                     break;
                                 case InteractionType.Call:
+                                    log.Info(scope + "Starting Normal Interaction Pickup");
                                     ActiveNormalInteraction.Pickup();
+                                    log.Info(scope + "Completed Normal Interaction Pickup");
                                     break;
                                 default:
                                     break;
@@ -3770,13 +3918,17 @@ namespace CIC
                             {
                                 case InteractionType.Email:
                                     this.ViewEmailDetail(ActiveNormalInteraction);
+                                    log.Info(scope + "Starting Normal Interaction Pickup");
                                     ActiveNormalInteraction.Pickup();
+                                    log.Info(scope + "Completed Normal Interaction Pickup");
                                     this.state_info_label.Text = "Connected to: " + callingNumber;
                                     break;
                                 case InteractionType.Chat:
                                     break;
                                 case InteractionType.Call:
+                                    log.Info(scope + "Starting Normal Interaction Pickup");
                                     ActiveNormalInteraction.Pickup();
+                                    log.Info(scope + "Completed Normal Interaction Pickup");
                                     this.state_info_label.Text = "Connected to: " + callingNumber;
                                     break;
                                 default:
@@ -3816,6 +3968,7 @@ namespace CIC
 
         private void FormMain_FormClosed(object sender, FormClosedEventArgs e)
         {
+            string scope = "CIC::frmMain::FormMain_FormClosed()::";
             DisposeQueueWatcher();
             DisposeSession();
             DisposeDialerSession();
@@ -3825,7 +3978,9 @@ namespace CIC
             {
                 try
                 {
+                    log.Info(scope + "Starting Dialer Session Request Logout");
                     this.ActiveDialerInteraction.DialerSession.RequestLogout();
+                    log.Info(scope + "Completed Dialer Session Request Logout");
                 }
                 catch (Exception ex)
                 {
@@ -3836,6 +3991,7 @@ namespace CIC
 
         private void tryDisconnectAllInteractions()
         {
+            string scope = "CIC::frmMain::tryDisconnectAllInteractions()::";
             if (this.InteractionList != null)
             {
                 foreach (ININ.IceLib.Interactions.Interaction CurrentInteraction in this.InteractionList)
@@ -3844,7 +4000,9 @@ namespace CIC
                     {
                         try
                         {
+                            log.Info(scope + "Starting Interaction Disconnect");
                             CurrentInteraction.Disconnect();
+                            log.Info(scope + "Completed Interaction Disconnect");
                         }
                         catch (Exception ex)
                         {
