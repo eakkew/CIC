@@ -87,7 +87,7 @@ namespace CIC
 
         private void frmWorkflow_FormClosed(object sender, FormClosedEventArgs e)
         {
-
+            workflow_combobox.Items.Clear();
         }
     }
 }

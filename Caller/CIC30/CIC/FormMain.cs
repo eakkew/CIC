@@ -49,6 +49,8 @@ namespace CIC
 
         private ScheduleCallbackForm frmScheduleCallbackForm { get; set; }
 
+
+        private bool isConsulting { get; set; }
         private bool break_requested { get; set; }
         private bool break_granted { get; set; }
         private bool BlindTransferFlag { get; set; }
@@ -65,6 +67,7 @@ namespace CIC
         private string ScheduleAgent { get; set; }
         private string CallBackPhone { get; set; }
         private string CallerHost { get; set; }
+        private string cachedURI { get; set; }
         private string AlertSoundFileType { get; set; }
         private float timer = global::CIC.Properties.Settings.Default.CountdownTime;
 
@@ -4182,9 +4185,5 @@ namespace CIC
                 exit_button.BackgroundImage = CIC.Properties.Resources.disable_Icon_Exit;
             }
         }
-
-        public bool isConsulting { get; set; }
-
-        public string cachedURI { get; set; }
     }
 }
