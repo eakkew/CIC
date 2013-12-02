@@ -57,7 +57,7 @@ namespace CIC
           if (!_Initialized)
           {
               mDialingManager = null;
-              log.Info("Initial dialingManager ,,, ININ.IceLib.Dialer.DialingManager(" + session. + ")")
+              log.Info("Initial dialingManager ,,, ININ.IceLib.Dialer.DialingManager(" + session + ")")
               mDialingManager = new ININ.IceLib.Dialer.DialingManager(session);
               _Initialized = true;
           }
