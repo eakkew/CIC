@@ -1430,95 +1430,138 @@ namespace CIC
         private void tryDisconnect()
         {
             string scope = "CIC::MainForm::tryDisconnect()::";
-            try
+            log.Info(scope + "Starting");
+            if (IcWorkFlow != null &&
+                IcWorkFlow.LoginResult &&
+                this.IC_Session != null &&
+                this.IC_Session.ConnectionState == ININ.IceLib.Connection.ConnectionState.Up)
             {
-                if (IcWorkFlow != null &&
-                    IcWorkFlow.LoginResult &&
-                    this.IC_Session != null &&
-                    this.IC_Session.ConnectionState == ININ.IceLib.Connection.ConnectionState.Up)
+                if (this.current_state == FormMainState.PreviewCall ||
+                    this.current_state == FormMainState.ConferenceCall)
                 {
-                    if (this.current_state == FormMainState.PreviewCall ||
-                        this.current_state == FormMainState.ConferenceCall)
-                    {
-                        frmDisposition disposition = frmDisposition.getInstance(
-                            this.IC_Session, this.GetDialerNumber()); //new frmDisposition();
-                        disposition.ShowDialog();
-                    }
+                    frmDisposition disposition = frmDisposition.getInstance(
+                        this.IC_Session, this.GetDialerNumber()); //new frmDisposition();
+                    disposition.ShowDialog();
+                }
 
-                    if (ActiveDialerInteraction != null)
+                if (ActiveDialerInteraction != null)
+                {
+                    if (!ActiveDialerInteraction.IsDisconnected)
                     {
-                        if (!ActiveDialerInteraction.IsDisconnected)
+                        try
                         {
                             log.Info(scope + "Starting Dialer Interaction Disconnect");
                             ActiveDialerInteraction.Disconnect();
                             log.Info(scope + "Completed Dialer Interaction Disconnect");
                         }
-                        if (ActiveNormalInteraction != null && !ActiveNormalInteraction.IsDisconnected)
+                        catch (Exception ex)
                         {
+                            log.Error(scope + "Error info." + ex.Message);
+                        }
+                    }
+                    if (ActiveNormalInteraction != null && !ActiveNormalInteraction.IsDisconnected)
+                    {
+                        try 
+                        { 
                             log.Info(scope + "Starting Normal Interaction Disconnect");
                             this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
                             ActiveNormalInteraction.Disconnect();
                             log.Info(scope + "Completed Normal Interaction Disconnect");
                         }
-                        if (ActiveConsultInteraction != null && !ActiveConsultInteraction.IsDisconnected)
+                        catch (Exception ex)
                         {
+                            log.Error(scope + "Error info." + ex.Message);
+                        }
+                    }
+                    if (ActiveConsultInteraction != null && !ActiveConsultInteraction.IsDisconnected)
+                    {
+                        try
+                        { 
                             log.Info(scope + "Starting Consult Interaction Disconnect");
                             this.RemoveNormalInteractionFromList(ActiveConsultInteraction);
                             ActiveConsultInteraction.Disconnect();
                             log.Info(scope + "Completed Consult Interaction Disconnect");
                         }
-                        this.state_change(FormMainState.Preview);
+                        catch (Exception ex)
+                        {
+                            log.Error(scope + "Error info." + ex.Message);
+                        }
                     }
+                    this.state_change(FormMainState.Preview);
                 }
-                else
-                { // Not Log On to Dialer Server.
-                    if (this.ActiveDialerInteraction != null && !this.ActiveDialerInteraction.IsDisconnected)
-                    {
+            }
+            else
+            { // Not Log On to Dialer Server.
+                if (this.ActiveDialerInteraction != null && !this.ActiveDialerInteraction.IsDisconnected)
+                {
+                    try
+                    { 
                         log.Info(scope + "Starting Dialer Interaction Disconnect");
                         this.ActiveDialerInteraction.Disconnect();
                         this.ActiveDialerInteraction = null;
                         log.Info(scope + "Completed Dialer interaction Disconnect");
                     }
-                    if (ActiveNormalInteraction != null && !ActiveNormalInteraction.IsDisconnected)
+                    catch (Exception ex)
                     {
+                        log.Error(scope + "Error info." + ex.Message);
+                    }
+                }
+                if (ActiveNormalInteraction != null && !ActiveNormalInteraction.IsDisconnected)
+                {
+                    try
+                    { 
                         log.Info(scope + "Statring Normal Interaction Disconnect");
                         this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
                         ActiveNormalInteraction.Disconnect();
                         log.Info(scope + "Complete Normal Interaction Disconnect");
                         ActiveNormalInteraction = this.GetNormalInteractionFromList();
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        ActiveNormalInteraction = this.GetNormalInteractionFromList();
-                        if (ActiveNormalInteraction != null)
-                        {
+                        log.Error(scope + "Error info." + ex.Message);
+                    }
+                }
+                else
+                {
+                    ActiveNormalInteraction = this.GetNormalInteractionFromList();
+                    if (ActiveNormalInteraction != null)
+                    {
+                        try
+                        { 
                             log.Info(scope + "Starting Normal Interaction Disconnect");
                             ActiveNormalInteraction.Disconnect();
                             log.Info(scope + "Completed Normal Interaction Disconnect");
                         }
+                        catch (Exception ex)
+                        {
+                            log.Error(scope + "Error info." + ex.Message);
+                        }
                     }
-                    if (ActiveConsultInteraction != null && !ActiveConsultInteraction.IsDisconnected)
-                    {
+                }
+                if (ActiveConsultInteraction != null && !ActiveConsultInteraction.IsDisconnected)
+                {
+                    try
+                    { 
                         log.Info(scope + "Starting Consult Interaction Disconnect");
                         ActiveConsultInteraction.Disconnect();
                         ActiveConsultInteraction = null;
                         log.Info(scope + "Completed Consult Interaction Disconnect");
                     }
-
-                    if (this.InteractionList != null && this.InteractionList.Count <= 0)
+                    catch (Exception ex)
                     {
-                        ActiveConferenceInteraction = null;
-                        ActiveConsultInteraction = null;
+                        log.Error(scope + "Error info." + ex.Message);
                     }
-                    this.state_change(FormMainState.Connected);
                 }
-                isConsulting = false;
-            }
-            catch (Exception ex)
-            {
+
+                if (this.InteractionList != null && this.InteractionList.Count <= 0)
+                {
+                    ActiveConferenceInteraction = null;
+                    ActiveConsultInteraction = null;
+                }
                 this.state_change(FormMainState.Connected);
-                log.ErrorFormat("Something really bad happened: {0}", ex.Message);
             }
+            isConsulting = false;
+            log.Info(scope + "Completed.");
         }
 
         private Interaction GetNormalInteractionFromList()
