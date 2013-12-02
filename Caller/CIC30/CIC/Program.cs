@@ -57,6 +57,7 @@ namespace CIC
           if (!_Initialized)
           {
               mDialingManager = null;
+              log.Info("Initial dialingManager ,,, ININ.IceLib.Dialer.DialingManager(" + session. + ")")
               mDialingManager = new ININ.IceLib.Dialer.DialingManager(session);
               _Initialized = true;
           }
@@ -130,6 +131,7 @@ namespace CIC
                   }
                   if (global::CIC.Program.SessionLogInResult == CIC.Utils.LoginResult.Success)
                   {
+                      log.Info("called m_Session.Disconnect()");
                       m_Session.Disconnect();
                       m_Session = null;
                       //MainApp = new CIC.frmMain();
@@ -138,6 +140,7 @@ namespace CIC
                   }
                   if (m_Session != null)
                   {
+                      log.Info("called m_Session.Disconnect()");
                       m_Session.Disconnect();
                   }
                   log.Info("CIC::Program::Main()::Disconnecting from Session Manager.");
