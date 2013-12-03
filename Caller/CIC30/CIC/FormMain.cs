@@ -1487,7 +1487,7 @@ namespace CIC
                             log.Error(scope + "Error info." + ex.Message);
                         }
                     }
-                    this.state_change(FormMainState.Preview);
+                    this.state_change(FormMainState.Predictive);
                 }
             }
             else
@@ -1561,6 +1561,7 @@ namespace CIC
                 this.state_change(FormMainState.Connected);
             }
             isConsulting = false;
+            this.reset_info_on_dashboard();
             log.Info(scope + "Completed.");
         }
 
@@ -1871,7 +1872,8 @@ namespace CIC
                                 log.Info(scope + "Starting Dialer Interaction CallComplete");
                                 this.ActiveDialerInteraction.CallComplete((CallCompletionParameters)sender);
                                 log.Info(scope + "Completed Dialer Interaction CallComplete");
-                                
+
+                                this.reset_info_on_dashboard();
                                 if (!this.break_granted)
                                 {
                                     if (this.AvailableStatusMessageDetails != null)
@@ -1890,7 +1892,6 @@ namespace CIC
                                     }
                                 }
 
-                                this.reset_info_on_dashboard();
                             }
                             else if (this.ActiveDialerInteraction.DialingMode == DialingMode.Precise)
                             {
