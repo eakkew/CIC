@@ -2024,6 +2024,7 @@ namespace CIC
                         }
                     }
                 }
+                this.isConsulting = false;
                 log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
@@ -2147,6 +2148,7 @@ namespace CIC
                         }
                     }
                 }
+                this.isConsulting = false;
                 this.ResetActiveCallInfo();
                 log.Info(scope + "Completed.");
             }
@@ -3928,7 +3930,7 @@ namespace CIC
                 {
                     case true:   //Log On to Dialer Server.
                         log.Info(scope + "Pickup button clicked. Log on to Dialer Server.");
-                        if (this.ActiveDialerInteraction != null)
+                        if (this.ActiveDialerInteraction != null && !this.isConsulting)
                         {
                             log.Info(scope + "Starting Dialer Interaction Pickup");
                             this.ActiveDialerInteraction.Pickup();
@@ -3936,7 +3938,7 @@ namespace CIC
                             this.CrmScreenPop();
                             this.state_info_label.Text = "Connected to: " + this.GetDialerNumber();
                         }
-                        if (ActiveNormalInteraction != null)
+                        if (ActiveNormalInteraction != null && !this.isConsulting)
                         {
                             switch (ActiveNormalInteraction.InteractionType)
                             {
@@ -4075,6 +4077,7 @@ namespace CIC
                 {
                     global::CIC.Program.m_Session.ConnectionStateChanged -= new EventHandler<ConnectionStateChangedEventArgs>(mSession_Changed);
                 }
+                global::CIC.Program.m_Session.Disconnect();
                 log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
