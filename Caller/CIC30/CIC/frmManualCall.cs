@@ -65,7 +65,7 @@ namespace CIC
         }
 
         /*
-         * TODO : Change function name to validate textbox
+         * TODO : Change function name to validate RichTextBox
          */
         private bool CheckEmptyPhoneNumber()
         {

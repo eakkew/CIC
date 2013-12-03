@@ -48,74 +48,75 @@
             this.exit_button = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.date_callback_panel = new System.Windows.Forms.Panel();
-            this.date_callback_box = new System.Windows.Forms.TextBox();
+            this.date_callback_box = new System.Windows.Forms.RichTextBox();
             this.date_callback_label = new System.Windows.Forms.Label();
             this.payment_appoint_panel = new System.Windows.Forms.Panel();
-            this.payment_appoint_box = new System.Windows.Forms.TextBox();
+            this.payment_appoint_box = new System.Windows.Forms.RichTextBox();
             this.payment_appoint_label = new System.Windows.Forms.Label();
             this.start_overdue_date_panel = new System.Windows.Forms.Panel();
-            this.start_overdue_date_box = new System.Windows.Forms.TextBox();
+            this.start_overdue_date_box = new System.Windows.Forms.RichTextBox();
             this.start_overdue_date_label = new System.Windows.Forms.Label();
             this.followup_status_panel = new System.Windows.Forms.Panel();
-            this.followup_status_box = new System.Windows.Forms.TextBox();
+            this.followup_status_box = new System.Windows.Forms.RichTextBox();
             this.followup_status_label = new System.Windows.Forms.Label();
             this.debt_status_panel = new System.Windows.Forms.Panel();
-            this.debt_status_box = new System.Windows.Forms.TextBox();
+            this.debt_status_box = new System.Windows.Forms.RichTextBox();
             this.debt_status_label = new System.Windows.Forms.Label();
             this.monthly_payment_panel = new System.Windows.Forms.Panel();
-            this.monthly_payment_box = new System.Windows.Forms.TextBox();
+            this.monthly_payment_box = new System.Windows.Forms.RichTextBox();
             this.monthly_payment_label = new System.Windows.Forms.Label();
             this.last_date_payment_panel = new System.Windows.Forms.Panel();
-            this.last_date_payment_box = new System.Windows.Forms.TextBox();
+            this.last_date_payment_box = new System.Windows.Forms.RichTextBox();
             this.last_date_payment_label = new System.Windows.Forms.Label();
             this.initial_amount_panel = new System.Windows.Forms.Panel();
-            this.initial_amount_box = new System.Windows.Forms.TextBox();
+            this.initial_amount_box = new System.Windows.Forms.RichTextBox();
             this.initial_amount_label = new System.Windows.Forms.Label();
             this.last_amount_payment_panel = new System.Windows.Forms.Panel();
-            this.last_amount_payment_box = new System.Windows.Forms.TextBox();
+            this.last_amount_payment_box = new System.Windows.Forms.RichTextBox();
             this.last_amount_payment_label = new System.Windows.Forms.Label();
             this.base_debt_panel = new System.Windows.Forms.Panel();
-            this.base_debt_box = new System.Windows.Forms.TextBox();
+            this.base_debt_box = new System.Windows.Forms.RichTextBox();
             this.base_debt_label = new System.Windows.Forms.Label();
             this.number_due_panel = new System.Windows.Forms.Panel();
-            this.number_due_box = new System.Windows.Forms.TextBox();
+            this.number_due_box = new System.Windows.Forms.RichTextBox();
             this.number_due_label = new System.Windows.Forms.Label();
             this.aging_panel = new System.Windows.Forms.Panel();
-            this.aging_box = new System.Windows.Forms.TextBox();
+            this.aging_box = new System.Windows.Forms.RichTextBox();
             this.aging_label = new System.Windows.Forms.Label();
             this.name6_panel = new System.Windows.Forms.Panel();
-            this.name6_box2 = new System.Windows.Forms.TextBox();
-            this.name6_box1 = new System.Windows.Forms.TextBox();
+            this.name6_box2 = new System.Windows.Forms.RichTextBox();
+            this.name6_box1 = new System.Windows.Forms.RichTextBox();
             this.name6_label = new System.Windows.Forms.Label();
             this.name5_panel = new System.Windows.Forms.Panel();
-            this.name5_box2 = new System.Windows.Forms.TextBox();
-            this.name5_box1 = new System.Windows.Forms.TextBox();
+            this.name5_box2 = new System.Windows.Forms.RichTextBox();
+            this.name5_box1 = new System.Windows.Forms.RichTextBox();
             this.name5_label = new System.Windows.Forms.Label();
             this.name4_panel = new System.Windows.Forms.Panel();
-            this.name4_box2 = new System.Windows.Forms.TextBox();
-            this.name4_box1 = new System.Windows.Forms.TextBox();
+            this.name4_box2 = new System.Windows.Forms.RichTextBox();
+            this.name4_box1 = new System.Windows.Forms.RichTextBox();
             this.name4_label = new System.Windows.Forms.Label();
             this.name3_panel = new System.Windows.Forms.Panel();
-            this.name3_box2 = new System.Windows.Forms.TextBox();
-            this.name3_box1 = new System.Windows.Forms.TextBox();
+            this.name3_box2 = new System.Windows.Forms.RichTextBox();
+            this.name3_box1 = new System.Windows.Forms.RichTextBox();
             this.name3_label = new System.Windows.Forms.Label();
             this.name2_panel = new System.Windows.Forms.Panel();
-            this.name2_box2 = new System.Windows.Forms.TextBox();
-            this.name2_box1 = new System.Windows.Forms.TextBox();
+            this.name2_box2 = new System.Windows.Forms.RichTextBox();
+            this.name2_box1 = new System.Windows.Forms.RichTextBox();
             this.name2_label = new System.Windows.Forms.Label();
             this.name1_panel = new System.Windows.Forms.Panel();
-            this.name1_box2 = new System.Windows.Forms.TextBox();
-            this.name1_box1 = new System.Windows.Forms.TextBox();
+            this.name1_box2 = new System.Windows.Forms.RichTextBox();
+            this.name1_box1 = new System.Windows.Forms.RichTextBox();
             this.name1_label = new System.Windows.Forms.Label();
             this.product_name_panel = new System.Windows.Forms.Panel();
-            this.product_name_box = new System.Windows.Forms.TextBox();
+            this.product_name_box = new System.Windows.Forms.RichTextBox();
             this.product_name_label = new System.Windows.Forms.Label();
             this.license_plate_panel = new System.Windows.Forms.Panel();
-            this.license_plate_box = new System.Windows.Forms.TextBox();
+            this.license_plate_box = new System.Windows.Forms.RichTextBox();
             this.license_plate_label = new System.Windows.Forms.Label();
             this.contractID_panel = new System.Windows.Forms.Panel();
-            this.contractNo_box = new System.Windows.Forms.TextBox();
+            this.contractNo_box = new System.Windows.Forms.RichTextBox();
             this.contractID_label = new System.Windows.Forms.Label();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.toolStripCampaignIDLabel = new System.Windows.Forms.Label();
             this.toolStripCallTypeLabel = new System.Windows.Forms.Label();
             this.toolStripCallIDLabel = new System.Windows.Forms.Label();
@@ -147,7 +148,6 @@
             this.logout_button_label = new System.Windows.Forms.Label();
             this.exit_button_label = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
@@ -431,10 +431,14 @@
             // 
             // date_callback_box
             // 
+            this.date_callback_box.BackColor = System.Drawing.SystemColors.Window;
             this.date_callback_box.Location = new System.Drawing.Point(126, 2);
+            this.date_callback_box.Multiline = false;
             this.date_callback_box.Name = "date_callback_box";
+            this.date_callback_box.ReadOnly = true;
             this.date_callback_box.Size = new System.Drawing.Size(100, 20);
             this.date_callback_box.TabIndex = 1;
+            this.date_callback_box.Text = "";
             // 
             // date_callback_label
             // 
@@ -456,10 +460,14 @@
             // 
             // payment_appoint_box
             // 
+            this.payment_appoint_box.BackColor = System.Drawing.SystemColors.Window;
             this.payment_appoint_box.Location = new System.Drawing.Point(126, 2);
+            this.payment_appoint_box.Multiline = false;
             this.payment_appoint_box.Name = "payment_appoint_box";
+            this.payment_appoint_box.ReadOnly = true;
             this.payment_appoint_box.Size = new System.Drawing.Size(100, 20);
             this.payment_appoint_box.TabIndex = 1;
+            this.payment_appoint_box.Text = "";
             // 
             // payment_appoint_label
             // 
@@ -481,10 +489,14 @@
             // 
             // start_overdue_date_box
             // 
+            this.start_overdue_date_box.BackColor = System.Drawing.SystemColors.Window;
             this.start_overdue_date_box.Location = new System.Drawing.Point(126, 2);
+            this.start_overdue_date_box.Multiline = false;
             this.start_overdue_date_box.Name = "start_overdue_date_box";
+            this.start_overdue_date_box.ReadOnly = true;
             this.start_overdue_date_box.Size = new System.Drawing.Size(100, 20);
             this.start_overdue_date_box.TabIndex = 1;
+            this.start_overdue_date_box.Text = "";
             // 
             // start_overdue_date_label
             // 
@@ -506,10 +518,14 @@
             // 
             // followup_status_box
             // 
+            this.followup_status_box.BackColor = System.Drawing.SystemColors.Window;
             this.followup_status_box.Location = new System.Drawing.Point(126, 2);
+            this.followup_status_box.Multiline = false;
             this.followup_status_box.Name = "followup_status_box";
+            this.followup_status_box.ReadOnly = true;
             this.followup_status_box.Size = new System.Drawing.Size(329, 20);
             this.followup_status_box.TabIndex = 1;
+            this.followup_status_box.Text = "";
             // 
             // followup_status_label
             // 
@@ -531,10 +547,14 @@
             // 
             // debt_status_box
             // 
+            this.debt_status_box.BackColor = System.Drawing.SystemColors.Window;
             this.debt_status_box.Location = new System.Drawing.Point(126, 2);
+            this.debt_status_box.Multiline = false;
             this.debt_status_box.Name = "debt_status_box";
+            this.debt_status_box.ReadOnly = true;
             this.debt_status_box.Size = new System.Drawing.Size(329, 20);
             this.debt_status_box.TabIndex = 1;
+            this.debt_status_box.Text = "";
             // 
             // debt_status_label
             // 
@@ -556,10 +576,14 @@
             // 
             // monthly_payment_box
             // 
+            this.monthly_payment_box.BackColor = System.Drawing.SystemColors.Window;
             this.monthly_payment_box.Location = new System.Drawing.Point(126, 2);
+            this.monthly_payment_box.Multiline = false;
             this.monthly_payment_box.Name = "monthly_payment_box";
+            this.monthly_payment_box.ReadOnly = true;
             this.monthly_payment_box.Size = new System.Drawing.Size(100, 20);
             this.monthly_payment_box.TabIndex = 1;
+            this.monthly_payment_box.Text = "";
             // 
             // monthly_payment_label
             // 
@@ -581,10 +605,14 @@
             // 
             // last_date_payment_box
             // 
+            this.last_date_payment_box.BackColor = System.Drawing.SystemColors.Window;
             this.last_date_payment_box.Location = new System.Drawing.Point(126, 2);
+            this.last_date_payment_box.Multiline = false;
             this.last_date_payment_box.Name = "last_date_payment_box";
+            this.last_date_payment_box.ReadOnly = true;
             this.last_date_payment_box.Size = new System.Drawing.Size(100, 20);
             this.last_date_payment_box.TabIndex = 1;
+            this.last_date_payment_box.Text = "";
             // 
             // last_date_payment_label
             // 
@@ -606,10 +634,14 @@
             // 
             // initial_amount_box
             // 
+            this.initial_amount_box.BackColor = System.Drawing.SystemColors.Window;
             this.initial_amount_box.Location = new System.Drawing.Point(126, 2);
+            this.initial_amount_box.Multiline = false;
             this.initial_amount_box.Name = "initial_amount_box";
+            this.initial_amount_box.ReadOnly = true;
             this.initial_amount_box.Size = new System.Drawing.Size(100, 20);
             this.initial_amount_box.TabIndex = 1;
+            this.initial_amount_box.Text = "";
             // 
             // initial_amount_label
             // 
@@ -631,10 +663,14 @@
             // 
             // last_amount_payment_box
             // 
+            this.last_amount_payment_box.BackColor = System.Drawing.SystemColors.Window;
             this.last_amount_payment_box.Location = new System.Drawing.Point(126, 2);
+            this.last_amount_payment_box.Multiline = false;
             this.last_amount_payment_box.Name = "last_amount_payment_box";
+            this.last_amount_payment_box.ReadOnly = true;
             this.last_amount_payment_box.Size = new System.Drawing.Size(100, 20);
             this.last_amount_payment_box.TabIndex = 1;
+            this.last_amount_payment_box.Text = "";
             // 
             // last_amount_payment_label
             // 
@@ -656,10 +692,14 @@
             // 
             // base_debt_box
             // 
+            this.base_debt_box.BackColor = System.Drawing.SystemColors.Window;
             this.base_debt_box.Location = new System.Drawing.Point(126, 2);
+            this.base_debt_box.Multiline = false;
             this.base_debt_box.Name = "base_debt_box";
+            this.base_debt_box.ReadOnly = true;
             this.base_debt_box.Size = new System.Drawing.Size(100, 20);
             this.base_debt_box.TabIndex = 1;
+            this.base_debt_box.Text = "";
             // 
             // base_debt_label
             // 
@@ -681,10 +721,14 @@
             // 
             // number_due_box
             // 
+            this.number_due_box.BackColor = System.Drawing.SystemColors.Window;
             this.number_due_box.Location = new System.Drawing.Point(126, 2);
+            this.number_due_box.Multiline = false;
             this.number_due_box.Name = "number_due_box";
+            this.number_due_box.ReadOnly = true;
             this.number_due_box.Size = new System.Drawing.Size(100, 20);
             this.number_due_box.TabIndex = 1;
+            this.number_due_box.Text = "";
             // 
             // number_due_label
             // 
@@ -706,10 +750,14 @@
             // 
             // aging_box
             // 
+            this.aging_box.BackColor = System.Drawing.SystemColors.Window;
             this.aging_box.Location = new System.Drawing.Point(126, 2);
+            this.aging_box.Multiline = false;
             this.aging_box.Name = "aging_box";
+            this.aging_box.ReadOnly = true;
             this.aging_box.Size = new System.Drawing.Size(100, 20);
             this.aging_box.TabIndex = 1;
+            this.aging_box.Text = "";
             // 
             // aging_label
             // 
@@ -732,17 +780,25 @@
             // 
             // name6_box2
             // 
+            this.name6_box2.BackColor = System.Drawing.SystemColors.Window;
             this.name6_box2.Location = new System.Drawing.Point(497, 2);
+            this.name6_box2.Multiline = false;
             this.name6_box2.Name = "name6_box2";
+            this.name6_box2.ReadOnly = true;
             this.name6_box2.Size = new System.Drawing.Size(115, 20);
             this.name6_box2.TabIndex = 2;
+            this.name6_box2.Text = "";
             // 
             // name6_box1
             // 
+            this.name6_box1.BackColor = System.Drawing.SystemColors.Window;
             this.name6_box1.Location = new System.Drawing.Point(139, 2);
+            this.name6_box1.Multiline = false;
             this.name6_box1.Name = "name6_box1";
+            this.name6_box1.ReadOnly = true;
             this.name6_box1.Size = new System.Drawing.Size(352, 20);
             this.name6_box1.TabIndex = 1;
+            this.name6_box1.Text = "";
             // 
             // name6_label
             // 
@@ -765,17 +821,25 @@
             // 
             // name5_box2
             // 
+            this.name5_box2.BackColor = System.Drawing.SystemColors.Window;
             this.name5_box2.Location = new System.Drawing.Point(497, 2);
+            this.name5_box2.Multiline = false;
             this.name5_box2.Name = "name5_box2";
+            this.name5_box2.ReadOnly = true;
             this.name5_box2.Size = new System.Drawing.Size(115, 20);
             this.name5_box2.TabIndex = 2;
+            this.name5_box2.Text = "";
             // 
             // name5_box1
             // 
+            this.name5_box1.BackColor = System.Drawing.SystemColors.Window;
             this.name5_box1.Location = new System.Drawing.Point(139, 2);
+            this.name5_box1.Multiline = false;
             this.name5_box1.Name = "name5_box1";
+            this.name5_box1.ReadOnly = true;
             this.name5_box1.Size = new System.Drawing.Size(352, 20);
             this.name5_box1.TabIndex = 1;
+            this.name5_box1.Text = "";
             // 
             // name5_label
             // 
@@ -798,17 +862,25 @@
             // 
             // name4_box2
             // 
+            this.name4_box2.BackColor = System.Drawing.SystemColors.Window;
             this.name4_box2.Location = new System.Drawing.Point(497, 2);
+            this.name4_box2.Multiline = false;
             this.name4_box2.Name = "name4_box2";
+            this.name4_box2.ReadOnly = true;
             this.name4_box2.Size = new System.Drawing.Size(115, 20);
             this.name4_box2.TabIndex = 2;
+            this.name4_box2.Text = "";
             // 
             // name4_box1
             // 
+            this.name4_box1.BackColor = System.Drawing.SystemColors.Window;
             this.name4_box1.Location = new System.Drawing.Point(139, 2);
+            this.name4_box1.Multiline = false;
             this.name4_box1.Name = "name4_box1";
+            this.name4_box1.ReadOnly = true;
             this.name4_box1.Size = new System.Drawing.Size(352, 20);
             this.name4_box1.TabIndex = 1;
+            this.name4_box1.Text = "";
             // 
             // name4_label
             // 
@@ -831,17 +903,25 @@
             // 
             // name3_box2
             // 
+            this.name3_box2.BackColor = System.Drawing.SystemColors.Window;
             this.name3_box2.Location = new System.Drawing.Point(497, 2);
+            this.name3_box2.Multiline = false;
             this.name3_box2.Name = "name3_box2";
+            this.name3_box2.ReadOnly = true;
             this.name3_box2.Size = new System.Drawing.Size(115, 20);
             this.name3_box2.TabIndex = 2;
+            this.name3_box2.Text = "";
             // 
             // name3_box1
             // 
+            this.name3_box1.BackColor = System.Drawing.SystemColors.Window;
             this.name3_box1.Location = new System.Drawing.Point(139, 2);
+            this.name3_box1.Multiline = false;
             this.name3_box1.Name = "name3_box1";
+            this.name3_box1.ReadOnly = true;
             this.name3_box1.Size = new System.Drawing.Size(352, 20);
             this.name3_box1.TabIndex = 1;
+            this.name3_box1.Text = "";
             // 
             // name3_label
             // 
@@ -864,17 +944,25 @@
             // 
             // name2_box2
             // 
+            this.name2_box2.BackColor = System.Drawing.SystemColors.Window;
             this.name2_box2.Location = new System.Drawing.Point(497, 2);
+            this.name2_box2.Multiline = false;
             this.name2_box2.Name = "name2_box2";
+            this.name2_box2.ReadOnly = true;
             this.name2_box2.Size = new System.Drawing.Size(115, 20);
             this.name2_box2.TabIndex = 2;
+            this.name2_box2.Text = "";
             // 
             // name2_box1
             // 
+            this.name2_box1.BackColor = System.Drawing.SystemColors.Window;
             this.name2_box1.Location = new System.Drawing.Point(139, 2);
+            this.name2_box1.Multiline = false;
             this.name2_box1.Name = "name2_box1";
+            this.name2_box1.ReadOnly = true;
             this.name2_box1.Size = new System.Drawing.Size(352, 20);
             this.name2_box1.TabIndex = 1;
+            this.name2_box1.Text = "";
             // 
             // name2_label
             // 
@@ -897,17 +985,25 @@
             // 
             // name1_box2
             // 
+            this.name1_box2.BackColor = System.Drawing.SystemColors.Window;
             this.name1_box2.Location = new System.Drawing.Point(497, 2);
+            this.name1_box2.Multiline = false;
             this.name1_box2.Name = "name1_box2";
+            this.name1_box2.ReadOnly = true;
             this.name1_box2.Size = new System.Drawing.Size(115, 20);
             this.name1_box2.TabIndex = 2;
+            this.name1_box2.Text = "";
             // 
             // name1_box1
             // 
+            this.name1_box1.BackColor = System.Drawing.SystemColors.Window;
             this.name1_box1.Location = new System.Drawing.Point(139, 2);
+            this.name1_box1.Multiline = false;
             this.name1_box1.Name = "name1_box1";
+            this.name1_box1.ReadOnly = true;
             this.name1_box1.Size = new System.Drawing.Size(352, 20);
             this.name1_box1.TabIndex = 1;
+            this.name1_box1.Text = "";
             // 
             // name1_label
             // 
@@ -929,10 +1025,14 @@
             // 
             // product_name_box
             // 
+            this.product_name_box.BackColor = System.Drawing.SystemColors.Window;
             this.product_name_box.Location = new System.Drawing.Point(126, 4);
+            this.product_name_box.Multiline = false;
             this.product_name_box.Name = "product_name_box";
+            this.product_name_box.ReadOnly = true;
             this.product_name_box.Size = new System.Drawing.Size(332, 20);
             this.product_name_box.TabIndex = 1;
+            this.product_name_box.Text = "";
             // 
             // product_name_label
             // 
@@ -954,10 +1054,14 @@
             // 
             // license_plate_box
             // 
+            this.license_plate_box.BackColor = System.Drawing.SystemColors.Window;
             this.license_plate_box.Location = new System.Drawing.Point(126, 3);
+            this.license_plate_box.Multiline = false;
             this.license_plate_box.Name = "license_plate_box";
+            this.license_plate_box.ReadOnly = true;
             this.license_plate_box.Size = new System.Drawing.Size(100, 20);
             this.license_plate_box.TabIndex = 1;
+            this.license_plate_box.Text = "";
             // 
             // license_plate_label
             // 
@@ -979,10 +1083,14 @@
             // 
             // contractNo_box
             // 
+            this.contractNo_box.BackColor = System.Drawing.SystemColors.Window;
             this.contractNo_box.Location = new System.Drawing.Point(126, 2);
+            this.contractNo_box.Multiline = false;
             this.contractNo_box.Name = "contractNo_box";
+            this.contractNo_box.ReadOnly = true;
             this.contractNo_box.Size = new System.Drawing.Size(100, 20);
             this.contractNo_box.TabIndex = 1;
+            this.contractNo_box.Text = "";
             // 
             // contractID_label
             // 
@@ -1003,15 +1111,15 @@
             this.panel2.Controls.Add(this.toolStripCallType);
             this.panel2.Controls.Add(this.toolStripCampaignID);
             this.panel2.Controls.Add(this.toolStripWorkflow);
-            this.panel2.Location = new System.Drawing.Point(3, 274);
+            this.panel2.Location = new System.Drawing.Point(3, 332);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(406, 138);
+            this.panel2.Size = new System.Drawing.Size(406, 80);
             this.panel2.TabIndex = 2;
             // 
             // toolStripCampaignIDLabel
             // 
             this.toolStripCampaignIDLabel.AutoSize = true;
-            this.toolStripCampaignIDLabel.Location = new System.Drawing.Point(73, 30);
+            this.toolStripCampaignIDLabel.Location = new System.Drawing.Point(68, 24);
             this.toolStripCampaignIDLabel.Name = "toolStripCampaignIDLabel";
             this.toolStripCampaignIDLabel.Size = new System.Drawing.Size(27, 13);
             this.toolStripCampaignIDLabel.TabIndex = 7;
@@ -1020,7 +1128,7 @@
             // toolStripCallTypeLabel
             // 
             this.toolStripCallTypeLabel.AutoSize = true;
-            this.toolStripCallTypeLabel.Location = new System.Drawing.Point(73, 51);
+            this.toolStripCallTypeLabel.Location = new System.Drawing.Point(68, 45);
             this.toolStripCallTypeLabel.Name = "toolStripCallTypeLabel";
             this.toolStripCallTypeLabel.Size = new System.Drawing.Size(27, 13);
             this.toolStripCallTypeLabel.TabIndex = 6;
@@ -1029,7 +1137,7 @@
             // toolStripCallIDLabel
             // 
             this.toolStripCallIDLabel.AutoSize = true;
-            this.toolStripCallIDLabel.Location = new System.Drawing.Point(73, 69);
+            this.toolStripCallIDLabel.Location = new System.Drawing.Point(68, 63);
             this.toolStripCallIDLabel.Name = "toolStripCallIDLabel";
             this.toolStripCallIDLabel.Size = new System.Drawing.Size(27, 13);
             this.toolStripCallIDLabel.TabIndex = 5;
@@ -1038,7 +1146,7 @@
             // toolStripWorkflowLabel
             // 
             this.toolStripWorkflowLabel.AutoSize = true;
-            this.toolStripWorkflowLabel.Location = new System.Drawing.Point(73, 10);
+            this.toolStripWorkflowLabel.Location = new System.Drawing.Point(68, 4);
             this.toolStripWorkflowLabel.Name = "toolStripWorkflowLabel";
             this.toolStripWorkflowLabel.Size = new System.Drawing.Size(27, 13);
             this.toolStripWorkflowLabel.TabIndex = 4;
@@ -1047,7 +1155,7 @@
             // toolStripCallID
             // 
             this.toolStripCallID.AutoSize = true;
-            this.toolStripCallID.Location = new System.Drawing.Point(8, 69);
+            this.toolStripCallID.Location = new System.Drawing.Point(3, 63);
             this.toolStripCallID.Name = "toolStripCallID";
             this.toolStripCallID.Size = new System.Drawing.Size(44, 13);
             this.toolStripCallID.TabIndex = 3;
@@ -1056,7 +1164,7 @@
             // toolStripCallType
             // 
             this.toolStripCallType.AutoSize = true;
-            this.toolStripCallType.Location = new System.Drawing.Point(8, 51);
+            this.toolStripCallType.Location = new System.Drawing.Point(3, 45);
             this.toolStripCallType.Name = "toolStripCallType";
             this.toolStripCallType.Size = new System.Drawing.Size(57, 13);
             this.toolStripCallType.TabIndex = 2;
@@ -1065,7 +1173,7 @@
             // toolStripCampaignID
             // 
             this.toolStripCampaignID.AutoSize = true;
-            this.toolStripCampaignID.Location = new System.Drawing.Point(8, 30);
+            this.toolStripCampaignID.Location = new System.Drawing.Point(3, 24);
             this.toolStripCampaignID.Name = "toolStripCampaignID";
             this.toolStripCampaignID.Size = new System.Drawing.Size(60, 13);
             this.toolStripCampaignID.TabIndex = 1;
@@ -1074,7 +1182,7 @@
             // toolStripWorkflow
             // 
             this.toolStripWorkflow.AutoSize = true;
-            this.toolStripWorkflow.Location = new System.Drawing.Point(8, 10);
+            this.toolStripWorkflow.Location = new System.Drawing.Point(3, 4);
             this.toolStripWorkflow.Name = "toolStripWorkflow";
             this.toolStripWorkflow.Size = new System.Drawing.Size(58, 13);
             this.toolStripWorkflow.TabIndex = 0;
@@ -1114,7 +1222,7 @@
             // toolStripDatetime
             // 
             this.toolStripDatetime.Name = "toolStripDatetime";
-            this.toolStripDatetime.Size = new System.Drawing.Size(49, 17);
+            this.toolStripDatetime.Size = new System.Drawing.Size(54, 17);
             this.toolStripDatetime.Text = "datetime";
             // 
             // toolStripStatusLabel
@@ -1126,19 +1234,19 @@
             // toolStripStatus
             // 
             this.toolStripStatus.Name = "toolStripStatus";
-            this.toolStripStatus.Size = new System.Drawing.Size(63, 17);
+            this.toolStripStatus.Size = new System.Drawing.Size(68, 17);
             this.toolStripStatus.Text = "statusname";
             // 
             // toolStripDirection
             // 
             this.toolStripDirection.Name = "toolStripDirection";
-            this.toolStripDirection.Size = new System.Drawing.Size(56, 17);
+            this.toolStripDirection.Size = new System.Drawing.Size(61, 17);
             this.toolStripDirection.Text = "Direction: ";
             // 
             // toolStripDirectionLabel
             // 
             this.toolStripDirectionLabel.Name = "toolStripDirectionLabel";
-            this.toolStripDirectionLabel.Size = new System.Drawing.Size(25, 17);
+            this.toolStripDirectionLabel.Size = new System.Drawing.Size(29, 17);
             this.toolStripDirectionLabel.Text = "N/A";
             // 
             // previewCallTimer
@@ -1278,93 +1386,6 @@
             this.panel1.Size = new System.Drawing.Size(1245, 20);
             this.panel1.TabIndex = 9;
             // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.toolStripCampaignIDLabel);
-            this.panel2.Controls.Add(this.toolStripCallTypeLabel);
-            this.panel2.Controls.Add(this.toolStripCallIDLabel);
-            this.panel2.Controls.Add(this.toolStripWorkflowLabel);
-            this.panel2.Controls.Add(this.toolStripCallID);
-            this.panel2.Controls.Add(this.toolStripCallType);
-            this.panel2.Controls.Add(this.toolStripCampaignID);
-            this.panel2.Controls.Add(this.toolStripWorkflow);
-            this.panel2.Location = new System.Drawing.Point(3, 332);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(406, 80);
-            this.panel2.TabIndex = 2;
-            // 
-            // toolStripWorkflow
-            // 
-            this.toolStripWorkflow.AutoSize = true;
-            this.toolStripWorkflow.Location = new System.Drawing.Point(3, 4);
-            this.toolStripWorkflow.Name = "toolStripWorkflow";
-            this.toolStripWorkflow.Size = new System.Drawing.Size(58, 13);
-            this.toolStripWorkflow.TabIndex = 0;
-            this.toolStripWorkflow.Text = "Workflow: ";
-            // 
-            // toolStripCampaignID
-            // 
-            this.toolStripCampaignID.AutoSize = true;
-            this.toolStripCampaignID.Location = new System.Drawing.Point(3, 24);
-            this.toolStripCampaignID.Name = "toolStripCampaignID";
-            this.toolStripCampaignID.Size = new System.Drawing.Size(60, 13);
-            this.toolStripCampaignID.TabIndex = 1;
-            this.toolStripCampaignID.Text = "Campaign: ";
-            // 
-            // toolStripCallType
-            // 
-            this.toolStripCallType.AutoSize = true;
-            this.toolStripCallType.Location = new System.Drawing.Point(3, 45);
-            this.toolStripCallType.Name = "toolStripCallType";
-            this.toolStripCallType.Size = new System.Drawing.Size(57, 13);
-            this.toolStripCallType.TabIndex = 2;
-            this.toolStripCallType.Text = "Call Type: ";
-            // 
-            // toolStripCallID
-            // 
-            this.toolStripCallID.AutoSize = true;
-            this.toolStripCallID.Location = new System.Drawing.Point(3, 63);
-            this.toolStripCallID.Name = "toolStripCallID";
-            this.toolStripCallID.Size = new System.Drawing.Size(44, 13);
-            this.toolStripCallID.TabIndex = 3;
-            this.toolStripCallID.Text = "Call ID: ";
-            // 
-            // toolStripWorkflowLabel
-            // 
-            this.toolStripWorkflowLabel.AutoSize = true;
-            this.toolStripWorkflowLabel.Location = new System.Drawing.Point(68, 4);
-            this.toolStripWorkflowLabel.Name = "toolStripWorkflowLabel";
-            this.toolStripWorkflowLabel.Size = new System.Drawing.Size(27, 13);
-            this.toolStripWorkflowLabel.TabIndex = 4;
-            this.toolStripWorkflowLabel.Text = "N/A";
-            // 
-            // toolStripCallIDLabel
-            // 
-            this.toolStripCallIDLabel.AutoSize = true;
-            this.toolStripCallIDLabel.Location = new System.Drawing.Point(68, 63);
-            this.toolStripCallIDLabel.Name = "toolStripCallIDLabel";
-            this.toolStripCallIDLabel.Size = new System.Drawing.Size(27, 13);
-            this.toolStripCallIDLabel.TabIndex = 5;
-            this.toolStripCallIDLabel.Text = "N/A";
-            // 
-            // toolStripCallTypeLabel
-            // 
-            this.toolStripCallTypeLabel.AutoSize = true;
-            this.toolStripCallTypeLabel.Location = new System.Drawing.Point(68, 45);
-            this.toolStripCallTypeLabel.Name = "toolStripCallTypeLabel";
-            this.toolStripCallTypeLabel.Size = new System.Drawing.Size(27, 13);
-            this.toolStripCallTypeLabel.TabIndex = 6;
-            this.toolStripCallTypeLabel.Text = "N/A";
-            // 
-            // toolStripCampaignIDLabel
-            // 
-            this.toolStripCampaignIDLabel.AutoSize = true;
-            this.toolStripCampaignIDLabel.Location = new System.Drawing.Point(68, 24);
-            this.toolStripCampaignIDLabel.Name = "toolStripCampaignIDLabel";
-            this.toolStripCampaignIDLabel.Size = new System.Drawing.Size(27, 13);
-            this.toolStripCampaignIDLabel.TabIndex = 7;
-            this.toolStripCampaignIDLabel.Text = "N/A";
-            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1467,73 +1488,73 @@
         private System.Windows.Forms.Button exit_button;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Panel product_name_panel;
-        private System.Windows.Forms.TextBox product_name_box;
+        private System.Windows.Forms.RichTextBox product_name_box;
         private System.Windows.Forms.Label product_name_label;
         private System.Windows.Forms.Panel license_plate_panel;
-        private System.Windows.Forms.TextBox license_plate_box;
+        private System.Windows.Forms.RichTextBox license_plate_box;
         private System.Windows.Forms.Label license_plate_label;
         private System.Windows.Forms.Panel contractID_panel;
-        private System.Windows.Forms.TextBox contractNo_box;
+        private System.Windows.Forms.RichTextBox contractNo_box;
         private System.Windows.Forms.Label contractID_label;
         private System.Windows.Forms.Panel date_callback_panel;
-        private System.Windows.Forms.TextBox date_callback_box;
+        private System.Windows.Forms.RichTextBox date_callback_box;
         private System.Windows.Forms.Label date_callback_label;
         private System.Windows.Forms.Panel payment_appoint_panel;
-        private System.Windows.Forms.TextBox payment_appoint_box;
+        private System.Windows.Forms.RichTextBox payment_appoint_box;
         private System.Windows.Forms.Label payment_appoint_label;
         private System.Windows.Forms.Panel start_overdue_date_panel;
-        private System.Windows.Forms.TextBox start_overdue_date_box;
+        private System.Windows.Forms.RichTextBox start_overdue_date_box;
         private System.Windows.Forms.Label start_overdue_date_label;
         private System.Windows.Forms.Panel followup_status_panel;
-        private System.Windows.Forms.TextBox followup_status_box;
+        private System.Windows.Forms.RichTextBox followup_status_box;
         private System.Windows.Forms.Label followup_status_label;
         private System.Windows.Forms.Panel debt_status_panel;
-        private System.Windows.Forms.TextBox debt_status_box;
+        private System.Windows.Forms.RichTextBox debt_status_box;
         private System.Windows.Forms.Label debt_status_label;
         private System.Windows.Forms.Panel monthly_payment_panel;
-        private System.Windows.Forms.TextBox monthly_payment_box;
+        private System.Windows.Forms.RichTextBox monthly_payment_box;
         private System.Windows.Forms.Label monthly_payment_label;
         private System.Windows.Forms.Panel last_date_payment_panel;
-        private System.Windows.Forms.TextBox last_date_payment_box;
+        private System.Windows.Forms.RichTextBox last_date_payment_box;
         private System.Windows.Forms.Label last_date_payment_label;
         private System.Windows.Forms.Panel initial_amount_panel;
-        private System.Windows.Forms.TextBox initial_amount_box;
+        private System.Windows.Forms.RichTextBox initial_amount_box;
         private System.Windows.Forms.Label initial_amount_label;
         private System.Windows.Forms.Panel last_amount_payment_panel;
-        private System.Windows.Forms.TextBox last_amount_payment_box;
+        private System.Windows.Forms.RichTextBox last_amount_payment_box;
         private System.Windows.Forms.Label last_amount_payment_label;
         private System.Windows.Forms.Panel base_debt_panel;
-        private System.Windows.Forms.TextBox base_debt_box;
+        private System.Windows.Forms.RichTextBox base_debt_box;
         private System.Windows.Forms.Label base_debt_label;
         private System.Windows.Forms.Panel number_due_panel;
-        private System.Windows.Forms.TextBox number_due_box;
+        private System.Windows.Forms.RichTextBox number_due_box;
         private System.Windows.Forms.Label number_due_label;
         private System.Windows.Forms.Panel aging_panel;
-        private System.Windows.Forms.TextBox aging_box;
+        private System.Windows.Forms.RichTextBox aging_box;
         private System.Windows.Forms.Label aging_label;
         private System.Windows.Forms.Panel name6_panel;
-        private System.Windows.Forms.TextBox name6_box2;
-        private System.Windows.Forms.TextBox name6_box1;
+        private System.Windows.Forms.RichTextBox name6_box2;
+        private System.Windows.Forms.RichTextBox name6_box1;
         private System.Windows.Forms.Label name6_label;
         private System.Windows.Forms.Panel name5_panel;
-        private System.Windows.Forms.TextBox name5_box2;
-        private System.Windows.Forms.TextBox name5_box1;
+        private System.Windows.Forms.RichTextBox name5_box2;
+        private System.Windows.Forms.RichTextBox name5_box1;
         private System.Windows.Forms.Label name5_label;
         private System.Windows.Forms.Panel name4_panel;
-        private System.Windows.Forms.TextBox name4_box2;
-        private System.Windows.Forms.TextBox name4_box1;
+        private System.Windows.Forms.RichTextBox name4_box2;
+        private System.Windows.Forms.RichTextBox name4_box1;
         private System.Windows.Forms.Label name4_label;
         private System.Windows.Forms.Panel name3_panel;
-        private System.Windows.Forms.TextBox name3_box2;
-        private System.Windows.Forms.TextBox name3_box1;
+        private System.Windows.Forms.RichTextBox name3_box2;
+        private System.Windows.Forms.RichTextBox name3_box1;
         private System.Windows.Forms.Label name3_label;
         private System.Windows.Forms.Panel name2_panel;
-        private System.Windows.Forms.TextBox name2_box2;
-        private System.Windows.Forms.TextBox name2_box1;
+        private System.Windows.Forms.RichTextBox name2_box2;
+        private System.Windows.Forms.RichTextBox name2_box1;
         private System.Windows.Forms.Label name2_label;
         private System.Windows.Forms.Panel name1_panel;
-        private System.Windows.Forms.TextBox name1_box2;
-        private System.Windows.Forms.TextBox name1_box1;
+        private System.Windows.Forms.RichTextBox name1_box2;
+        private System.Windows.Forms.RichTextBox name1_box1;
         private System.Windows.Forms.Label name1_label;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel;
