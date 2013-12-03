@@ -2498,12 +2498,12 @@ namespace CIC
             this.name6_box2.Text = data.ContainsKey("is_attr_PhoneNo6") ? data["is_attr_PhoneNo6"] : "";
             this.aging_box.Text = data.ContainsKey("is_attr_Aging") ? data["is_attr_Aging"] : "";
             this.number_due_box.Text = data.ContainsKey("is_attr_NumberDue") ? data["is_attr_NumberDue"] : "";
-            this.last_date_payment_box.Text = data.ContainsKey("is_attr_LastReceiveDatePayment") ? getDateTimeString( data["is_attr_LastReceiveDatePayment"]) : "";
+            this.last_date_payment_box.Text = data.ContainsKey("is_attr_LastReceiveDatePayment") ? getDateTimeString( data["is_attr_LastReceiveDatePayment"], oldFormat: global::CIC.Properties.Settings.Default.ServerDateFormat) : "";
             this.debt_status_box.Text = data.ContainsKey("is_attr_DebtStatus") ? data["is_attr_DebtStatus"] : "";
-            this.start_overdue_date_box.Text = data.ContainsKey("is_attr_StartOverDueDate") ? getDateTimeString( data["is_attr_StartOverDueDate"]) : "";
+            this.start_overdue_date_box.Text = data.ContainsKey("is_attr_StartOverDueDate") ? getDateTimeString( data["is_attr_StartOverDueDate"], oldFormat: global::CIC.Properties.Settings.Default.ServerDateFormat) : "";
             this.followup_status_box.Text = data.ContainsKey("is_attr_FollowupStatus") ? data["is_attr_FollowupStatus"] : "";
-            this.payment_appoint_box.Text = data.ContainsKey("is_attr_PaymentAppoint") ? getDateTimeString(data["is_attr_PaymentAppoint"]) : "";
-            this.date_callback_box.Text = data.ContainsKey("is_attr_DateAppointCallBack") ? getDateTimeString( data["is_attr_DateAppointCallBack"], destFormat: "dd/MM/yyyy HH:mm") : "";
+            this.payment_appoint_box.Text = data.ContainsKey("is_attr_PaymentAppoint") ? getDateTimeString(data["is_attr_PaymentAppoint"], oldFormat: global::CIC.Properties.Settings.Default.ServerDateFormat) : "";
+            this.date_callback_box.Text = data.ContainsKey("is_attr_DateAppointCallBack") ? getDateTimeString( data["is_attr_DateAppointCallBack"], oldFormat: global::CIC.Properties.Settings.Default.ServerDateTimeFormat, destFormat: "dd/MM/yyyy HH:mm") : "";
             this.callingNumber = data.ContainsKey("is_attr_numbertodial") ? data["is_attr_numbertodial"] : "";
 
             update_currency_on_dashboard(data);
