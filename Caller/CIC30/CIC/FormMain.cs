@@ -2875,6 +2875,9 @@ namespace CIC
 
         private void preview_call_state()
         {
+            if (this.current_state == FormMainState.PreviewCall)
+                return;
+
             reset_state();
             disconnect_button.Enabled = true;
             hold_button.Enabled = true;
