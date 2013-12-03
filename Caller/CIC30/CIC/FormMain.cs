@@ -2064,7 +2064,7 @@ namespace CIC
             {
                 if (IcWorkFlow != null && IcWorkFlow.LoginResult)
                 {
-                    if (this.ActiveDialerInteraction != null && this.current_state == FormMainState.PreviewCall)
+                    if (this.ActiveDialerInteraction != null)
                     {
                         if (ActiveConsultInteraction != null)
                         {
@@ -2093,7 +2093,7 @@ namespace CIC
                 }
                 else
                 {
-                    if (ActiveNormalInteraction != null && this.current_state == FormMainState.PreviewCall)
+                    if (ActiveNormalInteraction != null)
                     {
                         if (ActiveConsultInteraction != null)
                         {
