@@ -1755,6 +1755,7 @@ namespace CIC
                         break_requested = false;
                         break_granted = false;
                         this.endbreak_button.Enabled = false;
+                        this.isOnBreak = false;
                         this.state_info_label.Text = "Break ended. Waiting for a new call from workflow.";
                         log.Info(scope + "Complete.");
                     }
@@ -2686,7 +2687,10 @@ namespace CIC
                         log.Info("State Changed: Predictive");
                         break;
                     case FormMainState.Preview:
-                        preview_state();
+                        if (this.isOnBreak)
+                            break_state();
+                        else
+                            preview_state();
                         log.Info("State Changed: Preview");
                         break;
                     case FormMainState.Connected:
@@ -2944,6 +2948,7 @@ namespace CIC
 
             prev_state = current_state;
             current_state = FormMainState.Break;
+            this.isOnBreak = true;
         }
         
         private void break_requested_state()
@@ -2971,11 +2976,6 @@ namespace CIC
         private void disable_logout()
         {
             logout_workflow_button.Enabled = false;
-        }
-
-        private void enable_transfer()
-        {
-            transfer_button.Enabled = true;
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -3077,7 +3077,6 @@ namespace CIC
             log.Info(scope + "Starting.");
             //this.TransferPanelToolStripButton.Enabled = true;
             //this.RequestBreakToolStripButton.Visible = false;
-            enable_transfer();
             this.disable_break_request();
             log.Info(scope + "Completed.");
         }
@@ -4234,5 +4233,7 @@ namespace CIC
                 exit_button.BackgroundImage = CIC.Properties.Resources.disable_Icon_Exit;
             }
         }
+
+        public bool isOnBreak { get; set; }
     }
 }
