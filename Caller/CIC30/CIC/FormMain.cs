@@ -791,18 +791,6 @@ namespace CIC
                             }
                             this.StrConnectionState = ActiveNormalInteraction.State;
                             toolStripStatus.Text = this.StrConnectionState.ToString();
-                            if (ActiveNormalInteraction != null)
-                            {
-                                if (ActiveNormalInteraction.IsDisconnected)
-                                {
-                                    this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
-                                    ActiveNormalInteraction = this.GetAvailableInteractionFromList();
-                                }
-                                else
-                                {
-                                    // TODO: check if there's no blind transfer flag allow pickup
-                                }
-                            }
                             if (this.BlindTransferFlag)
                             {
                                 this.ResetActiveCallInfo();
@@ -810,6 +798,19 @@ namespace CIC
                             else
                             {
                                 this.ShowActiveCallInfo();
+                            }
+                            if (ActiveNormalInteraction != null)
+                            {
+                                if (ActiveNormalInteraction.IsDisconnected)
+                                {
+                                    this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
+                                    ActiveNormalInteraction = this.GetAvailableInteractionFromList();
+                                    this.reset_info_on_dashboard();
+                                }
+                                else
+                                {
+                                    // TODO: check if there's no blind transfer flag allow pickup
+                                }
                             }
                             break;
                         default:
