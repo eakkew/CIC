@@ -4021,8 +4021,8 @@ namespace CIC
         {
             string scope = "CIC::frmMain::FormMain_FormClosed()::";
             DisposeQueueWatcher();
-            DisposeSession();
             DisposeDialerSession();
+            DisposeSession();
             tryDisconnect();
             tryDisconnectAllInteractions();
             if (this.ActiveDialerInteraction != null)
