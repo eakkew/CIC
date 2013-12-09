@@ -2525,6 +2525,11 @@ namespace CIC
             update_currency_on_dashboard(data);
 
             state_info_label.Text = "Acquired information from workflow.";
+            if (data.ContainsKey("is_attr_STATUS") && data["is_attr_STATUS"].ToLower() == "complete")
+            {
+                this.break_button.Enabled = true;
+                state_info_label.Text = "Workflow Completed.";
+            }
             log.Info(scope + "Completed.");
         }
 
