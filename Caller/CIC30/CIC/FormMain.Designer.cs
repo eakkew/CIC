@@ -1201,9 +1201,9 @@
             this.timer_info.AutoSize = true;
             this.timer_info.Location = new System.Drawing.Point(18, 9);
             this.timer_info.Name = "timer_info";
-            this.timer_info.Size = new System.Drawing.Size(52, 13);
+            this.timer_info.Size = new System.Drawing.Size(95, 13);
             this.timer_info.TabIndex = 0;
-            this.timer_info.Text = "timer_info";
+            this.timer_info.Text = "Time until call : 0.0";
             // 
             // statusStrip1
             // 

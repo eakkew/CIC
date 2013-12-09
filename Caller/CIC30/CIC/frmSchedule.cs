@@ -56,15 +56,17 @@ namespace CIC
         private void save_button_Click(object sender, EventArgs e)
         {
             isCanceled = false;
-            if (!validateTime())
+            if (!validateTime() && !validatePhone())
             {
                 minute_combobox.ForeColor = Color.Red;
                 hour_combobox.ForeColor = Color.Red;
+                phone_box.ForeColor = Color.Red;
             }
             else
             {
                 minute_combobox.ForeColor = Color.Black;
                 hour_combobox.ForeColor = Color.Black;
+                phone_box.ForeColor = Color.Black;
                 this.Close();
             }
 
@@ -81,15 +83,17 @@ namespace CIC
             //scheduled = scheduled.AddMinutes(minute);
             scheduled = new DateTime(today.Year, today.Month, today.Day, hour, minute, 0);
 
-            if (validateTime())
+            if (validateTime() && validatePhone())
             {
                 minute_combobox.ForeColor = Color.Black;
                 hour_combobox.ForeColor = Color.Black;
+                this.save_button.Enabled = true;
             }
             else
             {
                 minute_combobox.ForeColor = Color.Red;
                 hour_combobox.ForeColor = Color.Red;
+                this.save_button.Enabled = false;
             }
         }
 
@@ -104,15 +108,17 @@ namespace CIC
             //scheduled = scheduled.AddMinutes(minute);
             scheduled = new DateTime(today.Year, today.Month, today.Day, hour, minute, 0);
 
-            if (validateTime())
+            if (validateTime() && validatePhone())
             {
                 minute_combobox.ForeColor = Color.Black;
                 hour_combobox.ForeColor = Color.Black;
+                this.save_button.Enabled = true;
             }
             else
             {
                 minute_combobox.ForeColor = Color.Red;
                 hour_combobox.ForeColor = Color.Red;
+                this.save_button.Enabled = false;
             }
         }
 
@@ -120,6 +126,11 @@ namespace CIC
         {
             DateTime today = DateTime.Now;
             return (scheduled > today && !isCanceled);
+        }
+
+        public bool validatePhone()
+        {
+            return Util.form_validation_telephone_number(phone_box.Text);
         }
 
         private void frmSchedule_FormClosed(object sender, FormClosedEventArgs e)
@@ -135,6 +146,20 @@ namespace CIC
         public DateTime getScheduledTime()
         {
             return scheduled;
+        }
+
+        private void phone_box_TextChanged(object sender, EventArgs e)
+        {
+            if (validateTime() && validatePhone())
+            {
+                phone_box.ForeColor = Color.Black;
+                this.save_button.Enabled = true;
+            }
+            else
+            {
+                phone_box.ForeColor = Color.Red;
+                this.save_button.Enabled = false;
+            }
         }
 
     }

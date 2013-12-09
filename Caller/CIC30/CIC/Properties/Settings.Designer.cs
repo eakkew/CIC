@@ -913,5 +913,17 @@ namespace CIC.Properties {
                 return ((string)(this["TooManyBadLoginMsg"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("yyyy-dd-MM HH:mm")]
+        public string ServerDateTimeFormat {
+            get {
+                return ((string)(this["ServerDateTimeFormat"]));
+            }
+            set {
+                this["ServerDateTimeFormat"] = value;
+            }
+        }
     }
 }

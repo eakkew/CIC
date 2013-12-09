@@ -806,6 +806,7 @@ namespace CIC
                                     this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
                                     ActiveNormalInteraction = this.GetAvailableInteractionFromList();
                                     this.reset_info_on_dashboard();
+                                    this.BeginInvoke(new MethodInvoker(disable_when_line_disconnect));
                                 }
                                 else
                                 {
@@ -1680,7 +1681,7 @@ namespace CIC
 
         private void manual_call_button_Click(object sender, EventArgs e)
         {
-            if (IcWorkFlow == null || !IcWorkFlow.LoginResult)
+            if (IcWorkFlow == null || !IcWorkFlow.LoginResult || this.isOnBreak)
             {
                 frmManualCall manualCall = frmManualCall.getInstance();
                 manualCall.ShowDialog();
@@ -2498,12 +2499,21 @@ namespace CIC
             this.name6_box2.Text = data.ContainsKey("is_attr_PhoneNo6") ? data["is_attr_PhoneNo6"] : "";
             this.aging_box.Text = data.ContainsKey("is_attr_Aging") ? data["is_attr_Aging"] : "";
             this.number_due_box.Text = data.ContainsKey("is_attr_NumberDue") ? data["is_attr_NumberDue"] : "";
-            this.last_date_payment_box.Text = data.ContainsKey("is_attr_LastReceiveDatePayment") ? getDateTimeString( data["is_attr_LastReceiveDatePayment"], oldFormat: global::CIC.Properties.Settings.Default.ServerDateFormat) : "";
+            this.last_date_payment_box.Text = data.ContainsKey("is_attr_LastReceiveDatePayment") ? getDateTimeString(
+                    data["is_attr_LastReceiveDatePayment"], (string)global::CIC.Properties.Settings.Default["ServerDateTimeFormat"]
+                ) : "";
             this.debt_status_box.Text = data.ContainsKey("is_attr_DebtStatus") ? data["is_attr_DebtStatus"] : "";
-            this.start_overdue_date_box.Text = data.ContainsKey("is_attr_StartOverDueDate") ? getDateTimeString( data["is_attr_StartOverDueDate"], oldFormat: global::CIC.Properties.Settings.Default.ServerDateFormat) : "";
+            this.start_overdue_date_box.Text = data.ContainsKey("is_attr_StartOverDueDate") ? getDateTimeString(
+                    data["is_attr_StartOverDueDate"], (string)global::CIC.Properties.Settings.Default["ServerDateTimeFormat"]
+                ) : "";
             this.followup_status_box.Text = data.ContainsKey("is_attr_FollowupStatus") ? data["is_attr_FollowupStatus"] : "";
-            this.payment_appoint_box.Text = data.ContainsKey("is_attr_PaymentAppoint") ? getDateTimeString(data["is_attr_PaymentAppoint"], oldFormat: global::CIC.Properties.Settings.Default.ServerDateFormat) : "";
-            this.date_callback_box.Text = data.ContainsKey("is_attr_DateAppointCallBack") ? getDateTimeString( data["is_attr_DateAppointCallBack"], oldFormat: global::CIC.Properties.Settings.Default.ServerDateTimeFormat, destFormat: "dd/MM/yyyy HH:mm") : "";
+            this.payment_appoint_box.Text = data.ContainsKey("is_attr_PaymentAppoint") ? getDateTimeString(
+                    data["is_attr_PaymentAppoint"], (string)global::CIC.Properties.Settings.Default["ServerDateTimeFormat"]
+                ) : "";
+            this.date_callback_box.Text = data.ContainsKey("is_attr_DateAppointCallBack") ? getDateTimeString(
+                    data["is_attr_DateAppointCallBack"], oldFormat: (string)global::CIC.Properties.Settings.Default["ServerDateTimeFormat"],
+                    destFormat: "dd/MM/yyyy HH:mm"
+                ) : "";
             this.callingNumber = data.ContainsKey("is_attr_numbertodial") ? data["is_attr_numbertodial"] : "";
 
             update_currency_on_dashboard(data);
@@ -2978,6 +2988,12 @@ namespace CIC
         private void disable_logout()
         {
             logout_workflow_button.Enabled = false;
+        }
+
+        private void disable_when_line_disconnect()
+        {
+            conference_button.Enabled = false;
+            transfer_button.Enabled = false;
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -3592,15 +3608,25 @@ namespace CIC
                             }
                             if (InteractionList != null)
                             {
-                                foreach (ININ.IceLib.Interactions.Interaction CurrentInteraction in InteractionList)
+                                if (ActiveDialerInteraction.IsHeld)
                                 {
-                                    if (CurrentInteraction.IsHeld)
+                                    log.Info(scope + "Starting Normal Interaction Pickup");
+                                    ActiveNormalInteraction = ActiveDialerInteraction;
+                                    ActiveNormalInteraction.Pickup();
+                                    log.Info(scope + "Completed Normal Interaction Pickup");
+                                }
+                                else
+                                {
+                                    foreach (ININ.IceLib.Interactions.Interaction CurrentInteraction in InteractionList)
                                     {
-                                        log.Info(scope + "Starting Normal Interaction Pickup");
-                                        ActiveNormalInteraction = CurrentInteraction;
-                                        ActiveNormalInteraction.Pickup();
-                                        log.Info(scope + "Completed Normal Interaction Pickup");
-                                        break;
+                                        if (CurrentInteraction.IsHeld)
+                                        {
+                                            log.Info(scope + "Starting Normal Interaction Pickup");
+                                            ActiveNormalInteraction = CurrentInteraction;
+                                            ActiveNormalInteraction.Pickup();
+                                            log.Info(scope + "Completed Normal Interaction Pickup");
+                                            break;
+                                        }
                                     }
                                 }
                             }
@@ -3751,7 +3777,8 @@ namespace CIC
                             state_change(FormMainState.Break);
                             break;
                     }
-                    
+                    this.reset_info_on_dashboard();
+                    this.break_requested = false;
                     log.Info(scope + "Completed.");
                 }
                 catch (System.Exception ex)
@@ -3790,6 +3817,7 @@ namespace CIC
                                 global::CIC.Properties.Settings.Default.CompletedWorkflowMsg,
                                 "System Info.", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             reset_info_on_dashboard();
+                            
                             break;
                         default:
                             if (ActiveNormalInteraction != null)

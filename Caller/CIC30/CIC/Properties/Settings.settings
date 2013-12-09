@@ -290,5 +290,8 @@
     <Setting Name="TooManyBadLoginMsg" Type="System.String" Scope="Application">
       <Value Profile="(Default)">User ID หรือ Password ผิดเกิน 3 ครั้ง กรุณาติดต่อ Admin ระบบ</Value>
     </Setting>
+    <Setting Name="ServerDateTimeFormat" Type="System.String" Scope="User">
+      <Value Profile="(Default)">yyyy-dd-MM HH:mm</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
