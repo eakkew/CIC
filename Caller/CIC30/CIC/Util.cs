@@ -87,8 +87,8 @@ namespace CIC
 
         public static bool form_validation_telephone_number(string number)
         {
-            // TODO: make config file for regex to validate 4digit number, # and 4 digit number, and 10 or 11 digit
-            Regex r = new Regex(@"^[\d]+\d$"); // extension      -
+            // validate 4digit number, # and 4 digit number, and 10 or 11 digit
+            Regex r = new Regex(@"^[\d]+#?\d+$"); // extension      -
             Match m = r.Match(number);
             return m.Success && number != "";
         }
