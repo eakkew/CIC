@@ -1264,6 +1264,10 @@ namespace CIC
                         global::CIC.Program.IcStation.ConnectionTimes = 0;
                         this.IsActiveConnection = true;       //Set to ActiveConnection.
                         //this.SetStatusBarStripMsg();
+                        if (IcWorkFlow != null && !IcWorkFlow.LoginResult)
+                        {
+                            this.BeginInvoke(new MethodInvoker(login_workflow));
+                        }
                     }
                     try
                     {
@@ -1999,6 +2003,7 @@ namespace CIC
                             }
                             log.Info(scope + "Starting Normal Interaction Make New Conference");
                             this.NormalInterationManager.MakeNewConferenceAsync(TmpInteraction, MakeNewConferenceCompleted, null);
+                            disable_when_line_disconnect();
                             log.Info(scope + "Complete Normal Interaction Make New Conference");
                         }
                     }
@@ -2024,6 +2029,7 @@ namespace CIC
                             }
                             log.Info(scope + "Starting Normal Interaction Make New Conference");
                             this.NormalInterationManager.MakeNewConferenceAsync(TmpInteraction, MakeNewConferenceCompleted, null);
+                            disable_when_line_disconnect();
                             log.Info(scope + "Complete Normal Interaction Make New Conference");
                         }
                     }
@@ -2518,6 +2524,7 @@ namespace CIC
 
             update_currency_on_dashboard(data);
 
+            state_info_label.Text = "Acquired information from workflow.";
             log.Info(scope + "Completed.");
         }
 
@@ -2865,7 +2872,6 @@ namespace CIC
 
             prev_state = current_state;
             current_state = FormMainState.Preview;
-            state_info_label.Text = "Acquired information from workflow.";
         }
 
         private void predictive_state()
@@ -2878,7 +2884,6 @@ namespace CIC
 
             prev_state = current_state;
             current_state = FormMainState.Predictive;
-            state_info_label.Text = "Acquired information from workflow.";
         }
 
         private void calling_state()

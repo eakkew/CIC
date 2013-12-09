@@ -30,6 +30,7 @@ namespace CIC
             ext_number_box.Text = "";
             call_button.Enabled = false;
             conference_button.Enabled = false;
+            this.ActiveControl = ext_number_box;
         }
 
         private void call_button_Click(object sender, EventArgs e)
