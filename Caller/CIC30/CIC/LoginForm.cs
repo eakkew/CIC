@@ -23,6 +23,7 @@ namespace CIC
     private int SoftPhoneRegistryIndex = 0;
     private string StrSoftPhoneKey = "software\\Interactive Intelligence\\SIP Soft Phone";
     private string SoftPhoneStationNameKey = "Station";
+    private string WrongErrorMsgFromServer = ""; // @TODO: insert the error Msg from server
 
     private int wrongLoginAttempt = 0; // use to check how many consecutively login with wrong pair of username and password
 
@@ -402,20 +403,29 @@ namespace CIC
         this.UpdateStationInfoControls();
         this.LoginButton.Enabled = true;
         this.LoginButton.Focus();
-        if (++wrongLoginAttempt < 3)
+        
+        // check if either username or password is wrong.
+        if (e.Error.Message.Trim() == WrongErrorMsgFromServer)
         {
-            //this.lblLogInStatusMsg.Text = e.Error.Message.Trim();
-            this.lblLogInStatusMsg.Text = global::CIC.Properties.Settings.Default.BadLoginMsg;
+            if (++wrongLoginAttempt < 3)
+            {
+                //this.lblLogInStatusMsg.Text = e.Error.Message.Trim();
+                this.lblLogInStatusMsg.Text = global::CIC.Properties.Settings.Default.BadLoginMsg;
+            }
+            else 
+            {
+                LoginButton.Enabled = false;
+                this.lblLogInStatusMsg.Text = global::CIC.Properties.Settings.Default.TooManyBadLoginMsg;
+            }
         }
-        else
+        else 
         {
-            LoginButton.Enabled = false;
-            this.lblLogInStatusMsg.Text = global::CIC.Properties.Settings.Default.TooManyBadLoginMsg;
+            this.lblLogInStatusMsg.Text = e.Error.Message.Trim();
         }
       }
       else
       {
-          wrongLoginAttempt = 0; // reset wrong attmpt
+        wrongLoginAttempt = 0; // reset wrong attmpt
 
         this.lblLogInStatusMsg.Text = "Log In Completed!.";
         eDescription = "CIC::frmICStation::frmICStation()::Connected to session manager successfully";
