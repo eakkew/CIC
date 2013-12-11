@@ -409,6 +409,7 @@ namespace CIC
         }
         else
         {
+            LoginButton.Enabled = false;
             this.lblLogInStatusMsg.Text = global::CIC.Properties.Settings.Default.TooManyBadLoginMsg;
         }
       }
