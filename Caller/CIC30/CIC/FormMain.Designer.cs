@@ -148,6 +148,7 @@
             this.logout_button_label = new System.Windows.Forms.Label();
             this.exit_button_label = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.callingTimer = new System.Windows.Forms.Timer(this.components);
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
@@ -1386,6 +1387,10 @@
             this.panel1.Size = new System.Drawing.Size(1245, 20);
             this.panel1.TabIndex = 9;
             // 
+            // callingTimer
+            // 
+            this.callingTimer.Tick += new System.EventHandler(this.callingTimer_Tick);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1588,6 +1593,7 @@
         private System.Windows.Forms.Label toolStripCampaignID;
         private System.Windows.Forms.Label toolStripWorkflow;
         private System.Windows.Forms.Label toolStripCampaignIDLabel;
+        private System.Windows.Forms.Timer callingTimer;
 
     }
 }

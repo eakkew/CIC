@@ -70,6 +70,7 @@ namespace CIC
         private string cachedURI { get; set; }
         private string AlertSoundFileType { get; set; }
         private float timer = global::CIC.Properties.Settings.Default.CountdownTime;
+        private float callingTime = global::CIC.Properties.Settings.Default.CountdownTime;
 
 
         private bool IsPlayAlerting { get; set; }
@@ -787,7 +788,10 @@ namespace CIC
                                 this.BeginInvoke(new MethodInvoker(update_calling_info));
                                 if (IcWorkFlow != null && IcWorkFlow.LoginResult &&
                                     !isConsulting)
+                                {
                                     this.BeginInvoke(new MethodInvoker(CrmScreenPop));
+                                    this.BeginInvoke(new MethodInvoker(reset_call_timer));
+                                }
                             }
                             this.StrConnectionState = ActiveNormalInteraction.State;
                             toolStripStatus.Text = this.StrConnectionState.ToString();
@@ -1387,6 +1391,21 @@ namespace CIC
         {
             reset_timer();
             previewCallTimer.Start();
+        }
+
+        private void reset_call_timer()
+        {
+            if (!callingTimer.Enabled)
+                callingTimer.Enabled = true;
+            callingTimer.Stop();
+            callingTime = global::CIC.Properties.Settings.Default.CallingWaitTime;
+            log.Info("Calling time is reset");
+        }
+
+        private void restart_call_timer()
+        {
+            reset_call_timer();
+            callingTimer.Start();
         }
 
         public void login_workflow()
@@ -2939,7 +2958,7 @@ namespace CIC
         {
             reset_state();
             exit_button.Enabled = true;
-            // calling a new number
+
             reset_timer();
             prev_state = current_state;
             current_state = FormMainState.Disconnected;
@@ -3016,6 +3035,17 @@ namespace CIC
                 
                 // make a call or pickup
                 placecall(sender, e);
+            }
+        }
+
+        private void callingTimer_Tick(object sender, EventArgs e)
+        {
+            timer -= (float)callingTimer.Interval / 1000;
+            if (timer <= 0)
+            {
+                reset_call_timer();
+
+                disconnect_button_Click(sender, e);
             }
         }
 
@@ -3942,6 +3972,7 @@ namespace CIC
                             log.Info(scope + "Starting Dialer Interaction Place Preview Call");
                             this.ActiveDialerInteraction.PlacePreviewCallAsync(MakePreviewCallComplete, null);
                             log.Info(scope + "Completed Dialer Interaction Place Preview Call");
+                            restart_call_timer();
                             this.toolStripStatus.Text = (this.ActiveDialerInteraction != null) ?
                                 this.ActiveDialerInteraction.State.ToString() + ":" +
                                 this.ActiveDialerInteraction.StateDescription.ToString() : "N/A";
@@ -4275,5 +4306,6 @@ namespace CIC
         }
 
         public bool isOnBreak { get; set; }
+
     }
 }

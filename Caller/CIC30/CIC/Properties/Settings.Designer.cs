@@ -925,5 +925,14 @@ namespace CIC.Properties {
                 this["ServerDateTimeFormat"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
+        public float CallingWaitTime {
+            get {
+                return ((float)(this["CallingWaitTime"]));
+            }
+        }
     }
 }
