@@ -323,7 +323,6 @@
     <Compile Include="ScheduleCallbackForm.Designer.cs">
       <DependentUpon>ScheduleCallbackForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Settings.cs" />
     <Compile Include="UserData.cs" />
     <Compile Include="UserDataEventArgs.cs" />
     <Compile Include="UserStatusGridView.cs">

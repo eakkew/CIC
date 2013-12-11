@@ -55,6 +55,7 @@ namespace CIC
             {
                 this.finishcode_combobox.SelectedIndex = 0;
             }
+            this.ActiveControl = finishcode_combobox;
         }
 
         private void save_button_Click(object sender, EventArgs e)

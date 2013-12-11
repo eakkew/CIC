@@ -32,6 +32,7 @@ namespace CIC
         {
             InitializeComponent();
             call_button.Enabled = false;
+            this.ActiveControl = phone_box;
         }
 
         private void cancel_button_Click(object sender, EventArgs e)
@@ -65,7 +66,7 @@ namespace CIC
         }
 
         /*
-         * TODO : Change function name to validate textbox
+         * TODO : Change function name to validate RichTextBox
          */
         private bool CheckEmptyPhoneNumber()
         {

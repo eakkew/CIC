@@ -56,6 +56,7 @@ namespace CIC
                     menu.Enabled = false;
                     this.workflow_combobox.Items.Add(menu);
                 }
+                this.ActiveControl = workflow_combobox;
                 Tracing.TraceStatus(scope + "Completed.");
             }
             catch (ININ.IceLib.IceLibException ex)
@@ -87,7 +88,7 @@ namespace CIC
 
         private void frmWorkflow_FormClosed(object sender, FormClosedEventArgs e)
         {
-
+            workflow_combobox.Items.Clear();
         }
     }
 }
