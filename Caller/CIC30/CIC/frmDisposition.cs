@@ -85,6 +85,7 @@ namespace CIC
             ReasonCode sReasoncode = Util.GetReasonCode(this.finishcode_combobox.Text);
             callParameter callback = new callParameter();
 
+            // check finish code for conditional scheduling
             if (this.finishcode_combobox.Text.ToLower() == "call loss" || sReasoncode == ReasonCode.WrongParty)
             {
                 callback.param = new CallCompletionParameters(
@@ -125,19 +126,19 @@ namespace CIC
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            //timer -= (float)previewCallTimer.Interval / 1000;
-            elaspedTime += (float)timer1.Interval / 1000;
-            if (elaspedTime >= global::CIC.Properties.Settings.Default.DispositionTimeOut)
-            {
-                callParameter callback = new callParameter();
-                callback.param = new CallCompletionParameters(ReasonCode.Success, "Success");
-                Program.MainDashboard.disposition_invoke(callback, e);
-                Program.MainDashboard.request_break();
+            ////timer -= (float)previewCallTimer.Interval / 1000;
+            //elaspedTime += (float)timer1.Interval / 1000;
+            //if (elaspedTime >= global::CIC.Properties.Settings.Default.DispositionTimeOut)
+            //{
+            //    callParameter callback = new callParameter();
+            //    callback.param = new CallCompletionParameters(ReasonCode.Success, "Success");
+            //    Program.MainDashboard.disposition_invoke(callback, e);
+            //    Program.MainDashboard.request_break();
 
-                // cleanup
-                timer1.Stop();
-                elaspedTime = 0.0f;
-            }
+            //    // cleanup
+            //    timer1.Stop();
+            //    elaspedTime = 0.0f;
+            //}
         }
     }
 }
