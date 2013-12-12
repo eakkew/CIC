@@ -149,6 +149,11 @@ namespace CIC
             return scheduled;
         }
 
+        public string getNumber()
+        {
+            return this.phone_box.Text;
+        }
+
         private void phone_box_TextChanged(object sender, EventArgs e)
         {
             if (validateTime() && validatePhone())

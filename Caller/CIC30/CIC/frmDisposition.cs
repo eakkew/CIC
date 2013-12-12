@@ -11,6 +11,12 @@ using System.Windows.Forms;
 
 namespace CIC
 {
+    struct callParameter
+    {
+        public CallCompletionParameters param;
+        public string number;
+    }
+
     public partial class frmDisposition : Form
     {
         private DataSet DsReasonCode;
@@ -62,17 +68,18 @@ namespace CIC
         {
             // save data and callback to main form to save stuff
             ReasonCode sReasoncode = Util.GetReasonCode(this.finishcode_combobox.Text);
-            CallCompletionParameters param ;
+            callParameter callback = new callParameter();
             if (sReasoncode == ReasonCode.Scheduled)
             {
                 frmSchedule schedule = frmSchedule.getInstance(dialerNumber);
                 schedule.ShowDialog();
                 if (schedule.validateTime())
                 {
-                    param = new CallCompletionParameters(
+                    callback.param = new CallCompletionParameters(
                         sReasoncode, this.finishcode_combobox.Text, 
                         schedule.getScheduledTime(), this.IC_Session.UserId, false
                     );
+                    callback.number = schedule.getNumber();
                 }
                 else
                 {
@@ -81,10 +88,10 @@ namespace CIC
             }
             else
             {
-                param = new ININ.IceLib.Dialer.CallCompletionParameters(
+                callback.param = new ININ.IceLib.Dialer.CallCompletionParameters(
                     sReasoncode, sReasoncode.ToString());
             }
-            Program.MainDashboard.disposition_invoke(param, e);
+            Program.MainDashboard.disposition_invoke(callback, e);
             this.Close();
         }
 

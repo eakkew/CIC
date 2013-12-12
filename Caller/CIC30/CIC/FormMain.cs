@@ -1895,7 +1895,12 @@ namespace CIC
                                 }
 
                                 log.Info(scope + "Starting Dialer Interaction CallComplete");
-                                this.ActiveDialerInteraction.CallComplete((CallCompletionParameters)sender);
+                                callParameter callparam = (callParameter)sender;
+                                if (callparam.number != "")
+                                {
+                                    this.ActiveDialerInteraction.SetStringAttribute("is_attr_numbertodial", callparam.number);
+                                }
+                                this.ActiveDialerInteraction.CallComplete(callparam.param);
                                 log.Info(scope + "Completed Dialer Interaction CallComplete");
 
                                 this.reset_info_on_dashboard();
@@ -3040,13 +3045,13 @@ namespace CIC
 
         private void callingTimer_Tick(object sender, EventArgs e)
         {
-            timer -= (float)callingTimer.Interval / 1000;
-            if (timer <= 0)
-            {
-                reset_call_timer();
+            //timer -= (float)callingTimer.Interval / 1000;
+            //if (timer <= 0)
+            //{
+            //    reset_call_timer();
 
-                disconnect_button_Click(sender, e);
-            }
+            //    disconnect_button_Click(sender, e);
+            //}
         }
 
         public void MakePreviewCallComplete(object sender, AsyncCompletedEventArgs e)
