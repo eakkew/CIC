@@ -111,7 +111,7 @@ namespace CIC
             ExitFlag = false;
             isConsulting = false;
             InitializeComponent();
-            this.Text = "Outbound Telephony Dialer Client v.1.0.20131212c";
+            this.Text = "Outbound Telephony Dialer Client v.1.0.20131212d";
             state_change(FormMainState.Disconnected);
             InitializeSession();
         }
@@ -1467,7 +1467,7 @@ namespace CIC
                     this.current_state == FormMainState.ConferenceCall)
                 {
                     frmDisposition disposition = frmDisposition.getInstance(
-                        this.IC_Session, this.GetDialerNumber()); //new frmDisposition();
+                        this.IC_Session, this.GetDialerNumber(), this.toolStripCallTypeLabel.Text); //new frmDisposition();
                     disposition.ShowDialog();
                 }
 

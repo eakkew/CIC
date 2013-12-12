@@ -299,5 +299,14 @@
     <Setting Name="DispositionTimeOut" Type="System.Single" Scope="Application">
       <Value Profile="(Default)">30</Value>
     </Setting>
+    <Setting Name="PredictiveReasonCode" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">ic_reason_code.xml</Value>
+    </Setting>
+    <Setting Name="PreviewReasonCode" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">ic_reason_code.xml</Value>
+    </Setting>
+    <Setting Name="PowerReasonCode" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">ic_reason_code.xml</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

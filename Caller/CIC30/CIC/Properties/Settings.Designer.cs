@@ -943,5 +943,32 @@ namespace CIC.Properties {
                 return ((float)(this["DispositionTimeOut"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("ic_reason_code.xml")]
+        public string PredictiveReasonCode {
+            get {
+                return ((string)(this["PredictiveReasonCode"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("ic_reason_code.xml")]
+        public string PreviewReasonCode {
+            get {
+                return ((string)(this["PreviewReasonCode"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("ic_reason_code.xml")]
+        public string PowerReasonCode {
+            get {
+                return ((string)(this["PowerReasonCode"]));
+            }
+        }
     }
 }

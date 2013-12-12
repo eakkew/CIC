@@ -26,16 +26,16 @@ namespace CIC
         private Session IC_Session;
         private float elaspedTime;
 
-        public static frmDisposition getInstance(Session session, string number)
+        public static frmDisposition getInstance(Session session, string number, string calltype = "preview")
         {
             if (instance == null || instance.IsDisposed)
             {
-                instance = new frmDisposition(session, number);
+                instance = new frmDisposition(session, number, calltype.ToLower());
             }
             return instance;
         }
 
-        private frmDisposition(Session session, string number)
+        private frmDisposition(Session session, string number, string calltype)
         {
             InitializeComponent();
             // load up finish code
@@ -44,7 +44,20 @@ namespace CIC
             this.timer1.Start();
             elaspedTime = 0.0f;
             this.DsReasonCode = new System.Data.DataSet();
-            string DsFile = Program.ApplicationPath + "\\ic_reason_code.xml";
+            string DsFile = Program.ApplicationPath + "\\";
+            if (calltype == "predictive")
+            {
+                DsFile += global::CIC.Properties.Settings.Default.PredictiveReasonCode;
+            }
+            else if (calltype == "power")
+            {
+                DsFile += global::CIC.Properties.Settings.Default.PowerReasonCode;
+            }
+            else
+            {
+                DsFile += global::CIC.Properties.Settings.Default.PreviewReasonCode;
+            }
+
             if (System.IO.File.Exists(DsFile) == true)
             {
                 this.DsReasonCode.ReadXml(DsFile, XmlReadMode.InferSchema);
