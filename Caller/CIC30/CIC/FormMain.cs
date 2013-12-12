@@ -1417,6 +1417,7 @@ namespace CIC
         private void FormMain_Load(object sender, EventArgs e)
         {
             previewCallTimer.Enabled = false;
+            toolStripUsernameLabel.Text = global::CIC.Properties.Settings.Default.UserId;
         }
 
         private void workflow_button_Click(object sender, EventArgs e)

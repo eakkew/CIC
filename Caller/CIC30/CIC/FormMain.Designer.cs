@@ -149,6 +149,8 @@
             this.exit_button_label = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.callingTimer = new System.Windows.Forms.Timer(this.components);
+            this.toolStripUsername = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripUsernameLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
@@ -1213,7 +1215,9 @@
             this.toolStripStatusLabel,
             this.toolStripStatus,
             this.toolStripDirection,
-            this.toolStripDirectionLabel});
+            this.toolStripDirectionLabel,
+            this.toolStripUsername,
+            this.toolStripUsernameLabel});
             this.statusStrip1.Location = new System.Drawing.Point(0, 562);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(1274, 22);
@@ -1390,6 +1394,18 @@
             // callingTimer
             // 
             this.callingTimer.Tick += new System.EventHandler(this.callingTimer_Tick);
+            // 
+            // toolStripUsername
+            // 
+            this.toolStripUsername.Name = "toolStripUsername";
+            this.toolStripUsername.Size = new System.Drawing.Size(63, 17);
+            this.toolStripUsername.Text = "Username:";
+            // 
+            // toolStripUsernameLabel
+            // 
+            this.toolStripUsernameLabel.Name = "toolStripUsernameLabel";
+            this.toolStripUsernameLabel.Size = new System.Drawing.Size(64, 17);
+            this.toolStripUsernameLabel.Text = "loginname";
             // 
             // FormMain
             // 
@@ -1594,6 +1610,8 @@
         private System.Windows.Forms.Label toolStripWorkflow;
         private System.Windows.Forms.Label toolStripCampaignIDLabel;
         private System.Windows.Forms.Timer callingTimer;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripUsername;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripUsernameLabel;
 
     }
 }
