@@ -28,10 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmDisposition));
             this.save_button = new System.Windows.Forms.Button();
             this.finishcode_label = new System.Windows.Forms.Label();
             this.finishcode_combobox = new System.Windows.Forms.ComboBox();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // save_button
@@ -61,6 +63,10 @@
             this.finishcode_combobox.Size = new System.Drawing.Size(230, 21);
             this.finishcode_combobox.TabIndex = 2;
             // 
+            // timer1
+            // 
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // frmDisposition
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -88,5 +94,6 @@
         private System.Windows.Forms.Button save_button;
         private System.Windows.Forms.Label finishcode_label;
         private System.Windows.Forms.ComboBox finishcode_combobox;
+        private System.Windows.Forms.Timer timer1;
     }
 }

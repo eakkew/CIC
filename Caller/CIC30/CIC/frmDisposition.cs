@@ -24,13 +24,13 @@ namespace CIC
         private static frmDisposition instance = null;
         private string dialerNumber;
         private Session IC_Session;
+        private float elaspedTime;
 
         public static frmDisposition getInstance(Session session, string number)
         {
             if (instance == null || instance.IsDisposed)
             {
                 instance = new frmDisposition(session, number);
-
             }
             return instance;
         }
@@ -41,6 +41,8 @@ namespace CIC
             // load up finish code
             this.dialerNumber = number;
             this.IC_Session = session;
+            this.timer1.Start();
+            elaspedTime = 0.0f;
             this.DsReasonCode = new System.Data.DataSet();
             string DsFile = Program.ApplicationPath + "\\ic_reason_code.xml";
             if (System.IO.File.Exists(DsFile) == true)
@@ -99,6 +101,23 @@ namespace CIC
         {
             // message FormMain to change the flow accordingly
             // some finish code needs to open a schedule callback form
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            //timer -= (float)previewCallTimer.Interval / 1000;
+            elaspedTime += (float)timer1.Interval / 1000;
+            if (elaspedTime >= global::CIC.Properties.Settings.Default.DispositionTimeOut)
+            {
+                callParameter callback = new callParameter();
+                callback.param = new CallCompletionParameters(ReasonCode.Success, "Success");
+                Program.MainDashboard.disposition_invoke(callback, e);
+                Program.MainDashboard.request_break();
+
+                // cleanup
+                timer1.Stop();
+                elaspedTime = 0.0f;
+            }
         }
     }
 }

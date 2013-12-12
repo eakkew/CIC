@@ -111,7 +111,7 @@ namespace CIC
             ExitFlag = false;
             isConsulting = false;
             InitializeComponent();
-            this.Text = "Outbound Telephony Dialer Client v.1.0.20131212b";
+            this.Text = "Outbound Telephony Dialer Client v.1.0.20131212c";
             state_change(FormMainState.Disconnected);
             InitializeSession();
         }
@@ -1713,6 +1713,23 @@ namespace CIC
             else
             {
                 this.manual_call_button.Enabled = false;
+            }
+        }
+
+        public void request_break()
+        {
+            string scope = "CIC::FormMain::request_break()::";
+            if (this.InvokeRequired)
+            {
+                this.BeginInvoke(new MethodInvoker(request_break));
+            }
+            else
+            {
+                log.Info(scope + "Starting");
+                log.Info(scope + "Starting Dialer Interaction Request Break");
+                this.ActiveDialerInteraction.DialerSession.RequestBreak();
+                log.Info(scope + "Completed Dialer Interaction Request Break");
+                log.Info(scope + "Completed");
             }
         }
 

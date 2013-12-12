@@ -934,5 +934,14 @@ namespace CIC.Properties {
                 return ((float)(this["CallingWaitTime"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
+        public float DispositionTimeOut {
+            get {
+                return ((float)(this["DispositionTimeOut"]));
+            }
+        }
     }
 }

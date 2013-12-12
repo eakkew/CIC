@@ -23,7 +23,7 @@ namespace CIC
     private int SoftPhoneRegistryIndex = 0;
     private string StrSoftPhoneKey = "software\\Interactive Intelligence\\SIP Soft Phone";
     private string SoftPhoneStationNameKey = "Station";
-    private string WrongErrorMsgFromServer = ""; // @TODO: insert the error Msg from server
+    private string WrongErrorMsgFromServer = "Your username and/or password is invalid.";
 
     private int wrongLoginAttempt = 0; // use to check how many consecutively login with wrong pair of username and password
 
