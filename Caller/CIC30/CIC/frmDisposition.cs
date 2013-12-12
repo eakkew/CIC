@@ -49,7 +49,7 @@ namespace CIC
             {
                 DsFile += global::CIC.Properties.Settings.Default.PredictiveReasonCode;
             }
-            else if (calltype == "power")
+            else if (calltype == "power" || calltype == "powered")
             {
                 DsFile += global::CIC.Properties.Settings.Default.PowerReasonCode;
             }
