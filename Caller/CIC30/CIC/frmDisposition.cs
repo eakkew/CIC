@@ -120,8 +120,7 @@ namespace CIC
 
         private void frmDisposition_FormClosed(object sender, FormClosedEventArgs e)
         {
-            // message FormMain to change the flow accordingly
-            // some finish code needs to open a schedule callback form
+
         }
 
         private void timer1_Tick(object sender, EventArgs e)
