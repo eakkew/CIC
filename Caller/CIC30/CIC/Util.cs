@@ -93,11 +93,21 @@ namespace CIC
             return m.Success && number != "";
         }
 
+        public static DateTime getDateTimeNowPlusOne()
+        {
+            DateTime ret = DateTime.Now;
+
+            return ret.AddMinutes(1);
+        }
+
         public static ReasonCode GetReasonCode(string sFinishcode)
         {
             ININ.IceLib.Dialer.ReasonCode sRet = 0;
             switch (sFinishcode.ToLower().Trim())
             {
+                case "call loss":
+                    sRet = ReasonCode.Scheduled;
+                    break;
                 case "busy":
                     sRet = ReasonCode.Busy;
                     break;

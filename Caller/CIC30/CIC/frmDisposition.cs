@@ -84,7 +84,15 @@ namespace CIC
             // save data and callback to main form to save stuff
             ReasonCode sReasoncode = Util.GetReasonCode(this.finishcode_combobox.Text);
             callParameter callback = new callParameter();
-            if (sReasoncode == ReasonCode.Scheduled)
+
+            if (this.finishcode_combobox.Text.ToLower() == "call loss" || sReasoncode == ReasonCode.WrongParty)
+            {
+                callback.param = new CallCompletionParameters(
+                    sReasoncode, this.finishcode_combobox.Text,
+                    Util.getDateTimeNowPlusOne() , this.IC_Session.UserId, false
+                );
+            }
+            else if (sReasoncode == ReasonCode.Scheduled || sReasoncode == ReasonCode.SIT)
             {
                 frmSchedule schedule = frmSchedule.getInstance(dialerNumber);
                 schedule.ShowDialog();
