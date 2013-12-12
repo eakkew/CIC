@@ -110,7 +110,8 @@ namespace CIC
         {
             ExitFlag = false;
             isConsulting = false;
-            InitializeComponent(); 
+            InitializeComponent();
+            this.Text = "Outbound Telephony Dialer Client v.1.0.20131212b";
             state_change(FormMainState.Disconnected);
             InitializeSession();
         }

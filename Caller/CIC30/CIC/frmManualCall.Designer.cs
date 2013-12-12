@@ -47,7 +47,7 @@
             // phone_box
             // 
             this.phone_box.Location = new System.Drawing.Point(87, 26);
-            this.phone_box.MaxLength = 11;
+            this.phone_box.MaxLength = 255;
             this.phone_box.Name = "phone_box";
             this.phone_box.Size = new System.Drawing.Size(100, 20);
             this.phone_box.TabIndex = 1;
@@ -78,6 +78,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(220, 97);
+            this.ControlBox = false;
             this.Controls.Add(this.cancel_button);
             this.Controls.Add(this.call_button);
             this.Controls.Add(this.phone_box);
