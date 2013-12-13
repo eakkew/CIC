@@ -127,7 +127,6 @@ namespace CIC
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            ////timer -= (float)previewCallTimer.Interval / 1000;
             //elaspedTime += (float)timer1.Interval / 1000;
             //float timeout = global::CIC.Properties.Settings.Default.DispositionTimeOut;
             //if (elaspedTime >= timeout)
@@ -141,15 +140,15 @@ namespace CIC
             //    timer1.Stop();
             //    elaspedTime = 0.0f;
             //}
-            //else if (elaspedTime >= timeout * 3/4)
+            //else if (elaspedTime >= timeout * 3 / 4)
             //{
             //    this.TimedOutInfoLabel.ForeColor = Color.Red;
-            //    this.TimedOutInfoLabel.Text = "Auto Disposition will be commenced in: " + (timeout - elaspedTime);
+            //    this.TimedOutInfoLabel.Text = "Auto Disposition will be commenced in: " + (timeout - elaspedTime).ToString("0.00");
             //}
-            //else if (elaspedTime >= timeout * 1/4)
+            //else if (elaspedTime >= timeout * 1 / 4)
             //{
             //    this.TimedOutInfoLabel.ForeColor = Color.Black;
-            //    this.TimedOutInfoLabel.Text = "Auto Disposition will be commenced in: " + (timeout - elaspedTime);
+            //    this.TimedOutInfoLabel.Text = "Auto Disposition will be commenced in: " + (timeout - elaspedTime).ToString("0.00");
             //}
             //else
             //{
