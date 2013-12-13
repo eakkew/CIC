@@ -39,6 +39,7 @@ namespace CIC
         {
             InitializeComponent();
             // load up finish code
+            this.TimedOutInfoLabel.Text = "";
             this.dialerNumber = number;
             this.IC_Session = session;
             this.timer1.Start();
@@ -128,7 +129,8 @@ namespace CIC
         {
             ////timer -= (float)previewCallTimer.Interval / 1000;
             //elaspedTime += (float)timer1.Interval / 1000;
-            //if (elaspedTime >= global::CIC.Properties.Settings.Default.DispositionTimeOut)
+            //float timeout = global::CIC.Properties.Settings.Default.DispositionTimeOut;
+            //if (elaspedTime >= timeout)
             //{
             //    callParameter callback = new callParameter();
             //    callback.param = new CallCompletionParameters(ReasonCode.Success, "Success");
@@ -138,6 +140,20 @@ namespace CIC
             //    // cleanup
             //    timer1.Stop();
             //    elaspedTime = 0.0f;
+            //}
+            //else if (elaspedTime >= timeout * 3/4)
+            //{
+            //    this.TimedOutInfoLabel.ForeColor = Color.Red;
+            //    this.TimedOutInfoLabel.Text = "Auto Disposition will be commenced in: " + (timeout - elaspedTime);
+            //}
+            //else if (elaspedTime >= timeout * 1/4)
+            //{
+            //    this.TimedOutInfoLabel.ForeColor = Color.Black;
+            //    this.TimedOutInfoLabel.Text = "Auto Disposition will be commenced in: " + (timeout - elaspedTime);
+            //}
+            //else
+            //{
+            //    this.TimedOutInfoLabel.Text = "";
             //}
         }
     }

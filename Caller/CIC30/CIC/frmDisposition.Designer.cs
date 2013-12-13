@@ -34,6 +34,7 @@
             this.finishcode_label = new System.Windows.Forms.Label();
             this.finishcode_combobox = new System.Windows.Forms.ComboBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.TimedOutInfoLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // save_button
@@ -67,12 +68,22 @@
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // TimedOutInfoLabel
+            // 
+            this.TimedOutInfoLabel.AutoSize = true;
+            this.TimedOutInfoLabel.Location = new System.Drawing.Point(121, 13);
+            this.TimedOutInfoLabel.Name = "TimedOutInfoLabel";
+            this.TimedOutInfoLabel.Size = new System.Drawing.Size(35, 13);
+            this.TimedOutInfoLabel.TabIndex = 3;
+            this.TimedOutInfoLabel.Text = "label1";
+            // 
             // frmDisposition
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(382, 115);
             this.ControlBox = false;
+            this.Controls.Add(this.TimedOutInfoLabel);
             this.Controls.Add(this.finishcode_combobox);
             this.Controls.Add(this.finishcode_label);
             this.Controls.Add(this.save_button);
@@ -95,5 +106,6 @@
         private System.Windows.Forms.Label finishcode_label;
         private System.Windows.Forms.ComboBox finishcode_combobox;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Label TimedOutInfoLabel;
     }
 }
