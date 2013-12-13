@@ -127,33 +127,33 @@ namespace CIC
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            //elaspedTime += (float)timer1.Interval / 1000;
-            //float timeout = global::CIC.Properties.Settings.Default.DispositionTimeOut;
-            //if (elaspedTime >= timeout)
-            //{
-            //    callParameter callback = new callParameter();
-            //    callback.param = new CallCompletionParameters(ReasonCode.Success, "Success");
-            //    Program.MainDashboard.disposition_invoke(callback, e);
-            //    Program.MainDashboard.request_break();
+            elaspedTime += (float)timer1.Interval / 1000;
+            float timeout = global::CIC.Properties.Settings.Default.DispositionTimeOut;
+            if (elaspedTime >= timeout)
+            {
+                callParameter callback = new callParameter();
+                callback.param = new CallCompletionParameters(ReasonCode.Success, "Success");
+                Program.MainDashboard.disposition_invoke(callback, e);
+                Program.MainDashboard.request_break();
 
-            //    // cleanup
-            //    timer1.Stop();
-            //    elaspedTime = 0.0f;
-            //}
-            //else if (elaspedTime >= timeout * 3 / 4)
-            //{
-            //    this.TimedOutInfoLabel.ForeColor = Color.Red;
-            //    this.TimedOutInfoLabel.Text = "Auto Disposition will be commenced in: " + (timeout - elaspedTime).ToString("0.00");
-            //}
-            //else if (elaspedTime >= timeout * 1 / 4)
-            //{
-            //    this.TimedOutInfoLabel.ForeColor = Color.Black;
-            //    this.TimedOutInfoLabel.Text = "Auto Disposition will be commenced in: " + (timeout - elaspedTime).ToString("0.00");
-            //}
-            //else
-            //{
-            //    this.TimedOutInfoLabel.Text = "";
-            //}
+                // cleanup
+                timer1.Stop();
+                elaspedTime = 0.0f;
+            }
+            else if (elaspedTime >= timeout * 3 / 4)
+            {
+                this.TimedOutInfoLabel.ForeColor = Color.Red;
+                this.TimedOutInfoLabel.Text = "Auto Disposition will be commenced in: " + (timeout - elaspedTime).ToString("0.00");
+            }
+            else if (elaspedTime >= timeout * 1 / 4)
+            {
+                this.TimedOutInfoLabel.ForeColor = Color.Black;
+                this.TimedOutInfoLabel.Text = "Auto Disposition will be commenced in: " + (timeout - elaspedTime).ToString("0.00");
+            }
+            else
+            {
+                this.TimedOutInfoLabel.Text = "";
+            }
         }
     }
 }
