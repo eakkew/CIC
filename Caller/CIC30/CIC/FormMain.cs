@@ -2963,10 +2963,15 @@ namespace CIC
         {
             // starts the next number in line
             // timer1.Start();
-
+            string scope = "CIC::FormMain::predictive_state()";
             reset_state();
             break_button.Enabled = !break_requested && IcWorkFlow != null && IcWorkFlow.LoginResult;
-
+            if (break_requested)
+            {
+                log.Info(scope + "Starting Dialer Interaction Request Break");
+                this.ActiveDialerInteraction.DialerSession.RequestBreak();
+                log.Info(scope + "Completed Dialer Interaction Request Break");
+            }
             prev_state = current_state;
             current_state = FormMainState.Predictive;
         }
