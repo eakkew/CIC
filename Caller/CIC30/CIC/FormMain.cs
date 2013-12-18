@@ -1631,7 +1631,22 @@ namespace CIC
                         this.ActiveDialerInteraction.Hold(!this.ActiveDialerInteraction.IsHeld);
                         log.Info(scope + "Completed Dialer Interaction Hold/Unhold");
                         state_change(FormMainState.Hold);
+                        return;
                     }
+                }
+                if (ActiveNormalInteraction != null)
+                {
+                    if (ActiveNormalInteraction.IsMuted)
+                    {
+                        log.Info(scope + "Starting Normal Interaction Unmute");
+                        ActiveNormalInteraction.Mute(false);
+                        log.Info(scope + "Completed Normal interaction Unmute");
+                    }
+                    log.Info(scope + "Starting Normal Interaction Hold/Unhold");
+                    ActiveNormalInteraction.Hold(!ActiveNormalInteraction.IsHeld);
+                    log.Info(scope + "Completed Normal Interaction Hold/Unhold");
+                    state_change(FormMainState.Hold);
+                    return;
                 }
             }
             else
@@ -1670,6 +1685,21 @@ namespace CIC
                     this.ActiveDialerInteraction.MuteAsync(!this.ActiveDialerInteraction.IsMuted, MuteCompleted, null);
                     log.Info(scope + "Completed Dialer Interaction Mute/Unmute");
                     state_change(FormMainState.Mute);
+                    return;
+                }
+                if (ActiveNormalInteraction != null)
+                {
+                    if (ActiveNormalInteraction.IsHeld)
+                    {
+                        log.Info(scope + "Starting Normal Interaction Unhold");
+                        ActiveNormalInteraction.Hold(false);
+                        log.Info(scope + "Completed Normal Interaction Unhold");
+                    }
+                    log.Info(scope + "Starting Normal Interaction Mute/Unmute");
+                    ActiveNormalInteraction.MuteAsync(!ActiveNormalInteraction.IsMuted, MuteCompleted, null);
+                    log.Info(scope + "Starting Normal Interaction Mute/Unmute");
+                    state_change(FormMainState.Mute);
+                    return;
                 }
             }
             else
@@ -1688,7 +1718,6 @@ namespace CIC
                     state_change(FormMainState.Mute);
                     return;
                 }
-
             }
         }
 
@@ -1752,9 +1781,6 @@ namespace CIC
                     }
                     else
                     {
-                        log.Info(scope + "Starting Dialer Interaction Request Break");
-                        this.ActiveDialerInteraction.DialerSession.RequestBreak();
-                        log.Info(scope + "Completed Dialer Interaction Request Break");
                         break_requested = true;
                         break_requested_state();
                     }
@@ -1940,7 +1966,12 @@ namespace CIC
                                         }
                                     }
                                 }
-
+                                if (this.break_requested)
+                                {
+                                    log.Info(scope + "Starting Dialer Interaction Request Break");
+                                    this.ActiveDialerInteraction.DialerSession.RequestBreak();
+                                    log.Info(scope + "Completed Dialer Interaction Request Break");
+                                }
                             }
                             else if (this.ActiveDialerInteraction.DialingMode == DialingMode.Precise)
                             {
@@ -2844,16 +2875,9 @@ namespace CIC
                         log.Info("State Changed: Disconnected");
                         break;
                     case FormMainState.Break:
-                        if (break_requested)
-                        {
-                            break_state();
-                            log.Info("State Changed: Break");
-                        }
-                        else
-                        {
-                            preview_state();
-                            log.Info("State Changed: Unbreak -> Preview");
-                        }
+                        break_state();
+                        log.Info("State Changed: Break");
+                        
                         break;
                     case FormMainState.Loggedout:
                         logged_out_state();
@@ -3210,11 +3234,12 @@ namespace CIC
                         this.Initialize_CallBack();
                         this.Initialize_ContactData();
                         this.ShowActiveCallInfo();
+                        this.highlight_call();
                         break;
                     case InteractionType.Call:
                         this.Initialize_ContactData();
                         this.ShowActiveCallInfo();
-
+                        this.highlight_call();
                         break;
                 }
                 log.Info(scope + "Completed.");
@@ -3303,10 +3328,10 @@ namespace CIC
                         , productID, refCallID, callID).Replace("=", "%3d").Replace("{", "%7b").Replace("}", "%7d").Replace("&", "%26");
                     if (cachedURI != baseURI)
                     {
+                        log.Info("process.start : " + baseURI);
                         cachedURI = baseURI;
                         Process.Start(baseURI);
                     }
-                    log.Info("process.start : " + baseURI);
                     log.Info(scope + "Completed.");
                 }
                 catch (System.Exception ex)
@@ -3833,8 +3858,8 @@ namespace CIC
                     switch (break_requested)
                     {
                         case true:
-                            state_change(FormMainState.Break);
                             this.SetToDoNotDisturb_UserStatusMsg();
+                            state_change(FormMainState.Break);
                             this.state_info_label.Text = "On Break.";
                             break;
                         default:
@@ -3959,37 +3984,7 @@ namespace CIC
                         {
                             state_info_label.Text = "Calling: " + data["is_attr_numbertodial"];
                             String phone1 = data["is_attr_PhoneNo1"];
-                            // find a strategy to make a call by using PlacePreviewCall() and make a normal call for the other 6 numbers 
-                            if (data["is_attr_numbertodial"].CompareTo(data["is_attr_PhoneNo1"]) == 0)
-                            {
-                                reset_color_panel();
-                                name1_panel.BackColor = Color.Yellow;
-                            }
-                            else if (data["is_attr_numbertodial"].CompareTo(data["is_attr_PhoneNo2"]) == 0)
-                            {
-                                reset_color_panel();
-                                name2_panel.BackColor = Color.Yellow;
-                            }
-                            else if (data["is_attr_numbertodial"].CompareTo(data["is_attr_PhoneNo3"]) == 0)
-                            {
-                                reset_color_panel();
-                                name3_panel.BackColor = Color.Yellow;
-                            }
-                            else if (data["is_attr_numbertodial"].CompareTo(data["is_attr_PhoneNo4"]) == 0)
-                            {
-                                reset_color_panel();
-                                name4_panel.BackColor = Color.Yellow;
-                            }
-                            else if (data["is_attr_numbertodial"].CompareTo(data["is_attr_PhoneNo5"]) == 0)
-                            {
-                                reset_color_panel();
-                                name5_panel.BackColor = Color.Yellow;
-                            }
-                            else if (data["is_attr_numbertodial"].CompareTo(data["is_attr_PhoneNo6"]) == 0)
-                            {
-                                reset_color_panel();
-                                name6_panel.BackColor = Color.Yellow;
-                            }
+                            highlight_call();
 
                             this.callingNumber = data["is_attr_numbertodial"];
                             state_info_label.Text = "calling: " + this.callingNumber;
@@ -4009,6 +4004,56 @@ namespace CIC
                 catch (System.Exception ex)
                 {
                     log.Error(scope + "Error info : " + ex.Message);
+                }
+            }
+        }
+
+        private void highlight_call()
+        {
+            string scope = "CIC::MainForm::higilight_call(): ";
+
+            if (this.InvokeRequired)
+            {
+                this.BeginInvoke(new MethodInvoker(highlight_call));
+            }
+            else
+            {
+                if (ActiveDialerInteraction == null)
+                {
+                    log.Warn(scope + "ActiveDialerInteraction is null")
+                    return;
+                }
+                Dictionary<string, string> data = this.ActiveDialerInteraction.ContactData;
+                // find a strategy to make a call by using PlacePreviewCall() and make a normal call for the other 6 numbers 
+                if (data["is_attr_numbertodial"].CompareTo(data["is_attr_PhoneNo1"]) == 0)
+                {
+                    reset_color_panel();
+                    name1_panel.BackColor = Color.Yellow;
+                }
+                else if (data["is_attr_numbertodial"].CompareTo(data["is_attr_PhoneNo2"]) == 0)
+                {
+                    reset_color_panel();
+                    name2_panel.BackColor = Color.Yellow;
+                }
+                else if (data["is_attr_numbertodial"].CompareTo(data["is_attr_PhoneNo3"]) == 0)
+                {
+                    reset_color_panel();
+                    name3_panel.BackColor = Color.Yellow;
+                }
+                else if (data["is_attr_numbertodial"].CompareTo(data["is_attr_PhoneNo4"]) == 0)
+                {
+                    reset_color_panel();
+                    name4_panel.BackColor = Color.Yellow;
+                }
+                else if (data["is_attr_numbertodial"].CompareTo(data["is_attr_PhoneNo5"]) == 0)
+                {
+                    reset_color_panel();
+                    name5_panel.BackColor = Color.Yellow;
+                }
+                else if (data["is_attr_numbertodial"].CompareTo(data["is_attr_PhoneNo6"]) == 0)
+                {
+                    reset_color_panel();
+                    name6_panel.BackColor = Color.Yellow;
                 }
             }
         }
