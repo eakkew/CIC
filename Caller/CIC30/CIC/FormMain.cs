@@ -2155,7 +2155,7 @@ namespace CIC
                         {
                             //Tracing.TraceNote(scope + "Performing consult transfer");
                             log.Info(scope + "Starting Dialer Interaction Consult Transfer");
-                            ActiveDialerInteraction.ConsultTransferAsync(ActiveConsultInteraction.InteractionId, TransferCompleted, null);
+                            ActiveDialerInteraction.ConsultTransferAsync(ActiveConsultInteraction.InteractionId, WorkflowTransferCompleted, null);
                             log.Info(scope + "Completed Dialer Interaction Consult Transfer");
                             this.RemoveNormalInteractionFromList(ActiveConsultInteraction);
 
@@ -2186,7 +2186,7 @@ namespace CIC
                             if (ActiveConsultInteraction.InteractionId != ActiveNormalInteraction.InteractionId)
                             {
                                 log.Info(scope + "Starting Normal Interaction Consult Transfer");
-                                ActiveNormalInteraction.ConsultTransferAsync(ActiveConsultInteraction.InteractionId, TransferCompleted, null);
+                                ActiveNormalInteraction.ConsultTransferAsync(ActiveConsultInteraction.InteractionId, ManualTransferCompleted, null);
                                 this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
                                 this.RemoveNormalInteractionFromList(ActiveConsultInteraction);
                                 this.BlindTransferFlag = true;
@@ -2210,7 +2210,7 @@ namespace CIC
                                     if (ActiveNormalInteraction != null)
                                     {
                                         log.Info(scope + "Starting Consult Interaction Consult Transfer");
-                                        ActiveConsultInteraction.ConsultTransferAsync(ActiveNormalInteraction.InteractionId, TransferCompleted, null);
+                                        ActiveConsultInteraction.ConsultTransferAsync(ActiveNormalInteraction.InteractionId, ManualTransferCompleted, null);
                                         this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
                                         this.RemoveNormalInteractionFromList(ActiveConsultInteraction);
                                         this.BlindTransferFlag = true;
@@ -2243,9 +2243,22 @@ namespace CIC
             }
         }
 
-        private void TransferCompleted(object sender, AsyncCompletedEventArgs e)
+        private void WorkflowTransferCompleted(object sender, AsyncCompletedEventArgs e)
         {
-            string scope = "CIC::frmMain::TransferCompleted()::";
+            string scope = "CIC::frmMain::WorkflowTransferCompleted()::";
+            log.Info(scope + "Starting.");
+            this.BlindTransferFlag = true;
+            this.reset_info_on_dashboard();
+            this.BlindTransferFlag = false;
+            this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
+            state_change(FormMainState.Predictive);
+            state_info_label.Text = "Transfer complete.";
+            log.Info(scope + "Completed");
+        }
+
+        private void ManualTransferCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            string scope = "CIC::frmMain::ManualTransferCompleted()::";
             log.Info(scope + "Starting.");
             this.BlindTransferFlag = true;
             this.reset_info_on_dashboard();
