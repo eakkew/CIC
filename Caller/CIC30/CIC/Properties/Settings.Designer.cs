@@ -970,5 +970,14 @@ namespace CIC.Properties {
                 return ((string)(this["PowerReasonCode"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int AutoScheduledTime {
+            get {
+                return ((int)(this["AutoScheduledTime"]));
+            }
+        }
     }
 }

@@ -1463,6 +1463,7 @@ namespace CIC
                 this.IC_Session != null &&
                 this.IC_Session.ConnectionState == ININ.IceLib.Connection.ConnectionState.Up)
             {
+                log.Info(scope + "try disconnecting logged in workflow interactions");
                 if (this.current_state == FormMainState.PreviewCall ||
                     this.current_state == FormMainState.ConferenceCall)
                 {
@@ -1519,6 +1520,7 @@ namespace CIC
             }
             else
             { // Not Log On to Dialer Server.
+                log.Info(scope + "try disconnecting logged out workflow interactions");
                 if (this.ActiveDialerInteraction != null && !this.ActiveDialerInteraction.IsDisconnected)
                 {
                     try
@@ -4038,7 +4040,7 @@ namespace CIC
             {
                 if (ActiveDialerInteraction == null)
                 {
-                    log.Warn(scope + "ActiveDialerInteraction is null")
+                    log.Warn(scope + "ActiveDialerInteraction is null");
                     return;
                 }
                 Dictionary<string, string> data = this.ActiveDialerInteraction.ContactData;

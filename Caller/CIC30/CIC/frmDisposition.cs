@@ -87,11 +87,13 @@ namespace CIC
             callParameter callback = new callParameter();
 
             // check finish code for conditional scheduling
-            if (this.finishcode_combobox.Text.ToLower() == "call loss" || sReasoncode == ReasonCode.WrongParty)
+            if (this.finishcode_combobox.Text.ToLower() == "call loss" ||
+                sReasoncode == ReasonCode.WrongParty || 
+                sReasoncode == ReasonCode.RemoteHangup)
             {
                 callback.param = new CallCompletionParameters(
                     sReasoncode, this.finishcode_combobox.Text,
-                    Util.getDateTimeNowPlusOne() , this.IC_Session.UserId, false
+                    Util.getDateTimeNowPlusOffset() , this.IC_Session.UserId, false
                 );
             }
             else if (sReasoncode == ReasonCode.Scheduled || sReasoncode == ReasonCode.SIT)

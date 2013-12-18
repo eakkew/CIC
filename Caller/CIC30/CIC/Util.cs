@@ -93,11 +93,11 @@ namespace CIC
             return m.Success && number != "";
         }
 
-        public static DateTime getDateTimeNowPlusOne()
+        public static DateTime getDateTimeNowPlusOffset()
         {
             DateTime ret = DateTime.Now;
 
-            return ret.AddMinutes(1);
+            return ret.AddMinutes(global::CIC.Properties.Settings.Default.AutoScheduledTime);
         }
 
         public static ReasonCode GetReasonCode(string sFinishcode)

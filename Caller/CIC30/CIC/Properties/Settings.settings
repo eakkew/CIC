@@ -308,5 +308,8 @@
     <Setting Name="PowerReasonCode" Type="System.String" Scope="Application">
       <Value Profile="(Default)">ic_reason_code.xml</Value>
     </Setting>
+    <Setting Name="AutoScheduledTime" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
