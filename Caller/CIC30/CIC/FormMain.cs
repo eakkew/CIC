@@ -3921,7 +3921,6 @@ namespace CIC
                             this.state_info_label.Text = "On Break.";
                             break;
                         default:
-                            state_change(FormMainState.Break);
                             break;
                     }
                     this.reset_info_on_dashboard();
