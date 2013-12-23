@@ -122,6 +122,7 @@
             this.Name = "frmSchedule";
             this.Text = "Schedule Call Back";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmSchedule_FormClosed);
+            this.Load += new System.EventHandler(this.frmSchedule_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -111,7 +111,8 @@ namespace CIC
             ExitFlag = false;
             isConsulting = false;
             InitializeComponent();
-            this.Text = "Outbound Telephony Dialer Client v.1.0.20131212d";
+            JulianCalendar cal = new JulianCalendar();
+            this.Text = "Outbound Telephony Dialer Client v.1.0." + cal.GetDayOfYear(DateTime.Now) + "b";
             state_change(FormMainState.Disconnected);
             InitializeSession();
         }
@@ -1269,10 +1270,10 @@ namespace CIC
                         global::CIC.Program.IcStation.ConnectionTimes = 0;
                         this.IsActiveConnection = true;       //Set to ActiveConnection.
                         //this.SetStatusBarStripMsg();
-                        if (IcWorkFlow != null && !IcWorkFlow.LoginResult)
-                        {
-                            this.BeginInvoke(new MethodInvoker(login_workflow));
-                        }
+                    }
+                    if (IcWorkFlow != null && !IcWorkFlow.LoginResult)
+                    {
+                        this.BeginInvoke(new MethodInvoker(login_workflow));
                     }
                     try
                     {
@@ -1448,7 +1449,7 @@ namespace CIC
         private void disconnect_button_Click(object sender, EventArgs e)
         {
             tryDisconnect();
-
+            this.IsManualDialing = false;
             //this.ShowActiveCallInfo();
             this.reset_info_on_dashboard();
             state_info_label.Text = "Disconnected.";
@@ -1941,15 +1942,46 @@ namespace CIC
                                     log.Info(scope + "Completed Dialer Interaction Disconnect");
                                 }
 
-                                log.Info(scope + "Starting Dialer Interaction CallComplete");
                                 callParameter callparam = (callParameter)sender;
-                                if (callparam.number != "")
+                                if (callparam.number != null && callparam.number != "")
                                 {
-                                    this.ActiveDialerInteraction.SetStringAttribute("is_attr_numbertodial", callparam.number);
+                                    List<string> callbackAttributeName = new List<string>();
+                                    callbackAttributeName.Add(this.callingNumber);
+                                    try
+                                    {
+                                        if (!ActiveDialerInteraction.IsWatching())
+                                        {
+                                            log.Info(scope + "Starting Dialer Interaction startwatching");
+                                            this.ActiveDialerInteraction.StartWatching(callbackAttributeName.ToArray());
+                                            log.Info(scope + "Completed Dialer Interaction startwatching");
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        log.Warn(scope + "Dialer Interaction StartWatching failed: " + ex.Message);
+                                    }
+                                    try
+                                    {
+                                        this.callingNumber = callparam.number;
+                                        log.Info(scope + "Start Dialer Interaction ChangeWatchedAttribute");
+                                        this.ActiveDialerInteraction.ChangeWatchedAttributesAsync(callbackAttributeName.ToArray(), null, true, ChangeWatchedAttributesCompleted, null);
+                                        log.Info(scope + "Completed Dialer Interaction ChangeWatchedAttribute");
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        log.Error(scope + "Dialer Interaction ChangeWatchedAttribute failed: " + ex.Message);
+                                    }
                                 }
-                                this.ActiveDialerInteraction.CallComplete(callparam.param);
-                                log.Info(scope + "Completed Dialer Interaction CallComplete");
-
+                                try
+                                {
+                                    log.Info(scope + "Starting Dialer Interaction CallComplete");
+                                    this.ActiveDialerInteraction.CallComplete(callparam.param);
+                                    log.Info(scope + "Completed Dialer Interaction CallComplete");
+                                }
+                                catch (Exception ex)
+                                {
+                                    log.Error(scope + "Call Complete Failed: " + ex.Message);
+                                }
                                 this.reset_info_on_dashboard();
                                 if (!this.break_granted)
                                 {
@@ -1970,9 +2002,7 @@ namespace CIC
                                 }
                                 if (this.break_requested)
                                 {
-                                    log.Info(scope + "Starting Dialer Interaction Request Break");
-                                    this.ActiveDialerInteraction.DialerSession.RequestBreak();
-                                    log.Info(scope + "Completed Dialer Interaction Request Break");
+                                    this.request_break();
                                 }
                             }
                             else if (this.ActiveDialerInteraction.DialingMode == DialingMode.Precise)
@@ -2175,6 +2205,11 @@ namespace CIC
                             statusUpdate.StatusMessageDetails = this.AvailableStatusMessageDetails;
                             statusUpdate.UpdateRequest();
                             log.Info(scope + "Complete Update User Status");
+                            
+                            if (this.break_requested)
+                            {
+                                this.request_break();
+                            }
                         }
                     }
                 }
@@ -2235,6 +2270,7 @@ namespace CIC
                     }
                 }
                 this.isConsulting = false;
+                this.IsManualDialing = false;
                 this.ResetActiveCallInfo();
                 log.Info(scope + "Completed.");
             }
@@ -2455,7 +2491,10 @@ namespace CIC
                                     this.call_button.Enabled = true;
                                 }
                             }
-                            update_info_on_dashboard();
+                            if (this.current_state != FormMainState.ManualCall)
+                            {
+                                update_info_on_dashboard();
+                            }
                             this.toolStripCallIDLabel.Text = ActiveDialerInteraction.ContactData.ContainsKey("is_attr_callid") ?
                                 ActiveDialerInteraction.ContactData["is_attr_callid"] : "";
                             this.toolStripDirectionLabel.Text = ActiveDialerInteraction.Direction.ToString();
@@ -2618,6 +2657,7 @@ namespace CIC
             {
                 this.break_button.Enabled = true;
                 state_info_label.Text = "Workflow Completed.";
+                this.request_break();
             }
             log.Info(scope + "Completed.");
         }
@@ -2796,7 +2836,10 @@ namespace CIC
             switch (state)
                 {
                     case FormMainState.Predictive:
-                        predictive_state();
+                        if (this.isOnBreak)
+                            break_state();
+                        else
+                            predictive_state();
                         log.Info("State Changed: Predictive");
                         break;
                     case FormMainState.Preview:
@@ -2965,15 +3008,8 @@ namespace CIC
         {
             // starts the next number in line
             // timer1.Start();
-            string scope = "CIC::FormMain::predictive_state()";
             reset_state();
             break_button.Enabled = !break_requested && IcWorkFlow != null && IcWorkFlow.LoginResult;
-            if (break_requested)
-            {
-                log.Info(scope + "Starting Dialer Interaction Request Break");
-                this.ActiveDialerInteraction.DialerSession.RequestBreak();
-                log.Info(scope + "Completed Dialer Interaction Request Break");
-            }
             prev_state = current_state;
             current_state = FormMainState.Predictive;
         }
@@ -3038,7 +3074,7 @@ namespace CIC
             disconnect_button.Enabled = true;
             hold_button.Enabled = true;
             mute_button.Enabled = true;
-            break_button.Enabled = !break_requested;
+            break_button.Enabled = !break_requested && IcWorkFlow != null && IcWorkFlow.LoginResult;
 
             if (current_state != FormMainState.Hold)
             {
@@ -3125,14 +3161,24 @@ namespace CIC
 
         public void MakeCallCompleted(object sender,InteractionCompletedEventArgs e)
         {
+            string scope = "CIC::MainForm::MakeCallCompleted()::";
+            log.Info(scope + "Starting");
             if (!e.Cancelled)
             {
                 ActiveNormalInteraction = e.Interaction;
             }
             // TODO: should update message to conntected to: ####
             //state_info_label.Text = "Connected to: " + ActiveNormalInteraction.
-            StrConnectionState = ActiveNormalInteraction.State;
+            try
+            {
+                StrConnectionState = ActiveNormalInteraction.State;
+            }
+            catch (Exception ex)
+            {
+                log.Warn(scope + "Could not update state. Reason:" + ex.Message);
+            }
             state_change(FormMainState.ManualCall);
+            log.Info(scope + "Completed");
         }
 
         private void ChangeWatchedAttributesCompleted(object sender, AsyncCompletedEventArgs e)
@@ -3643,6 +3689,7 @@ namespace CIC
                 log.Info(scope + "Start Normal Interaction Make Call");
                 this.NormalInterationManager.MakeCallAsync(callParams, MakeCallCompleted, null);
                 log.Info(scope + "Completed Normal Interaction Make Call");
+                this.IsManualDialing = true;
                 state_change(FormMainState.ManualCall);
             }
             catch (Exception ex)

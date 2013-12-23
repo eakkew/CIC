@@ -88,12 +88,14 @@ namespace CIC
             {
                 minute_combobox.ForeColor = Color.Black;
                 hour_combobox.ForeColor = Color.Black;
+                phone_box.ForeColor = Color.Black;
                 this.save_button.Enabled = true;
             }
             else
             {
                 minute_combobox.ForeColor = Color.Red;
                 hour_combobox.ForeColor = Color.Red;
+                phone_box.ForeColor = Color.Red;
                 this.save_button.Enabled = false;
             }
         }
@@ -113,12 +115,14 @@ namespace CIC
             {
                 minute_combobox.ForeColor = Color.Black;
                 hour_combobox.ForeColor = Color.Black;
+                phone_box.ForeColor = Color.Black;
                 this.save_button.Enabled = true;
             }
             else
             {
                 minute_combobox.ForeColor = Color.Red;
                 hour_combobox.ForeColor = Color.Red;
+                phone_box.ForeColor = Color.Red;
                 this.save_button.Enabled = false;
             }
         }
@@ -158,14 +162,25 @@ namespace CIC
         {
             if (validateTime() && validatePhone())
             {
+                minute_combobox.ForeColor = Color.Black;
+                hour_combobox.ForeColor = Color.Black;
                 phone_box.ForeColor = Color.Black;
                 this.save_button.Enabled = true;
             }
             else
             {
+                minute_combobox.ForeColor = Color.Red;
+                hour_combobox.ForeColor = Color.Red;
                 phone_box.ForeColor = Color.Red;
                 this.save_button.Enabled = false;
             }
+        }
+
+        private void frmSchedule_Load(object sender, EventArgs e)
+        {
+            this.isCanceled = false;
+            hour_combobox.SelectedIndex = 0;
+            minute_combobox.SelectedIndex = 0;
         }
 
     }

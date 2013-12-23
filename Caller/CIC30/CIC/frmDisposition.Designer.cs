@@ -95,6 +95,7 @@
             this.Text = "Disposition";
             this.TopMost = true;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmDisposition_FormClosed);
+            this.Load += new System.EventHandler(this.frmDisposition_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

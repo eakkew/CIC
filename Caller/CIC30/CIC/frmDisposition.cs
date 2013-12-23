@@ -85,7 +85,7 @@ namespace CIC
             // save data and callback to main form to save stuff
             ReasonCode sReasoncode = Util.GetReasonCode(this.finishcode_combobox.Text);
             callParameter callback = new callParameter();
-
+            callback.number = "";
             // check finish code for conditional scheduling
             if (this.finishcode_combobox.Text.ToLower() == "call loss" ||
                 sReasoncode == ReasonCode.WrongParty || 
@@ -99,7 +99,9 @@ namespace CIC
             else if (sReasoncode == ReasonCode.Scheduled || sReasoncode == ReasonCode.SIT)
             {
                 frmSchedule schedule = frmSchedule.getInstance(dialerNumber);
+                timer1.Stop();
                 schedule.ShowDialog();
+                timer1.Start();
                 if (schedule.validateTime())
                 {
                     callback.param = new CallCompletionParameters(
@@ -124,7 +126,7 @@ namespace CIC
 
         private void frmDisposition_FormClosed(object sender, FormClosedEventArgs e)
         {
-
+            this.timer1.Stop();
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -133,11 +135,12 @@ namespace CIC
             float timeout = global::CIC.Properties.Settings.Default.DispositionTimeOut;
             if (elaspedTime >= timeout)
             {
+                this.TimedOutInfoLabel.Text = "Auto Disposition activating";
                 callParameter callback = new callParameter();
                 callback.param = new CallCompletionParameters(ReasonCode.Success, "Success");
                 Program.MainDashboard.disposition_invoke(callback, e);
                 Program.MainDashboard.request_break();
-
+                this.Close();
                 // cleanup
                 timer1.Stop();
                 elaspedTime = 0.0f;
@@ -145,17 +148,24 @@ namespace CIC
             else if (elaspedTime >= timeout * 3 / 4)
             {
                 this.TimedOutInfoLabel.ForeColor = Color.Red;
-                this.TimedOutInfoLabel.Text = "Auto Disposition will be commenced in: " + (timeout - elaspedTime).ToString("0.00");
+                this.TimedOutInfoLabel.Text = "Auto Disposition will be commenced in: " + (timeout - elaspedTime).ToString("0.0");
             }
             else if (elaspedTime >= timeout * 1 / 4)
             {
                 this.TimedOutInfoLabel.ForeColor = Color.Black;
-                this.TimedOutInfoLabel.Text = "Auto Disposition will be commenced in: " + (timeout - elaspedTime).ToString("0.00");
+                this.TimedOutInfoLabel.Text = "Auto Disposition will be commenced in: " + (timeout - elaspedTime).ToString("0.0");
             }
             else
             {
                 this.TimedOutInfoLabel.Text = "";
             }
+        }
+
+        private void frmDisposition_Load(object sender, EventArgs e)
+        {
+            this.TimedOutInfoLabel.Text = "";
+            this.timer1.Start();
+            elaspedTime = 0.0f;
         }
     }
 }
