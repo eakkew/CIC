@@ -112,7 +112,7 @@ namespace CIC
             isConsulting = false;
             InitializeComponent();
             JulianCalendar cal = new JulianCalendar();
-            this.Text = "Outbound Telephony Dialer Client v.1.0." + cal.GetDayOfYear(DateTime.Now) + "b";
+            this.Text = "Outbound Telephony Dialer Client v.1.0." + cal.GetDayOfYear(DateTime.Now) + "a";
             state_change(FormMainState.Disconnected);
             InitializeSession();
         }
@@ -3167,16 +3167,7 @@ namespace CIC
             {
                 ActiveNormalInteraction = e.Interaction;
             }
-            // TODO: should update message to conntected to: ####
-            //state_info_label.Text = "Connected to: " + ActiveNormalInteraction.
-            try
-            {
-                StrConnectionState = ActiveNormalInteraction.State;
-            }
-            catch (Exception ex)
-            {
-                log.Warn(scope + "Could not update state. Reason:" + ex.Message);
-            }
+
             state_change(FormMainState.ManualCall);
             log.Info(scope + "Completed");
         }
