@@ -1828,8 +1828,8 @@ namespace CIC
                         }
                         break_requested = false;
                         break_granted = false;
-                        this.endbreak_button.Enabled = false;
                         this.isOnBreak = false;
+                        this.endbreak_button.Enabled = false;
                         this.state_info_label.Text = "Break ended. Waiting for a new call from workflow.";
                         log.Info(scope + "Complete.");
                     }
@@ -3984,6 +3984,9 @@ namespace CIC
                             break;
                     }
                     // TODO: add more clean up state
+                    break_requested = false;
+                    break_granted = false;
+                    this.isOnBreak = false;
                     log.Info(scope + "Completed.");
                 }
                 catch (System.Exception ex)
