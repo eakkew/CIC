@@ -140,10 +140,10 @@ namespace CIC
                 callback.param = new CallCompletionParameters(ReasonCode.Success, "Success");
                 Program.MainDashboard.disposition_invoke(callback, e);
                 Program.MainDashboard.request_break();
-                this.Close();
-                // cleanup
                 timer1.Stop();
                 elaspedTime = 0.0f;
+                this.Close();
+                // cleanup
             }
             else if (elaspedTime >= timeout * 3 / 4)
             {
