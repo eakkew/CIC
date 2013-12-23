@@ -126,6 +126,7 @@ namespace CIC
 
         private void frmDisposition_FormClosed(object sender, FormClosedEventArgs e)
         {
+            this.finishcode_combobox.SelectedIndex = 0;
             this.timer1.Stop();
         }
 
