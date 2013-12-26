@@ -112,7 +112,7 @@ namespace CIC
             isConsulting = false;
             InitializeComponent();
             JulianCalendar cal = new JulianCalendar();
-            this.Text = "Outbound Telephony Dialer Client v.1.0." + cal.GetDayOfYear(DateTime.Now) + "a";
+            this.Text = "Outbound Telephony Dialer Client v.1.0." + cal.GetDayOfYear(DateTime.Now) + "b";
             state_change(FormMainState.Disconnected);
             InitializeSession();
         }
@@ -539,12 +539,6 @@ namespace CIC
                         this.reset_info_on_dashboard();
 
                         this.state_info_label.Text = "Connected to: unknown";
-                        //this.DirectiontoolStripStatus.Text = "None";
-                        //this.CallTypeToolStripStatusLabel.Text = "N/A";
-                        //this.CampaignIdToolStripStatusLabel.Text = "N/A";
-                        //this.QueueNameToolStripStatusLabel.Text = "N/A";
-                        //this.NumberToolStripStatusLabel.Text = "N/A";
-                        //this.CallStateToolStripStatusLabel.Text = "N/A";
                         this.SetInfoBarColor();
                         this.transfer_button.Enabled = true;
                     }
@@ -784,15 +778,18 @@ namespace CIC
                             break;
                         case InteractionType.Call:
                             ActiveNormalInteraction = e.Interaction;
-                            if (this.StrConnectionState == InteractionState.Proceeding &&
-                                ActiveNormalInteraction.State == InteractionState.Connected)
+                            if (ActiveNormalInteraction.State == InteractionState.Connected)
                             {
-                                this.BeginInvoke(new MethodInvoker(update_calling_info));
-                                if (IcWorkFlow != null && IcWorkFlow.LoginResult &&
-                                    !isConsulting)
+                                this.BeginInvoke(new MethodInvoker(enable_when_repickup));
+                                if (this.StrConnectionState == InteractionState.Proceeding)
                                 {
-                                    this.BeginInvoke(new MethodInvoker(CrmScreenPop));
-                                    this.BeginInvoke(new MethodInvoker(reset_call_timer));
+                                    this.BeginInvoke(new MethodInvoker(update_calling_info));
+                                    if (IcWorkFlow != null && IcWorkFlow.LoginResult &&
+                                        !isConsulting)
+                                    {
+                                        this.BeginInvoke(new MethodInvoker(CrmScreenPop));
+                                        this.BeginInvoke(new MethodInvoker(reset_call_timer));
+                                    }
                                 }
                             }
                             this.StrConnectionState = ActiveNormalInteraction.State;
@@ -1945,38 +1942,43 @@ namespace CIC
                                 callParameter callparam = (callParameter)sender;
                                 if (callparam.number != null && callparam.number != "")
                                 {
-                                    List<string> callbackAttributeName = new List<string>();
-                                    callbackAttributeName.Add(this.callingNumber);
-                                    try
-                                    {
-                                        if (!ActiveDialerInteraction.IsWatching())
-                                        {
-                                            log.Info(scope + "Starting Dialer Interaction startwatching");
-                                            this.ActiveDialerInteraction.StartWatching(callbackAttributeName.ToArray());
-                                            log.Info(scope + "Completed Dialer Interaction startwatching");
-                                        }
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        log.Warn(scope + "Dialer Interaction StartWatching failed: " + ex.Message);
-                                    }
-                                    try
-                                    {
-                                        this.callingNumber = callparam.number;
-                                        log.Info(scope + "Start Dialer Interaction ChangeWatchedAttribute");
-                                        this.ActiveDialerInteraction.ChangeWatchedAttributesAsync(callbackAttributeName.ToArray(), null, true, ChangeWatchedAttributesCompleted, null);
-                                        log.Info(scope + "Completed Dialer Interaction ChangeWatchedAttribute");
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        log.Error(scope + "Dialer Interaction ChangeWatchedAttribute failed: " + ex.Message);
-                                    }
+                                    ActiveDialerInteraction.ContactData["is_attr_numbertodial"] = callparam.number;
+                                    ActiveDialerInteraction.UpdateCallData();
+                                    //List<string> callbackAttributeName = new List<string>();
+                                    //callbackAttributeName.Add(this.callingNumber);
+                                    //try
+                                    //{
+                                    //    if (!ActiveDialerInteraction.IsWatching())
+                                    //    {
+                                    //        log.Info(scope + "Starting Dialer Interaction startwatching");
+                                    //        this.ActiveDialerInteraction.StartWatching(callbackAttributeName.ToArray());
+                                    //        log.Info(scope + "Completed Dialer Interaction startwatching");
+                                    //    }
+                                    //}
+                                    //catch (Exception ex)
+                                    //{
+                                    //    log.Warn(scope + "Dialer Interaction StartWatching failed: " + ex.Message);
+                                    //}
+                                    //try
+                                    //{
+                                    //    this.callingNumber = callparam.number;
+                                    //    log.Info(scope + "Start Dialer Interaction ChangeWatchedAttribute");
+                                    //    this.ActiveDialerInteraction.ChangeWatchedAttributesAsync(callbackAttributeName.ToArray(), null, true, ChangeWatchedAttributesCompleted, null);
+                                    //    log.Info(scope + "Completed Dialer Interaction ChangeWatchedAttribute");
+                                    //}
+                                    //catch (Exception ex)
+                                    //{
+                                    //    log.Error(scope + "Dialer Interaction ChangeWatchedAttribute failed: " + ex.Message);
+                                    //}
                                 }
                                 try
                                 {
                                     log.Info(scope + "Starting Dialer Interaction CallComplete");
                                     this.ActiveDialerInteraction.CallComplete(callparam.param);
                                     log.Info(scope + "Completed Dialer Interaction CallComplete");
+                                    //is_attr_DateAppointCallBack
+                                    this.ActiveDialerInteraction.ContactData["is_attr_DateAppointCallBack"] = callparam.param.ScheduledTime.ToString("yyyy-MM-DD HH:mm:ss.fff");
+                                    this.ActiveDialerInteraction.UpdateCallData();
                                 }
                                 catch (Exception ex)
                                 {
@@ -3010,6 +3012,7 @@ namespace CIC
             // timer1.Start();
             reset_state();
             break_button.Enabled = !break_requested && IcWorkFlow != null && IcWorkFlow.LoginResult;
+            logout_workflow_button.Enabled = true;
             prev_state = current_state;
             current_state = FormMainState.Predictive;
         }
@@ -3127,6 +3130,12 @@ namespace CIC
         {
             conference_button.Enabled = false;
             transfer_button.Enabled = false;
+        }
+
+        private void enable_when_repickup()
+        {
+            conference_button.Enabled = true;
+            transfer_button.Enabled = true;
         }
 
         private void timer1_Tick(object sender, EventArgs e)

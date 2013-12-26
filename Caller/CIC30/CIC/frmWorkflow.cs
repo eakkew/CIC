@@ -20,6 +20,7 @@ namespace CIC
         }
 
         private static frmWorkflow instance = null;
+        private Session mSession;
 
         public static frmWorkflow getInstance(Session IC_Session)
         {
@@ -34,43 +35,8 @@ namespace CIC
         private frmWorkflow(Session IC_Session)
         {
             string scope = "CIC::MainForm::LoginToolStripMenuItem_DropDownOpening()::";
-            Tracing.TraceStatus(scope + "Starting.");
             InitializeComponent();
-            try
-            {
-                Program.Initialize_dialingManager(IC_Session);
-                string[] workflows = Program.mDialingManager.GetAvailableWorkflows();
-                workflow_combobox.Items.Clear();
-                if (workflows.Length > 0)
-                {
-                    foreach (string workflow in workflows)
-                    {
-                        //ToolStripMenuItem menu = new ToolStripMenuItem((string)workflow, null, WorkflowToolStripMenuItem_Click);
-                        //menu.Image = global::CIC.Properties.Resources.pin_green;
-                        this.workflow_combobox.Items.Add(workflow);
-                    }
-                }
-                else
-                {
-                    ToolStripMenuItem menu = new ToolStripMenuItem("No Workflows Available");
-                    menu.Enabled = false;
-                    this.workflow_combobox.Items.Add(menu);
-                }
-                this.ActiveControl = workflow_combobox;
-                Tracing.TraceStatus(scope + "Completed.");
-            }
-            catch (ININ.IceLib.IceLibException ex)
-            {
-                string output = String.Format("Cannot retrieving available workflows: {0}", ex.Message);
-                Tracing.TraceStatus(scope + "Error info." + ex.Message);
-                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
-                MessageBox.Show(output, "CIC Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            catch (Exception e)
-            {
-                string output = String.Format("Something really bad happened: {0}", e.Message);
-                MessageBox.Show(output, "CIC Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
+            mSession = IC_Session;
         }
 
         private void login_button_Click(object sender, EventArgs e)
@@ -89,6 +55,43 @@ namespace CIC
         private void frmWorkflow_FormClosed(object sender, FormClosedEventArgs e)
         {
             workflow_combobox.Items.Clear();
+        }
+
+        private void frmWorkflow_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                Program.Initialize_dialingManager(mSession);
+                string[] workflows = Program.mDialingManager.GetAvailableWorkflows();
+                workflow_combobox.Items.Clear();
+                if (workflows.Length > 0)
+                {
+                    foreach (string workflow in workflows)
+                    {
+                        //ToolStripMenuItem menu = new ToolStripMenuItem((string)workflow, null, WorkflowToolStripMenuItem_Click);
+                        //menu.Image = global::CIC.Properties.Resources.pin_green;
+                        this.workflow_combobox.Items.Add(workflow);
+                    }
+                }
+                else
+                {
+                    ToolStripMenuItem menu = new ToolStripMenuItem("No Workflows Available");
+                    menu.Enabled = false;
+                    this.workflow_combobox.Items.Add(menu);
+                }
+                this.ActiveControl = workflow_combobox;
+            }
+            catch (ININ.IceLib.IceLibException ex)
+            {
+                string output = String.Format("Cannot retrieving available workflows: {0}", ex.Message);
+                //System.Diagnostics.EventLog.WriteEntry(Application.ProductName, scope + "Error info." + ex.Message, System.Diagnostics.EventLogEntryType.Error); //Window Event Log
+                MessageBox.Show(output, "CIC Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                string output = String.Format("Something really bad happened: {0}", ex.Message);
+                MessageBox.Show(output, "CIC Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
     }
 }

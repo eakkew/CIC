@@ -102,6 +102,7 @@
             this.Text = "Logon to Workflow";
             this.TopMost = true;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmWorkflow_FormClosed);
+            this.Load += new System.EventHandler(this.frmWorkflow_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);

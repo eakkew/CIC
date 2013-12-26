@@ -90,5 +90,11 @@ namespace CIC
                 this.call_button.Enabled = true;
             }
         }
+
+        private void frmManualCall_Load(object sender, EventArgs e)
+        {
+            this.ActiveControl = phone_box;
+            this.phone_box.Text = "";
+        }
     }
 }

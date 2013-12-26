@@ -44,6 +44,7 @@ namespace CIC
             this.IC_Session = session;
             this.timer1.Start();
             elaspedTime = 0.0f;
+            this.ActiveControl = this.finishcode_combobox;
             this.DsReasonCode = new System.Data.DataSet();
             string DsFile = Program.ApplicationPath + "\\";
             if (calltype == "predictive")
@@ -167,6 +168,7 @@ namespace CIC
             this.TimedOutInfoLabel.Text = "";
             this.timer1.Start();
             elaspedTime = 0.0f;
+            this.ActiveControl = this.finishcode_combobox;
         }
     }
 }

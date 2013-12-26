@@ -102,6 +102,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Conference Call";
             this.TopMost = true;
+            this.Load += new System.EventHandler(this.frmConference_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

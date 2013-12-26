@@ -81,5 +81,14 @@ namespace CIC
             }
         }
 
+        private void frmConference_Load(object sender, EventArgs e)
+        {
+            ext_number_box.Enabled = true;
+            ext_number_box.Text = "";
+            call_button.Enabled = true;
+            conference_button.Enabled = false;
+            this.ActiveControl = ext_number_box;
+        }
+
     }
 }

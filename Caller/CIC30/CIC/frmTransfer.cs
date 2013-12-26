@@ -87,6 +87,13 @@ namespace CIC
                 this.call_button.Enabled = true;
             }
         }
+
+        private void frmTransfer_Load(object sender, EventArgs e)
+        {
+            transfer_button.Enabled = false;
+            call_button.Enabled = false;
+            this.ActiveControl = ext_number_box;
+        }
         
 
     }
