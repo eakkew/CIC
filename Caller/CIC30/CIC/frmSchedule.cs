@@ -150,7 +150,7 @@ namespace CIC
 
         public DateTime getScheduledTime()
         {
-            return scheduled;
+            return scheduled.ToUniversalTime();
         }
 
         public string getNumber()

@@ -136,6 +136,7 @@ namespace CIC
                     sRet = ReasonCode.SIT;
                     break;
                 case "wrongparty":
+                case "wrongperson":
                     sRet = ReasonCode.WrongParty;
                     break;
                 case "success":

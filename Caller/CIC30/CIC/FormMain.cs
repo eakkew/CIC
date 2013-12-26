@@ -1977,8 +1977,6 @@ namespace CIC
                                     this.ActiveDialerInteraction.CallComplete(callparam.param);
                                     log.Info(scope + "Completed Dialer Interaction CallComplete");
                                     //is_attr_DateAppointCallBack
-                                    this.ActiveDialerInteraction.ContactData["is_attr_DateAppointCallBack"] = callparam.param.ScheduledTime.ToString("yyyy-MM-DD HH:mm:ss.fff");
-                                    this.ActiveDialerInteraction.UpdateCallData();
                                 }
                                 catch (Exception ex)
                                 {
@@ -2981,9 +2979,8 @@ namespace CIC
 
         private void connected_state()
         {
-            // starts the next number in line
-            // timer1.Start();
-
+            string scope = "CIC::FormMain::connected_state()::";
+            log.Debug(scope + "Starting");
             reset_state();
             workflow_button.Enabled = true;
             manual_call_button.Enabled = true;
@@ -2991,44 +2988,51 @@ namespace CIC
 
             prev_state = current_state;
             current_state = FormMainState.Connected;
+            log.Debug(scope + "Completed");
         }
 
         private void preview_state()
         {
-            // starts the next number in line
-            // timer1.Start();
-
+            string scope = "CIC::FormMain::preview_state()::";
+            log.Debug(scope + "Starting");
             reset_state();
             call_button.Enabled = true;
             break_button.Enabled = !break_requested && IcWorkFlow != null && IcWorkFlow.LoginResult;
 
             prev_state = current_state;
             current_state = FormMainState.Preview;
+            log.Debug(scope + "Completed");
         }
 
         private void predictive_state()
         {
-            // starts the next number in line
-            // timer1.Start();
+            string scope = "CIC::FormMain::predictive_state()::";
+            log.Debug(scope + "Starting");
             reset_state();
             break_button.Enabled = !break_requested && IcWorkFlow != null && IcWorkFlow.LoginResult;
             logout_workflow_button.Enabled = true;
             prev_state = current_state;
             current_state = FormMainState.Predictive;
+            log.Debug(scope + "Completed");
         }
 
         private void calling_state()
         {
+            string scope = "CIC::FormMain::calling_state()::";
+            log.Debug(scope + "Starting");
             reset_state();
             disconnect_button.Enabled = true;
 
             prev_state = current_state;
             current_state = FormMainState.Calling;
             state_info_label.Text = "Calling: " + callingNumber;
+            log.Debug(scope + "Completed");
         }
 
         private void preview_call_state()
         {
+            string scope = "CIC::FormMain::preview_call_state()::";
+            log.Debug(scope + "Starting");
             if (this.current_state == FormMainState.PreviewCall)
                 return;
 
@@ -3043,10 +3047,13 @@ namespace CIC
             //state_info_label.Text = "Connected to: " + callingNumber;
             prev_state = current_state;
             current_state = FormMainState.PreviewCall;
+            log.Debug(scope + "Completed");
         }
 
         private void hold_state()
         {
+            string scope = "CIC::FormMain::hold_state()::";
+            log.Debug(scope + "Starting");
             reset_state();
             disconnect_button.Enabled = true;
             hold_button.Enabled = true;
@@ -3059,20 +3066,26 @@ namespace CIC
             }
             current_state = FormMainState.Hold;
             state_info_label.Text = "Connected to: " + callingNumber + " (Held)";
+            log.Debug(scope + "Completed");
         }
 
         private void disconnect_state()
         {
+            string scope = "CIC::FormMain::disconnect_state()::";
+            log.Debug(scope + "Starting");
             reset_state();
             exit_button.Enabled = true;
 
             reset_timer();
             prev_state = current_state;
             current_state = FormMainState.Disconnected;
+            log.Debug(scope + "Completed");
         }
 
         private void mute_state()
         {
+            string scope = "CIC::FormMain::mute_state()::";
+            log.Debug(scope + "Starting");
             reset_state();
             disconnect_button.Enabled = true;
             hold_button.Enabled = true;
@@ -3085,10 +3098,13 @@ namespace CIC
             }
             current_state = FormMainState.Mute;
             state_info_label.Text = "Connected to: " + callingNumber + " (Muted)";
+            log.Debug(scope + "Completed");
         }
 
         private void break_state()
         {
+            string scope = "CIC::FormMain::break_state()::";
+            log.Debug(scope + "Starting");
             reset_state();
             manual_call_button.Enabled = true;
             endbreak_button.Enabled = true;
@@ -3097,6 +3113,7 @@ namespace CIC
             prev_state = current_state;
             current_state = FormMainState.Break;
             this.isOnBreak = true;
+            log.Debug(scope + "Completed");
         }
         
         private void break_requested_state()
@@ -3106,6 +3123,8 @@ namespace CIC
 
         private void logged_out_state()
         {
+            string scope = "CIC::FormMain::logged_out_state()::";
+            log.Debug(scope + "Starting");
             reset_state();
             workflow_button.Enabled = true;
             manual_call_button.Enabled = true;
@@ -3114,28 +3133,40 @@ namespace CIC
             prev_state = current_state;
             current_state = FormMainState.Loggedout;
             state_info_label.Text = "Logged out";
+            log.Debug(scope + "Completed");
         }
 
         private void disable_break_request()
         {
+            string scope = "CIC::FormMain::disable_break_request()::";
+            log.Debug(scope + "Starting");
             break_button.Enabled = false;
+            log.Debug(scope + "Completed");
         }
             
         private void disable_logout()
         {
+            string scope = "CIC::FormMain::disable_logout()::";
+            log.Debug(scope + "Starting");
             logout_workflow_button.Enabled = false;
+            log.Debug(scope + "Completed");
         }
 
         private void disable_when_line_disconnect()
         {
+            string scope = "CIC::FormMain::disable_when_line_disconnect()::";
+            log.Debug(scope + "Starting");
             conference_button.Enabled = false;
             transfer_button.Enabled = false;
         }
 
         private void enable_when_repickup()
         {
+            string scope = "CIC::FormMain::enable_when_repickup()::";
+            log.Debug(scope + "Starting");
             conference_button.Enabled = true;
             transfer_button.Enabled = true;
+            log.Debug(scope + "Completed");
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -4140,31 +4171,45 @@ namespace CIC
                         log.Info(scope + "Pickup button clicked. Log on to Dialer Server.");
                         if (this.ActiveDialerInteraction != null && !this.isConsulting)
                         {
-                            log.Info(scope + "Starting Dialer Interaction Pickup");
-                            this.ActiveDialerInteraction.Pickup();
-                            log.Info(scope + "Completed Dialer Interaction Pickup");
+                            try
+                            {
+                                log.Info(scope + "Starting Dialer Interaction Pickup");
+                                this.ActiveDialerInteraction.Pickup();
+                                log.Info(scope + "Completed Dialer Interaction Pickup");
+                            }
+                            catch (Exception ex)
+                            {
+                                log.Warn(scope + "Pickup fail. Reason " + ex.Message);
+                            }
                             this.CrmScreenPop();
                             this.state_info_label.Text = "Connected to: " + this.GetDialerNumber();
                         }
                         if (ActiveNormalInteraction != null && !this.isConsulting)
                         {
-                            switch (ActiveNormalInteraction.InteractionType)
+                            try
                             {
-                                case InteractionType.Email:
-                                    //Show Mail form
-                                    log.Info(scope + "Starting Normal Interaction Pickup");
-                                    ActiveNormalInteraction.Pickup();
-                                    log.Info(scope + "Completed Normal Interaction Pickup");
-                                    break;
-                                case InteractionType.Chat:
-                                    break;
-                                case InteractionType.Call:
-                                    log.Info(scope + "Starting Normal Interaction Pickup");
-                                    ActiveNormalInteraction.Pickup();
-                                    log.Info(scope + "Completed Normal Interaction Pickup");
-                                    break;
-                                default:
-                                    break;
+                                switch (ActiveNormalInteraction.InteractionType)
+                                {
+                                    case InteractionType.Email:
+                                        //Show Mail form
+                                        log.Info(scope + "Starting Normal Interaction Pickup");
+                                        ActiveNormalInteraction.Pickup();
+                                        log.Info(scope + "Completed Normal Interaction Pickup");
+                                        break;
+                                    case InteractionType.Chat:
+                                        break;
+                                    case InteractionType.Call:
+                                        log.Info(scope + "Starting Normal Interaction Pickup");
+                                        ActiveNormalInteraction.Pickup();
+                                        log.Info(scope + "Completed Normal Interaction Pickup");
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                log.Warn(scope + "Pickup fail. Reason " + ex.Message);
                             }
                         }
                         state_change(FormMainState.PreviewCall);
@@ -4173,25 +4218,32 @@ namespace CIC
                         log.Info(scope + "Pickup button clicked[Basic station].");
                         if (ActiveNormalInteraction != null)
                         {
-                            switch (ActiveNormalInteraction.InteractionType)
+                            try
                             {
-                                case InteractionType.Email:
-                                    this.ViewEmailDetail(ActiveNormalInteraction);
-                                    log.Info(scope + "Starting Normal Interaction Pickup");
-                                    ActiveNormalInteraction.Pickup();
-                                    log.Info(scope + "Completed Normal Interaction Pickup");
-                                    this.state_info_label.Text = "Connected to: " + callingNumber;
-                                    break;
-                                case InteractionType.Chat:
-                                    break;
-                                case InteractionType.Call:
-                                    log.Info(scope + "Starting Normal Interaction Pickup");
-                                    ActiveNormalInteraction.Pickup();
-                                    log.Info(scope + "Completed Normal Interaction Pickup");
-                                    this.state_info_label.Text = "Connected to: " + callingNumber;
-                                    break;
-                                default:
-                                    break;
+                                switch (ActiveNormalInteraction.InteractionType)
+                                {
+                                    case InteractionType.Email:
+                                        this.ViewEmailDetail(ActiveNormalInteraction);
+                                        log.Info(scope + "Starting Normal Interaction Pickup");
+                                        ActiveNormalInteraction.Pickup();
+                                        log.Info(scope + "Completed Normal Interaction Pickup");
+                                        this.state_info_label.Text = "Connected to: " + callingNumber;
+                                        break;
+                                    case InteractionType.Chat:
+                                        break;
+                                    case InteractionType.Call:
+                                        log.Info(scope + "Starting Normal Interaction Pickup");
+                                        ActiveNormalInteraction.Pickup();
+                                        log.Info(scope + "Completed Normal Interaction Pickup");
+                                        this.state_info_label.Text = "Connected to: " + callingNumber;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                log.Warn(scope + "Pickup fail. Reason " + ex.Message);
                             }
                         }
                         state_change(FormMainState.ManualCall);
