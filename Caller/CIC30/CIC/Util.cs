@@ -104,11 +104,14 @@ namespace CIC
             ININ.IceLib.Dialer.ReasonCode sRet = 0;
             switch (sFinishcode.ToLower().Trim())
             {
-                case "call loss":
-                    sRet = ReasonCode.Scheduled;
+                case "ambiguous":
+                    sRet = ReasonCode.Ambiguous;
                     break;
                 case "busy":
                     sRet = ReasonCode.Busy;
+                    break;
+                case "call loss":
+                    sRet = ReasonCode.Scheduled;
                     break;
                 case "deleted":
                     sRet = ReasonCode.Deleted;
@@ -124,6 +127,9 @@ namespace CIC
                     break;
                 case "noanswer":
                     sRet = ReasonCode.NoAnswer;
+                    break;
+                case "nolines":
+                    sRet = ReasonCode.NoLines;
                     break;
                 case "remotehangup":
                     sRet = ReasonCode.RemoteHangup;

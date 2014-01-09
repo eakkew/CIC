@@ -85,7 +85,7 @@ namespace CIC
         {
             ext_number_box.Enabled = true;
             ext_number_box.Text = "";
-            call_button.Enabled = true;
+            call_button.Enabled = false;
             conference_button.Enabled = false;
             this.ActiveControl = ext_number_box;
         }

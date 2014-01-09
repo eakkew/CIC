@@ -110,9 +110,10 @@ namespace CIC
         {
             ExitFlag = false;
             isConsulting = false;
+            isFirstTimeLogin = true;
             InitializeComponent();
             JulianCalendar cal = new JulianCalendar();
-            this.Text = "Outbound Telephony Dialer Client v.1.0." + cal.GetDayOfYear(DateTime.Now) + "a";
+            this.Text = "Outbound Telephony Dialer Client v.1.0." + cal.GetDayOfYear(DateTime.Now) + "b";
             state_change(FormMainState.Disconnected);
             InitializeSession();
         }
@@ -173,6 +174,11 @@ namespace CIC
                                 this.Initial_NormalInteraction();
                                 this.InitializeQueueWatcher();
                                 this.BeginInvoke(new MethodInvoker(connected_state));
+                                if (this.isFirstTimeLogin)
+                                {
+                                    this.login_workflow();
+                                    this.isFirstTimeLogin = false;
+                                }
                                 log.Info(scope + "Completed.");
                             }
                             else
@@ -1280,11 +1286,15 @@ namespace CIC
                     {
                         log.Error(scope + "Error info." + ex.Message);
                     }
-
                     this.Initial_NormalInteraction();
                     this.InitializeQueueWatcher();
+
+                    if (this.isFirstTimeLogin)
+                    {
+                        this.login_workflow();
+                        this.isFirstTimeLogin = false;
+                    }
                     this.BeginInvoke(new MethodInvoker(connected_state));
-                    this.state_info_label.Text = "Connected to the server.";
                     log.Info(scope + "Completed.");
                     break;
                 case ININ.IceLib.Connection.ConnectionState.Down:
@@ -1410,7 +1420,14 @@ namespace CIC
 
         public void login_workflow()
         {
-            this.workflow_button_Click(null, EventArgs.Empty);
+            if (this.InvokeRequired)
+            {
+                this.BeginInvoke(new MethodInvoker(login_workflow));
+            }
+            else
+            {
+                this.workflow_button_Click(null, EventArgs.Empty);
+            }
         }
 
         private void FormMain_Load(object sender, EventArgs e)
@@ -2965,16 +2982,25 @@ namespace CIC
 
         private void connected_state()
         {
-            string scope = "CIC::FormMain::connected_state()::";
-            log.Debug(scope + "Starting");
-            reset_state();
-            workflow_button.Enabled = true;
-            manual_call_button.Enabled = true;
-            exit_button.Enabled = true;
+            if (this.InvokeRequired)
+            {
+                this.BeginInvoke(new MethodInvoker(connected_state));
+            }
+            else
+            {
+                string scope = "CIC::FormMain::connected_state()::";
+                log.Debug(scope + "Starting");
+                reset_state();
+                workflow_button.Enabled = true;
+                manual_call_button.Enabled = true;
+                exit_button.Enabled = true;
 
-            prev_state = current_state;
-            current_state = FormMainState.Connected;
-            log.Debug(scope + "Completed");
+                this.state_info_label.Text = "Connected to the server.";
+
+                prev_state = current_state;
+                current_state = FormMainState.Connected;
+                log.Debug(scope + "Completed");
+            }
         }
 
         private void preview_state()
@@ -3032,7 +3058,7 @@ namespace CIC
                 transfer_button.Enabled = true;
                 conference_button.Enabled = true;
             }
-            break_button.Enabled = !break_requested && IcWorkFlow != null && IcWorkFlow.LoginResult;
+            break_button.Enabled = !break_requested && IcWorkFlow != null && IcWorkFlow.LoginResult && !IsManualDialing;
 
             //state_info_label.Text = "Connected to: " + callingNumber;
             prev_state = current_state;
@@ -3166,6 +3192,7 @@ namespace CIC
             if (timer <= 0)
             {
                 reset_timer();
+                timer_info.Text = "Calling: " + this.GetDialerNumber();
                 
                 // make a call or pickup
                 placecall(sender, e);
@@ -3710,6 +3737,7 @@ namespace CIC
                 this.NormalInterationManager.MakeCallAsync(callParams, MakeCallCompleted, null);
                 log.Info(scope + "Completed Normal Interaction Make Call");
                 this.IsManualDialing = true;
+                reset_info_on_dashboard();
                 state_change(FormMainState.ManualCall);
             }
             catch (Exception ex)
@@ -4487,5 +4515,7 @@ namespace CIC
 
         public bool isOnBreak { get; set; }
 
+
+        public bool isFirstTimeLogin { get; set; }
     }
 }
