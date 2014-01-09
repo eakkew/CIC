@@ -1945,39 +1945,13 @@ namespace CIC
                                 callParameter callparam = (callParameter)sender;
                                 if (callparam.number != null && callparam.number != "")
                                 {
-                                    ActiveDialerInteraction.ContactData["is_attr_numbertodial"] = callparam.number;
+                                    ActiveDialerInteraction.ContactData["is_attr_schedphone"] = callparam.number;
                                     ActiveDialerInteraction.UpdateCallData();
-                                    //List<string> callbackAttributeName = new List<string>();
-                                    //callbackAttributeName.Add(this.callingNumber);
-                                    //try
-                                    //{
-                                    //    if (!ActiveDialerInteraction.IsWatching())
-                                    //    {
-                                    //        log.Info(scope + "Starting Dialer Interaction startwatching");
-                                    //        this.ActiveDialerInteraction.StartWatching(callbackAttributeName.ToArray());
-                                    //        log.Info(scope + "Completed Dialer Interaction startwatching");
-                                    //    }
-                                    //}
-                                    //catch (Exception ex)
-                                    //{
-                                    //    log.Warn(scope + "Dialer Interaction StartWatching failed: " + ex.Message);
-                                    //}
-                                    //try
-                                    //{
-                                    //    this.callingNumber = callparam.number;
-                                    //    log.Info(scope + "Start Dialer Interaction ChangeWatchedAttribute");
-                                    //    this.ActiveDialerInteraction.ChangeWatchedAttributesAsync(callbackAttributeName.ToArray(), null, true, ChangeWatchedAttributesCompleted, null);
-                                    //    log.Info(scope + "Completed Dialer Interaction ChangeWatchedAttribute");
-                                    //}
-                                    //catch (Exception ex)
-                                    //{
-                                    //    log.Error(scope + "Dialer Interaction ChangeWatchedAttribute failed: " + ex.Message);
-                                    //}
                                 }
                                 try
                                 {
                                     log.Info(scope + "Starting Dialer Interaction CallComplete");
-                                    this.ActiveDialerInteraction.CallComplete(callparam.param);
+                                    this.ActiveDialerInteraction.CallCompleteAsync(callparam.param, completedCallback, null);
                                     log.Info(scope + "Completed Dialer Interaction CallComplete");
                                     //is_attr_DateAppointCallBack
                                 }
@@ -2046,6 +2020,15 @@ namespace CIC
                 {
                     log.Error(scope + "Error info." + ex.Message);
                 }
+            }
+        }
+
+        private void completedCallback(object sender, AsyncCompletedEventArgs e)
+        {
+            if (e.Error != null)
+            {
+                log.Warn("CompletedCall is incompleted" + e.Error.StackTrace + " :: " + e.Error.Message);
+                return;
             }
         }
 
@@ -3868,6 +3851,7 @@ namespace CIC
                     }
                 }
                 this.isConsulting = false;
+                this.BeginInvoke(new MethodInvoker(enable_when_repickup));
                 log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)

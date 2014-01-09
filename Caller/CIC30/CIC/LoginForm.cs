@@ -304,6 +304,10 @@ namespace CIC
       {
           return;
       }
+      if (this.isLoginLocked)
+      {
+          return;
+      }
       LoginButton.Enabled = true;
     }
 
@@ -415,6 +419,7 @@ namespace CIC
             else 
             {
                 LoginButton.Enabled = false;
+                this.isLoginLocked = true;
                 this.lblLogInStatusMsg.Text = global::CIC.Properties.Settings.Default.TooManyBadLoginMsg;
             }
         }
@@ -687,5 +692,7 @@ namespace CIC
 
 #endregion
 
+
+    public bool isLoginLocked { get; set; }
   }
 }

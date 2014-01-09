@@ -96,7 +96,6 @@ namespace CIC
         public static DateTime getDateTimeNowPlusOffset()
         {
             DateTime ret = DateTime.Now;
-
             return ret.AddMinutes(global::CIC.Properties.Settings.Default.AutoScheduledTime);
         }
 

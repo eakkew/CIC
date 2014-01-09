@@ -109,7 +109,7 @@ namespace CIC
             //scheduled = DateTime.Now;
             //scheduled = scheduled.AddHours(hour);
             //scheduled = scheduled.AddMinutes(minute);
-            scheduled = new DateTime(today.Year, today.Month, today.Day, hour, minute, 0);
+            scheduled = new DateTime(today.Year, today.Month, today.Day + 1, hour, minute, 0);
 
             if (validateTime() && validatePhone())
             {

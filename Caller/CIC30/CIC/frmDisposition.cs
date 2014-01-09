@@ -94,7 +94,7 @@ namespace CIC
             {
                 callback.param = new CallCompletionParameters(
                     sReasoncode, this.finishcode_combobox.Text,
-                    Util.getDateTimeNowPlusOffset() , this.IC_Session.UserId, false
+                    Util.getDateTimeNowPlusOffset().ToUniversalTime() , this.IC_Session.UserId, false, ININ.IceLib.Dialer.Enums.TimeReference.UTC
                 );
             }
             else if (sReasoncode == ReasonCode.Scheduled || sReasoncode == ReasonCode.SIT)
@@ -107,7 +107,7 @@ namespace CIC
                 {
                     callback.param = new CallCompletionParameters(
                         sReasoncode, this.finishcode_combobox.Text, 
-                        schedule.getScheduledTime(), this.IC_Session.UserId, false
+                        schedule.getScheduledTime(), this.IC_Session.UserId, false, ININ.IceLib.Dialer.Enums.TimeReference.UTC
                     );
                     callback.number = schedule.getNumber();
                 }
