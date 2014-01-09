@@ -137,6 +137,7 @@ namespace CIC
                     break;
                 case "wrongparty":
                 case "wrongperson":
+                case "wrong person":
                     sRet = ReasonCode.WrongParty;
                     break;
                 case "success":

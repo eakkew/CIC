@@ -139,7 +139,7 @@ namespace CIC
             {
                 this.TimedOutInfoLabel.Text = "Auto Disposition activating";
                 callParameter callback = new callParameter();
-                callback.param = new CallCompletionParameters(ReasonCode.Success, "Success");
+                callback.param = new CallCompletionParameters(ReasonCode.Success, "Auto Close");
                 Program.MainDashboard.disposition_invoke(callback, e);
                 Program.MainDashboard.request_break();
                 timer1.Stop();

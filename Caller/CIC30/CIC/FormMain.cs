@@ -112,7 +112,7 @@ namespace CIC
             isConsulting = false;
             InitializeComponent();
             JulianCalendar cal = new JulianCalendar();
-            this.Text = "Outbound Telephony Dialer Client v.1.0." + cal.GetDayOfYear(DateTime.Now) + "b";
+            this.Text = "Outbound Telephony Dialer Client v.1.0." + cal.GetDayOfYear(DateTime.Now) + "a";
             state_change(FormMainState.Disconnected);
             InitializeSession();
         }
@@ -1389,6 +1389,7 @@ namespace CIC
         private void restart_timer()
         {
             reset_timer();
+            this.ShowActiveCallInfo();
             previewCallTimer.Start();
         }
 
@@ -1463,7 +1464,8 @@ namespace CIC
             {
                 log.Info(scope + "try disconnecting logged in workflow interactions");
                 if (this.current_state == FormMainState.PreviewCall ||
-                    this.current_state == FormMainState.ConferenceCall)
+                    this.current_state == FormMainState.ConferenceCall ||
+                    !this.IsManualDialing)
                 {
                     frmDisposition disposition = frmDisposition.getInstance(
                         this.IC_Session, this.GetDialerNumber(), this.toolStripCallTypeLabel.Text); //new frmDisposition();
@@ -1588,6 +1590,7 @@ namespace CIC
                 this.state_change(FormMainState.Connected);
             }
             isConsulting = false;
+            this.IsActiveConference_flag = false;
             this.reset_info_on_dashboard();
             log.Info(scope + "Completed.");
         }
@@ -2491,7 +2494,7 @@ namespace CIC
                                     this.call_button.Enabled = true;
                                 }
                             }
-                            if (this.current_state != FormMainState.ManualCall)
+                            if (this.current_state != FormMainState.ManualCall || !this.IsManualDialing)
                             {
                                 update_info_on_dashboard();
                             }
@@ -3040,8 +3043,12 @@ namespace CIC
             disconnect_button.Enabled = true;
             hold_button.Enabled = true;
             mute_button.Enabled = true;
-            transfer_button.Enabled = true;
-            conference_button.Enabled = true;
+
+            if (!this.IsActiveConference_flag)
+            {
+                transfer_button.Enabled = true;
+                conference_button.Enabled = true;
+            }
             break_button.Enabled = !break_requested && IcWorkFlow != null && IcWorkFlow.LoginResult;
 
             //state_info_label.Text = "Connected to: " + callingNumber;
@@ -3208,6 +3215,7 @@ namespace CIC
                 ActiveNormalInteraction = e.Interaction;
             }
 
+            reset_info_on_dashboard();
             state_change(FormMainState.ManualCall);
             log.Info(scope + "Completed");
         }
@@ -3370,7 +3378,6 @@ namespace CIC
                     case InteractionType.Callback:
                         this.Initialize_CallBack();
                         this.Initialize_ContactData();
-                        this.ShowActiveCallInfo();
 
                         // restart timer and reset call index
                         this.BeginInvoke(new MethodInvoker(preview_state));
@@ -3379,7 +3386,6 @@ namespace CIC
                         break;
                     case InteractionType.Call:
                         this.Initialize_ContactData();
-                        this.ShowActiveCallInfo();
 
                         // restart timer and reset call index
                         // TODO: need to check whether it is predictive or preview
@@ -3712,7 +3718,7 @@ namespace CIC
             try
             {
                 callingNumber = number;
-                this.state_info_label.Text = "Next Calling Number: " + callingNumber;
+                this.state_info_label.Text = "Manual Calling Number: " + callingNumber;
                 CallInteractionParameters callParams =
                     new CallInteractionParameters(number, CallMadeStage.Allocated);
                 SessionSettings sessionSetting = Program.m_Session.GetSessionSettings();
