@@ -63,6 +63,7 @@ namespace CIC
             {
                 Program.Initialize_dialingManager(mSession);
                 string[] workflows = Program.mDialingManager.GetAvailableWorkflows();
+                
                 workflow_combobox.Items.Clear();
                 if (workflows.Length > 0)
                 {

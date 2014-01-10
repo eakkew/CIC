@@ -1870,7 +1870,7 @@ namespace CIC
                     //if (this.CallStateToolStripStatusLabel.Text.ToLower().Trim() == "n/a")
                     if (this.current_state == FormMainState.Disconnected)
                     {
-                        this.LogoutGranted(sender, e);      //No call object from this campaign;permit to logging out.
+                        IcWorkFlow.DialerSession.RequestLogoutAsync(LogoutGranted, null);
                     }
                     else
                     {
@@ -1879,15 +1879,19 @@ namespace CIC
                             if (!this.break_granted)
                             {
                                 this.break_granted = true;
-                                this.break_button_Click(sender, e);               //wait for breakgrant
+                                this.request_break();               //wait for breakgrant
                                 log.Info(scope + "Starting Dialer Interaction Request Logout");
                                 this.ActiveDialerInteraction.DialerSession.RequestLogoutAsync(LogoutGranted, null);
                                 log.Info(scope + "Completed Dialer Interaction Request Logout");
                             }
                             else
                             {
-                                this.LogoutGranted(sender, e);     //already breakpermit to logging out.
+                                this.ActiveDialerInteraction.DialerSession.RequestLogoutAsync(LogoutGranted, null);
                             }
+                        }
+                        else
+                        {
+                            IcWorkFlow.DialerSession.RequestLogoutAsync(LogoutGranted, null);
                         }
                     }
                 }
@@ -2064,21 +2068,22 @@ namespace CIC
                 {
                     this.InitializeDialerSession();
                     this.SetActiveSession(Program.m_Session);
-                    log.Info(scope + "Completed.");
                     this.Initial_NormalInteraction();
                     this.InitializeQueueWatcher();
                     this.UpdateUserStatus();
                     this.state_change(FormMainState.Predictive);
+                    this.state_info_label.Text = "Logged into Workflow";
+                    log.Info(scope + "Completed.");
                 }
                 else
                 {
-                    log.Warn(scope + "WorkFlow [" + ((ToolStripMenuItem)sender).Text + "] logon Fail. Please try again.");
+                    log.Warn(scope + "WorkFlow [" + ((string)sender) + "] logon Fail. Please try again.");
                 }
             }
             catch (System.Exception ex)
             {
                 this.state_change(FormMainState.Disconnected);
-                log.Error(scope + "Error info.Logon to Workflow[" + ((ToolStripMenuItem)sender).Text + "] : " + ex.Message);
+                log.Error(scope + "Error info.Logon to Workflow[" + ((string)sender) + "] : " + ex.Message);
             }  
         }
 
