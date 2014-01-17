@@ -590,7 +590,6 @@ namespace CIC
             this.toolStripDirectionLabel.Text = "N/A";
             this.toolStripCallTypeLabel.Text = "N/A";
             this.toolStripCampaignIDLabel.Text = "N/A";
-            this.toolStripWorkflowLabel.Text = "N/A";
         }
 
         private void SetInfoBarColor()
@@ -1482,8 +1481,8 @@ namespace CIC
                 this.IC_Session.ConnectionState == ININ.IceLib.Connection.ConnectionState.Up)
             {
                 log.Info(scope + "try disconnecting logged in workflow interactions");
-                if (this.current_state == FormMainState.PreviewCall ||
-                    this.current_state == FormMainState.ConferenceCall ||
+                if ((this.current_state == FormMainState.PreviewCall ||
+                    this.current_state == FormMainState.ConferenceCall) &&
                     !this.IsManualDialing)
                 {
                     frmDisposition disposition = frmDisposition.getInstance(
@@ -1825,6 +1824,9 @@ namespace CIC
                 if (this.ActiveDialerInteraction == null)
                 {
                     break_requested = false;
+                    break_granted = false;
+                    this.isOnBreak = false;
+                    this.endbreak_button.Enabled = false;
                 }
                 else
                 {
@@ -1849,6 +1851,7 @@ namespace CIC
                         break_granted = false;
                         this.isOnBreak = false;
                         this.endbreak_button.Enabled = false;
+                        this.manual_call_button.Enabled = false;
                         this.state_info_label.Text = "Break ended. Waiting for a new call from workflow.";
                         log.Info(scope + "Complete.");
                     }
@@ -2057,36 +2060,43 @@ namespace CIC
 
         public void workflow_invoke(object sender, EventArgs e)
         {
-            string scope = "CIC::MainForm::WorkflowToolStripMenuItem_Click()::";
-            log.Info(scope + "Starting.");
-            try
+            if (this.InvokeRequired)
             {
-                log.Info(scope + "Logging into workflow. UserId=" + this.IC_Session.UserId + ", StationId=" + this.IC_Session.GetStationInfo().Id);
-                IcWorkFlow = new CIC.ICWorkFlow(CIC.Program.DialingManager);
-                this.DialerSession = IcWorkFlow.LogIn(((String)sender));
-                this.toolStripWorkflowLabel.Text = (string)sender;
-                //IcWorkFlow.LoginResult = IcWorkFlow.LoginResult;
-                if (IcWorkFlow.LoginResult)
+                this.BeginInvoke(new EventHandler<EventArgs>(workflow_invoke), new object[] { sender, e });
+            }
+            else
+            {
+                string scope = "CIC::MainForm::WorkflowToolStripMenuItem_Click()::";
+                log.Info(scope + "Starting.");
+                try
                 {
-                    this.InitializeDialerSession();
-                    this.SetActiveSession(Program.m_Session);
-                    this.Initial_NormalInteraction();
-                    this.InitializeQueueWatcher();
-                    this.UpdateUserStatus();
-                    this.state_change(FormMainState.Predictive);
-                    this.state_info_label.Text = "Logged into Workflow";
-                    log.Info(scope + "Completed.");
+                    log.Info(scope + "Logging into workflow. UserId=" + this.IC_Session.UserId + ", StationId=" + this.IC_Session.GetStationInfo().Id);
+                    IcWorkFlow = new CIC.ICWorkFlow(CIC.Program.DialingManager);
+                    this.DialerSession = IcWorkFlow.LogIn(((String)sender));
+                    this.toolStripWorkflowLabel.Text = (string)sender;
+                    //IcWorkFlow.LoginResult = IcWorkFlow.LoginResult;
+                    if (IcWorkFlow.LoginResult)
+                    {
+                        this.InitializeDialerSession();
+                        this.SetActiveSession(Program.m_Session);
+                        this.Initial_NormalInteraction();
+                        this.InitializeQueueWatcher();
+                        this.UpdateUserStatus();
+                        this.state_change(FormMainState.Predictive);
+                        this.state_info_label.Text = "Logged into Workflow";
+                        log.Info(scope + "Completed.");
+                    }
+                    else
+                    {
+                        log.Warn(scope + "WorkFlow [" + ((string)sender) + "] logon Fail. Please try again.");
+                    }
                 }
-                else
+                catch (System.Exception ex)
                 {
-                    log.Warn(scope + "WorkFlow [" + ((string)sender) + "] logon Fail. Please try again.");
+                    this.state_change(FormMainState.Disconnected);
+                    log.Error(scope + "Error info.Logon to Workflow[" + ((string)sender) + "] : " + ex.Message);
                 }
             }
-            catch (System.Exception ex)
-            {
-                this.state_change(FormMainState.Disconnected);
-                log.Error(scope + "Error info.Logon to Workflow[" + ((string)sender) + "] : " + ex.Message);
-            }  
         }
 
         public void conference_invoke(string transferTxtDestination)
@@ -4018,6 +4028,8 @@ namespace CIC
                                 this.ActiveDialerInteraction = null;
                             }
                             // TODO: need to clean up
+                            tryDisconnect();
+                            tryDisconnectAllInteractions();
                             IcWorkFlow = null;
                             this.DialerSession = null;
                             
@@ -4027,7 +4039,7 @@ namespace CIC
                                 global::CIC.Properties.Settings.Default.CompletedWorkflowMsg,
                                 "System Info.", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             reset_info_on_dashboard();
-                            
+                            this.toolStripWorkflowLabel.Text = "N/A";
                             break;
                         default:
                             if (ActiveNormalInteraction != null)
