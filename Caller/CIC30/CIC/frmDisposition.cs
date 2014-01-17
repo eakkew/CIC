@@ -89,7 +89,6 @@ namespace CIC
             callback.number = "";
             // check finish code for conditional scheduling
             if (this.finishcode_combobox.Text.ToLower() == "call loss" ||
-                sReasoncode == ReasonCode.WrongParty || 
                 sReasoncode == ReasonCode.RemoteHangup)
             {
                 callback.param = new CallCompletionParameters(

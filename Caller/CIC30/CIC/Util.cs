@@ -143,7 +143,7 @@ namespace CIC
                 case "wrongparty":
                 case "wrongperson":
                 case "wrong person":
-                    sRet = ReasonCode.WrongParty;
+                    sRet = ReasonCode.Scheduled;
                     break;
                 case "success":
                     sRet = ReasonCode.Success;

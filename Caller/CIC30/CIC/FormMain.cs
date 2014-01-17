@@ -795,6 +795,7 @@ namespace CIC
                                     {
                                         this.BeginInvoke(new MethodInvoker(CrmScreenPop));
                                         this.BeginInvoke(new MethodInvoker(reset_call_timer));
+                                        this.update_state_info_label("Connected to: " + this.GetDialerNumber());
                                     }
                                 }
                             }
@@ -1457,7 +1458,8 @@ namespace CIC
 
             // make a call or pickup
             placecall_or_pickup();
-                
+            update_state_info_label("Calling: " + this.GetDialerNumber());
+            highlight_call();
             state_change(FormMainState.PreviewCall);
         }
 
@@ -2660,7 +2662,6 @@ namespace CIC
 
             update_currency_on_dashboard(data);
 
-            state_info_label.Text = "Acquired information from workflow.";
             if (data.ContainsKey("is_attr_STATUS") && data["is_attr_STATUS"].ToLower() == "complete")
             {
                 this.break_button.Enabled = true;
@@ -3065,7 +3066,6 @@ namespace CIC
             }
             break_button.Enabled = !break_requested && IcWorkFlow != null && IcWorkFlow.LoginResult && !IsManualDialing;
 
-            //state_info_label.Text = "Connected to: " + callingNumber;
             prev_state = current_state;
             current_state = FormMainState.PreviewCall;
             log.Debug(scope + "Completed");
@@ -3397,7 +3397,7 @@ namespace CIC
                         // restart timer and reset call index
                         this.BeginInvoke(new MethodInvoker(preview_state));
                         this.BeginInvoke(new MethodInvoker(restart_timer));
-                        
+                        this.update_state_info_label("Acquired information from workflow.");
                         break;
                     case InteractionType.Call:
                         this.Initialize_ContactData();
@@ -3406,6 +3406,7 @@ namespace CIC
                         // TODO: need to check whether it is predictive or preview
                         this.BeginInvoke(new MethodInvoker(preview_state));
                         this.BeginInvoke(new MethodInvoker(restart_timer));
+                        this.update_state_info_label("Acquired information from workflow.");
                         break;
                 }
                 log.Info(scope + "Completed.");
@@ -4205,7 +4206,7 @@ namespace CIC
                                 log.Warn(scope + "Pickup fail. Reason " + ex.Message);
                             }
                             this.CrmScreenPop();
-                            this.state_info_label.Text = "Connected to: " + this.GetDialerNumber();
+                            update_state_info_label("Connected to: " + this.GetDialerNumber());
                         }
                         if (ActiveNormalInteraction != null && !this.isConsulting)
                         {
@@ -4277,6 +4278,22 @@ namespace CIC
             catch (System.Exception ex)
             {
                 log.Error("Error info." + ex.Message);
+            }
+        }
+
+        public delegate void MyDelegate(string myArg);
+
+        private void update_state_info_label(string info)
+        {
+            if (this.InvokeRequired)
+            {
+                object[] myArray = new object[1];
+                myArray[0] = info;
+                this.BeginInvoke(new MyDelegate(update_state_info_label), myArray);
+            }
+            else
+            {
+                this.state_info_label.Text = info;
             }
         }
 
