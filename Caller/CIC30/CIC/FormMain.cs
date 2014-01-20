@@ -1035,14 +1035,6 @@ namespace CIC
                                         this.CallerHost = session_Setting.MachineName.ToString();
                                     }
                                 }
-                                if (!this.IsManualDialing)
-                                {
-
-                                }
-                                else
-                                {
-                                    this.IsManualDialing = false;
-                                }
                             }
                             else
                             {
@@ -2494,13 +2486,16 @@ namespace CIC
                         {
                             if (this.ActiveDialerInteraction.DialingMode == DialingMode.Regular)
                             {
-                                if (global::CIC.Properties.Settings.Default.AutoAnswer)
+                                if (!this.ActiveDialerInteraction.IsHeld && !this.ActiveDialerInteraction.IsMuted)
                                 {
-                                    this.pickup();
-                                }
-                                else
-                                {
-                                    this.call_button.Enabled = true;
+                                    if (global::CIC.Properties.Settings.Default.AutoAnswer)
+                                    {
+                                        this.pickup();
+                                    }
+                                    else
+                                    {
+                                        this.call_button.Enabled = true;
+                                    }
                                 }
                             }
                             if (!this.IsManualDialing)
