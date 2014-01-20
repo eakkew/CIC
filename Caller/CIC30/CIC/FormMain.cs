@@ -776,10 +776,44 @@ namespace CIC
                             //
                             break;
                         case InteractionType.Chat:
-                            //
                             break;
                         case InteractionType.Callback:
-                            //
+                            ActiveNormalInteraction = e.Interaction;
+                            if (ActiveNormalInteraction.State == InteractionState.Connected)
+                            {
+                                this.BeginInvoke(new MethodInvoker(enable_when_repickup));
+                                if (this.StrConnectionState == InteractionState.Proceeding)
+                                {
+                                    this.BeginInvoke(new MethodInvoker(update_calling_info));
+                                    if (IcWorkFlow != null && IcWorkFlow.LoginResult &&
+                                        !isConsulting)
+                                    {
+                                        this.BeginInvoke(new MethodInvoker(CrmScreenPop));
+                                        this.BeginInvoke(new MethodInvoker(reset_call_timer));
+                                        this.update_state_info_label("Connected to: " + this.GetDialerNumber());
+                                    }
+                                }
+                            }
+                            this.StrConnectionState = ActiveNormalInteraction.State;
+                            toolStripStatus.Text = this.StrConnectionState.ToString();
+                            if (this.BlindTransferFlag)
+                            {
+                                this.ResetActiveCallInfo();
+                            }
+                            else
+                            {
+                                this.ShowActiveCallInfo();
+                            }
+                            if (ActiveNormalInteraction != null)
+                            {
+                                if (ActiveNormalInteraction.IsDisconnected)
+                                {
+                                    this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
+                                    ActiveNormalInteraction = this.GetAvailableInteractionFromList();
+                                    this.reset_info_on_dashboard();
+                                    this.BeginInvoke(new MethodInvoker(disable_when_line_disconnect));
+                                }
+                            }
                             break;
                         case InteractionType.Call:
                             ActiveNormalInteraction = e.Interaction;
@@ -816,10 +850,6 @@ namespace CIC
                                     ActiveNormalInteraction = this.GetAvailableInteractionFromList();
                                     this.reset_info_on_dashboard();
                                     this.BeginInvoke(new MethodInvoker(disable_when_line_disconnect));
-                                }
-                                else
-                                {
-                                    // TODO: check if there's no blind transfer flag allow pickup
                                 }
                             }
                             break;
@@ -2510,7 +2540,7 @@ namespace CIC
                                     this.call_button.Enabled = true;
                                 }
                             }
-                            if (this.current_state != FormMainState.ManualCall || !this.IsManualDialing)
+                            if (!this.IsManualDialing)
                             {
                                 update_info_on_dashboard();
                             }
@@ -2912,6 +2942,7 @@ namespace CIC
                                 hold_button.Text = "Hold";
                                 state_info_label.Text = "Continue call from: " + callingNumber;
                                 state_change(FormMainState.PreviewCall);
+                                this.BeginInvoke(new MethodInvoker(enable_when_repickup));
                                 log.Info("State Changed: Unhold -> Preview Call");
                                 break;
                         }
@@ -2942,6 +2973,7 @@ namespace CIC
                                 state_info_label.Text = "Continue call from: " + callingNumber;
                                 state = FormMainState.PreviewCall;
                                 state_change(FormMainState.PreviewCall);
+                                this.BeginInvoke(new MethodInvoker(enable_when_repickup));
                                 log.Info("State Changed: Unmute -> Preview Call");
                                 break;
                         }
@@ -3087,7 +3119,7 @@ namespace CIC
             reset_state();
             disconnect_button.Enabled = true;
             hold_button.Enabled = true;
-            mute_button.Enabled = true;
+            mute_button.Enabled = false;
             break_button.Enabled = !break_requested && IcWorkFlow != null && IcWorkFlow.LoginResult;
 
             if (current_state != FormMainState.Mute)
@@ -3118,7 +3150,7 @@ namespace CIC
             log.Debug(scope + "Starting");
             reset_state();
             disconnect_button.Enabled = true;
-            hold_button.Enabled = true;
+            hold_button.Enabled = false;
             mute_button.Enabled = true;
             break_button.Enabled = !break_requested && IcWorkFlow != null && IcWorkFlow.LoginResult;
 
