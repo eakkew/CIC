@@ -778,43 +778,6 @@ namespace CIC
                         case InteractionType.Chat:
                             break;
                         case InteractionType.Callback:
-                            ActiveNormalInteraction = e.Interaction;
-                            if (ActiveNormalInteraction.State == InteractionState.Connected)
-                            {
-                                this.BeginInvoke(new MethodInvoker(enable_when_repickup));
-                                if (this.StrConnectionState == InteractionState.Proceeding)
-                                {
-                                    this.BeginInvoke(new MethodInvoker(update_calling_info));
-                                    if (IcWorkFlow != null && IcWorkFlow.LoginResult &&
-                                        !isConsulting)
-                                    {
-                                        this.BeginInvoke(new MethodInvoker(CrmScreenPop));
-                                        this.BeginInvoke(new MethodInvoker(reset_call_timer));
-                                        this.update_state_info_label("Connected to: " + this.GetDialerNumber());
-                                    }
-                                }
-                            }
-                            this.StrConnectionState = ActiveNormalInteraction.State;
-                            toolStripStatus.Text = this.StrConnectionState.ToString();
-                            if (this.BlindTransferFlag)
-                            {
-                                this.ResetActiveCallInfo();
-                            }
-                            else
-                            {
-                                this.ShowActiveCallInfo();
-                            }
-                            if (ActiveNormalInteraction != null)
-                            {
-                                if (ActiveNormalInteraction.IsDisconnected)
-                                {
-                                    this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
-                                    ActiveNormalInteraction = this.GetAvailableInteractionFromList();
-                                    this.reset_info_on_dashboard();
-                                    this.BeginInvoke(new MethodInvoker(disable_when_line_disconnect));
-                                }
-                            }
-                            break;
                         case InteractionType.Call:
                             ActiveNormalInteraction = e.Interaction;
                             if (ActiveNormalInteraction.State == InteractionState.Connected)
@@ -1494,6 +1457,12 @@ namespace CIC
 
         private void disconnect_button_Click(object sender, EventArgs e)
         {
+            if (!this.IsManualDialing)
+            {
+                frmDisposition disposition = frmDisposition.getInstance(
+                    this.IC_Session, this.GetDialerNumber(), this.toolStripCallTypeLabel.Text); //new frmDisposition();
+                disposition.ShowDialog();
+            }
             tryDisconnect();
             this.IsManualDialing = false;
             //this.ShowActiveCallInfo();
@@ -1511,12 +1480,6 @@ namespace CIC
                 this.IC_Session.ConnectionState == ININ.IceLib.Connection.ConnectionState.Up)
             {
                 log.Info(scope + "try disconnecting logged in workflow interactions");
-                if (!this.IsManualDialing)
-                {
-                    frmDisposition disposition = frmDisposition.getInstance(
-                        this.IC_Session, this.GetDialerNumber(), this.toolStripCallTypeLabel.Text); //new frmDisposition();
-                    disposition.ShowDialog();
-                }
 
                 if (ActiveDialerInteraction != null)
                 {
