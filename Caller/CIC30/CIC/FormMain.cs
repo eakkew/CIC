@@ -1481,9 +1481,7 @@ namespace CIC
                 this.IC_Session.ConnectionState == ININ.IceLib.Connection.ConnectionState.Up)
             {
                 log.Info(scope + "try disconnecting logged in workflow interactions");
-                if ((this.current_state == FormMainState.PreviewCall ||
-                    this.current_state == FormMainState.ConferenceCall) &&
-                    !this.IsManualDialing)
+                if (!this.IsManualDialing)
                 {
                     frmDisposition disposition = frmDisposition.getInstance(
                         this.IC_Session, this.GetDialerNumber(), this.toolStripCallTypeLabel.Text); //new frmDisposition();
@@ -1703,7 +1701,7 @@ namespace CIC
                         log.Info(scope + "Complete Dialer Interaction Unhold");
                     }
                     log.Info(scope + "Statring Dialer Interaction Mute/Unmute");
-                    this.ActiveDialerInteraction.MuteAsync(!this.ActiveDialerInteraction.IsMuted, MuteCompleted, null);
+                    this.ActiveDialerInteraction.Mute(!this.ActiveDialerInteraction.IsMuted);
                     log.Info(scope + "Completed Dialer Interaction Mute/Unmute");
                     state_change(FormMainState.Mute);
                     return;
@@ -1717,7 +1715,7 @@ namespace CIC
                         log.Info(scope + "Completed Normal Interaction Unhold");
                     }
                     log.Info(scope + "Starting Normal Interaction Mute/Unmute");
-                    ActiveNormalInteraction.MuteAsync(!ActiveNormalInteraction.IsMuted, MuteCompleted, null);
+                    ActiveNormalInteraction.Mute(!ActiveNormalInteraction.IsMuted);
                     log.Info(scope + "Starting Normal Interaction Mute/Unmute");
                     state_change(FormMainState.Mute);
                     return;
@@ -1734,7 +1732,7 @@ namespace CIC
                         log.Info(scope + "Completed Normal Interaction Unhold");
                     }
                     log.Info(scope + "Starting Normal Interaction Mute/Unmute");
-                    ActiveNormalInteraction.MuteAsync(!ActiveNormalInteraction.IsMuted, MuteCompleted, null);
+                    ActiveNormalInteraction.Mute(!ActiveNormalInteraction.IsMuted);
                     log.Info(scope + "Starting Normal Interaction Mute/Unmute");
                     state_change(FormMainState.Mute);
                     return;
@@ -1777,6 +1775,7 @@ namespace CIC
             else
             {
                 log.Info(scope + "Starting");
+                this.break_requested = true;
                 log.Info(scope + "Starting Dialer Interaction Request Break");
                 this.ActiveDialerInteraction.DialerSession.RequestBreak();
                 log.Info(scope + "Completed Dialer Interaction Request Break");
@@ -4259,7 +4258,6 @@ namespace CIC
                                 switch (ActiveNormalInteraction.InteractionType)
                                 {
                                     case InteractionType.Email:
-                                        this.ViewEmailDetail(ActiveNormalInteraction);
                                         log.Info(scope + "Starting Normal Interaction Pickup");
                                         ActiveNormalInteraction.Pickup();
                                         log.Info(scope + "Completed Normal Interaction Pickup");
@@ -4309,16 +4307,6 @@ namespace CIC
             }
         }
 
-        private void ViewEmailDetail(Interaction ActiveNormalInteraction)
-        {
-            // TODO: add view email detail
-        }
-
-        private void MuteCompleted(object sender, AsyncCompletedEventArgs e)
-        {
-            // TODO: check UAT for detail if we need this.
-        }
-        
         private void reset_color_panel()
         {
             name1_panel.BackColor = SystemColors.Control;

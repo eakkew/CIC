@@ -42,8 +42,11 @@ namespace CIC
         private void login_button_Click(object sender, EventArgs e)
         {
             //do stuff to select workflow
-            Program.MainDashboard.workflow_invoke(this.workflow_combobox.SelectedItem, e);
-            this.Close();
+            if (this.workflow_combobox.SelectedItem != null)
+            {
+                Program.MainDashboard.workflow_invoke(this.workflow_combobox.SelectedItem, e);
+                this.Close();
+            }
         }
 
         private void cancel_button_Click(object sender, EventArgs e)
