@@ -871,7 +871,7 @@ namespace CIC.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("prototype.locus.co.th:7900/login.do?action=login")]
+        [global::System.Configuration.DefaultSettingValueAttribute("10.3.112.57/UATOBC/main.aspx?")]
         public string MSCRMServerName {
             get {
                 return ((string)(this["MSCRMServerName"]));
