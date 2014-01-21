@@ -1225,7 +1225,7 @@ namespace CIC
         private void ShowChangePasswordDialog()
         {
             CIC.frmChangePassword changePasswordObject = new frmChangePassword();
-            changePasswordObject.Show();
+            changePasswordObject.ShowDialog();
         }
 
         private void mSession_Changed(object sender, ConnectionStateChangedEventArgs e)
