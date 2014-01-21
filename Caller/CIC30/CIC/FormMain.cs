@@ -60,6 +60,7 @@ namespace CIC
         private bool ExitFlag { get; set; }
         private bool IsManualDialing { get; set; }
         private bool IsActiveConference_flag { get; set; }
+        private bool isConnectedCall { get; set; }
         private int AutoReconnect = 2;
         private string[] InteractionAttributes { get; set; }
         private ArrayList InteractionList { get; set; }
@@ -1865,9 +1866,9 @@ namespace CIC
                     {
                         if (this.ActiveDialerInteraction != null)
                         {
-                            if (!this.break_granted)
+                            if (!this.break_requested)
                             {
-                                this.break_granted = true;
+                                this.break_requested = true;
                                 this.request_break();               //wait for breakgrant
                                 log.Info(scope + "Starting Dialer Interaction Request Logout");
                                 this.ActiveDialerInteraction.DialerSession.RequestLogoutAsync(LogoutGranted, null);
@@ -1941,6 +1942,11 @@ namespace CIC
                     {
                         if (this.ActiveDialerInteraction != null)
                         {
+                            if (this.break_requested)
+                            {
+                                this.request_break();
+                            }
+                            this.isConnectedCall = false;
                             ININ.IceLib.People.UserStatusUpdate statusUpdate = new UserStatusUpdate(this.mPeopleManager);
                             if (this.ActiveDialerInteraction.DialingMode == DialingMode.Preview ||
                                 this.ActiveDialerInteraction.DialingMode == DialingMode.Regular)
@@ -1986,10 +1992,6 @@ namespace CIC
                                             log.Error(scope + "Could not update User Status. Error info." + ex.Message);
                                         }
                                     }
-                                }
-                                if (this.break_requested)
-                                {
-                                    this.request_break();
                                 }
                             }
                             else if (this.ActiveDialerInteraction.DialingMode == DialingMode.Precise)
@@ -2067,6 +2069,8 @@ namespace CIC
                         this.InitializeQueueWatcher();
                         this.UpdateUserStatus();
                         this.state_change(FormMainState.Predictive);
+                        this.SetToAvailable_UserStatusMsg();
+                        this.endbreak_button_Click(sender, e);
                         this.state_info_label.Text = "Logged into Workflow";
                         log.Info(scope + "Completed.");
                     }
@@ -2486,11 +2490,12 @@ namespace CIC
                         {
                             if (this.ActiveDialerInteraction.DialingMode == DialingMode.Regular)
                             {
-                                if (!this.ActiveDialerInteraction.IsHeld && !this.ActiveDialerInteraction.IsMuted)
+                                if (!this.isConnectedCall)
                                 {
                                     if (global::CIC.Properties.Settings.Default.AutoAnswer)
                                     {
                                         this.pickup();
+                                        this.isConnectedCall = true;
                                     }
                                     else
                                     {
@@ -4058,6 +4063,33 @@ namespace CIC
                 {
                     log.Error(scope + "Error info." + ex.Message);
                 }
+            }
+        }
+
+        private void SetToAvailable_UserStatusMsg()
+        {
+            string scope = "CIC::MainForm::SetToDoNotDisturb_UserStatusMsg(): ";
+            ININ.IceLib.People.UserStatusUpdate statusUpdate = null;
+            try
+            {
+                log.Info(scope + "Starting.");
+                if (this.AvailableStatusMessageDetails != null)
+                {
+                    if (this.mPeopleManager != null)
+                    {
+                        log.Info(scope + "Starting Update User Status");
+                        statusUpdate = new UserStatusUpdate(this.mPeopleManager);
+                        statusUpdate.StatusMessageDetails = this.AvailableStatusMessageDetails;
+                        statusUpdate.UpdateRequest();
+                        log.Info(scope + "Completed Update User Status");
+                    }
+                }
+
+                log.Info(scope + "completed.");
+            }
+            catch (System.Exception ex)
+            {
+                log.Error(scope + "Error info : " + ex.Message);
             }
         }
 
