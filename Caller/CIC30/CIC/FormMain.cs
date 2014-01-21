@@ -434,20 +434,6 @@ namespace CIC
                     switch (e.Interaction.InteractionType)
                     {
                         case InteractionType.Email:
-                            ActiveNormalInteraction = e.Interaction;
-                            if (ActiveNormalInteraction != null)
-                            {
-                                if (ActiveNormalInteraction.IsDisconnected)
-                                {
-                                    this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
-                                    this.CallerHost = "";
-                                    ActiveNormalInteraction = this.GetAvailableInteractionFromList();
-                                    if (ActiveNormalInteraction.State != InteractionState.None)  //chk EIC_STATE
-                                    {
-                                        this.ShowActiveCallInfo();
-                                    }
-                                }
-                            }
                             break;
                         case InteractionType.Chat:
                             //
@@ -491,8 +477,7 @@ namespace CIC
                                 {
                                     this.StrConnectionState = InteractionState.None; //"None"
                                 }
-                                this.ShowActiveCallInfo();
-
+                                //this.reset_info_on_dashboard();
                             }
                             break;
                     }
@@ -786,13 +771,15 @@ namespace CIC
                                 this.BeginInvoke(new MethodInvoker(enable_when_repickup));
                                 if (this.StrConnectionState == InteractionState.Proceeding)
                                 {
-                                    this.BeginInvoke(new MethodInvoker(update_calling_info));
                                     if (IcWorkFlow != null && IcWorkFlow.LoginResult &&
                                         !isConsulting)
                                     {
-                                        this.BeginInvoke(new MethodInvoker(CrmScreenPop));
+                                        if (!this.IsManualDialing)
+                                        {
+                                            this.BeginInvoke(new MethodInvoker(CrmScreenPop));
+                                            this.update_state_info_label("Connected to: " + this.GetDialerNumber());
+                                        }
                                         this.BeginInvoke(new MethodInvoker(reset_call_timer));
-                                        this.update_state_info_label("Connected to: " + this.GetDialerNumber());
                                     }
                                 }
                             }
@@ -1427,7 +1414,7 @@ namespace CIC
             if (this.IsActiveConnection)
             {
                 frmWorkflow workflow = frmWorkflow.getInstance(global::CIC.Program.m_Session); //new CIC.frmWorkflow(global::CIC.Program.m_Session);
-                workflow.Show();
+                workflow.ShowDialog();
             }
             else
             {
@@ -1946,7 +1933,6 @@ namespace CIC
                             {
                                 this.request_break();
                             }
-                            this.isConnectedCall = false;
                             ININ.IceLib.People.UserStatusUpdate statusUpdate = new UserStatusUpdate(this.mPeopleManager);
                             if (this.ActiveDialerInteraction.DialingMode == DialingMode.Preview ||
                                 this.ActiveDialerInteraction.DialingMode == DialingMode.Regular)
@@ -2671,11 +2657,6 @@ namespace CIC
                 this.request_break();
             }
             log.Info(scope + "Completed.");
-        }
-
-        private void update_calling_info()
-        {
-            this.state_info_label.Text = "Connected to: " + callingNumber;
         }
 
         private void update_currency_on_dashboard(Dictionary<string, string> data)
@@ -3492,6 +3473,7 @@ namespace CIC
         {
             string scope = "CIC::MainForm::InitialContactData()::";
             log.Info(scope + "Starting.");
+            this.isConnectedCall = false;
             int i = 0;
             System.Data.DataTable dt = new DataTable("ATTR_TABLE");
             dt.Columns.Add("id");
@@ -4238,8 +4220,11 @@ namespace CIC
                             {
                                 log.Warn(scope + "Pickup fail. Reason " + ex.Message);
                             }
-                            this.CrmScreenPop();
-                            update_state_info_label("Connected to: " + this.GetDialerNumber());
+                            if (!this.IsManualDialing)
+                            {
+                                this.CrmScreenPop();
+                                update_state_info_label("Connected to: " + this.GetDialerNumber());
+                            }
                         }
                         if (ActiveNormalInteraction != null && !this.isConsulting)
                         {
