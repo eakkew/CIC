@@ -114,7 +114,7 @@ namespace CIC
             isFirstTimeLogin = true;
             InitializeComponent();
             JulianCalendar cal = new JulianCalendar();
-            this.Text = "Outbound Telephony Dialer Client v.1.0." + cal.GetDayOfYear(DateTime.Now) + "a";
+            this.Text = "Outbound Telephony Dialer Client v.1.0." + cal.GetDayOfYear(DateTime.Now) + "b";
             state_change(FormMainState.Disconnected);
             InitializeSession();
         }
@@ -2474,7 +2474,8 @@ namespace CIC
                         }
                         else
                         {
-                            if (this.ActiveDialerInteraction.DialingMode == DialingMode.Regular)
+                            if (this.ActiveDialerInteraction.DialingMode == DialingMode.Regular ||
+                                this.ActiveDialerInteraction.DialingMode == DialingMode.OwnAgentCallback)
                             {
                                 if (!this.isConnectedCall)
                                 {
