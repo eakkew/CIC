@@ -459,6 +459,8 @@ namespace CIC
                                     {
                                         this.ShowActiveCallInfo();
                                     }
+                                    this.disable_when_line_disconnect();
+                                    this.disable_hold_and_mute();
                                 }
                             }
                             break;
@@ -477,6 +479,8 @@ namespace CIC
                                 {
                                     this.StrConnectionState = InteractionState.None; //"None"
                                 }
+                                this.disable_when_line_disconnect();
+                                this.disable_hold_and_mute();
                                 //this.reset_info_on_dashboard();
                             }
                             break;
@@ -801,6 +805,7 @@ namespace CIC
                                     ActiveNormalInteraction = this.GetAvailableInteractionFromList();
                                     this.reset_info_on_dashboard();
                                     this.BeginInvoke(new MethodInvoker(disable_when_line_disconnect));
+                                    this.BeginInvoke(new MethodInvoker(disable_hold_and_mute));
                                 }
                             }
                             break;
@@ -812,6 +817,8 @@ namespace CIC
                                 {
                                     this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
                                     ActiveNormalInteraction = this.GetAvailableInteractionFromList();
+                                    this.BeginInvoke(new MethodInvoker(disable_when_line_disconnect));
+                                    this.BeginInvoke(new MethodInvoker(disable_hold_and_mute));
                                 }
                             }
                             if (this.BlindTransferFlag)
@@ -1432,6 +1439,7 @@ namespace CIC
             placecall_or_pickup();
             update_state_info_label("Calling: " + this.GetDialerNumber());
             highlight_call();
+            this.IsManualDialing = false;
             state_change(FormMainState.PreviewCall);
         }
 
@@ -1444,7 +1452,6 @@ namespace CIC
                 disposition.ShowDialog();
             }
             tryDisconnect();
-            this.IsManualDialing = false;
             //this.ShowActiveCallInfo();
             this.reset_info_on_dashboard();
             state_info_label.Text = "Disconnected.";
@@ -1463,13 +1470,14 @@ namespace CIC
 
                 if (ActiveDialerInteraction != null)
                 {
-                    if (!ActiveDialerInteraction.IsDisconnected)
+                    if (ActiveConsultInteraction != null && !ActiveConsultInteraction.IsDisconnected)
                     {
                         try
                         {
-                            log.Info(scope + "Starting Dialer Interaction Disconnect");
-                            ActiveDialerInteraction.Disconnect();
-                            log.Info(scope + "Completed Dialer Interaction Disconnect");
+                            log.Info(scope + "Starting Consult Interaction Disconnect");
+                            this.RemoveNormalInteractionFromList(ActiveConsultInteraction);
+                            ActiveConsultInteraction.Disconnect();
+                            log.Info(scope + "Completed Consult Interaction Disconnect");
                         }
                         catch (Exception ex)
                         {
@@ -1478,8 +1486,8 @@ namespace CIC
                     }
                     if (ActiveNormalInteraction != null && !ActiveNormalInteraction.IsDisconnected)
                     {
-                        try 
-                        { 
+                        try
+                        {
                             log.Info(scope + "Starting Normal Interaction Disconnect");
                             this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
                             ActiveNormalInteraction.Disconnect();
@@ -1490,14 +1498,13 @@ namespace CIC
                             log.Error(scope + "Error info." + ex.Message);
                         }
                     }
-                    if (ActiveConsultInteraction != null && !ActiveConsultInteraction.IsDisconnected)
+                    if (!ActiveDialerInteraction.IsDisconnected)
                     {
                         try
-                        { 
-                            log.Info(scope + "Starting Consult Interaction Disconnect");
-                            this.RemoveNormalInteractionFromList(ActiveConsultInteraction);
-                            ActiveConsultInteraction.Disconnect();
-                            log.Info(scope + "Completed Consult Interaction Disconnect");
+                        {
+                            log.Info(scope + "Starting Dialer Interaction Disconnect");
+                            ActiveDialerInteraction.Disconnect();
+                            log.Info(scope + "Completed Dialer Interaction Disconnect");
                         }
                         catch (Exception ex)
                         {
@@ -1607,7 +1614,7 @@ namespace CIC
         private void hold_button_Click(object sender, EventArgs e)
         {
             string scope = "CIC::frmMain::hold_button_Click()::";
-            if (IcWorkFlow != null && IcWorkFlow.LoginResult)
+            if (!this.IsManualDialing)
             {
                 if (this.ActiveDialerInteraction != null)
                 {
@@ -1663,7 +1670,7 @@ namespace CIC
         private void mute_button_Click(object sender, EventArgs e)
         {
             string scope = "CIC::frmMain::mute_button_Click()::";
-            if (IcWorkFlow != null && IcWorkFlow.LoginResult)
+            if (!this.IsManualDialing)
             {
                 if (this.ActiveDialerInteraction != null)
                 {
@@ -1689,7 +1696,7 @@ namespace CIC
                     }
                     log.Info(scope + "Starting Normal Interaction Mute/Unmute");
                     ActiveNormalInteraction.Mute(!ActiveNormalInteraction.IsMuted);
-                    log.Info(scope + "Starting Normal Interaction Mute/Unmute");
+                    log.Info(scope + "Completed Normal Interaction Mute/Unmute");
                     state_change(FormMainState.Mute);
                     return;
                 }
@@ -1706,7 +1713,7 @@ namespace CIC
                     }
                     log.Info(scope + "Starting Normal Interaction Mute/Unmute");
                     ActiveNormalInteraction.Mute(!ActiveNormalInteraction.IsMuted);
-                    log.Info(scope + "Starting Normal Interaction Mute/Unmute");
+                    log.Info(scope + "Completed Normal Interaction Mute/Unmute");
                     state_change(FormMainState.Mute);
                     return;
                 }
@@ -1950,12 +1957,12 @@ namespace CIC
                                     ActiveDialerInteraction.ContactData["is_attr_schedphone"] = callparam.number;
                                     ActiveDialerInteraction.UpdateCallData();
                                 }
+                                
                                 try
                                 {
                                     log.Info(scope + "Starting Dialer Interaction CallComplete");
                                     this.ActiveDialerInteraction.CallCompleteAsync(callparam.param, completedCallback, null);
                                     log.Info(scope + "Completed Dialer Interaction CallComplete");
-                                    //is_attr_DateAppointCallBack
                                 }
                                 catch (Exception ex)
                                 {
@@ -2081,7 +2088,8 @@ namespace CIC
             ININ.IceLib.Interactions.Interaction[] TmpInteraction;
             try
             {
-                if (IcWorkFlow != null && IcWorkFlow.LoginResult)
+                //if (IcWorkFlow != null && IcWorkFlow.LoginResult && !this.IsManualDialing)
+                if (!this.IsManualDialing)
                 {
                     if (this.ActiveDialerInteraction != null &&
                         ActiveNormalInteraction != null && 
@@ -2103,7 +2111,6 @@ namespace CIC
                             }
                             log.Info(scope + "Starting Normal Interaction Make New Conference");
                             this.NormalInterationManager.MakeNewConferenceAsync(TmpInteraction, MakeNewConferenceCompleted, null);
-                            disable_when_line_disconnect();
                             log.Info(scope + "Complete Normal Interaction Make New Conference");
                         }
                     }
@@ -2129,7 +2136,6 @@ namespace CIC
                             }
                             log.Info(scope + "Starting Normal Interaction Make New Conference");
                             this.NormalInterationManager.MakeNewConferenceAsync(TmpInteraction, MakeNewConferenceCompleted, null);
-                            disable_when_line_disconnect();
                             log.Info(scope + "Complete Normal Interaction Make New Conference");
                         }
                     }
@@ -2158,6 +2164,8 @@ namespace CIC
                 ActiveConsultInteraction = null;
                 state_info_label.Text = "Conferencing";
                 state_change(FormMainState.ConferenceCall);
+                disable_when_line_disconnect();
+                disable_hold_and_mute();
                 log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
@@ -2173,7 +2181,8 @@ namespace CIC
             this.BlindTransferFlag = false;
             try
             {
-                if (IcWorkFlow != null && IcWorkFlow.LoginResult)
+                //if (IcWorkFlow != null && IcWorkFlow.LoginResult)
+                if (!this.IsManualDialing)
                 {
                     if (this.ActiveDialerInteraction != null)
                     {
@@ -2483,6 +2492,7 @@ namespace CIC
                                     {
                                         this.pickup();
                                         this.isConnectedCall = true;
+                                        this.IsManualDialing = false;
                                     }
                                     else
                                     {
@@ -2830,21 +2840,39 @@ namespace CIC
                 {
                     case FormMainState.Predictive:
                         if (this.isOnBreak)
+                        {
                             break_state();
+                            log.Info("State Changed: Break");
+                        }
                         else
+                        { 
                             predictive_state();
-                        log.Info("State Changed: Predictive");
+                            log.Info("State Changed: Predictive");
+                        }
                         break;
                     case FormMainState.Preview:
                         if (this.isOnBreak)
+                        {
                             break_state();
+                            log.Info("State Changed: Break");
+                        }
                         else
+                        {
                             preview_state();
-                        log.Info("State Changed: Preview");
+                            log.Info("State Changed: Preview");
+                        }
                         break;
                     case FormMainState.Connected:
-                        connected_state();
-                        log.Info("State Changed: Connected");
+                        if (this.isOnBreak)
+                        {
+                            break_state();
+                            log.Info("State Changed: Break");
+                        }
+                        else
+                        {
+                            connected_state();
+                            log.Info("State Changed: Connected");
+                        }
                         break;
                     case FormMainState.Calling:
                         calling_state();
@@ -3165,6 +3193,17 @@ namespace CIC
             log.Debug(scope + "Starting");
             conference_button.Enabled = false;
             transfer_button.Enabled = false;
+            log.Debug(scope + "Completed");
+        }
+
+        private void disable_hold_and_mute()
+        {
+            string scope = "CIC::FormMain::disable_when_line_disconnect()::";
+            log.Debug(scope + "Starting");
+            hold_button.Enabled = false;
+            mute_button.Enabled = false;
+            log.Debug(scope + "Completed");
+
         }
 
         private void enable_when_repickup()
@@ -3186,19 +3225,13 @@ namespace CIC
                 timer_info.Text = "Calling: " + this.GetDialerNumber();
                 
                 // make a call or pickup
+                this.IsManualDialing = true;
                 placecall(sender, e);
             }
         }
 
         private void callingTimer_Tick(object sender, EventArgs e)
         {
-            //timer -= (float)callingTimer.Interval / 1000;
-            //if (timer <= 0)
-            //{
-            //    reset_call_timer();
-
-            //    disconnect_button_Click(sender, e);
-            //}
         }
 
         public void MakePreviewCallComplete(object sender, AsyncCompletedEventArgs e)

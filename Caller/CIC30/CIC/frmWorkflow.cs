@@ -68,6 +68,8 @@ namespace CIC
                 string[] workflows = Program.mDialingManager.GetAvailableWorkflows();
 
                 workflow_combobox.Items.Clear();
+                workflow_combobox.SelectedItem = null;
+                workflow_combobox.SelectedText = "";
                 if (workflows.Length > 0)
                 {
                     foreach (string workflow in workflows)
@@ -83,6 +85,7 @@ namespace CIC
                     menu.Enabled = false;
                     this.workflow_combobox.Items.Add(menu);
                 }
+                this.workflow_combobox.SelectedIndex = 0;
                 this.ActiveControl = workflow_combobox;
             }
             catch (ININ.IceLib.IceLibException ex)
