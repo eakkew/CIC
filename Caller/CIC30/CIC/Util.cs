@@ -110,9 +110,6 @@ namespace CIC
                 case "busy":
                     sRet = ReasonCode.Busy;
                     break;
-                case "call loss":
-                    sRet = ReasonCode.Scheduled;
-                    break;
                 case "deleted":
                     sRet = ReasonCode.Deleted;
                     break;
@@ -134,15 +131,14 @@ namespace CIC
                 case "remotehangup":
                     sRet = ReasonCode.RemoteHangup;
                     break;
-                case "scheduled":
-                    sRet = ReasonCode.Scheduled;
-                    break;
                 case "sit":
                     sRet = ReasonCode.SIT;
                     break;
                 case "wrongparty":
                 case "wrongperson":
                 case "wrong person":
+                case "scheduled":
+                case "call loss":
                     sRet = ReasonCode.Scheduled;
                     break;
                 case "success":

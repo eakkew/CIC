@@ -14,6 +14,7 @@ namespace CIC
         private static frmSchedule instance = null;
         private DateTime scheduled;
         private bool isCanceled;
+        private string dialerNumber;
 
         public static frmSchedule getInstance(string dialNumber)
         {
@@ -33,7 +34,7 @@ namespace CIC
         {
             InitializeComponent();
             initializeComboboxInfo();
-            phone_box.Text = dialNumber;
+            dialerNumber = dialNumber;
             this.ActiveControl = phone_box;
             isCanceled = false;
         }
@@ -179,6 +180,7 @@ namespace CIC
         private void frmSchedule_Load(object sender, EventArgs e)
         {
             this.isCanceled = false;
+            this.phone_box.Text = this.dialerNumber;
             hour_combobox.SelectedIndex = 0;
             minute_combobox.SelectedIndex = 0;
         }
