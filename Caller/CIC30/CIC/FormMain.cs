@@ -1951,7 +1951,9 @@ namespace CIC
                             }
                             ININ.IceLib.People.UserStatusUpdate statusUpdate = new UserStatusUpdate(this.mPeopleManager);
                             if (this.ActiveDialerInteraction.DialingMode == DialingMode.Preview ||
-                                this.ActiveDialerInteraction.DialingMode == DialingMode.Regular)
+                                this.ActiveDialerInteraction.DialingMode == DialingMode.Regular ||
+                                this.ActiveDialerInteraction.DialingMode == DialingMode.OwnAgentCallback ||
+                                this.ActiveDialerInteraction.DialingMode == DialingMode.OwnAgentCallback_Preview)
                             {
                                 if (this.ActiveDialerInteraction.IsDisconnected == false)
                                 {
@@ -2000,14 +2002,6 @@ namespace CIC
                                 //
                             }
                             else if (this.ActiveDialerInteraction.DialingMode == DialingMode.Agentless)
-                            {
-                                //
-                            }
-                            else if (this.ActiveDialerInteraction.DialingMode == DialingMode.OwnAgentCallback)
-                            {
-                                //
-                            }
-                            else if (this.ActiveDialerInteraction.DialingMode == DialingMode.OwnAgentCallback_Preview)
                             {
                                 //
                             }
