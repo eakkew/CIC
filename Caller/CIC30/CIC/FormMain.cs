@@ -3122,7 +3122,7 @@ namespace CIC
                 prev_state = current_state;
             }
             current_state = FormMainState.Hold;
-            state_info_label.Text = "Connected to: " + callingNumber + " (Held)";
+            state_info_label.Text = "Connected to: " + this.GetDialerNumber() + " (Held)";
             log.Debug(scope + "Completed");
         }
 
@@ -3154,7 +3154,7 @@ namespace CIC
                 prev_state = current_state;
             }
             current_state = FormMainState.Mute;
-            state_info_label.Text = "Connected to: " + callingNumber + " (Muted)";
+            state_info_label.Text = "Connected to: " + this.GetDialerNumber() + " (Muted)";
             log.Debug(scope + "Completed");
         }
 
