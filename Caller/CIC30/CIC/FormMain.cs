@@ -459,8 +459,8 @@ namespace CIC
                                     {
                                         this.ShowActiveCallInfo();
                                     }
-                                    this.disable_when_line_disconnect();
-                                    this.disable_hold_and_mute();
+                                    //this.disable_when_line_disconnect();
+                                    //this.disable_hold_and_mute();
                                 }
                             }
                             break;
@@ -479,8 +479,8 @@ namespace CIC
                                 {
                                     this.StrConnectionState = InteractionState.None; //"None"
                                 }
-                                this.disable_when_line_disconnect();
-                                this.disable_hold_and_mute();
+                                //this.disable_when_line_disconnect();
+                                //this.disable_hold_and_mute();
                                 //this.reset_info_on_dashboard();
                             }
                             break;
@@ -507,7 +507,6 @@ namespace CIC
                         this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
                     }
                     ActiveNormalInteraction = null;
-                    this.reset_info_on_dashboard();
                 }
             }
         }
@@ -532,7 +531,6 @@ namespace CIC
                     if (this.BlindTransferFlag)
                     {
                         this.InteractionList.Clear();
-                        this.reset_info_on_dashboard();
 
                         this.state_info_label.Text = "Connected to: unknown";
                         this.SetInfoBarColor();
@@ -788,12 +786,12 @@ namespace CIC
                             }
                             this.StrConnectionState = ActiveNormalInteraction.State;
                             toolStripStatus.Text = this.StrConnectionState.ToString();
-                            //if (this.StrConnectionState == InteractionState.InternalDisconnect ||
-                            //    this.StrConnectionState == InteractionState.ExternalDisconnect)
-                            //{
-                            //    this.BeginInvoke(new MethodInvoker(disable_when_line_disconnect));
-                            //    this.BeginInvoke(new MethodInvoker(disable_hold_and_mute));
-                            //}
+                            if (this.StrConnectionState == InteractionState.InternalDisconnect ||
+                                this.StrConnectionState == InteractionState.ExternalDisconnect)
+                            {
+                                this.BeginInvoke(new MethodInvoker(disable_when_line_disconnect));
+                                this.BeginInvoke(new MethodInvoker(disable_hold_and_mute));
+                            }
                             if (this.BlindTransferFlag)
                             {
                                 this.ResetActiveCallInfo();
@@ -808,23 +806,30 @@ namespace CIC
                                 {
                                     this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
                                     ActiveNormalInteraction = this.GetAvailableInteractionFromList();
-                                    this.reset_info_on_dashboard();
-                                    this.BeginInvoke(new MethodInvoker(disable_when_line_disconnect));
-                                    this.BeginInvoke(new MethodInvoker(disable_hold_and_mute));
+                                    //this.BeginInvoke(new MethodInvoker(disable_when_line_disconnect));
+                                    //this.BeginInvoke(new MethodInvoker(disable_hold_and_mute));
                                 }
                             }
                             break;
                         default:
                             ActiveNormalInteraction = e.Interaction;
+                            this.StrConnectionState = ActiveNormalInteraction.State;
+                            toolStripStatus.Text = this.StrConnectionState.ToString();
                             if (ActiveNormalInteraction != null)
                             {
                                 if (ActiveNormalInteraction.IsDisconnected)
                                 {
                                     this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
                                     ActiveNormalInteraction = this.GetAvailableInteractionFromList();
-                                    this.BeginInvoke(new MethodInvoker(disable_when_line_disconnect));
-                                    this.BeginInvoke(new MethodInvoker(disable_hold_and_mute));
+                                    //this.BeginInvoke(new MethodInvoker(disable_when_line_disconnect));
+                                    //this.BeginInvoke(new MethodInvoker(disable_hold_and_mute));
                                 }
+                            }
+                            if (this.StrConnectionState == InteractionState.InternalDisconnect ||
+                                this.StrConnectionState == InteractionState.ExternalDisconnect)
+                            {
+                                this.BeginInvoke(new MethodInvoker(disable_when_line_disconnect));
+                                this.BeginInvoke(new MethodInvoker(disable_hold_and_mute));
                             }
                             if (this.BlindTransferFlag)
                             {
@@ -1458,7 +1463,6 @@ namespace CIC
             }
             tryDisconnect();
             //this.ShowActiveCallInfo();
-            this.reset_info_on_dashboard();
             state_info_label.Text = "Disconnected.";
         }
 
@@ -1973,7 +1977,6 @@ namespace CIC
                                 {
                                     log.Error(scope + "Call Complete Failed: " + ex.Message);
                                 }
-                                this.reset_info_on_dashboard();
                                 if (!this.break_granted)
                                 {
                                     if (this.AvailableStatusMessageDetails != null)
@@ -2079,7 +2082,6 @@ namespace CIC
                 }
                 catch (System.Exception ex)
                 {
-                    this.state_change(FormMainState.Disconnected);
                     log.Error(scope + "Error info.Logon to Workflow[" + ((string)sender) + "] : " + ex.Message);
                 }
             }
@@ -2169,8 +2171,8 @@ namespace CIC
                 ActiveConsultInteraction = null;
                 state_info_label.Text = "Conferencing";
                 state_change(FormMainState.ConferenceCall);
-                disable_when_line_disconnect();
-                disable_hold_and_mute();
+                this.disable_when_line_disconnect();
+                this.disable_hold_and_mute();
                 log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
@@ -2623,52 +2625,59 @@ namespace CIC
 
         private void update_info_on_dashboard()
         {
-            string scope = "CIC::frmMain::update_info_on_dashboard()::";
-            log.Info(scope + "Starting.");
-            Dictionary<string, string> data = this.ActiveDialerInteraction.ContactData;
-            this.contractNo_box.Text = data.ContainsKey("is_attr_ContractNumber") ? data["is_attr_ContractNumber"] : "";
-            this.license_plate_box.Text = data.ContainsKey("is_attr_CarLicenseNumber") ? data["is_attr_CarLicenseNumber"] : "";
-            this.product_name_box.Text = data.ContainsKey("is_attr_ProductName") ? data["is_attr_ProductName"] : "";
-            this.name1_box1.Text = data.ContainsKey("is_attr_FullName_Relation1") ? data["is_attr_FullName_Relation1"] : "";
-            this.name2_box1.Text = data.ContainsKey("is_attr_FullName_Relation2") ? data["is_attr_FullName_Relation2"] : "";
-            this.name3_box1.Text = data.ContainsKey("is_attr_FullName_Relation3") ? data["is_attr_FullName_Relation3"] : "";
-            this.name4_box1.Text = data.ContainsKey("is_attr_FullName_Relation4") ? data["is_attr_FullName_Relation4"] : "";
-            this.name5_box1.Text = data.ContainsKey("is_attr_FullName_Relation5") ? data["is_attr_FullName_Relation5"] : "";
-            this.name6_box1.Text = data.ContainsKey("is_attr_FullName_Relation6") ? data["is_attr_FullName_Relation6"] : "";
-            this.name1_box2.Text = data.ContainsKey("is_attr_PhoneNo1") ? data["is_attr_PhoneNo1"] : "";
-            this.name2_box2.Text = data.ContainsKey("is_attr_PhoneNo2") ? data["is_attr_PhoneNo2"] : "";
-            this.name3_box2.Text = data.ContainsKey("is_attr_PhoneNo3") ? data["is_attr_PhoneNo3"] : "";
-            this.name4_box2.Text = data.ContainsKey("is_attr_PhoneNo4") ? data["is_attr_PhoneNo4"] : "";
-            this.name5_box2.Text = data.ContainsKey("is_attr_PhoneNo5") ? data["is_attr_PhoneNo5"] : "";
-            this.name6_box2.Text = data.ContainsKey("is_attr_PhoneNo6") ? data["is_attr_PhoneNo6"] : "";
-            this.aging_box.Text = data.ContainsKey("is_attr_Aging") ? data["is_attr_Aging"] : "";
-            this.number_due_box.Text = data.ContainsKey("is_attr_NumberDue") ? data["is_attr_NumberDue"] : "";
-            this.last_date_payment_box.Text = data.ContainsKey("is_attr_LastReceiveDatePayment") ? getDateTimeString(
-                    data["is_attr_LastReceiveDatePayment"], (string)global::CIC.Properties.Settings.Default["ServerDateTimeFormat"]
-                ) : "";
-            this.debt_status_box.Text = data.ContainsKey("is_attr_DebtStatus") ? data["is_attr_DebtStatus"] : "";
-            this.start_overdue_date_box.Text = data.ContainsKey("is_attr_StartOverDueDate") ? getDateTimeString(
-                    data["is_attr_StartOverDueDate"], (string)global::CIC.Properties.Settings.Default["ServerDateTimeFormat"]
-                ) : "";
-            this.followup_status_box.Text = data.ContainsKey("is_attr_FollowupStatus") ? data["is_attr_FollowupStatus"] : "";
-            this.payment_appoint_box.Text = data.ContainsKey("is_attr_PaymentAppoint") ? getDateTimeString(
-                    data["is_attr_PaymentAppoint"], (string)global::CIC.Properties.Settings.Default["ServerDateTimeFormat"]
-                ) : "";
-            this.date_callback_box.Text = data.ContainsKey("is_attr_DateAppointCallBack") ? getDateTimeString(
-                    data["is_attr_DateAppointCallBack"], oldFormat: (string)global::CIC.Properties.Settings.Default["ServerDateTimeFormat"],
-                    destFormat: "dd/MM/yyyy HH:mm"
-                ) : "";
-            this.callingNumber = data.ContainsKey("is_attr_numbertodial") ? data["is_attr_numbertodial"] : "";
-
-            update_currency_on_dashboard(data);
-
-            if (data.ContainsKey("is_attr_STATUS") && data["is_attr_STATUS"].ToLower() == "complete")
+            if (this.InvokeRequired)
             {
-                this.break_button.Enabled = true;
-                state_info_label.Text = "Workflow Completed.";
-                this.request_break();
+                this.BeginInvoke(new MethodInvoker(update_info_on_dashboard));
             }
-            log.Info(scope + "Completed.");
+            else
+            {
+                string scope = "CIC::frmMain::update_info_on_dashboard()::";
+                log.Info(scope + "Starting.");
+                Dictionary<string, string> data = this.ActiveDialerInteraction.ContactData;
+                this.contractNo_box.Text = data.ContainsKey("is_attr_ContractNumber") ? data["is_attr_ContractNumber"] : "";
+                this.license_plate_box.Text = data.ContainsKey("is_attr_CarLicenseNumber") ? data["is_attr_CarLicenseNumber"] : "";
+                this.product_name_box.Text = data.ContainsKey("is_attr_ProductName") ? data["is_attr_ProductName"] : "";
+                this.name1_box1.Text = data.ContainsKey("is_attr_FullName_Relation1") ? data["is_attr_FullName_Relation1"] : "";
+                this.name2_box1.Text = data.ContainsKey("is_attr_FullName_Relation2") ? data["is_attr_FullName_Relation2"] : "";
+                this.name3_box1.Text = data.ContainsKey("is_attr_FullName_Relation3") ? data["is_attr_FullName_Relation3"] : "";
+                this.name4_box1.Text = data.ContainsKey("is_attr_FullName_Relation4") ? data["is_attr_FullName_Relation4"] : "";
+                this.name5_box1.Text = data.ContainsKey("is_attr_FullName_Relation5") ? data["is_attr_FullName_Relation5"] : "";
+                this.name6_box1.Text = data.ContainsKey("is_attr_FullName_Relation6") ? data["is_attr_FullName_Relation6"] : "";
+                this.name1_box2.Text = data.ContainsKey("is_attr_PhoneNo1") ? data["is_attr_PhoneNo1"] : "";
+                this.name2_box2.Text = data.ContainsKey("is_attr_PhoneNo2") ? data["is_attr_PhoneNo2"] : "";
+                this.name3_box2.Text = data.ContainsKey("is_attr_PhoneNo3") ? data["is_attr_PhoneNo3"] : "";
+                this.name4_box2.Text = data.ContainsKey("is_attr_PhoneNo4") ? data["is_attr_PhoneNo4"] : "";
+                this.name5_box2.Text = data.ContainsKey("is_attr_PhoneNo5") ? data["is_attr_PhoneNo5"] : "";
+                this.name6_box2.Text = data.ContainsKey("is_attr_PhoneNo6") ? data["is_attr_PhoneNo6"] : "";
+                this.aging_box.Text = data.ContainsKey("is_attr_Aging") ? data["is_attr_Aging"] : "";
+                this.number_due_box.Text = data.ContainsKey("is_attr_NumberDue") ? data["is_attr_NumberDue"] : "";
+                this.last_date_payment_box.Text = data.ContainsKey("is_attr_LastReceiveDatePayment") ? getDateTimeString(
+                        data["is_attr_LastReceiveDatePayment"], (string)global::CIC.Properties.Settings.Default["ServerDateTimeFormat"]
+                    ) : "";
+                this.debt_status_box.Text = data.ContainsKey("is_attr_DebtStatus") ? data["is_attr_DebtStatus"] : "";
+                this.start_overdue_date_box.Text = data.ContainsKey("is_attr_StartOverDueDate") ? getDateTimeString(
+                        data["is_attr_StartOverDueDate"], (string)global::CIC.Properties.Settings.Default["ServerDateTimeFormat"]
+                    ) : "";
+                this.followup_status_box.Text = data.ContainsKey("is_attr_FollowupStatus") ? data["is_attr_FollowupStatus"] : "";
+                this.payment_appoint_box.Text = data.ContainsKey("is_attr_PaymentAppoint") ? getDateTimeString(
+                        data["is_attr_PaymentAppoint"], (string)global::CIC.Properties.Settings.Default["ServerDateTimeFormat"]
+                    ) : "";
+                this.date_callback_box.Text = data.ContainsKey("is_attr_DateAppointCallBack") ? getDateTimeString(
+                        data["is_attr_DateAppointCallBack"], oldFormat: (string)global::CIC.Properties.Settings.Default["ServerDateTimeFormat"],
+                        destFormat: "dd/MM/yyyy HH:mm"
+                    ) : "";
+                this.callingNumber = data.ContainsKey("is_attr_numbertodial") ? data["is_attr_numbertodial"] : "";
+
+                update_currency_on_dashboard(data);
+
+                if (data.ContainsKey("is_attr_STATUS") && data["is_attr_STATUS"].ToLower() == "complete")
+                {
+                    this.break_button.Enabled = true;
+                    state_info_label.Text = "Workflow Completed.";
+                    this.request_break();
+                }
+                log.Info(scope + "Completed.");
+            }
         }
 
         private void update_currency_on_dashboard(Dictionary<string, string> data)
@@ -3244,7 +3253,6 @@ namespace CIC
                 timer_info.Text = "Calling: " + this.GetDialerNumber();
                 
                 // make a call or pickup
-                this.IsManualDialing = true;
                 placecall(sender, e);
             }
         }
@@ -3259,7 +3267,7 @@ namespace CIC
             state_change(FormMainState.Calling);
         }
 
-        public void MakeCallCompleted(object sender,InteractionCompletedEventArgs e)
+        public void MakeManualCallCompleted(object sender,InteractionCompletedEventArgs e)
         {
             string scope = "CIC::MainForm::MakeCallCompleted()::";
             log.Info(scope + "Starting");
@@ -3268,7 +3276,7 @@ namespace CIC
                 ActiveNormalInteraction = e.Interaction;
             }
 
-            reset_info_on_dashboard();
+            this.reset_info_on_dashboard();
             state_change(FormMainState.ManualCall);
             log.Info(scope + "Completed");
         }
@@ -3780,10 +3788,10 @@ namespace CIC
                 SessionSettings sessionSetting = Program.m_Session.GetSessionSettings();
                 callParams.AdditionalAttributes.Add("CallerHost", sessionSetting.MachineName.ToString());
                 log.Info(scope + "Start Normal Interaction Make Call");
-                this.NormalInterationManager.MakeCallAsync(callParams, MakeCallCompleted, null);
+                this.NormalInterationManager.MakeCallAsync(callParams, MakeManualCallCompleted, null);
                 log.Info(scope + "Completed Normal Interaction Make Call");
                 this.IsManualDialing = true;
-                reset_info_on_dashboard();
+                this.reset_info_on_dashboard();
                 state_change(FormMainState.ManualCall);
             }
             catch (Exception ex)
@@ -4018,7 +4026,6 @@ namespace CIC
                         default:
                             break;
                     }
-                    this.reset_info_on_dashboard();
                     this.break_requested = false;
                     log.Info(scope + "Completed.");
                 }
@@ -4059,7 +4066,6 @@ namespace CIC
                             System.Windows.Forms.MessageBox.Show(
                                 global::CIC.Properties.Settings.Default.CompletedWorkflowMsg,
                                 "System Info.", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            reset_info_on_dashboard();
                             this.toolStripWorkflowLabel.Text = "N/A";
                             break;
                         default:
