@@ -532,7 +532,7 @@ namespace CIC
                     {
                         this.InteractionList.Clear();
 
-                        this.state_info_label.Text = "Connected to: unknown";
+                        this.update_state_info_label("Connected to: unknown");
                         this.SetInfoBarColor();
                         this.transfer_button.Enabled = true;
                     }
@@ -778,8 +778,8 @@ namespace CIC
                                         if (!this.IsManualDialing)
                                         {
                                             this.BeginInvoke(new MethodInvoker(CrmScreenPop));
-                                            this.update_state_info_label("Connected to: " + this.GetDialerNumber());
                                         }
+                                        this.update_state_info_label("Connected to: " + this.GetDialerNumber());
                                         this.BeginInvoke(new MethodInvoker(reset_call_timer));
                                     }
                                 }
@@ -1383,7 +1383,7 @@ namespace CIC
             previewCallTimer.Stop();
             timer = global::CIC.Properties.Settings.Default.CountdownTime;
             log.Info("Timer is reset");
-            state_info_label.Text = "Next calling number: " + this.GetDialerNumber();
+            this.update_state_info_label("Next calling number: " + this.GetDialerNumber());
         }
         
         private void restart_timer()
@@ -1463,7 +1463,7 @@ namespace CIC
             }
             tryDisconnect();
             //this.ShowActiveCallInfo();
-            state_info_label.Text = "Disconnected.";
+            this.update_state_info_label("Disconnected.");
         }
 
         private void tryDisconnect()
@@ -1840,7 +1840,7 @@ namespace CIC
                         this.isOnBreak = false;
                         this.endbreak_button.Enabled = false;
                         this.manual_call_button.Enabled = false;
-                        this.state_info_label.Text = "Break ended. Waiting for a new call from workflow.";
+                        this.update_state_info_label("Break ended. Waiting for a new call from workflow.");
                         log.Info(scope + "Complete.");
                     }
                 }
@@ -2066,7 +2066,7 @@ namespace CIC
                         this.state_change(FormMainState.Predictive);
                         this.SetToAvailable_UserStatusMsg();
                         this.endbreak_button_Click(sender, e);
-                        this.state_info_label.Text = "Logged into Workflow";
+                        this.update_state_info_label("Logged into Workflow");
                         log.Info(scope + "Completed.");
                     }
                     else
@@ -2163,7 +2163,7 @@ namespace CIC
                 object ConferenceuserState = e.UserState;
                 System.Exception ConferenceErrMsg = e.Error;
                 ActiveConsultInteraction = null;
-                state_info_label.Text = "Conferencing";
+                this.update_state_info_label("Conferencing");
                 state_change(FormMainState.ConferenceCall);
                 this.disable_when_line_disconnect();
                 this.disable_hold_and_mute();
@@ -2294,7 +2294,7 @@ namespace CIC
             this.BlindTransferFlag = false;
             this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
             state_change(FormMainState.Predictive);
-            state_info_label.Text = "Transfer complete.";
+            this.update_state_info_label("Transfer complete.");
             log.Info(scope + "Completed");
         }
 
@@ -2307,7 +2307,7 @@ namespace CIC
             this.BlindTransferFlag = false;
             this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
             state_change(FormMainState.Connected);
-            state_info_label.Text = "Transfer complete.";
+            this.update_state_info_label("Transfer complete.");
             log.Info(scope + "Completed");
         }
 
@@ -2667,7 +2667,7 @@ namespace CIC
                 if (data.ContainsKey("is_attr_STATUS") && data["is_attr_STATUS"].ToLower() == "complete")
                 {
                     this.break_button.Enabled = true;
-                    state_info_label.Text = "Workflow Completed.";
+                    this.update_state_info_label("Workflow Completed.");
                     this.request_break();
                 }
                 log.Info(scope + "Completed.");
@@ -2902,7 +2902,7 @@ namespace CIC
                             case FormMainState.ConferenceCall:
                             case FormMainState.ManualCall:
                                 hold_button.Text = "Unhold";
-                                state_info_label.Text = "Hold call from: " + callingNumber;
+                                this.update_state_info_label("Hold call from: " + callingNumber);
                                 hold_state();
                                 log.Info("State Changed: Hold");
                                 break;
@@ -2910,14 +2910,14 @@ namespace CIC
                             case FormMainState.Mute:
                                 hold_button.Text = "Unhold";
                                 mute_button.Text = "Mute";
-                                state_info_label.Text = "Hold call from: " + callingNumber;
+                                this.update_state_info_label("Hold call from: " + callingNumber);
                                 hold_state();
                                 log.Info("State Changed: Hold");
                                 break;
                             // case Hold state -> change to calling state
                             case FormMainState.Hold:
                                 hold_button.Text = "Hold";
-                                state_info_label.Text = "Continue call from: " + callingNumber;
+                                this.update_state_info_label("Continue call from: " + callingNumber);
                                 state_change(FormMainState.PreviewCall);
                                 this.BeginInvoke(new MethodInvoker(enable_when_repickup));
                                 log.Info("State Changed: Unhold -> Preview Call");
@@ -2932,7 +2932,7 @@ namespace CIC
                             case FormMainState.ConferenceCall:
                             case FormMainState.ManualCall:
                                 mute_button.Text = "Unmute";
-                                state_info_label.Text = "Mute call from: " + callingNumber;
+                                this.update_state_info_label("Mute call from: " + callingNumber);
                                 mute_state();
                                 log.Info("State Changed: Mute");
                                 break;
@@ -2940,14 +2940,14 @@ namespace CIC
                             case FormMainState.Hold:
                                 mute_button.Text = "Unmute";
                                 hold_button.Text = "Hold";
-                                state_info_label.Text = "Mute call from: " + callingNumber;
+                                this.update_state_info_label("Mute call from: " + callingNumber);
                                 mute_state();
                                 log.Info("State Changed: Mute");
                                 break;
                             // case Mute state -> change to calling state
                             case FormMainState.Mute:
                                 mute_button.Text = "Mute";
-                                state_info_label.Text = "Continue call from: " + callingNumber;
+                                this.update_state_info_label("Continue call from: " + callingNumber);
                                 state = FormMainState.PreviewCall;
                                 state_change(FormMainState.PreviewCall);
                                 this.BeginInvoke(new MethodInvoker(enable_when_repickup));
@@ -3019,7 +3019,7 @@ namespace CIC
                 manual_call_button.Enabled = true;
                 exit_button.Enabled = true;
 
-                this.state_info_label.Text = "Connected to the server.";
+                this.update_state_info_label("Connected to the server.");
 
                 prev_state = current_state;
                 current_state = FormMainState.Connected;
@@ -3061,7 +3061,7 @@ namespace CIC
 
             prev_state = current_state;
             current_state = FormMainState.Calling;
-            state_info_label.Text = "Calling: " + callingNumber;
+            this.update_state_info_label("Calling: " + callingNumber);
             log.Debug(scope + "Completed");
         }
 
@@ -3122,7 +3122,7 @@ namespace CIC
                 prev_state = current_state;
             }
             current_state = FormMainState.Hold;
-            state_info_label.Text = "Connected to: " + this.GetDialerNumber() + " (Held)";
+            this.update_state_info_label("Connected to: " + this.GetDialerNumber() + " (Held)");
             log.Debug(scope + "Completed");
         }
 
@@ -3154,7 +3154,7 @@ namespace CIC
                 prev_state = current_state;
             }
             current_state = FormMainState.Mute;
-            state_info_label.Text = "Connected to: " + this.GetDialerNumber() + " (Muted)";
+            this.update_state_info_label("Connected to: " + this.GetDialerNumber() + " (Muted)");
             log.Debug(scope + "Completed");
         }
 
@@ -3189,7 +3189,7 @@ namespace CIC
 
             prev_state = current_state;
             current_state = FormMainState.Loggedout;
-            state_info_label.Text = "Logged out";
+            this.update_state_info_label("Logged out");
             log.Debug(scope + "Completed");
         }
 
@@ -3776,7 +3776,7 @@ namespace CIC
             try
             {
                 callingNumber = number;
-                this.state_info_label.Text = "Manual Calling Number: " + callingNumber;
+                this.update_state_info_label("Manual Calling Number: " + callingNumber);
                 CallInteractionParameters callParams =
                     new CallInteractionParameters(number, CallMadeStage.Allocated);
                 SessionSettings sessionSetting = Program.m_Session.GetSessionSettings();
@@ -3924,7 +3924,7 @@ namespace CIC
 
         private void MakeConsultCompleted(object sender, InteractionCompletedEventArgs e)
         {
-            state_info_label.Text = "Consulting:" + callingNumber;
+            this.update_state_info_label("Consulting:" + callingNumber);
             ActiveConsultInteraction = e.Interaction;
         }
 
@@ -4015,7 +4015,7 @@ namespace CIC
                         case true:
                             this.SetToDoNotDisturb_UserStatusMsg();
                             state_change(FormMainState.Break);
-                            this.state_info_label.Text = "On Break.";
+                            this.update_state_info_label("On Break.");
                             break;
                         default:
                             break;
@@ -4166,11 +4166,10 @@ namespace CIC
                         Dictionary<string, string> data = this.ActiveDialerInteraction.ContactData;
                         if (data.ContainsKey("is_attr_numbertodial"))
                         {
-                            state_info_label.Text = "Calling: " + data["is_attr_numbertodial"];
+                            this.update_state_info_label("Calling: " + data["is_attr_numbertodial"]);
                             highlight_call();
 
                             this.callingNumber = data["is_attr_numbertodial"];
-                            state_info_label.Text = "calling: " + this.callingNumber;
                             log.Info(scope + "Starting Dialer Interaction Place Preview Call");
                             this.ActiveDialerInteraction.PlacePreviewCallAsync(MakePreviewCallComplete, null);
                             log.Info(scope + "Completed Dialer Interaction Place Preview Call");
@@ -4312,7 +4311,7 @@ namespace CIC
                                         log.Info(scope + "Starting Normal Interaction Pickup");
                                         ActiveNormalInteraction.Pickup();
                                         log.Info(scope + "Completed Normal Interaction Pickup");
-                                        this.state_info_label.Text = "Connected to: " + callingNumber;
+                                        this.update_state_info_label("Connected to: " + callingNumber);
                                         break;
                                     case InteractionType.Chat:
                                         break;
@@ -4320,7 +4319,7 @@ namespace CIC
                                         log.Info(scope + "Starting Normal Interaction Pickup");
                                         ActiveNormalInteraction.Pickup();
                                         log.Info(scope + "Completed Normal Interaction Pickup");
-                                        this.state_info_label.Text = "Connected to: " + callingNumber;
+                                        this.update_state_info_label("Connected to: " + callingNumber);
                                         break;
                                     default:
                                         break;
