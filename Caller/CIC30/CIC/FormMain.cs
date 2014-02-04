@@ -253,6 +253,15 @@ namespace CIC
                         case InteractionType.Chat:
                             break;
                         case InteractionType.Callback:
+                            ActiveNormalInteraction = e.Interaction;
+                            if (e.ConferenceItem.IsDisconnected)
+                            {
+                                this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
+                            }
+                            else
+                            {
+                                this.Set_ConferenceToolStrip();
+                            }
                             break;
                         case InteractionType.Call:
                             ActiveNormalInteraction = e.Interaction;
@@ -260,11 +269,14 @@ namespace CIC
                             {
                                 this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
                             }
+                            else
+                            {
+                                this.Set_ConferenceToolStrip();
+                            }
                             break;
                         default:
                             break;
                     }
-                    this.Set_ConferenceToolStrip();
                     log.Info(scope + "Completed.");
                 }
                 catch (System.Exception ex)
@@ -340,6 +352,15 @@ namespace CIC
                         case InteractionType.Chat:
                             break;
                         case InteractionType.Callback:
+                            ActiveNormalInteraction = e.Interaction;
+                            if (e.ConferenceItem.IsDisconnected)
+                            {
+                                this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
+                            }
+                            else
+                            {
+                                this.Set_ConferenceToolStrip();
+                            }
                             break;
                         case InteractionType.Call:
                             ActiveNormalInteraction = e.Interaction;
@@ -347,12 +368,15 @@ namespace CIC
                             {
                                 this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
                             }
+                            else
+                            {
+                                this.Set_ConferenceToolStrip();
+                            }
                             break;
                         default:
                             break;
                     }
 
-                    this.Set_ConferenceToolStrip();
                     log.Info(scope + "Completed.");
                 }
                 catch (System.Exception ex)
@@ -784,6 +808,7 @@ namespace CIC
                                         this.BeginInvoke(new MethodInvoker(reset_call_timer));
                                     }
                                 }
+                                this.state_change(FormMainState.PreviewCall);
                             }
                             this.StrConnectionState = ActiveNormalInteraction.State;
                             toolStripStatus.Text = this.StrConnectionState.ToString();
@@ -1415,7 +1440,6 @@ namespace CIC
         private void restart_timer()
         {
             reset_timer();
-            this.ShowActiveCallInfo();
             previewCallTimer.Start();
         }
 
@@ -1884,6 +1908,11 @@ namespace CIC
             log.Info(scope + "Starting.");
             try
             {
+                if (IcWorkFlow == null)
+                {
+                    state_change(FormMainState.Connected);
+                    return;
+                }
                 if (IcWorkFlow.LoginResult)
                 {
                     // TODO: check the state of calling from the commented one
@@ -2039,7 +2068,7 @@ namespace CIC
                         }
                     }
 
-                    if (this.break_granted || current_state == FormMainState.ManualCall)
+                    if (this.break_granted || this.IsManualDialing)
                     {
                         break_requested = false;
                         state_change(FormMainState.Break);
@@ -2128,7 +2157,8 @@ namespace CIC
                             TmpInteraction = new ININ.IceLib.Interactions.Interaction[this.InteractionList.Count];
                             foreach (ININ.IceLib.Interactions.Interaction interact in this.InteractionList)
                             {
-                                if (interact.InteractionType == InteractionType.Call)
+                                if (interact.InteractionType == InteractionType.Call ||
+                                    interact.InteractionType == InteractionType.Callback)
                                 {
                                     if (!interact.IsDisconnected)
                                     {
@@ -2161,7 +2191,8 @@ namespace CIC
                             TmpInteraction = new ININ.IceLib.Interactions.Interaction[this.InteractionList.Count];
                             foreach (ININ.IceLib.Interactions.Interaction interact in this.InteractionList)
                             {
-                                if (interact.InteractionType == InteractionType.Call)
+                                if (interact.InteractionType == InteractionType.Call ||
+                                    interact.InteractionType == InteractionType.Callback)
                                 {
                                     if (!interact.IsDisconnected)
                                     {
@@ -2246,13 +2277,19 @@ namespace CIC
                             this.ActiveDialerInteraction.CallComplete(callCompletionParameters);
                             log.Info(scope + "Completed Dialer Interaction CallComplete");
 
-                            // update user status
-                            log.Info(scope + "Starting Update User Status");
-                            ININ.IceLib.People.UserStatusUpdate statusUpdate = new UserStatusUpdate(this.mPeopleManager);
-                            statusUpdate.StatusMessageDetails = this.AvailableStatusMessageDetails;
-                            statusUpdate.UpdateRequest();
-                            log.Info(scope + "Complete Update User Status");
-                            
+                            try
+                            {
+                                // update user status
+                                log.Info(scope + "Starting Update User Status");
+                                ININ.IceLib.People.UserStatusUpdate statusUpdate = new UserStatusUpdate(this.mPeopleManager);
+                                statusUpdate.StatusMessageDetails = this.AvailableStatusMessageDetails;
+                                statusUpdate.UpdateRequest();
+                                log.Info(scope + "Complete Update User Status");
+                            }
+                            catch (Exception ex)
+                            {
+                                log.Info(scope + "Error info." + ex.Message);
+                            }
                             if (this.break_requested)
                             {
                                 this.request_break();
@@ -2333,8 +2370,8 @@ namespace CIC
             string scope = "CIC::frmMain::WorkflowTransferCompleted()::";
             log.Info(scope + "Starting.");
             this.BlindTransferFlag = true;
+            this.isConsulting = false;
             this.reset_info_on_dashboard();
-            this.BlindTransferFlag = false;
             this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
             state_change(FormMainState.Predictive);
             this.update_state_info_label("Transfer complete.");
@@ -2537,6 +2574,7 @@ namespace CIC
                                         this.pickup();
                                         this.isConnectedCall = true;
                                         this.IsManualDialing = false;
+                                        this.isConsulting = false;
                                     }
                                     else
                                     {
@@ -2885,128 +2923,128 @@ namespace CIC
             log.Info(scope + "Starting.");
             // TODO: implement all states
             switch (state)
-                {
-                    case FormMainState.Predictive:
-                        if (this.isOnBreak)
-                        {
-                            break_state();
-                            log.Info("State Changed: Break");
-                        }
-                        else
-                        { 
-                            predictive_state();
-                            log.Info("State Changed: Predictive");
-                        }
-                        break;
-                    case FormMainState.Preview:
-                        if (this.isOnBreak)
-                        {
-                            break_state();
-                            log.Info("State Changed: Break");
-                        }
-                        else
-                        {
-                            preview_state();
-                            log.Info("State Changed: Preview");
-                        }
-                        break;
-                    case FormMainState.Connected:
-                        if (this.isOnBreak)
-                        {
-                            break_state();
-                            log.Info("State Changed: Break");
-                        }
-                        else
-                        {
-                            connected_state();
-                            log.Info("State Changed: Connected");
-                        }
-                        break;
-                    case FormMainState.Calling:
-                        calling_state();
-                        log.Info("State Changed: Calling");
-                        break;
-                    case FormMainState.PreviewCall :
-                        preview_call_state();
-                        log.Info("State Changed: Preview Call");
-                        break;
-                    case FormMainState.ConferenceCall:
-                        conference_call_state();
-                        log.Info("State Changed: Conference Call");
-                        break;
-                    case FormMainState.ManualCall:
-                        preview_call_state();
-                        log.Info("State Changed: Manual Call");
-                        break;
-                    case FormMainState.Hold:
-                        switch (current_state)
-                        {
-                            // case calling state -> change to hold state
-                            case FormMainState.PreviewCall:
-                            case FormMainState.ConferenceCall:
-                            case FormMainState.ManualCall:
-                                hold_button.Text = "Unhold";
-                                hold_state();
-                                log.Info("State Changed: Hold");
-                                break;
-                            // case Mute state -> change to hold state.
-                            case FormMainState.Mute:
-                                hold_button.Text = "Unhold";
-                                mute_button.Text = "Mute";
-                                hold_state();
-                                log.Info("State Changed: Hold");
-                                break;
-                            // case Hold state -> change to calling state
-                            case FormMainState.Hold:
-                                hold_button.Text = "Hold";
-                                state_change(FormMainState.PreviewCall);
-                                this.BeginInvoke(new MethodInvoker(enable_when_repickup));
-                                log.Info("State Changed: Unhold -> Preview Call");
-                                break;
-                        }
-                        break;
-                    case FormMainState.Mute:
-                        switch (current_state)
-                        {
-                            // case calling state -> change to hold state
-                            case FormMainState.PreviewCall:
-                            case FormMainState.ConferenceCall:
-                            case FormMainState.ManualCall:
-                                mute_button.Text = "Unmute";
-                                mute_state();
-                                log.Info("State Changed: Mute");
-                                break;
-                            // case Mute state -> change to hold state.
-                            case FormMainState.Hold:
-                                mute_button.Text = "Unmute";
-                                hold_button.Text = "Hold";
-                                mute_state();
-                                log.Info("State Changed: Mute");
-                                break;
-                            // case Mute state -> change to calling state
-                            case FormMainState.Mute:
-                                mute_button.Text = "Mute";
-                                state = FormMainState.PreviewCall;
-                                state_change(FormMainState.PreviewCall);
-                                this.BeginInvoke(new MethodInvoker(enable_when_repickup));
-                                log.Info("State Changed: Unmute -> Preview Call");
-                                break;
-                        }
-                        break;
-                    case FormMainState.Disconnected:
-                        disconnect_state();
-                        log.Info("State Changed: Disconnected");
-                        break;
-                    case FormMainState.Break:
+            {
+                case FormMainState.Predictive:
+                    if (this.isOnBreak)
+                    {
                         break_state();
                         log.Info("State Changed: Break");
+                    }
+                    else
+                    { 
+                        predictive_state();
+                        log.Info("State Changed: Predictive");
+                    }
+                    break;
+                case FormMainState.Preview:
+                    if (this.isOnBreak)
+                    {
+                        break_state();
+                        log.Info("State Changed: Break");
+                    }
+                    else
+                    {
+                        preview_state();
+                        log.Info("State Changed: Preview");
+                    }
+                    break;
+                case FormMainState.Connected:
+                    if (this.isOnBreak)
+                    {
+                        break_state();
+                        log.Info("State Changed: Break");
+                    }
+                    else
+                    {
+                        connected_state();
+                        log.Info("State Changed: Connected");
+                    }
+                    break;
+                case FormMainState.Calling:
+                    calling_state();
+                    log.Info("State Changed: Calling");
+                    break;
+                case FormMainState.PreviewCall :
+                    preview_call_state();
+                    log.Info("State Changed: Preview Call");
+                    break;
+                case FormMainState.ConferenceCall:
+                    conference_call_state();
+                    log.Info("State Changed: Conference Call");
+                    break;
+                case FormMainState.ManualCall:
+                    preview_call_state();
+                    log.Info("State Changed: Manual Call");
+                    break;
+                case FormMainState.Hold:
+                    switch (current_state)
+                    {
+                        // case calling state -> change to hold state
+                        case FormMainState.Calling:
+                        case FormMainState.PreviewCall:
+                        case FormMainState.ConferenceCall:
+                        case FormMainState.ManualCall:
+                            hold_button.Text = "Unhold";
+                            hold_state();
+                            log.Info("State Changed: Hold");
+                            break;
+                        // case Mute state -> change to hold state.
+                        case FormMainState.Mute:
+                            hold_button.Text = "Unhold";
+                            hold_state();
+                            log.Info("State Changed: Hold");
+                            break;
+                        // case Hold state -> change to calling state
+                        case FormMainState.Hold:
+                            hold_button.Text = "";
+                            state_change(FormMainState.PreviewCall);
+                            this.BeginInvoke(new MethodInvoker(enable_when_repickup));
+                            log.Info("State Changed: Unhold -> Preview Call");
+                            break;
+                    }
+                    break;
+                case FormMainState.Mute:
+                    switch (current_state)
+                    {
+                        // case calling state -> change to hold state
+                        case FormMainState.Calling:
+                        case FormMainState.PreviewCall:
+                        case FormMainState.ConferenceCall:
+                        case FormMainState.ManualCall:
+                            mute_button.Text = "Unmute";
+                            mute_state();
+                            log.Info("State Changed: Mute");
+                            break;
+                        // case Mute state -> change to hold state.
+                        case FormMainState.Hold:
+                            mute_button.Text = "Unmute";
+                            mute_state();
+                            log.Info("State Changed: Mute");
+                            break;
+                        // case Mute state -> change to calling state
+                        case FormMainState.Mute:
+                            state = FormMainState.PreviewCall;
+                            mute_button.Text = "";
+                            state_change(FormMainState.PreviewCall);
+                            this.BeginInvoke(new MethodInvoker(enable_when_repickup));
+                            log.Info("State Changed: Unmute -> Preview Call");
+                            break;
+                    }
+                    break;
+                case FormMainState.Disconnected:
+                    disconnect_state();
+                    log.Info("State Changed: Disconnected");
+                    break;
+                case FormMainState.Break:
+                    break_state();
+                    log.Info("State Changed: Break");
                         
-                        break;
-                    case FormMainState.Loggedout:
-                        logged_out_state();
-                        log.Info("State Changed: Logged Out");
-                        break;
-                }
+                    break;
+                case FormMainState.Loggedout:
+                    logged_out_state();
+                    log.Info("State Changed: Logged Out");
+                    break;
+            }
             log.Info(scope + "Completed");
         }
         
@@ -3435,10 +3473,14 @@ namespace CIC
                     case InteractionType.Callback:
                         this.Initialize_CallBack();
                         this.Initialize_ContactData();
+
+                        this.update_state_info_label("Acquired call from workflow.");
                         this.ShowActiveCallInfo();
                         break;
                     case InteractionType.Call:
                         this.Initialize_ContactData();
+
+                        this.update_state_info_label("Acquired call from workflow.");
                         this.ShowActiveCallInfo();
                         break;
                 }
@@ -3568,34 +3610,41 @@ namespace CIC
 
         private void Initialize_ContactData()
         {
-            string scope = "CIC::MainForm::InitialContactData()::";
-            log.Info(scope + "Starting.");
-            this.isConnectedCall = false;
-            int i = 0;
-            System.Data.DataTable dt = new DataTable("ATTR_TABLE");
-            dt.Columns.Add("id");
-            dt.Columns.Add("attr_key");
-            dt.Columns.Add("attr_value");
-            if (this.ActiveDialerInteraction != null)
+            if (this.InvokeRequired)
             {
-                mDialerData = new NameValueCollection();
-                mDialerData.Clear();
-                foreach (KeyValuePair<string, string> pair in this.ActiveDialerInteraction.ContactData)
-                {
-                    mDialerData.Add(pair.Key.ToString().Trim(), pair.Value);
-                    System.Data.DataRow dr = dt.NewRow();
-                    dr["id"] = i++.ToString();
-                    dr["attr_key"] = pair.Key.ToString();
-                    dr["attr_value"] = pair.Value.ToString();
-                    dt.Rows.Add(dr);
-                }
-                System.Data.DataSet Ds = new DataSet();
-                Ds.Tables.Add(dt);
-                Ds.Namespace = "CIC-30-DS";
-                Ds.DataSetName = "IC_ATTR";
-                Ds.WriteXml(Program.ApplicationPath + "\\cic_attr.xml", XmlWriteMode.WriteSchema);
+                this.BeginInvoke(new MethodInvoker(Initialize_ContactData));
             }
-            log.Info(scope + "Completed.");
+            else
+            {
+                string scope = "CIC::MainForm::InitialContactData()::";
+                log.Info(scope + "Starting.");
+                this.isConnectedCall = false;
+                int i = 0;
+                System.Data.DataTable dt = new DataTable("ATTR_TABLE");
+                dt.Columns.Add("id");
+                dt.Columns.Add("attr_key");
+                dt.Columns.Add("attr_value");
+                if (this.ActiveDialerInteraction != null)
+                {
+                    mDialerData = new NameValueCollection();
+                    mDialerData.Clear();
+                    foreach (KeyValuePair<string, string> pair in this.ActiveDialerInteraction.ContactData)
+                    {
+                        mDialerData.Add(pair.Key.ToString().Trim(), pair.Value);
+                        System.Data.DataRow dr = dt.NewRow();
+                        dr["id"] = i++.ToString();
+                        dr["attr_key"] = pair.Key.ToString();
+                        dr["attr_value"] = pair.Value.ToString();
+                        dt.Rows.Add(dr);
+                    }
+                    System.Data.DataSet Ds = new DataSet();
+                    Ds.Tables.Add(dt);
+                    Ds.Namespace = "CIC-30-DS";
+                    Ds.DataSetName = "IC_ATTR";
+                    Ds.WriteXml(Program.ApplicationPath + "\\cic_attr.xml", XmlWriteMode.WriteSchema);
+                }
+                log.Info(scope + "Completed.");
+            }
         }
 
         private void Initialize_CallBack()
