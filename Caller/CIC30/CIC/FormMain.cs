@@ -769,7 +769,7 @@ namespace CIC
                         case InteractionType.Callback:
                         case InteractionType.Call:
                             ActiveNormalInteraction = e.Interaction;
-                            if (ActiveNormalInteraction.State == InteractionState.Connected)
+                            if (ActiveNormalInteraction.State == InteractionState.Connected && !ActiveNormalInteraction.IsMuted)
                             {
                                 this.BeginInvoke(new MethodInvoker(enable_when_repickup));
                                 if (this.StrConnectionState == InteractionState.Proceeding)
@@ -805,7 +805,10 @@ namespace CIC
                                 }
                                 else
                                 {
-                                    this.update_state_info_label("Connected to: " + this.GetDialerNumber());
+                                    if (!ActiveNormalInteraction.IsMuted)
+                                    {
+                                        this.update_state_info_label("Connected to: " + this.GetDialerNumber());
+                                    }
                                 }
                             }
                             if (this.BlindTransferFlag)
@@ -3309,7 +3312,7 @@ namespace CIC
             }
 
             this.reset_info_on_dashboard();
-            state_change(FormMainState.ManualCall);
+            state_change(FormMainState.Calling);
             log.Info(scope + "Completed");
         }
 
@@ -4392,7 +4395,7 @@ namespace CIC
             }
             else
             {
-                this.state_info_label.Text = info;
+                this.break_status_label.Text = info;
             }
         }
 

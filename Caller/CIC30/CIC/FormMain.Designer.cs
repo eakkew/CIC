@@ -151,7 +151,7 @@
             this.exit_button_label = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.callingTimer = new System.Windows.Forms.Timer(this.components);
-            this.breakStatusLabel = new System.Windows.Forms.Label();
+            this.break_status_label = new System.Windows.Forms.Label();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
@@ -1107,7 +1107,7 @@
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.breakStatusLabel);
+            this.panel2.Controls.Add(this.break_status_label);
             this.panel2.Controls.Add(this.toolStripCampaignIDLabel);
             this.panel2.Controls.Add(this.toolStripCallTypeLabel);
             this.panel2.Controls.Add(this.toolStripCallIDLabel);
@@ -1411,11 +1411,11 @@
             // 
             // breakStatusLabel
             // 
-            this.breakStatusLabel.AutoSize = true;
-            this.breakStatusLabel.Location = new System.Drawing.Point(368, 61);
-            this.breakStatusLabel.Name = "breakStatusLabel";
-            this.breakStatusLabel.Size = new System.Drawing.Size(0, 13);
-            this.breakStatusLabel.TabIndex = 8;
+            this.break_status_label.AutoSize = true;
+            this.break_status_label.Location = new System.Drawing.Point(368, 61);
+            this.break_status_label.Name = "breakStatusLabel";
+            this.break_status_label.Size = new System.Drawing.Size(0, 13);
+            this.break_status_label.TabIndex = 8;
             // 
             // FormMain
             // 
@@ -1622,7 +1622,7 @@
         private System.Windows.Forms.Timer callingTimer;
         private System.Windows.Forms.ToolStripStatusLabel toolStripUsername;
         private System.Windows.Forms.ToolStripStatusLabel toolStripUsernameLabel;
-        private System.Windows.Forms.Label breakStatusLabel;
+        private System.Windows.Forms.Label break_status_label;
 
     }
 }
