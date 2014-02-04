@@ -100,6 +100,7 @@ namespace CIC
             {
                 frmSchedule schedule = frmSchedule.getInstance(dialerNumber);
                 timer1.Stop();
+                schedule.updateDialerNumber(dialerNumber);
                 schedule.ShowDialog();
                 timer1.Start();
                 if (schedule.validateTime())
@@ -160,6 +161,11 @@ namespace CIC
             {
                 this.TimedOutInfoLabel.Text = "";
             }
+        }
+
+        public void updateDialerNumber(string dialingNumber)
+        {
+            this.dialerNumber = dialingNumber;
         }
 
         private void frmDisposition_Load(object sender, EventArgs e)

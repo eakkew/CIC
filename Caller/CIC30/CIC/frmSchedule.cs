@@ -177,6 +177,11 @@ namespace CIC
             }
         }
 
+        public void updateDialerNumber(string dialingNumber)
+        {
+            this.dialerNumber = dialingNumber;
+        }
+
         private void frmSchedule_Load(object sender, EventArgs e)
         {
             this.isCanceled = false;

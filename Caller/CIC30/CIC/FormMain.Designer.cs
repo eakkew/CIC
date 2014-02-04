@@ -133,6 +133,8 @@
             this.toolStripStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripDirection = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripDirectionLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripUsername = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripUsernameLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.previewCallTimer = new System.Windows.Forms.Timer(this.components);
             this.dateTimeTimer = new System.Windows.Forms.Timer(this.components);
             this.Login_button_label = new System.Windows.Forms.Label();
@@ -149,8 +151,7 @@
             this.exit_button_label = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.callingTimer = new System.Windows.Forms.Timer(this.components);
-            this.toolStripUsername = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripUsernameLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.breakStatusLabel = new System.Windows.Forms.Label();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
@@ -1106,6 +1107,7 @@
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.breakStatusLabel);
             this.panel2.Controls.Add(this.toolStripCampaignIDLabel);
             this.panel2.Controls.Add(this.toolStripCallTypeLabel);
             this.panel2.Controls.Add(this.toolStripCallIDLabel);
@@ -1254,6 +1256,18 @@
             this.toolStripDirectionLabel.Size = new System.Drawing.Size(29, 17);
             this.toolStripDirectionLabel.Text = "N/A";
             // 
+            // toolStripUsername
+            // 
+            this.toolStripUsername.Name = "toolStripUsername";
+            this.toolStripUsername.Size = new System.Drawing.Size(63, 17);
+            this.toolStripUsername.Text = "Username:";
+            // 
+            // toolStripUsernameLabel
+            // 
+            this.toolStripUsernameLabel.Name = "toolStripUsernameLabel";
+            this.toolStripUsernameLabel.Size = new System.Drawing.Size(64, 17);
+            this.toolStripUsernameLabel.Text = "loginname";
+            // 
             // previewCallTimer
             // 
             this.previewCallTimer.Tick += new System.EventHandler(this.timer1_Tick);
@@ -1395,17 +1409,13 @@
             // 
             this.callingTimer.Tick += new System.EventHandler(this.callingTimer_Tick);
             // 
-            // toolStripUsername
+            // breakStatusLabel
             // 
-            this.toolStripUsername.Name = "toolStripUsername";
-            this.toolStripUsername.Size = new System.Drawing.Size(63, 17);
-            this.toolStripUsername.Text = "Username:";
-            // 
-            // toolStripUsernameLabel
-            // 
-            this.toolStripUsernameLabel.Name = "toolStripUsernameLabel";
-            this.toolStripUsernameLabel.Size = new System.Drawing.Size(64, 17);
-            this.toolStripUsernameLabel.Text = "loginname";
+            this.breakStatusLabel.AutoSize = true;
+            this.breakStatusLabel.Location = new System.Drawing.Point(368, 61);
+            this.breakStatusLabel.Name = "breakStatusLabel";
+            this.breakStatusLabel.Size = new System.Drawing.Size(0, 13);
+            this.breakStatusLabel.TabIndex = 8;
             // 
             // FormMain
             // 
@@ -1612,6 +1622,7 @@
         private System.Windows.Forms.Timer callingTimer;
         private System.Windows.Forms.ToolStripStatusLabel toolStripUsername;
         private System.Windows.Forms.ToolStripStatusLabel toolStripUsernameLabel;
+        private System.Windows.Forms.Label breakStatusLabel;
 
     }
 }
