@@ -96,7 +96,7 @@ namespace CIC
                     Util.getDateTimeNowPlusOffset().ToUniversalTime() , this.IC_Session.UserId, false, ININ.IceLib.Dialer.Enums.TimeReference.UTC
                 );
             }
-            else if (sReasoncode == ReasonCode.Scheduled || sReasoncode == ReasonCode.SIT)
+            else if (sReasoncode == ReasonCode.Scheduled)
             {
                 frmSchedule schedule = frmSchedule.getInstance(dialerNumber);
                 timer1.Stop();
