@@ -260,7 +260,7 @@ namespace CIC
                             }
                             else
                             {
-                                this.Set_ConferenceToolStrip();
+                                //this.Set_ConferenceToolStrip();
                             }
                             break;
                         case InteractionType.Call:
@@ -271,7 +271,7 @@ namespace CIC
                             }
                             else
                             {
-                                this.Set_ConferenceToolStrip();
+                                //this.Set_ConferenceToolStrip();
                             }
                             break;
                         default:
@@ -359,7 +359,7 @@ namespace CIC
                             }
                             else
                             {
-                                this.Set_ConferenceToolStrip();
+                                //this.Set_ConferenceToolStrip();
                             }
                             break;
                         case InteractionType.Call:
@@ -370,7 +370,7 @@ namespace CIC
                             }
                             else
                             {
-                                this.Set_ConferenceToolStrip();
+                                //this.Set_ConferenceToolStrip();
                             }
                             break;
                         default:
@@ -1505,14 +1505,15 @@ namespace CIC
 
         private void disconnect_button_Click(object sender, EventArgs e)
         {
+            tryDisconnect();
             if (!this.IsManualDialing)
             {
                 frmDisposition disposition = frmDisposition.getInstance(
                     this.IC_Session, this.GetDialerNumber(), this.toolStripCallTypeLabel.Text); //new frmDisposition();
                 disposition.updateDialerNumber(this.GetDialerNumber());
+                disposition.updateCallerList(this.GetDialerListNumber());
                 disposition.ShowDialog();
             }
-            tryDisconnect();
             //this.ShowActiveCallInfo();
             this.update_state_info_label("Disconnected.");
         }
@@ -3142,7 +3143,6 @@ namespace CIC
             log.Debug(scope + "Completed");
         }
 
-
         private void conference_call_state()
         {
             string scope = "CIC::FormMain::preview_call_state()::";
@@ -4017,6 +4017,30 @@ namespace CIC
         {
             this.update_state_info_label("Consulting:" + callingNumber);
             ActiveConsultInteraction = e.Interaction;
+        }
+
+        public string[] GetDialerListNumber()
+        {
+            if (IsManualDialing)
+                return null;
+
+            List<string> callList = new List<string>();
+            Dictionary<string, string> data = this.ActiveDialerInteraction.ContactData;
+
+            if (data.ContainsKey("is_attr_PhoneNo1") && data["is_attr_PhoneNo1"] != "")
+                callList.Add(data["is_attr_PhoneNo1"]);
+            if (data.ContainsKey("is_attr_PhoneNo2") && data["is_attr_PhoneNo2"] != "")
+                callList.Add(data["is_attr_PhoneNo2"]);
+            if (data.ContainsKey("is_attr_PhoneNo3") && data["is_attr_PhoneNo3"] != "")
+                callList.Add(data["is_attr_PhoneNo3"]);
+            if (data.ContainsKey("is_attr_PhoneNo4") && data["is_attr_PhoneNo4"] != "")
+                callList.Add(data["is_attr_PhoneNo5"]);
+            if (data.ContainsKey("is_attr_PhoneNo5") && data["is_attr_PhoneNo5"] != "")
+                callList.Add(data["is_attr_PhoneNo5"]);
+            if (data.ContainsKey("is_attr_PhoneNo6") && data["is_attr_PhoneNo6"] != "")
+                callList.Add(data["is_attr_PhoneNo6"]);
+
+            return callList.ToArray();
         }
 
         public string GetDialerNumber()

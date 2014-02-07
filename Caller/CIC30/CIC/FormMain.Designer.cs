@@ -117,6 +117,7 @@
             this.contractNo_box = new System.Windows.Forms.RichTextBox();
             this.contractID_label = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.break_status_label = new System.Windows.Forms.Label();
             this.toolStripCampaignIDLabel = new System.Windows.Forms.Label();
             this.toolStripCallTypeLabel = new System.Windows.Forms.Label();
             this.toolStripCallIDLabel = new System.Windows.Forms.Label();
@@ -151,7 +152,6 @@
             this.exit_button_label = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.callingTimer = new System.Windows.Forms.Timer(this.components);
-            this.break_status_label = new System.Windows.Forms.Label();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
@@ -417,6 +417,7 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.break_status_label);
             this.splitContainer1.Panel2.Controls.Add(this.panel2);
             this.splitContainer1.Panel2.Controls.Add(this.state_info_label);
             this.splitContainer1.Panel2.Controls.Add(this.timer_info);
@@ -1107,7 +1108,6 @@
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.break_status_label);
             this.panel2.Controls.Add(this.toolStripCampaignIDLabel);
             this.panel2.Controls.Add(this.toolStripCallTypeLabel);
             this.panel2.Controls.Add(this.toolStripCallIDLabel);
@@ -1120,6 +1120,14 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(406, 80);
             this.panel2.TabIndex = 2;
+            // 
+            // break_status_label
+            // 
+            this.break_status_label.AutoSize = true;
+            this.break_status_label.Location = new System.Drawing.Point(22, 70);
+            this.break_status_label.Name = "break_status_label";
+            this.break_status_label.Size = new System.Drawing.Size(0, 13);
+            this.break_status_label.TabIndex = 8;
             // 
             // toolStripCampaignIDLabel
             // 
@@ -1408,14 +1416,6 @@
             // callingTimer
             // 
             this.callingTimer.Tick += new System.EventHandler(this.callingTimer_Tick);
-            // 
-            // breakStatusLabel
-            // 
-            this.break_status_label.AutoSize = true;
-            this.break_status_label.Location = new System.Drawing.Point(368, 61);
-            this.break_status_label.Name = "breakStatusLabel";
-            this.break_status_label.Size = new System.Drawing.Size(0, 13);
-            this.break_status_label.TabIndex = 8;
             // 
             // FormMain
             // 

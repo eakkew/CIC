@@ -25,6 +25,7 @@ namespace CIC
         private string dialerNumber;
         private Session IC_Session;
         private float elaspedTime;
+        private string[] callerList;
 
         public static frmDisposition getInstance(Session session, string number, string calltype = "preview")
         {
@@ -96,6 +97,22 @@ namespace CIC
                     Util.getDateTimeNowPlusOffset().ToUniversalTime() , this.IC_Session.UserId, false, ININ.IceLib.Dialer.Enums.TimeReference.UTC
                 );
             }
+            else if (sReasoncode == ReasonCode.WrongParty)
+            {
+                callback.number = getNextNumber();
+                if (callback.number == "")
+                {
+                    callback.param = new CallCompletionParameters(
+                        ReasonCode.Success, "LastWrongPerson");
+                }
+                else
+                {
+                    callback.param = new CallCompletionParameters(
+                        sReasoncode, this.finishcode_combobox.Text,
+                        Util.getDateTimeNowPlusOffset().ToUniversalTime(), this.IC_Session.UserId, false, ININ.IceLib.Dialer.Enums.TimeReference.UTC
+                    );
+                }
+            }
             else if (sReasoncode == ReasonCode.Scheduled)
             {
                 frmSchedule schedule = frmSchedule.getInstance(dialerNumber);
@@ -166,6 +183,27 @@ namespace CIC
         public void updateDialerNumber(string dialingNumber)
         {
             this.dialerNumber = dialingNumber;
+        }
+
+        public void updateCallerList(string[] cList)
+        {
+            if (cList != null)
+                this.callerList = cList;
+        }
+
+        private string getNextNumber()
+        {
+            string ret = "";
+            if (this.callerList.Count() <= 1)
+                return "";
+
+            for (int i = 0; i < this.callerList.Count() - 1; i++)
+            {
+                if (this.dialerNumber == this.callerList[i])
+                    return this.callerList[i + 1];
+            }
+
+            return ret;
         }
 
         private void frmDisposition_Load(object sender, EventArgs e)
