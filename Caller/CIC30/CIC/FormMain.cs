@@ -115,7 +115,7 @@ namespace CIC
             InitializeComponent();
             JulianCalendar cal = new JulianCalendar();
             // version
-            this.Text = "Outbound Telephony Dialer Client v.1.0." + cal.GetDayOfYear(DateTime.Now) + "c";
+            this.Text = "Outbound Telephony Dialer Client v.1.0." + cal.GetDayOfYear(DateTime.Now) + "a";
             state_change(FormMainState.Disconnected);
             InitializeSession();
         }
@@ -550,18 +550,18 @@ namespace CIC
                 if (ActiveConsultInteraction != null)
                 {
                     this.SetInfoBarColor();
-                    this.transfer_button.Enabled = true;
                 }
                 else
                 {
                     if (this.BlindTransferFlag)
                     {
-                        this.InteractionList.Clear();
-
-                        this.update_state_info_label("Connected to: " + this.GetDialerNumber());
+                        if (this.InteractionList.Count > 0)
+                        {
+                            this.InteractionList.Clear();
+                        }
+                        //this.update_state_info_label("Connected to: " + this.GetDialerNumber());
                         update_break_status_label("");
                         this.SetInfoBarColor();
-                        this.transfer_button.Enabled = true;
                     }
                 }
                 log.Info(scope + "Completed.");
@@ -1507,6 +1507,7 @@ namespace CIC
         private void disconnect_button_Click(object sender, EventArgs e)
         {
             tryDisconnect();
+            tryDisconnectAllInteractions();
             if (!this.IsManualDialing)
             {
                 frmDisposition disposition = frmDisposition.getInstance(
@@ -2363,7 +2364,7 @@ namespace CIC
                 }
                 this.isConsulting = false;
                 this.IsManualDialing = false;
-                this.ResetActiveCallInfo();
+                this.reset_info_on_dashboard();
                 log.Info(scope + "Completed.");
             }
             catch (System.Exception ex)
@@ -3458,15 +3459,16 @@ namespace CIC
                     case InteractionType.Callback:
                         this.Initialize_CallBack();
                         this.Initialize_ContactData();
-
-                        this.update_state_info_label("Acquired call from workflow.");
+                        if (this.current_state != FormMainState.Preview)
+                            this.update_state_info_label("Acquired call from workflow.");
                         update_break_status_label("");
                         this.ShowActiveCallInfo();
                         break;
                     case InteractionType.Call:
                         this.Initialize_ContactData();
 
-                        this.update_state_info_label("Acquired call from workflow.");
+                        if (this.current_state != FormMainState.Preview)
+                            this.update_state_info_label("Acquired call from workflow.");
                         update_break_status_label("");
                         this.ShowActiveCallInfo();
                         break;

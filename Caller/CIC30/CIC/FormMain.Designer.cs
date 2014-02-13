@@ -116,8 +116,8 @@
             this.contractID_panel = new System.Windows.Forms.Panel();
             this.contractNo_box = new System.Windows.Forms.RichTextBox();
             this.contractID_label = new System.Windows.Forms.Label();
-            this.panel2 = new System.Windows.Forms.Panel();
             this.break_status_label = new System.Windows.Forms.Label();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.toolStripCampaignIDLabel = new System.Windows.Forms.Label();
             this.toolStripCallTypeLabel = new System.Windows.Forms.Label();
             this.toolStripCallIDLabel = new System.Windows.Forms.Label();
@@ -1106,6 +1106,14 @@
             this.contractID_label.TabIndex = 0;
             this.contractID_label.Text = "เลขที่สัญญา:";
             // 
+            // break_status_label
+            // 
+            this.break_status_label.AutoSize = true;
+            this.break_status_label.Location = new System.Drawing.Point(22, 70);
+            this.break_status_label.Name = "break_status_label";
+            this.break_status_label.Size = new System.Drawing.Size(0, 13);
+            this.break_status_label.TabIndex = 8;
+            // 
             // panel2
             // 
             this.panel2.Controls.Add(this.toolStripCampaignIDLabel);
@@ -1120,14 +1128,6 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(406, 80);
             this.panel2.TabIndex = 2;
-            // 
-            // break_status_label
-            // 
-            this.break_status_label.AutoSize = true;
-            this.break_status_label.Location = new System.Drawing.Point(22, 70);
-            this.break_status_label.Name = "break_status_label";
-            this.break_status_label.Size = new System.Drawing.Size(0, 13);
-            this.break_status_label.TabIndex = 8;
             // 
             // toolStripCampaignIDLabel
             // 
@@ -1249,8 +1249,8 @@
             // toolStripStatus
             // 
             this.toolStripStatus.Name = "toolStripStatus";
-            this.toolStripStatus.Size = new System.Drawing.Size(68, 17);
-            this.toolStripStatus.Text = "statusname";
+            this.toolStripStatus.Size = new System.Drawing.Size(29, 17);
+            this.toolStripStatus.Text = "N/A";
             // 
             // toolStripDirection
             // 
