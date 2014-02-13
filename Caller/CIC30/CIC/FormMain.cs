@@ -1495,10 +1495,6 @@ namespace CIC
 
         private void call_button_Click(object sender, EventArgs e)
         {   
-            //change state from workflow.
-            // name1_panel.BackColor = Color.Yellow;
-            // reset_timer();
-
             // make a call or pickup
             placecall(this, null);
             state_change(FormMainState.Calling);
@@ -1516,6 +1512,8 @@ namespace CIC
                 disposition.updateCallerList(this.GetDialerListNumber());
                 disposition.ShowDialog();
             }
+            hold_button.Text = "";
+            mute_button.Text = "";
             //this.ShowActiveCallInfo();
             this.update_state_info_label("Disconnected.");
         }
@@ -3459,7 +3457,7 @@ namespace CIC
                     case InteractionType.Callback:
                         this.Initialize_CallBack();
                         this.Initialize_ContactData();
-                        if (this.current_state != FormMainState.Preview)
+                        if (this.current_state != FormMainState.Calling)
                             this.update_state_info_label("Acquired call from workflow.");
                         update_break_status_label("");
                         this.ShowActiveCallInfo();
@@ -3467,7 +3465,7 @@ namespace CIC
                     case InteractionType.Call:
                         this.Initialize_ContactData();
 
-                        if (this.current_state != FormMainState.Preview)
+                        if (this.current_state != FormMainState.Calling)
                             this.update_state_info_label("Acquired call from workflow.");
                         update_break_status_label("");
                         this.ShowActiveCallInfo();
@@ -4536,7 +4534,6 @@ namespace CIC
                     }
                 }
                 this.InteractionList.Clear();
-                this.InteractionList = null;
             }
         }
 
