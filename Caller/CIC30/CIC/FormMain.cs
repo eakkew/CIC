@@ -114,7 +114,8 @@ namespace CIC
             isFirstTimeLogin = true;
             InitializeComponent();
             JulianCalendar cal = new JulianCalendar();
-            this.Text = "Outbound Telephony Dialer Client v.1.0." + cal.GetDayOfYear(DateTime.Now) + "a";
+            // version
+            this.Text = "Outbound Telephony Dialer Client v.1.0." + cal.GetDayOfYear(DateTime.Now) + "c";
             state_change(FormMainState.Disconnected);
             InitializeSession();
         }
@@ -414,7 +415,6 @@ namespace CIC
                         case InteractionType.Chat:
                             break;
                         case InteractionType.Callback:
-                            break;
                         case InteractionType.Call:
                             if (!e.Interaction.IsDisconnected)
                             {
@@ -423,6 +423,8 @@ namespace CIC
                                     this.NormalInterationManager, e.Interaction.InteractionType,
                                     e.ConferenceItem.ConferenceId);
                                 ActiveNormalInteraction = e.Interaction;
+                                this.disable_when_line_disconnect();
+                                this.disable_hold_and_mute();
                             }
                             break;
                         default:
@@ -556,7 +558,8 @@ namespace CIC
                     {
                         this.InteractionList.Clear();
 
-                        this.update_state_info_label("Connected to: unknown");
+                        this.update_state_info_label("Connected to: " + this.GetDialerNumber());
+                        update_break_status_label("");
                         this.SetInfoBarColor();
                         this.transfer_button.Enabled = true;
                     }
@@ -833,6 +836,7 @@ namespace CIC
                                     if (!ActiveNormalInteraction.IsMuted)
                                     {
                                         this.update_state_info_label("Connected to: " + this.GetDialerNumber());
+                                        update_break_status_label("");
                                     }
                                 }
                             }
@@ -1496,10 +1500,7 @@ namespace CIC
             // reset_timer();
 
             // make a call or pickup
-            placecall_or_pickup();
-            update_state_info_label("Calling: " + this.GetDialerNumber());
-            highlight_call();
-            this.IsManualDialing = false;
+            placecall(this, null);
             state_change(FormMainState.Calling);
         }
 
@@ -1522,8 +1523,7 @@ namespace CIC
         {
             string scope = "CIC::MainForm::tryDisconnect()::";
             log.Info(scope + "Starting");
-            if (IcWorkFlow != null &&
-                IcWorkFlow.LoginResult &&
+            if (!this.IsManualDialing &&
                 this.IC_Session != null &&
                 this.IC_Session.ConnectionState == ININ.IceLib.Connection.ConnectionState.Up)
             {
@@ -2076,7 +2076,7 @@ namespace CIC
                     }
                     else
                     {
-                        state_change(FormMainState.Preview);
+                        state_change(FormMainState.Predictive);
                     }
                     log.Info(scope + "Completed.[Disposition]");
                 }
@@ -2109,26 +2109,33 @@ namespace CIC
                 try
                 {
                     log.Info(scope + "Logging into workflow. UserId=" + this.IC_Session.UserId + ", StationId=" + this.IC_Session.GetStationInfo().Id);
-                    IcWorkFlow = new CIC.ICWorkFlow(CIC.Program.DialingManager);
-                    this.DialerSession = IcWorkFlow.LogIn(((String)sender));
-                    this.toolStripWorkflowLabel.Text = (string)sender;
-                    //IcWorkFlow.LoginResult = IcWorkFlow.LoginResult;
-                    if (IcWorkFlow.LoginResult)
+                    if (IcWorkFlow != null && IcWorkFlow.LoginResult)
                     {
-                        this.InitializeDialerSession();
-                        this.SetActiveSession(Program.m_Session);
-                        this.Initial_NormalInteraction();
-                        this.InitializeQueueWatcher();
-                        this.UpdateUserStatus();
                         this.state_change(FormMainState.Predictive);
-                        this.SetToAvailable_UserStatusMsg();
-                        this.endbreak_button_Click(sender, e);
-                        this.update_state_info_label("Logged into Workflow");
-                        log.Info(scope + "Completed.");
                     }
                     else
                     {
-                        log.Warn(scope + "WorkFlow [" + ((string)sender) + "] logon Fail. Please try again.");
+                        IcWorkFlow = new CIC.ICWorkFlow(CIC.Program.DialingManager);
+                        this.DialerSession = IcWorkFlow.LogIn(((String)sender));
+                        this.toolStripWorkflowLabel.Text = (string)sender;
+                        //IcWorkFlow.LoginResult = IcWorkFlow.LoginResult;
+                        if (IcWorkFlow.LoginResult)
+                        {
+                            this.InitializeDialerSession();
+                            this.SetActiveSession(Program.m_Session);
+                            this.Initial_NormalInteraction();
+                            this.InitializeQueueWatcher();
+                            this.UpdateUserStatus();
+                            this.state_change(FormMainState.Predictive);
+                            this.SetToAvailable_UserStatusMsg();
+                            this.endbreak_button_Click(sender, e);
+                            this.update_state_info_label("Logged into Workflow");
+                            log.Info(scope + "Completed.");
+                        }
+                        else
+                        {
+                            log.Warn(scope + "WorkFlow [" + ((string)sender) + "] logon Fail. Please try again.");
+                        }
                     }
                 }
                 catch (System.Exception ex)
@@ -3093,7 +3100,6 @@ namespace CIC
                 log.Debug(scope + "Starting");
                 reset_state();
                 workflow_button.Enabled = true;
-                manual_call_button.Enabled = true;
                 exit_button.Enabled = true;
 
                 this.update_state_info_label("Connected to the server.");
@@ -3112,6 +3118,7 @@ namespace CIC
             call_button.Enabled = true;
             break_button.Enabled = !break_requested && !IsManualDialing;
             update_state_info_label("Connected to: " + this.GetDialerNumber());
+            update_break_status_label("");
             prev_state = current_state;
             current_state = FormMainState.Preview;
 
@@ -3261,7 +3268,6 @@ namespace CIC
             log.Debug(scope + "Starting");
             reset_state();
             workflow_button.Enabled = true;
-            manual_call_button.Enabled = true;
             exit_button.Enabled = true;
 
             prev_state = current_state;
@@ -3363,27 +3369,6 @@ namespace CIC
                 return;
             }
         }
-
-        private void placecall_or_pickup()
-        {
-            if (!IcWorkFlow.LoginResult)
-            {
-                if (IsNormalInteractionAvailableForPickup())
-                {
-                    pickup();
-                    return;
-                }
-            }
-            if (ActiveDialerInteraction != null)
-            {
-                if (IsDialerInteractionAvailableForPickup() || ActiveDialerInteraction.IsMuted)
-                {
-                    pickup();
-                    return;
-                }
-                else placecall(this, null);
-            }
-        }
         
         private bool IsDialerInteractionAvailableForPickup()
         {
@@ -3475,12 +3460,14 @@ namespace CIC
                         this.Initialize_ContactData();
 
                         this.update_state_info_label("Acquired call from workflow.");
+                        update_break_status_label("");
                         this.ShowActiveCallInfo();
                         break;
                     case InteractionType.Call:
                         this.Initialize_ContactData();
 
                         this.update_state_info_label("Acquired call from workflow.");
+                        update_break_status_label("");
                         this.ShowActiveCallInfo();
                         break;
                 }
@@ -3522,6 +3509,7 @@ namespace CIC
                         this.BeginInvoke(new MethodInvoker(preview_state));
                         this.BeginInvoke(new MethodInvoker(restart_timer));
                         this.update_state_info_label("Acquired information from workflow.");
+                        update_break_status_label("");
                         break;
                     case InteractionType.Call:
                         this.Initialize_ContactData();
@@ -3531,6 +3519,7 @@ namespace CIC
                         this.BeginInvoke(new MethodInvoker(preview_state));
                         this.BeginInvoke(new MethodInvoker(restart_timer));
                         this.update_state_info_label("Acquired information from workflow.");
+                        update_break_status_label("");
                         break;
                 }
                 log.Info(scope + "Completed.");
@@ -4002,6 +3991,7 @@ namespace CIC
                 }
                 this.isConsulting = false;
                 update_state_info_label("Connected to: " + this.GetDialerNumber());
+                update_break_status_label("");
                 this.BeginInvoke(new MethodInvoker(enable_when_repickup));
                 log.Info(scope + "Completed.");
             }
@@ -4288,12 +4278,12 @@ namespace CIC
                             log.Info(scope + "Starting Dialer Interaction Place Preview Call");
                             this.ActiveDialerInteraction.PlacePreviewCallAsync(MakePreviewCallComplete, null);
                             log.Info(scope + "Completed Dialer Interaction Place Preview Call");
+                            this.IsManualDialing = false;
                             restart_call_timer();
                             this.toolStripStatus.Text = (this.ActiveDialerInteraction != null) ?
                                 this.ActiveDialerInteraction.State.ToString() + ":" +
                                 this.ActiveDialerInteraction.StateDescription.ToString() : "N/A";
                             reset_timer();
-                            
                         }
                     }
                     log.Info(scope + "Completed.[Place Call]");
@@ -4382,6 +4372,7 @@ namespace CIC
                             {
                                 this.CrmScreenPop();
                                 update_state_info_label("Connected to: " + this.GetDialerNumber());
+                                update_break_status_label("");
                             }
                         }
                         if (ActiveNormalInteraction != null && !this.isConsulting)
@@ -4427,6 +4418,7 @@ namespace CIC
                                         ActiveNormalInteraction.Pickup();
                                         log.Info(scope + "Completed Normal Interaction Pickup");
                                         this.update_state_info_label("Connected to: " + callingNumber);
+                                        update_break_status_label("");
                                         break;
                                     case InteractionType.Chat:
                                         break;
@@ -4435,6 +4427,7 @@ namespace CIC
                                         ActiveNormalInteraction.Pickup();
                                         log.Info(scope + "Completed Normal Interaction Pickup");
                                         this.update_state_info_label("Connected to: " + callingNumber);
+                                        update_break_status_label("");
                                         break;
                                     default:
                                         break;

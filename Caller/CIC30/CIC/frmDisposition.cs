@@ -108,7 +108,7 @@ namespace CIC
                 else
                 {
                     callback.param = new CallCompletionParameters(
-                        sReasoncode, this.finishcode_combobox.Text,
+                        ReasonCode.Scheduled, this.finishcode_combobox.Text,
                         Util.getDateTimeNowPlusOffset().ToUniversalTime(), this.IC_Session.UserId, false, ININ.IceLib.Dialer.Enums.TimeReference.UTC
                     );
                 }
