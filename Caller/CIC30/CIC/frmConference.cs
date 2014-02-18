@@ -46,7 +46,7 @@ namespace CIC
 
         private void conference_button_Click(object sender, EventArgs e)
         {
-            Program.MainDashboard.conference_invoke(this.ext_number_box.Text);
+            Program.MainDashboard.conference_invoke();
             ext_number_box.Enabled = true;
             conference_button.Enabled = false;
             call_button.Enabled = true;

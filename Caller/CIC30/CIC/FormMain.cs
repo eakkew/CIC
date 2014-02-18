@@ -41,7 +41,6 @@ namespace CIC
         Disconnected,           // disconnect from session
         None,                   // nothing at all or error state
     };
-    //private bool IsLoggedIntoDialer = false;
 
     public partial class FormMain : Form
     {
@@ -50,6 +49,8 @@ namespace CIC
         private ScheduleCallbackForm frmScheduleCallbackForm { get; set; }
 
 
+        public bool isOnBreak { get; set; }
+        public bool isFirstTimeLogin { get; set; }
         private bool isConsulting { get; set; }
         private bool break_requested { get; set; }
         private bool break_granted { get; set; }
@@ -107,24 +108,26 @@ namespace CIC
         private static InteractionConference ActiveConferenceInteraction = null;
         private static NameValueCollection mDialerData { get; set; }
 
+        // start initialize parameters and login to session
         public FormMain()
         {
             ExitFlag = false;
             isConsulting = false;
             isFirstTimeLogin = true;
             InitializeComponent();
+
+            // versioning base on day it was built
             JulianCalendar cal = new JulianCalendar();
-            // version
             this.Text = "Outbound Telephony Dialer Client v.1.0." + cal.GetDayOfYear(DateTime.Now) + "a";
             state_change(FormMainState.Disconnected);
             InitializeSession();
         }
 
+        // create session and add events that are tied to session
         private void InitializeSession()
         {
             string scope = "CIC::frmMain::InitialAllComponents()::";
             log.Info(scope + " Starting");
-            bool bResult = false;
             if (this.InvokeRequired)
             {
                 this.BeginInvoke(new MethodInvoker(InitializeSession));
@@ -157,7 +160,7 @@ namespace CIC
                 
                     if (session != null)
                     {
-                        bResult = this.SetActiveSession(session);
+                        this.SetActiveSession(session);
                         if (this.IC_Session != null)
                         {
                             ININ.IceLib.Connection.ConnectionState mConnectionState;
@@ -200,6 +203,7 @@ namespace CIC
             }
         }
 
+        // initialize queue watcher and add events that are tied to queue watcher
         private void InitializeQueueWatcher()
         {
             string scope = "CIC::MainForm::InitializeQueueWatcher():: ";
@@ -229,6 +233,10 @@ namespace CIC
             }
         }
 
+
+        // handle event from interaction queue conference interaction removed
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void m_InteractionQueue_ConferenceInteractionRemoved(object sender, ConferenceInteractionEventArgs e)
         {
             string scope = "CIC::MainForm::m_InteractionQueue_ConferenceInteractionChanged():: ";
@@ -287,6 +295,7 @@ namespace CIC
             }
         }
 
+        // check if there is a conference in session
         private void Set_ConferenceToolStrip()
         {
             string scope = "CIC::MainForm::Set_ConferenceToolStrip():: ";
@@ -322,6 +331,9 @@ namespace CIC
             }
         }
 
+        // handle event from interaction queue conference interaction changed
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void m_InteractionQueue_ConferenceInteractionChanged(object sender, ConferenceInteractionAttributesEventArgs e)
         {
             string scope = "CIC::MainForm::m_InteractionQueue_ConferenceInteractionChanged():: ";
@@ -386,7 +398,10 @@ namespace CIC
                 }
             }
         }
-        
+
+        // handle event from interaction queue conference interaction added
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void m_InteractionQueue_ConferenceInteractionAdded(object sender, ConferenceInteractionAttributesEventArgs e)
         {
             string scope = "CIC::MainForm::m_InteractionQueue_ConferenceInteractionAdded():: ";
@@ -439,6 +454,9 @@ namespace CIC
             }
         }
 
+        // handle event from interaction queue interaction removed
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void m_InteractionQueue_InteractionRemoved(object sender, InteractionEventArgs e)
         {
             string scope = "CIC::MainForm::m_InteractionQueue_InteractionRemoved():: ";
@@ -537,6 +555,7 @@ namespace CIC
             }
         }
 
+        // clear interaction list and set call tone
         private void ResetActiveCallInfo()
         {
             string scope = "CIC::frmMain::ResetActiveCallInfo()::";
@@ -549,7 +568,7 @@ namespace CIC
             {
                 if (ActiveConsultInteraction != null)
                 {
-                    this.SetInfoBarColor();
+                    this.SetCallTone();
                 }
                 else
                 {
@@ -561,13 +580,14 @@ namespace CIC
                         }
                         //this.update_state_info_label("Connected to: " + this.GetDialerNumber());
                         update_break_status_label("");
-                        this.SetInfoBarColor();
+                        this.SetCallTone();
                     }
                 }
                 log.Info(scope + "Completed.");
             }
         }
 
+        // clear UI data on dash board
         private void reset_info_on_dashboard()
         {
             this.reset_color_panel();
@@ -608,7 +628,8 @@ namespace CIC
             this.toolStripCampaignIDLabel.Text = "N/A";
         }
 
-        private void SetInfoBarColor()
+        //set call tone
+        private void SetCallTone()
         {
             string scope = "CIC::frmMain::SetInfoBarColor()::";
             log.Info(scope + "Starting.");
@@ -651,7 +672,7 @@ namespace CIC
             log.Info(scope + "Completed.");
         }
 
-
+        // stop alert sound
         private void Stop_AlertingWav()
         {
             string scope = "CIC::MainForm::Stop_AlertingWav():: ";
@@ -685,6 +706,7 @@ namespace CIC
             }
         }
 
+        // start alert sound
         private void Start_AlertingWav()
         {
             string scope = "CIC::MainForm::Start_AlertingWav():: ";
@@ -768,6 +790,9 @@ namespace CIC
             }
         }
 
+        // handle event from interaction queue interaction changed
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void m_InteractionQueue_InteractionChanged(object sender, InteractionAttributesEventArgs e)
         {
             string scope = "CIC::MainForm::m_InteractionQueue_InteractionChanged():: ";
@@ -905,6 +930,8 @@ namespace CIC
             }
         }
 
+        // check if there is a consult call in session
+        // @return - result whether current interaction is consult call
         private bool isCurrentConsultCall()
         {
             if (ActiveConsultInteraction ==  null)
@@ -912,6 +939,8 @@ namespace CIC
             return (ActiveNormalInteraction.InteractionId == ActiveConsultInteraction.InteractionId);
         }
 
+        // remove interaction from list
+        // @Interaction_Object - object to be removed
         private void RemoveNormalInteractionFromList(Interaction Interaction_Object)
         {
             string scope = "CIC::frmMain::RemoveNormalInteractionFromList(Interaction_Object)::";      //Over load II
@@ -1005,6 +1034,7 @@ namespace CIC
             }
         }
 
+        // @return a connected interaction
         private Interaction GetAvailableInteractionFromList()
         {
             string scope = "CIC::frmMain::GetAvailableInteractionFromList()::";
@@ -1031,6 +1061,9 @@ namespace CIC
             return retInteraction;
         }
 
+        // handle event from interaction queue interaction added
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void m_InteractionQueue_InteractionAdded(object sender, InteractionAttributesEventArgs e)
         {
             string scope = "CIC::MainForm::m_InteractionQueue_InteractionAdded():: ";
@@ -1112,6 +1145,9 @@ namespace CIC
             }
         }
 
+        // handle event from normal interaction attribute changed
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void NormalInteraction_AttributesChanged(object sender, AttributesEventArgs e)
         {
             string scope = "CIC::MainForm::NormalInteraction_AttributesChanged():: ";
@@ -1145,6 +1181,8 @@ namespace CIC
             }
         }
 
+        // Store Interaction into the list
+        // @interaction - an interaction to be added
         private void Add_InteractionListObject(Interaction interaction)
         {
             int chk_idx = -1;
@@ -1181,6 +1219,7 @@ namespace CIC
             }
         }
 
+        // init an array of attribute name to be use in attribute watch
         private void Initialize_InteractionAttributes()
         {
             string scope = "CIC::MainForm::Initial_InteractionAttributes():: ";
@@ -1232,6 +1271,7 @@ namespace CIC
             log.Info(scope + "Completed.");
         }
 
+        // init interaction manager and interaction list
         private void Initial_NormalInteraction()
         {
             string scope = "CIC::MainForm::Initial_NormalInteraction()::";
@@ -1258,6 +1298,9 @@ namespace CIC
             }
         }
 
+        // handle event when session connect complete
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void SessionConnectCompleted(object sender, AsyncCompletedEventArgs e)
         {
             string scope = "CIC::frmMain::SessionConnectCompleted()::";
@@ -1265,7 +1308,8 @@ namespace CIC
             this.MustChangePassword();
             log.Info(scope + "Completed.");
         }
-
+        
+        // check if password needs changed
         private void MustChangePassword()
         {
             string scope = "CIC::MainForm::MustChangePassword()::";
@@ -1294,12 +1338,16 @@ namespace CIC
             log.Info(scope + "Complete.");
         }
 
+        // call password change dialog
         private void ShowChangePasswordDialog()
         {
             CIC.frmChangePassword changePasswordObject = new frmChangePassword();
             changePasswordObject.ShowDialog();
         }
 
+        // handle event when session changed
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void mSession_Changed(object sender, ConnectionStateChangedEventArgs e)
         {
             string scope = "CIC::MainForm::mSession_Changed()::";
@@ -1385,6 +1433,7 @@ namespace CIC
             }
         }
 
+        // dispose queue watcher
         private void DisposeQueueWatcher()
         {
             string scope = "CIC::MainForm::Dispose_QueueWatcher()::";
@@ -1412,6 +1461,9 @@ namespace CIC
             }
         }
 
+        // record session to a parameter
+        // @session - a succesful session to be recorded
+        // @return result of this action
         private bool SetActiveSession(ININ.IceLib.Connection.Session session)
         {
             bool bResult = false;
@@ -1431,6 +1483,7 @@ namespace CIC
             return bResult;
         }
 
+        // reset timer of preview call
         private void reset_timer()
         {
             if (!previewCallTimer.Enabled)
@@ -1441,12 +1494,14 @@ namespace CIC
             this.update_state_info_label("Next calling number: " + this.GetDialerNumber());
         }
         
+        // restart the preview call timer
         private void restart_timer()
         {
             reset_timer();
             previewCallTimer.Start();
         }
 
+        // reset calling timer
         private void reset_call_timer()
         {
             if (!callingTimer.Enabled)
@@ -1456,12 +1511,14 @@ namespace CIC
             log.Info("Calling time is reset");
         }
 
+        // restart calling timer
         private void restart_call_timer()
         {
             reset_call_timer();
             callingTimer.Start();
         }
 
+        // login workflow by invoking button click
         public void login_workflow()
         {
             if (this.InvokeRequired)
@@ -1474,12 +1531,18 @@ namespace CIC
             }
         }
 
+        // handle event when form loaded
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void FormMain_Load(object sender, EventArgs e)
         {
             previewCallTimer.Enabled = false;
             toolStripUsernameLabel.Text = global::CIC.Properties.Settings.Default.UserId;
         }
 
+        // handle event when workflow button was clicked
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void workflow_button_Click(object sender, EventArgs e)
         {
             if (this.IsActiveConnection)
@@ -1493,6 +1556,9 @@ namespace CIC
             }
         }
 
+        // handle event when call button was clicked
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void call_button_Click(object sender, EventArgs e)
         {   
             // make a call or pickup
@@ -1500,6 +1566,9 @@ namespace CIC
             state_change(FormMainState.Calling);
         }
 
+        // handle event when disconnect button was clicked
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void disconnect_button_Click(object sender, EventArgs e)
         {
             tryDisconnect();
@@ -1518,6 +1587,7 @@ namespace CIC
             this.update_state_info_label("Disconnected.");
         }
 
+        // attempts to disconnect current call
         private void tryDisconnect()
         {
             string scope = "CIC::MainForm::tryDisconnect()::";
@@ -1651,6 +1721,7 @@ namespace CIC
             log.Info(scope + "Completed.");
         }
 
+        // @return interaction found first
         private Interaction GetNormalInteractionFromList()
         {
             string scope = "CIC::frmMain::GetNormalInteractionFromList()::";
@@ -1671,6 +1742,9 @@ namespace CIC
             return retInteraction;
         }
 
+        // handle event when hold button was clicked
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void hold_button_Click(object sender, EventArgs e)
         {
             string scope = "CIC::frmMain::hold_button_Click()::";
@@ -1727,6 +1801,9 @@ namespace CIC
             }
         }
 
+        // handle event when mute button was clicked
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void mute_button_Click(object sender, EventArgs e)
         {
             string scope = "CIC::frmMain::mute_button_Click()::";
@@ -1780,18 +1857,27 @@ namespace CIC
             }
         }
 
+        // handle event when transfer button was clicked
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void transfer_button_Click(object sender, EventArgs e)
         {
             frmTransfer transfer = frmTransfer.getInstance();
             transfer.ShowDialog();
         }
 
+        // handle event when conference button was clicked
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void conference_button_Click(object sender, EventArgs e)
         {
             frmConference conference = frmConference.getInstance();
             conference.ShowDialog();
         }
 
+        // handle event when manual call button was clicked
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void manual_call_button_Click(object sender, EventArgs e)
         {
             if (IcWorkFlow == null || !IcWorkFlow.LoginResult || this.isOnBreak)
@@ -1805,6 +1891,7 @@ namespace CIC
             }
         }
 
+        // attempts to request a break from server
         public void request_break()
         {
             string scope = "CIC::FormMain::request_break()::";
@@ -1823,6 +1910,10 @@ namespace CIC
             }
         }
 
+        // handle event when break button was clicked
+        // this will raise a flag to request break when user disconnect a next call
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void break_button_Click(object sender, EventArgs e)
         {
             string scope = "CIC::frmMain::break_button_Click()::";
@@ -1854,6 +1945,9 @@ namespace CIC
             }
         }
 
+        // handle event when end break button was clicked
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void endbreak_button_Click(object sender, EventArgs e)
         {
             string scope = "CIC::frmMain::endbreak_button_Click()::";
@@ -1902,6 +1996,9 @@ namespace CIC
             }
         }
 
+        // handle event when logout button was clicked
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void logout_workflow_button_Click(object sender, EventArgs e)
         {
             string scope = "CIC::MainForm::LogoutToolStripMenuItem_Click(): ";
@@ -1961,6 +2058,7 @@ namespace CIC
             }
         }
 
+        // dispose IC session
         private void disconnect_IC_session()
         {
             string scope = "CIC::MainForm::disconnect_IC_session(): ";
@@ -1973,6 +2071,7 @@ namespace CIC
             }
         }
 
+        // attempts to disconnect a normal interaction
         private static void disconnect_normal_interaction()
         {
             string scope = "CIC::MainForm::disconnect_normal_interaction(): ";
@@ -1984,7 +2083,10 @@ namespace CIC
                 ActiveNormalInteraction = null;
             }
         }
-        
+
+        // handle event when there is a call back from disposition form
+        // @sender - the object that invoke this event
+        // @e - event arguments
         public void disposition_invoke(object sender, EventArgs e)
         {
             string scope = "CIC::MainForm::DispositionToolStripButton_Click(): ";
@@ -2086,6 +2188,10 @@ namespace CIC
             }
         }
 
+
+        // handle event when callback was completed
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void completedCallback(object sender, AsyncCompletedEventArgs e)
         {
             if (e.Error != null)
@@ -2095,6 +2201,9 @@ namespace CIC
             }
         }
 
+        // handle event when there is a callback from select workflow form
+        // @sender - the object that invoke this event
+        // @e - event arguments
         public void workflow_invoke(object sender, EventArgs e)
         {
             if (this.InvokeRequired)
@@ -2144,7 +2253,8 @@ namespace CIC
             }
         }
 
-        public void conference_invoke(string transferTxtDestination)
+        // handle event when workflow button was clicked
+        public void conference_invoke()
         {
             string scope = "CIC::frmMain::CreateConferenceToolStripButton_Click()::";
             log.Info(scope + "Starting.");
@@ -2232,6 +2342,9 @@ namespace CIC
             }
         }
 
+        // handle event when make conference call was completed
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void MakeNewConferenceCompleted(object sender, MakeNewConferenceCompletedEventArgs e)
         {
             string scope = "CIC::frmMain::MakeNewConferenceCompleted()::";
@@ -2257,7 +2370,8 @@ namespace CIC
             }
         }
 
-        public void transfer_invoke(string transferTxtDestination)
+        // handles event when there is a callback from transfer form
+        public void transfer_invoke()
         {
             string scope = "CIC::frmMain::transfer_invoke()::";
             log.Info(scope + "Starting.");
@@ -2348,17 +2462,6 @@ namespace CIC
                                 }
                             }
                         }
-                        else
-                        {
-                            log.Info(scope + "Performing blind transfer");
-                            if (transferTxtDestination != "")
-                            {
-                                log.Info(scope + "Starting Normal Interaction Blind Transfer");
-                                ActiveNormalInteraction.BlindTransfer(transferTxtDestination);
-                                this.RemoveNormalInteractionFromList(ActiveNormalInteraction);
-                                log.Info(scope + "Complete Normal Interaction Blind Transfer");
-                            }
-                        }
                     }
                 }
                 this.isConsulting = false;
@@ -2373,6 +2476,9 @@ namespace CIC
             }
         }
 
+        // handle event when tranfer was complete during workflow call
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void WorkflowTransferCompleted(object sender, AsyncCompletedEventArgs e)
         {
             string scope = "CIC::frmMain::WorkflowTransferCompleted()::";
@@ -2386,6 +2492,9 @@ namespace CIC
             log.Info(scope + "Completed");
         }
 
+        // handle event when transfer was complete during manual call
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void ManualTransferCompleted(object sender, AsyncCompletedEventArgs e)
         {
             string scope = "CIC::frmMain::ManualTransferCompleted()::";
@@ -2399,6 +2508,7 @@ namespace CIC
             log.Info(scope + "Completed");
         }
 
+        // attempts to update user stutus
         private void UpdateUserStatus()
         {
             int iIndex = 0;
@@ -2424,7 +2534,6 @@ namespace CIC
                                 this.AllStatusMessageList = new StatusMessageList(this.mPeopleManager);
                                 this.AllStatusMessageListOfUser = new UserStatusList(this.mPeopleManager);
                                 log.Info(scope + "Completed User Status Initialization");
-                                this.AllStatusMessageListOfUser.WatchedObjectsChanged += new EventHandler<WatchedObjectsEventArgs<UserStatusProperty>>(AllStatusMessageListOfUser_WatchedObjectsChanged);
                                 string[] dusers = { Program.DialingManager.Session.UserId };   //Make value to array 
                                 this.AllStatusMessageListOfUser.StartWatching(dusers);
                                 this.CurrentUserStatus = this.AllStatusMessageListOfUser.GetUserStatus(Program.DialingManager.Session.UserId);
@@ -2463,8 +2572,6 @@ namespace CIC
                                 this.AllStatusMessageList = new StatusMessageList(this.mPeopleManager);
                                 this.AllStatusMessageListOfUser = new UserStatusList(this.mPeopleManager);
                                 log.Info(scope + "Completed User Status Initialization");
-                                this.AllStatusMessageListOfUser.WatchedObjectsChanged +=
-                                    new EventHandler<WatchedObjectsEventArgs<UserStatusProperty>>(AllStatusMessageListOfUser_WatchedObjectsChanged);
                                 this.AllStatusMessageListOfUser.StartWatching(nusers);
                                 this.CurrentUserStatus = this.AllStatusMessageListOfUser.GetUserStatus(this.IC_Session.UserId);
                                 sIconPath = CIC.Program.ResourcePath;
@@ -2543,11 +2650,7 @@ namespace CIC
             }
         }
 
-        private void AllStatusMessageListOfUser_WatchedObjectsChanged(object sender, WatchedObjectsEventArgs<UserStatusProperty> e)
-        {
-            throw new NotImplementedException();
-        }
-
+        // update call info and check state of the call info
         private void ShowActiveCallInfo()
         {
             string scope = "CIC::frmMain::ShowActiveCallInfo()::";
@@ -2572,6 +2675,7 @@ namespace CIC
                         }
                         else
                         {
+                            // attempts to auto pickup if the call is from predictive mode
                             if (this.ActiveDialerInteraction.DialingMode == DialingMode.Regular ||
                                 this.ActiveDialerInteraction.DialingMode == DialingMode.OwnAgentCallback)
                             {
@@ -2700,12 +2804,13 @@ namespace CIC
                 {
                     log.Error(scope + "Error info." + ex.Message);
                 }
-                this.SetInfoBarColor();
+                this.SetCallTone();
                 update_conference_status();
             }
             log.Info(scope + "Completed.");
         }
 
+        // update info on dashboard
         private void update_info_on_dashboard()
         {
             if (this.InvokeRequired)
@@ -2764,6 +2869,7 @@ namespace CIC
             }
         }
 
+        // update currency data to dashboard
         private void update_currency_on_dashboard(Dictionary<string, string> data)
         {
             string scope = "CIC::frmMain::update_currency_on_dashboard()::";
@@ -2815,6 +2921,7 @@ namespace CIC
             log.Info(scope + "Completed.");
         }
 
+        // update conference status
         private void update_conference_status()
         {
             string scope = "CIC::FormMain::update_conference_status()::";
@@ -2847,6 +2954,7 @@ namespace CIC
             log.Info(scope + "Completed.");
         }
 
+        // attempts to get the connected call
         private void SetActiveCallInfo()
         {
             string scope = "CIC::frmMain::SetActiveCallInfo()::";
@@ -2874,6 +2982,7 @@ namespace CIC
             }
         }
 
+        // init dialer session and added events tied to it
         private void InitializeDialerSession()
         {
             string scope = "CIC::MainForm::RegisterHandlers()::";
@@ -2882,7 +2991,6 @@ namespace CIC
             {
                 this.DialerSession.PreviewCallAdded += new EventHandler<ININ.IceLib.Dialer.PreviewCallAddedEventArgs>(PreviewCallAdded);
                 this.DialerSession.DataPop += new EventHandler<ININ.IceLib.Dialer.DataPopEventArgs>(DataPop);
-                this.DialerSession.CampaignTransition += new EventHandler<CampaignTransistionEventArgs>(CampaignTransition);
                 this.DialerSession.BreakGranted += new EventHandler(BreakGranted);
                 this.DialerSession.LogoutGranted += new EventHandler(LogoutGranted);
                 Program.mDialingManager.WorkflowStopped += new EventHandler<WorkflowStoppedEventArgs>(WorkflowStopped);
@@ -2895,6 +3003,7 @@ namespace CIC
             }
         }
 
+        // dispose dialer session and removed events tied to it
         private void DisposeDialerSession()
         {
             string scope = "CIC::MainForm::DisposeDialerSession()::";
@@ -2903,7 +3012,6 @@ namespace CIC
             {
                 this.DialerSession.PreviewCallAdded -= new EventHandler<ININ.IceLib.Dialer.PreviewCallAddedEventArgs>(PreviewCallAdded);
                 this.DialerSession.DataPop -= new EventHandler<ININ.IceLib.Dialer.DataPopEventArgs>(DataPop);
-                this.DialerSession.CampaignTransition -= new EventHandler<CampaignTransistionEventArgs>(CampaignTransition);
                 this.DialerSession.BreakGranted -= new EventHandler(BreakGranted);
                 this.DialerSession.LogoutGranted -= new EventHandler(LogoutGranted);
                 Program.mDialingManager.WorkflowStopped -= new EventHandler<WorkflowStoppedEventArgs>(WorkflowStopped);
@@ -2916,6 +3024,9 @@ namespace CIC
             }
         }
 
+        // handle event when exit button was clicked
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void exit_button_Click(object sender, EventArgs e)
         {
             string scope = "CIC::MainForm::exit_button_Click()::";
@@ -2925,6 +3036,7 @@ namespace CIC
             this.Close();
         }
 
+        // change an internal state of main form
         private void state_change(FormMainState state)
         {
             string scope = "CIC::MainForm::state_change()::";
@@ -3056,6 +3168,7 @@ namespace CIC
             log.Info(scope + "Completed");
         }
         
+        // disable all buttons
         private void reset_state()
         {
             workflow_button.Enabled = false;
@@ -3072,6 +3185,7 @@ namespace CIC
             exit_button.Enabled = false;
         }
 
+        // enable all buttons
         private void enable_all_button()
         {
             workflow_button.Enabled = true;
@@ -3088,6 +3202,7 @@ namespace CIC
             exit_button.Enabled = true;
         }
 
+        // change to connected state
         private void connected_state()
         {
             if (this.InvokeRequired)
@@ -3110,6 +3225,7 @@ namespace CIC
             }
         }
 
+        // change to preview state
         private void preview_state()
         {
             string scope = "CIC::FormMain::preview_state()::";
@@ -3125,6 +3241,7 @@ namespace CIC
             log.Debug(scope + "Completed");
         }
 
+        // change to predictive state
         private void predictive_state()
         {
             string scope = "CIC::FormMain::predictive_state()::";
@@ -3137,6 +3254,7 @@ namespace CIC
             log.Debug(scope + "Completed");
         }
 
+        // change to calling state
         private void calling_state()
         {
             string scope = "CIC::FormMain::calling_state()::";
@@ -3149,7 +3267,8 @@ namespace CIC
             this.update_state_info_label("Calling: " + callingNumber);
             log.Debug(scope + "Completed");
         }
-
+        
+        // change to conference state
         private void conference_call_state()
         {
             string scope = "CIC::FormMain::preview_call_state()::";
@@ -3167,6 +3286,7 @@ namespace CIC
             log.Debug(scope + "Completed");
         }
 
+        // change to preview call state
         private void preview_call_state()
         {
             string scope = "CIC::FormMain::preview_call_state()::";
@@ -3191,6 +3311,7 @@ namespace CIC
             log.Debug(scope + "Completed");
         }
 
+        // change to hold state
         private void hold_state()
         {
             string scope = "CIC::FormMain::hold_state()::";
@@ -3210,6 +3331,7 @@ namespace CIC
             log.Debug(scope + "Completed");
         }
 
+        // change to disconnected state
         private void disconnect_state()
         {
             string scope = "CIC::FormMain::disconnect_state()::";
@@ -3223,6 +3345,7 @@ namespace CIC
             log.Debug(scope + "Completed");
         }
 
+        // change to mute state
         private void mute_state()
         {
             string scope = "CIC::FormMain::mute_state()::";
@@ -3242,6 +3365,7 @@ namespace CIC
             log.Debug(scope + "Completed");
         }
 
+        // change to break state
         private void break_state()
         {
             string scope = "CIC::FormMain::break_state()::";
@@ -3257,11 +3381,13 @@ namespace CIC
             log.Debug(scope + "Completed");
         }
         
+        // disable break button
         private void break_requested_state()
         {
             break_button.Enabled = !break_requested && IcWorkFlow != null && IcWorkFlow.LoginResult;
         }
 
+        // change to logged out state
         private void logged_out_state()
         {
             string scope = "CIC::FormMain::logged_out_state()::";
@@ -3276,6 +3402,7 @@ namespace CIC
             log.Debug(scope + "Completed");
         }
 
+        // disable break button
         private void disable_break_request()
         {
             string scope = "CIC::FormMain::disable_break_request()::";
@@ -3284,6 +3411,7 @@ namespace CIC
             log.Debug(scope + "Completed");
         }
             
+        // disable logout button
         private void disable_logout()
         {
             string scope = "CIC::FormMain::disable_logout()::";
@@ -3292,6 +3420,7 @@ namespace CIC
             log.Debug(scope + "Completed");
         }
 
+        // disable conference and transfer button
         private void disable_when_line_disconnect()
         {
             string scope = "CIC::FormMain::disable_when_line_disconnect()::";
@@ -3301,6 +3430,7 @@ namespace CIC
             log.Debug(scope + "Completed");
         }
 
+        // disable hold and mute button
         private void disable_hold_and_mute()
         {
             string scope = "CIC::FormMain::disable_when_line_disconnect()::";
@@ -3311,6 +3441,7 @@ namespace CIC
 
         }
 
+        // enable mute, hold, conference, and transfer button
         private void enable_when_repickup()
         {
             string scope = "CIC::FormMain::enable_when_repickup()::";
@@ -3322,6 +3453,9 @@ namespace CIC
             log.Debug(scope + "Completed");
         }
 
+        // handle event when timer was ticked for preview call timer
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void timer1_Tick(object sender, EventArgs e)
         {
             timer -= (float)previewCallTimer.Interval / 1000;
@@ -3336,16 +3470,18 @@ namespace CIC
             }
         }
 
-        private void callingTimer_Tick(object sender, EventArgs e)
-        {
-        }
-
+        // handle event when preview call is called
+        // @sender - the object that invoke this event
+        // @e - event arguments
         public void MakePreviewCallComplete(object sender, AsyncCompletedEventArgs e)
         {
             //state_info_label.Text = "Connected to: " + this.ActiveDialerInteraction.ContactData["is_attr_numbertodial"];
             state_change(FormMainState.Calling);
         }
 
+        // handle event when manual call is called
+        // @sender - the object that invoke this event
+        // @e - event arguments
         public void MakeManualCallCompleted(object sender,InteractionCompletedEventArgs e)
         {
             string scope = "CIC::MainForm::MakeCallCompleted()::";
@@ -3360,38 +3496,15 @@ namespace CIC
             log.Info(scope + "Completed");
         }
 
-        private void ChangeWatchedAttributesCompleted(object sender, AsyncCompletedEventArgs e)
-        {
-            if (e.Error != null)
-            {
-                MessageBox.Show(e.Error.StackTrace, e.Error.Message);
-                log.Warn(e.Error.StackTrace + " :: " + e.Error.Message);
-                return;
-            }
-        }
-        
-        private bool IsDialerInteractionAvailableForPickup()
-        {
-            return ActiveDialerInteraction.State == InteractionState.Alerting
-                || ActiveDialerInteraction.State == InteractionState.Held
-                || ActiveDialerInteraction.State == InteractionState.Messaging
-                || ActiveDialerInteraction.State == InteractionState.Offering;
-        }
-
-        private bool IsNormalInteractionAvailableForPickup()
-        {
-            return ActiveNormalInteraction.State == InteractionState.Alerting
-                || ActiveNormalInteraction.State == InteractionState.Held
-                || ActiveNormalInteraction.State == InteractionState.Messaging
-                || ActiveNormalInteraction.State == InteractionState.Offering;
-        }
-
         /****************************************************
         *****************************************************
         ******************* The Logic Part ******************
         *****************************************************
         ****************************************************/
 
+        // handle event when workflow started
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void WorkflowStarted(object sender, WorkflowStartedEventArgs e)
         {
             string scope = "CIC::MainForm::WorkflowStarted()::";
@@ -3401,6 +3514,9 @@ namespace CIC
             log.Info(scope + "Completed.");
         }
 
+        // handle event when workflow stopped
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void WorkflowStopped(object sender, WorkflowStoppedEventArgs e)
         {
             string scope = "CIC::MainForm::WorkflowStopped()::";
@@ -3411,13 +3527,9 @@ namespace CIC
             log.Info(scope + "Completed.");
         }
 
-        private void CampaignTransition(object sender, CampaignTransistionEventArgs e)
-        {
-            // NYI
-        }
-
         /*
          * convert a string of dateTime from `oldFormat` into `destFormat`
+         * @return formatted string
          */
         private string getDateTimeString(String datetime, 
             String oldFormat = "yyyy-dd-MM HH:mm", String destFormat = "dd/MM/yyyy")
@@ -3435,6 +3547,10 @@ namespace CIC
             return "";
         }
 
+
+        // handle event when a new call is made or there is an incoming call
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void DataPop(object sender, DataPopEventArgs e)
         {
             string scope = "CIC::MainForm::DataPop()::";
@@ -3481,7 +3597,9 @@ namespace CIC
             }
         }
 
-        // Get new infomation set
+        // handle event when new preview call is sent to the system
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void PreviewCallAdded(object sender, PreviewCallAddedEventArgs e)
         {
             string scope = "CIC::MainForm::PreviewCallAdded()::";
@@ -3530,7 +3648,8 @@ namespace CIC
                 log.Error(scope + "Error info : " + ex.Message);
             }
         }
-
+        
+        // open up a CRM screen
         private void CrmScreenPop()
         {
             string scope = "CIC::MainForm::CrmScreenPop()::";
@@ -3543,12 +3662,6 @@ namespace CIC
             {
                 try
                 {
-                    // http://[MS-CRM Server name]/CRM/main.aspx?
-                    // etn=col_collection_history&pagetype=entityrecord&extraqs=col_contract_no={Parameter1}&col_phone_id={Parameter2}&col_call_id={Parameter3}
-                    // Parameter1 = ProductRefID (ฟิลด์ที่ 1 ใน spec) is_attr_ProductRefID
-                    // Parameter2 = Ref_PhoneNo1 - Ref_PhoneNo6  (ฟิลด์ที่ 32-37 ใน spec อยู่ที่ขณะนั้นโทรติดที่ 
-                    // PhoneNoอะไร) is_attr_Ref_PhoneNo1
-                    // Parameter3 = Call_id (Id ของการโทรออก) is_attr_callid
                     Dictionary<string, string> data = ActiveDialerInteraction.ContactData;
                     string productID = data.ContainsKey("is_attr_ProductRefID") ? data["is_attr_ProductRefID"] : "";
                     string refCallID = getRefCallID(data);
@@ -3570,11 +3683,13 @@ namespace CIC
                 catch (System.Exception ex)
                 {
                     log.Error(scope + "Error info : " + ex.Message);
-                    //this.MainWebBrowser.Url = new System.Uri(global::CIC.Properties.Settings.Default.StartupUrl, System.UriKind.Absolute);
                 }
             }
         }
 
+        // get ref call id
+        // @data dictionary of contact data from interaction
+        // @return a ref call id
         private string getRefCallID(Dictionary<string, string> data)
         {
             string refCallID = "";
@@ -3598,6 +3713,7 @@ namespace CIC
             return refCallID;
         }
 
+        // init contact data and cache it into an xml file
         private void Initialize_ContactData()
         {
             if (this.InvokeRequired)
@@ -3637,6 +3753,7 @@ namespace CIC
             }
         }
 
+        // init callback and events tied to it
         private void Initialize_CallBack()
         {
             string scope = "CIC::MainForm::Initial_CallBack()::";
@@ -3673,6 +3790,7 @@ namespace CIC
             }
         }
 
+        // init status message list and list of users
         private void InitializeStatusMessageDetails()
         {
             // TODO: clean up unused variables
@@ -3691,8 +3809,6 @@ namespace CIC
                     {
                         this.AllStatusMessageList = new StatusMessageList(this.mPeopleManager);
                         this.AllStatusMessageListOfUser = new UserStatusList(this.mPeopleManager);
-                        this.AllStatusMessageListOfUser.WatchedObjectsChanged += 
-                            new EventHandler<WatchedObjectsEventArgs<UserStatusProperty>>(AllStatusMessageListOfUser_WatchedObjectsChanged);
                         string[] dusers = { Program.DialingManager.Session.UserId };   //Make value to array 
                         this.AllStatusMessageListOfUser.StartWatching(dusers);
                         this.CurrentUserStatus = this.AllStatusMessageListOfUser.GetUserStatus(Program.DialingManager.Session.UserId);
@@ -3718,8 +3834,6 @@ namespace CIC
                     string[] nusers = { this.IC_Session.UserId };   //Make value to array 
                     this.AllStatusMessageList = new StatusMessageList(this.mPeopleManager);
                     this.AllStatusMessageListOfUser = new UserStatusList(this.mPeopleManager);
-                    this.AllStatusMessageListOfUser.WatchedObjectsChanged += 
-                        new EventHandler<WatchedObjectsEventArgs<UserStatusProperty>>(AllStatusMessageListOfUser_WatchedObjectsChanged);
                     this.AllStatusMessageListOfUser.StartWatching(nusers);
                     this.CurrentUserStatus = this.AllStatusMessageListOfUser.GetUserStatus(this.IC_Session.UserId);
                     this.AllStatusMessageList.StartWatching();
@@ -3782,6 +3896,9 @@ namespace CIC
             }
         }
 
+        // handle event when call back interaction start watching completed
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void CallBackInteration_StartWatchingCompleted(object sender, AsyncCompletedEventArgs e)
         {
             string scope = "CIC::MainForm::CallBackInteration_StartWatchingCompleted()::";
@@ -3827,16 +3944,25 @@ namespace CIC
             }
         }
 
+        // handle event when workgroup detail start watching completed
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void WorkgroupDetailsStartWatchingComplete(object sender, AsyncCompletedEventArgs e)
         {
             // NYI
         }
 
+        // handle event when workgroup watched attributes changed
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void WorkGroup_WatchedAttributesChanged(object sender, WatchedAttributesEventArgs e)
         {
             // NYI
         }
 
+        // handle event when callback interaction attributes changed
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void CallBackInteraction_AttributesChanged(object sender, AttributesEventArgs e)
         {
             if (this.InvokeRequired)
@@ -3849,6 +3975,8 @@ namespace CIC
             }
         }
 
+        // handles manual call made from manual call form
+        // @number - number to call
         public void MakeManualCall(string number)
         {
             string scope = "CIC::MainForm::MakeManualCall()::";
@@ -3875,7 +4003,9 @@ namespace CIC
             log.Info(scope + "complete");
         }
 
-        public void MakeConsultCall(string transferTxtDestination)
+        // handles making consult call made from transfer and conference form
+        // @number - number to make consult call
+        public void MakeConsultCall(string number)
         {
             string scope = "CIC::frmMain::MakeConsultCallToolStripButton_Click()::";
             log.Info(scope + "Starting.");
@@ -3884,10 +4014,10 @@ namespace CIC
             {
                 //Log On to Dialer Server.  use same normal to call before using dialer object to blind/consult transfer.
                 log.Info(scope + "Call button clicked. Log On to Dialer Server.");
-                if (transferTxtDestination != "")
+                if (number != "")
                 {
-                    log.Info(scope + "Making consult call to " + transferTxtDestination);
-                    callParams = new CallInteractionParameters(transferTxtDestination, CallMadeStage.Allocated);
+                    log.Info(scope + "Making consult call to " + number);
+                    callParams = new CallInteractionParameters(number, CallMadeStage.Allocated);
                     if (NormalInterationManager != null)
                     {
                         //callingNumber = transferTxtDestination;
@@ -3909,6 +4039,7 @@ namespace CIC
             }
         }
 
+        // attempts to disconnect an active consult call invoked from transfer and conference form
         public void DisconnectConsultCall()
         {
             string scope = "CIC::frmMain::CancelTransferToolStripButton_Click()::";
@@ -4004,12 +4135,17 @@ namespace CIC
             }
         }
 
+        // handle event when make consult call is completed
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void MakeConsultCompleted(object sender, InteractionCompletedEventArgs e)
         {
             this.update_state_info_label("Consulting.");
             ActiveConsultInteraction = e.Interaction;
         }
 
+        // get list of number in contact list
+        // @return an array of number in contact list
         public string[] GetDialerListNumber()
         {
             if (IsManualDialing)
@@ -4034,6 +4170,7 @@ namespace CIC
             return callList.ToArray();
         }
 
+        // @return current number from contact list or number made from manual call
         public string GetDialerNumber()
         {
             string scope = "CIC::frmMain::GetDialerNumber()::";
@@ -4082,6 +4219,9 @@ namespace CIC
             return DialerNumber;
         }
 
+        // handle event when dialer interaction attributes change
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void DialerInteraction_AttributesChanged(object sender, AttributesEventArgs e)
         {
             string scope = "CIC::MainForm::DialerInteraction_AttributesChanged():: ";
@@ -4104,6 +4244,9 @@ namespace CIC
             }
         }
 
+        // handle event when break is granted
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void BreakGranted(object sender, EventArgs e)
         {
             string scope = "CIC::MainForm::BreakGranted(): ";
@@ -4136,6 +4279,9 @@ namespace CIC
             }
         }
 
+        // handle event when logout is granted
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void LogoutGranted(object sender, EventArgs e)
         {
             string scope = "CIC::MainForm::LogoutGranted(): ";
@@ -4199,6 +4345,7 @@ namespace CIC
             }
         }
 
+        // change user status to available
         private void SetToAvailable_UserStatusMsg()
         {
             string scope = "CIC::MainForm::SetToDoNotDisturb_UserStatusMsg(): ";
@@ -4226,6 +4373,7 @@ namespace CIC
             }
         }
 
+        // change user status to dnd
         private void SetToDoNotDisturb_UserStatusMsg()
         {
             string scope = "CIC::MainForm::SetToDoNotDisturb_UserStatusMsg(): ";
@@ -4254,6 +4402,9 @@ namespace CIC
         }
 
         // Src: PlaceCallToolStripButton_Click()
+        // handle event when calling is made
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void placecall(object sender, EventArgs e)
         {
             string scope = "CIC::MainForm::placecall(): ";
@@ -4296,6 +4447,7 @@ namespace CIC
             }
         }
 
+        // highlight the calling number
         private void highlight_call()
         {
             string scope = "CIC::MainForm::higilight_call(): ";
@@ -4346,7 +4498,7 @@ namespace CIC
             }
         }
 
-        // Src: PickupToolStripButton_Click()
+        // attempts to pickup an active interaction
         private void pickup()
         {
             string scope = "CIC::frmMain::pickup()::";
@@ -4450,8 +4602,10 @@ namespace CIC
             }
         }
 
+        // this is delegate for invoking function in the correct thread
         public delegate void MyDelegate(string myArg);
 
+        // change the status of break status on dashboard
         private void update_break_status_label(string info)
         {
             if (this.InvokeRequired)
@@ -4466,6 +4620,7 @@ namespace CIC
             }
         }
 
+        // change the status of call on dashboard
         private void update_state_info_label(string info)
         {
             if (this.InvokeRequired)
@@ -4480,6 +4635,7 @@ namespace CIC
             }
         }
 
+        // reset highlight color
         private void reset_color_panel()
         {
             name1_panel.BackColor = SystemColors.Control;
@@ -4490,6 +4646,9 @@ namespace CIC
             name6_panel.BackColor = SystemColors.Control;
         }
 
+        // handle event when form is closed
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void FormMain_FormClosed(object sender, FormClosedEventArgs e)
         {
             string scope = "CIC::frmMain::FormMain_FormClosed()::";
@@ -4513,6 +4672,7 @@ namespace CIC
             }
         }
 
+        // attempts to disconnect all interaction in the interaction list
         private void tryDisconnectAllInteractions()
         {
             string scope = "CIC::frmMain::tryDisconnectAllInteractions()::";
@@ -4538,6 +4698,7 @@ namespace CIC
             }
         }
 
+        // dispose session when it is not needed
         private void DisposeSession()
         {
             string scope = "CIC::MainForm::DisposeSession():: ";
@@ -4557,12 +4718,18 @@ namespace CIC
                 log.Error(scope + "Error info." + ex.Message);
             }
         }
-
+        
+        // handle event when dateTime timer ticked and update time accordingly
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void dateTimeTimer_Tick(object sender, EventArgs e)
         {
             toolStripDatetime.Text = DateTime.Now.ToString("F");
         }
 
+        // handle event when buttons is enabled or disabled
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void workflow_button_EnabledChanged(object sender, EventArgs e)
         {
             if (workflow_button.Enabled)
@@ -4575,6 +4742,9 @@ namespace CIC
             }
         }
 
+        // handle event when buttons is enabled or disabled
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void call_button_EnabledChanged(object sender, EventArgs e)
         {
             if (call_button.Enabled)
@@ -4587,6 +4757,9 @@ namespace CIC
             }
         }
 
+        // handle event when buttons is enabled or disabled
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void disconnect_button_EnabledChanged(object sender, EventArgs e)
         {
             if (disconnect_button.Enabled)
@@ -4599,6 +4772,9 @@ namespace CIC
             }
         }
 
+        // handle event when buttons is enabled or disabled
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void hold_button_EnabledChanged(object sender, EventArgs e)
         {
             if (hold_button.Enabled)
@@ -4611,6 +4787,9 @@ namespace CIC
             }
         }
 
+        // handle event when buttons is enabled or disabled
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void mute_button_EnabledChanged(object sender, EventArgs e)
         {
             if (mute_button.Enabled)
@@ -4623,6 +4802,9 @@ namespace CIC
             }
         }
 
+        // handle event when buttons is enabled or disabled
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void transfer_button_EnabledChanged(object sender, EventArgs e)
         {
             if (transfer_button.Enabled)
@@ -4635,6 +4817,9 @@ namespace CIC
             }
         }
 
+        // handle event when buttons is enabled or disabled
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void conference_button_EnabledChanged(object sender, EventArgs e)
         {
             if (conference_button.Enabled)
@@ -4647,6 +4832,9 @@ namespace CIC
             }
         }
 
+        // handle event when buttons is enabled or disabled
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void manual_call_button_EnabledChanged(object sender, EventArgs e)
         {
             if (manual_call_button.Enabled)
@@ -4659,6 +4847,9 @@ namespace CIC
             }
         }
 
+        // handle event when buttons is enabled or disabled
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void break_button_EnabledChanged(object sender, EventArgs e)
         {
             if (break_button.Enabled)
@@ -4671,6 +4862,9 @@ namespace CIC
             }
         }
 
+        // handle event when buttons is enabled or disabled
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void endbreak_button_EnabledChanged(object sender, EventArgs e)
         {
             if (endbreak_button.Enabled)
@@ -4683,6 +4877,9 @@ namespace CIC
             }
         }
 
+        // handle event when buttons is enabled or disabled
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void logout_workflow_button_EnabledChanged(object sender, EventArgs e)
         {
             if (logout_workflow_button.Enabled)
@@ -4695,6 +4892,9 @@ namespace CIC
             }
         }
 
+        // handle event when buttons is enabled or disabled
+        // @sender - the object that invoke this event
+        // @e - event arguments
         private void exit_button_EnabledChanged(object sender, EventArgs e)
         {
             if (exit_button.Enabled)
@@ -4706,10 +4906,5 @@ namespace CIC
                 exit_button.BackgroundImage = CIC.Properties.Resources.disable_Icon_Exit;
             }
         }
-
-        public bool isOnBreak { get; set; }
-
-
-        public bool isFirstTimeLogin { get; set; }
     }
 }

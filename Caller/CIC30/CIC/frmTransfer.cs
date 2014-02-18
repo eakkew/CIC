@@ -63,7 +63,7 @@ namespace CIC
         private void transfer_button_Click(object sender, EventArgs e)
         {
             // transfer the current connection to another
-            Program.MainDashboard.transfer_invoke(ext_number_box.Text);
+            Program.MainDashboard.transfer_invoke();
             call_button.Enabled = true;
             transfer_button.Enabled = false;
             ext_number_box.Enabled = true;

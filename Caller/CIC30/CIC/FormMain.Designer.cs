@@ -1413,10 +1413,6 @@
             this.panel1.Size = new System.Drawing.Size(1245, 20);
             this.panel1.TabIndex = 9;
             // 
-            // callingTimer
-            // 
-            this.callingTimer.Tick += new System.EventHandler(this.callingTimer_Tick);
-            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
