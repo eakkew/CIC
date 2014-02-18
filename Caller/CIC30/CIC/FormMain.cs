@@ -2252,6 +2252,7 @@ namespace CIC
             }
             catch (System.Exception ex)
             {
+
                 log.Error(scope + "Error info." + ex.Message);
             }
         }
@@ -3889,7 +3890,7 @@ namespace CIC
                     callParams = new CallInteractionParameters(transferTxtDestination, CallMadeStage.Allocated);
                     if (NormalInterationManager != null)
                     {
-                        callingNumber = transferTxtDestination;
+                        //callingNumber = transferTxtDestination;
                         log.Info(scope + "Starting Normal Interaction Make Consult Call");
                         NormalInterationManager.ConsultMakeCallAsync(callParams, MakeConsultCompleted, null);
                         log.Info(scope + "Completed Normal Interaction Make Consult Call");
@@ -4005,7 +4006,7 @@ namespace CIC
 
         private void MakeConsultCompleted(object sender, InteractionCompletedEventArgs e)
         {
-            this.update_state_info_label("Consulting:" + callingNumber);
+            this.update_state_info_label("Consulting.");
             ActiveConsultInteraction = e.Interaction;
         }
 
